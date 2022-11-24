@@ -3,10 +3,59 @@ import os
 import openai
 import re
 from flask import Flask, redirect, render_template, request, url_for
-
+import cv2
+from flask import Flask
+from flask import request
+import os
+import base64
+from WindowStructure import *
+import time
+# from NodeDescriberManager import *
+import socket
+import json
+import numpy as np
 app = Flask(__name__)
 openai.api_key = os.getenv("OPENAI_API_KEY")
-
+layout = None
+screenshot = None
+imgdata = None
+cnt = 0
+semantic_nodes=[]
+@app.route('/demo', methods=['POST'])
+def demo():
+    global cnt
+    cnt += 1
+    global layout,  screenshot, imgdata, img_np, page_instance, pageindex, page_id_now,page_root,semantic_nodes,semantic_info
+    start_time = time.time()
+    page_id_now = cnt
+    screenshot = request.form["screenshot"]
+    layout = request.form['layout']
+    pageindex = request.form['pageindex']
+    imgdata = base64.b64decode(screenshot)
+    nparr = np.frombuffer(imgdata, np.uint8)
+    img_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    
+    result_json = {"state": "ok"}
+    fp = open('runtime_data/imagedata' + str(cnt) +
+              ".jpg", 'wb')  # 'wb'表示写二进制文件
+    fp.write(imgdata)
+    fp.close()
+    fp = open('runtime_data/page' + str(cnt) + ".json", 'w')
+    fp.write(layout)
+    fp.close()
+    page_instance = PageInstance()
+    page_instance.load_from_dict("", json.loads(layout))
+    print("page loaded")
+    page_root = page_instance.ui_root
+    semantic_nodes = page_root.get_all_semantic_nodes()
+    semantic_info = [node.generate_semantic_info() for node in semantic_nodes]
+    print("semantic_nodes",len(semantic_nodes))
+    end_time = time.time()
+    print("time:", end_time-start_time, flush=True)
+    result_json["time"] = (end_time-start_time)*1000
+    return json.dumps(result_json)
+    
+    
 
 @app.route("/", methods=("GET", "POST"))
 def index():
@@ -46,3 +95,6 @@ Let's think step by step, he may do the following sequence:
 """.format(
         animal.capitalize()
     )
+
+if __name__ == "__main__":
+    app.run(host='127.0.0.1', port=5000)
