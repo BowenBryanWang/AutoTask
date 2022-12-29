@@ -29,6 +29,9 @@ body {
 .icon {
   width: 34px;
 }
+.image {
+  width: 350px;
+}
 h3 {
   font-size: 32px;
   line-height: 40px;
@@ -77,4 +80,41 @@ input[type="submit"] {
   color: #353740;
   margin-bottom: 10px;
   margin-top: 10px;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.column-left {
+  margin-right: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+/* 不要居中显示，让组件置顶，向上对齐 */
+.column-right {
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.img_up{
+  position:absolute;
+  z-index:1;
+  margin-bottom: 10px;
+  
+}
+.img_down{
+  position:absolute;
+  z-index:2;
+  margin-bottom: 10px;
 }

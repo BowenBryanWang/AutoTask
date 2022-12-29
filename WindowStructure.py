@@ -193,22 +193,24 @@ class UINode:
     def generate_all_semantic_info(self):
         #获得该节点和它的所有后代，所有的语义信息，以dict形式返回
         #{"text":[],"content-desc":[],"description":[]}
+        res={"text":[],"content-desc":[]}
         def generateAllSemanticInfo(self):
             semanticInfo = {}
             if self.text != '':
                 semanticInfo['text'] = [self.text]
             if self.content_desc != '':
                 semanticInfo['content-desc'] = [self.content_desc]
-            if self.description != '':
-                semanticInfo['description'] = [self.description]
             return semanticInfo
-        semanticInfo = generateAllSemanticInfo(self)
         stack = [self]
         while stack:
             current_node = stack.pop()
             stack.extend(current_node.children)
-            semanticInfo = mergeDict(semanticInfo,generateAllSemanticInfo(current_node))
-        return semanticInfo
+            tmp_info = generateAllSemanticInfo(current_node)
+            if "text" in tmp_info:
+                res["text"].extend(tmp_info["text"])
+            if "content-desc" in tmp_info:
+                res["content-desc"].extend(tmp_info["content-desc"])
+        return res
     def has_similar_children(self):
         #如果一个节点的子节点中有半数以上的子节点的宽度和高度都在一个范围内，那么就认为这个节点有相似的子节点
         #这个函数用于判断一个节点是否有相似的子节点
@@ -218,9 +220,10 @@ class UINode:
                 all["width"].append(child.width)
                 all["height"].append(child.height)
             #找到all中width和height的众数比例
-            widthModeRatio = max(set(all["width"]), key=all["width"].count)/len(all["width"])
-            heightModeRatio = max(set(all["height"]), key=all["height"].count)/len(all["height"])
-            if widthModeRatio*heightModeRatio>0.6:
+            widthModeRatio = all["width"].count(max(set(all["width"]), key=all["width"].count))/len(all["width"])
+            heightModeRatio = all["height"].count(max(set(all["height"]), key=all["height"].count))/len(all["height"])
+            print("area:",widthModeRatio,heightModeRatio)
+            if widthModeRatio*heightModeRatio>0.8:
                 return True
         return False
     def is_selected(self):
