@@ -10,7 +10,7 @@ import os
 import base64
 from WindowStructure import *
 import time
-# from NodeDescriberManager import *
+from NodeDescriberManager import *
 import json
 import numpy as np
 from flask_socketio import SocketIO
@@ -18,12 +18,8 @@ from flask import Flask
 from flask_sockets import Sockets
 import datetime
 
-app = Flask(__name__)
-# sockets = Sockets(app)
-socketio = SocketIO(app)
 
-from flask_cors import *
-CORS(app, supports_credentials=True)
+app = Flask(__name__)
 
 openai.api_key = "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"
 layout = None
@@ -31,6 +27,7 @@ screenshot = None
 imgdata = None
 cnt = 0
 semantic_nodes = []
+describermanagers = {}
 seq = ["8", "50", "141", "146", "167"]
 seq_semantic_info = [[
     {"text": ["微信(20)"], "content-desc": ["更多功能按钮", "搜索"], "type":"标题"},
@@ -69,10 +66,112 @@ ins_seq = ["Click 'Me'", "Click 'Settings'",
 i = 0
 prompt_now = ""
 intention = ""
+html_detect = False
+agenda_detect = False
+upload_time = None
+time_between_upload = 1
+all_text = ""  # 当前页面的所有文本
+describermanagers_init = False
+page_root = None
+semantic_info=[]
+
+
+@app.route('/detect', methods=['GET'])
+def detect():
+    global html_detect, all_text
+    print("detect")
+    detect_money()
+    while True:
+        if time.time()-upload_time <= time_between_upload:
+            continue
+        else:
+            html = detect_html(all_text)
+            if html:
+                return {"type": "html", "html": str(html)}
+            else:
+                continue
+
+
+def init_describer():
+    print("loadmodel")
+    global relation_dict
+    with open('./static/data'+'/manager_structure.json', 'r', encoding='utf-8') as file:
+        describermanagers_str = json.load(file)
+        global describermanagers
+        for key, value in describermanagers_str.items():
+            value = json.loads(value)
+            print("loading", key)
+            if key == "Root Object;":
+                describermanagers[key] = NodeDescriberManager(
+                    "Root", None, "Root Object;")
+            if key.count(";") > 1:
+                p_last = key.split(";")[-2]
+                model_fa_id = key.replace(p_last+";", "")
+                describermanagers[key] = NodeDescriberManager(
+                    value["type"], describermanagers[model_fa_id], key)
+                describermanagers[model_fa_id].update_children(
+                    describermanagers[key])
+                tmp_positive_ref_nodes = []
+                tmp_negative_ref_nodes = []
+                tmp_positive_nodes = []
+                for node_info in value["positive_ref"]:
+                    with open('data/'+'/page' + str(node_info["page_id"]) + '.json', 'r')as fp:
+                        tmp_layout = json.loads(fp.read())
+                    tmp_page_instance = PageInstance()
+                    if isinstance(tmp_layout, list):
+                        tmp_layout = tmp_layout[0]
+                    tmp_page_instance.load_from_dict("", tmp_layout)
+                    tmp_page_root = tmp_page_instance.ui_root
+                    tmp_node = tmp_page_root.get_node_by_relative_id(
+                        node_info["index"])
+                    tmp_node.update_page_id(node_info["page_id"])
+                    tmp_positive_ref_nodes.append(
+                        (tmp_node.findBlockNode(), tmp_node))
+                for node_info in value["negative_ref"]:
+                    print("node_info", node_info)
+                    with open('data/'+'/page' + str(node_info["page_id"]) + '.json', 'r')as fp:
+                        tmp_layout = json.loads(fp.read())
+                    tmp_page_instance = PageInstance()
+                    if isinstance(tmp_layout, list):
+                        tmp_layout = tmp_layout[0]
+                    tmp_page_instance.load_from_dict("", tmp_layout)
+                    tmp_page_root = tmp_page_instance.ui_root
+                    print(node_info["page_id"],
+                          tmp_page_root.generate_all_text())
+                    tmp_node = tmp_page_root.get_node_by_relative_id(
+                        node_info["index"])
+                    tmp_node.update_page_id(node_info["page_id"])
+                    tmp_negative_ref_nodes.append(
+                        (tmp_node.findBlockNode(), tmp_node))
+                for node_info in value["positive"]:
+                    with open('data/'+'/page' + str(node_info["page_id"]) + '.json', 'r')as fp:
+                        tmp_layout = json.loads(fp.read())
+                    tmp_page_instance = PageInstance()
+                    if isinstance(tmp_layout, list):
+                        tmp_layout = tmp_layout[0]
+                    tmp_page_instance.load_from_dict("", tmp_layout)
+                    tmp_page_root = tmp_page_instance.ui_root
+                    tmp_node = tmp_page_root.get_node_by_relative_id(
+                        node_info["index"])
+                    tmp_node.update_page_id(node_info["page_id"])
+                    tmp_positive_nodes.append(
+                        (tmp_node.findBlockNode(), tmp_node))
+                describermanagers[key].update(
+                    tmp_positive_ref_nodes, tmp_negative_ref_nodes, tmp_positive_nodes)
+    global describermanagers_init
+    describermanagers_init = True
+    # with open('./static/data/'+'/relation_dict.json', 'r', encoding='utf-8') as file:
+    #     relation_dict = json.loads(file.read())
+    # with open('./static/data/'+'/model_structure.json', 'r', encoding='utf-8') as file:
+    #     model_data = json.loads(file.read())
+    #     print(model_data)
+    #     return model_data
 
 
 @app.route('/demo', methods=['POST'])
 def demo():
+    global html_detect
+    html_detect = True
     global cnt
     cnt += 1
     global layout,  screenshot, imgdata, img_np, page_instance, pageindex, page_id_now, page_root, semantic_nodes, semantic_info
@@ -86,23 +185,29 @@ def demo():
     img_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
     result_json = {"state": "ok"}
-    fp = open('runtime_data/imagedata' + str(cnt) +
+    fp = open('static/data/imagedata' + str(cnt) +
               ".jpg", 'wb')  # 'wb'表示写二进制文件
     fp.write(imgdata)
     fp.close()
-    fp = open('runtime_data/page' + str(cnt) + ".json", 'w')
+    fp = open('static/data/page' + str(cnt) + ".json", 'w')
     fp.write(layout)
     fp.close()
     page_instance = PageInstance()
     page_instance.load_from_dict("", json.loads(layout))
     print("page loaded")
     page_root = page_instance.ui_root
+    global all_text,semantic_info
+    all_text = page_root.generate_all_text()
+    print("all_text", all_text)
     semantic_nodes = page_root.get_all_semantic_nodes()
     semantic_info = [node.generate_all_semantic_info()
-                     for node in semantic_nodes]
+                     for node in semantic_nodes["nodes"]]
     print("semantic info,", semantic_info)
     print("semantic_nodes", len(semantic_nodes))
     end_time = time.time()
+    global upload_time  # 上一次上传的时间
+    upload_time = end_time  # 记录本次上传的时间
+    print("upload_time", upload_time)
     print("time:", end_time-start_time, flush=True)
     result_json["time"] = (end_time-start_time)*1000
     return json.dumps(result_json)
@@ -115,9 +220,25 @@ def detect_html(str):
     # 匹配网址
     url = re.findall(reg, str)
     if url:
+        print("url:", url[0])
         return url[0]
     else:
-        return ""
+        return None
+
+
+def detect_money():
+    global describermanagers_init
+    if not describermanagers_init:
+        init_describer()
+        return None
+    else:
+        global describermanagers, page_root
+        count = 0
+        for key, value in describermanagers.items():
+            if value.find_node(page_root):
+                count += 1
+        print(count)
+        return count
 
 
 def detect_agenda(str):
@@ -191,27 +312,32 @@ def detect_agenda(str):
         return True
     return False
 
+# def detect_money():
+
 
 @app.route("/", methods=("GET", "POST"))
 def index():
-    global i, seq, ins_seq, seq_semantic_info, prompt_now, intention
+    global i, seq, ins_seq,  prompt_now, intention
     print(request.form)
+    global semantic_info
     if request.method == "POST" and "intention" in request.form:
-
+        
         intention = request.form["intention"]
         initialize_prompt(intention)
         print(prompt_now)
-        img_id = seq[i]
-        seq_semantic_info[i] = str(seq_semantic_info[i])
-        semantic_info = seq_semantic_info[i][2:-2].replace(r"}, {", "\n")
-        return redirect(url_for("index", img_id=img_id, semantic_info=semantic_info))
-    if request.method == "POST" and "next" in request.form:
-        print(generate_prompt(semantic_info=str(seq_semantic_info[i])))
+        print(semantic_info)
+    elif request.method == "POST" and "next" in request.form:
+        
+        img_id = str(cnt)
+        print(semantic_info)
+        semantic_info = str(semantic_info)[2:-2].replace(r"}, {", "\n")
+        print(semantic_info)
+        print(generate_prompt(semantic_info=str(semantic_info)))
         response = openai.Completion.create(
             model="text-davinci-002",
             prompt=prompt_now,
             temperature=0,
-            max_tokens=50,
+            max_tokens=20,
         )
         print(response)
         result = response.choices[0].text
@@ -219,24 +345,21 @@ def index():
         # result=re.sub(r'[^a-zA-Z0-9,.?! ]', '', result)
         # #将每一句话后接上一个换行符
         # result=re.sub(r'([.?!])', r'\1\n', result)
-        print(result)
+        
         # 正则匹配到类似于"3,"的字符串，数字加一个逗号，做一个split
-        result = result.split('The page now has')[0]
-        if "\n" in result:
-            result = result.split("\n")[-2]
-        img_id = seq[i]
-        # 把seq_semantic_info的每一项都转化成一个长字符串
-        seq_semantic_info[i] = str(seq_semantic_info[i])
-        semantic_info = seq_semantic_info[i][2:-2].replace(r"}, {", "\n")
-        i += 1
+        if "The page now has" in result:
+            result = result.split('The page now has')[0]
+        # if "\n" in result:
+        #     result = result.split("\n")[-2]
+        print(result)
         prompt_now = prompt_now+result+"\n"
 
-        return redirect(url_for("index", result=result, img_id=img_id, semantic_info=semantic_info))
+        return render_template("index.html", result=result, img_id=img_id, semantic_info=semantic_info)
 
-    result = request.args.get("result")
-    img_id = request.args.get("img_id")
-    semantic_info = request.args.get("semantic_info")
-    return render_template("index.html", result=result, img_id=img_id, semantic_info=semantic_info)
+    # result = request.args.get("result")
+    # img_id = request.args.get("img_id")
+    # semantic_info = request.args.get("semantic_info")
+    return render_template("index.html")
 
 
 def generate_prompt(semantic_info):
@@ -246,7 +369,6 @@ def generate_prompt(semantic_info):
         str(i+1), semantic_info
     )
     return prompt_now
-
 
 
 def initialize_prompt(init):
@@ -264,62 +386,5 @@ A user's intention is to "{}".
     )
 
 
-@socketio.on('message')
-def handle_message(message):
-    print('received message: ' + message)
-    socketio.emit('my response', {'data': 'got it!'})
-
-
-@socketio.on('connect')
-def test_connect():
-    print("connect")
-    socketio.emit('my response', {'data': 'Connected'})
-
-@socketio.on('disconnect')
-def test_disconnect():
-    print('Client disconnected')
-    
-@socketio.on('/echo')
-def echo_socket(ws):
-    print("connection start")
-    while not ws.closed:
-        msg = ws.receive() # 同步阻塞
-        print(msg)
-        ws.send("can you hear me?")  # 发送数据
-        time.sleep(1)
-
-
-
-
-
-# @sockets.route('/echo',methods=["GET","POST"])
-# def echo_socket(ws):
-#     print("hello")
-#     while not ws.closed:
-#         msg = ws.receive()
-#         print(msg)
-#         now = datetime.datetime.now().isoformat()
-#         ws.send(now)  #发送数据
-
-@app.route('/test')
-def test():
-    print("hello")
-
-
-# if __name__ == "__main__":
-#     from gevent import pywsgi
-#     from geventwebsocket.handler import WebSocketHandler
-#     server = pywsgi.WSGIServer(('0.0.0.0', 5000), app, handler_class=WebSocketHandler)
-#     print('server start')
-#     server.serve_forever()
-
-
 if __name__ == "__main__":
-    # #获取输入
-    # test = input("请输入：")
-    # print(detect_agenda(test))
-    print("server started1")
-    socketio.run(app, host='0.0.0.0', port=5000)
-    print("server started2")
-    # app.run(host='0.0.0.0', port=5000)
-    print("server started3")
+    app.run(host='0.0.0.0', port=5000)

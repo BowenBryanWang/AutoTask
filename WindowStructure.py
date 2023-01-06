@@ -90,10 +90,10 @@ class UINode:
         self.isVisible = (self.bound[0] < self.bound[2]
                           and self.bound[1] < self.bound[3])
 
-        # self.absolute_id = self.node_class if self.parent is None else self.parent.absolute_id + '|%d;%s' % (
-        #     self.index, self.node_class)  # type: str
+        self.absolute_id = self.node_class if self.parent is None else self.parent.absolute_id + '|%d;%s' % (
+            self.index, self.node_class)  # type: str
 
-        self.absolute_id = None  # type: str
+        # self.absolute_id = None  # type: str
         # type: str # 需要在知道的 dynamic entrance 之后才能确定 在原来基础上，不对动态区域子节点 index 进行要求
         self.absolute_dynamic_id = None
 
@@ -222,7 +222,7 @@ class UINode:
             #找到all中width和height的众数比例
             widthModeRatio = all["width"].count(max(set(all["width"]), key=all["width"].count))/len(all["width"])
             heightModeRatio = all["height"].count(max(set(all["height"]), key=all["height"].count))/len(all["height"])
-            print("area:",widthModeRatio,heightModeRatio)
+            # print("area:",widthModeRatio,heightModeRatio)
             if widthModeRatio*heightModeRatio>0.8:
                 return True
         return False
@@ -230,27 +230,27 @@ class UINode:
             prob = 1
             #如果节点的面积大于页面面积的0.4，给予惩罚
             if self.area >1080*2310*0.4:
-                print("area too large")
+                # print("area too large")
                 prob *= 0.3
             if self.executable:
-                print("executable")
+                # print("executable")
                 prob *= 1.5
             else :
-                print("not executable")
+                # print("not executable")
                 prob *= 0.2
             if self.has_semantic_info():
-                print("has semantic info")
+                # print("has semantic info")
                 prob *= 1.5
             else:
-                print("no semantic info")
+                # print("no semantic info")
                 prob *= 0.5
             if self.has_similar_children():
-                print("has similar children")
+                # print("has similar children")
                 prob *= 0.2
             if self.editable:
-                print("editable")
+                # print("editable")
                 prob *= 2
-            print(prob)
+            # print(prob)
             return prob
     def get_all_semantic_nodes(self):
         #此函数的作用是获取当前页面中所有的有语义的节点
@@ -312,9 +312,9 @@ class UINode:
         crtNode = self
         p = None
         while (crtNode != None) and (crtNode.parent != None):
-            if (crtNode.parent.is_dynamic_entrance):
-                p = crtNode
-                break
+            # if crtNode.parent and crtNode.parent.is_dynamic_entrance:
+            #     p = crtNode
+            #     break
             crtNode = crtNode.parent
         if p is not None:
             self.blockRoot = p
@@ -1634,12 +1634,12 @@ class PageInstance:
         self.absolute_dynamic_id_2_node[crt_node.absolute_dynamic_id].append(
             crt_node)
 
-        if len(crt_node.actions_to_act) > 0:
-            self.node_not_tried_to_action.append(crt_node)
+        # if len(crt_node.actions_to_act) > 0:
+        #     self.node_not_tried_to_action.append(crt_node)
 
-        for index, child_node in enumerate(crt_node.children):
-            self.generate_dynamic_attr(
-                child_node, dynamic_entrance_store_list, has_encounter_entrance or crt_node.is_dynamic_entrance)
+        # for index, child_node in enumerate(crt_node.children):
+        #     self.generate_dynamic_attr(
+        #         child_node, dynamic_entrance_store_list, has_encounter_entrance or crt_node.is_dynamic_entrance)
 
     def add_new_last_action(self, new_last_into_action):
         # type: (Action) -> None

@@ -94,13 +94,13 @@ def get_global_ui_diff(page_instance1, page_instance2):
 
 
 def is_static_empty(node):
-    if not node.is_in_static_region:
-        return True
-    if len(node.text) > 0 or (len(node.children) == 0 and len(node.content_desc) > 0):  # or node.clickable
-        return False
-    for child in node.children:
-        if not is_static_empty(child):
-            return False
+    # if not node.is_in_static_region:
+    #     return True
+    # if len(node.text) > 0 or (len(node.children) == 0 and len(node.content_desc) > 0):  # or node.clickable
+    #     return False
+    # for child in node.children:
+    #     if not is_static_empty(child):
+    #         return False
     return True
 
 
