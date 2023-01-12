@@ -21,7 +21,7 @@ import datetime
 
 app = Flask(__name__)
 
-openai.api_key = "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"
+openai.api_key = "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"
 layout = None
 screenshot = None
 imgdata = None
