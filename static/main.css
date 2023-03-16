@@ -118,3 +118,19 @@ input[type="submit"] {
   z-index:2;
   margin-bottom: 10px;
 }
+.chart {
+  width: 400px;
+  height: 30px;
+  background-color: #f2f2f2;
+}
+.progress {
+  height: 100%;
+  background-color: #4CAF50;
+  width: 50%;
+}
+.label {
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  line-height: 30px;
+}

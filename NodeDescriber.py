@@ -84,7 +84,7 @@ class SpecialNodeDescriber(NodeDescriber):
         while stack:
             node = stack.pop()
             for positive_node_pair in self.positive_ref_nodes:
-                dis = self.calNodeDistanceToDescriber(
+                dis = self.NodeDistanceToDescriber(
                     node, positive_node_pair[1])
                 if dis <= minDis:
                     minDis = dis
@@ -96,6 +96,19 @@ class SpecialNodeDescriber(NodeDescriber):
             return minDisNode
         else:
             return None
+
+    def calculate(self,node):
+        if len(self.positive_ref_nodes) == 0:
+            return None
+        minDis = 99.0
+        for positive_node_pair in self.positive_ref_nodes:
+            dis = self.calNodeDistanceToDescriber(
+                node, positive_node_pair[1])
+            print(dis)
+            if dis <= minDis:
+                minDis = dis
+        print(minDis)
+        return minDis
 
     def calNodeDistanceToDescriber(self, node: UINode, positive_node: UINode):
         if node == None:

@@ -36,8 +36,9 @@
             placeholder="Enter an intention"
             required
           />
-          <input type="submit" value="Generate" style="margin-bottom: 10px";/>
+          <input type="submit" value="Generate" style="margin-bottom: 10px" ; />
         </form>
+
         {% if result %}
         <h4>Predicted operation sequence</h4>
         <!-- 根据result的换行符分割 -->
@@ -48,8 +49,41 @@
         {% endfor %} {% endif %}
         <!-- 建立一个button，每次点击也会发请求，但是不需要输入框，样式为submit -->
         <form action="/" method="post">
-          <input type="submit" value="Next Step" name="next" style="margin-top: 10px;"/>
+          <input
+            type="submit"
+            value="Next Step"
+            name="next"
+            style="margin-top: 10px"
+          />
         </form>
+        <form action="/" method="post">
+          <input
+            type="submit"
+            value="Reset"
+            name="reset"
+            style="margin-top: 10px"
+          />
+        </form>
+      </div>
+      <div
+        style="
+          margin-left: 20px;
+          margin-right: 20px;
+          margin-top: 20px;
+          margin-bottom: 20px;
+        "
+      >
+        <canvas id="myChart"></canvas>
+      </div>
+      <div
+        style="
+          margin-left: 20px;
+          margin-right: 20px;
+          margin-top: 20px;
+          margin-bottom: 20px;
+        "
+      >
+        <canvas id="myLineChart"></canvas>
       </div>
     </div>
     <!-- 右侧为输出框 -->
@@ -105,8 +139,49 @@
           <h5 class="result">{{ line }}</h5>
           {% endfor %}
         </div>
-         {% endif %}
+        {% endif %}
       </div>
     </div>
   </div>
 </body>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  const ctx = document.getElementById("myChart");
+  const chartData = JSON.parse({{ chart_data|tojson|safe }});
+  new Chart(ctx, {
+    type: "doughnut",
+    data: chartData,
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: "top",
+        },
+        title: {
+          display: true,
+          text: "Probabilities of each operation",
+        },
+      },
+    },
+  });
+</script>
+<script>
+  const ctx2 = document.getElementById("myLineChart");
+  const lineData = JSON.parse({{ line_data|tojson|safe }});
+  new Chart(ctx2, {
+    type: "line",
+    data: lineData,
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: (ctx2) =>
+            "Point Style: ",
+        },
+      },
+    },
+  });
+</script>

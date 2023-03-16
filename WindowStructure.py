@@ -45,36 +45,46 @@ class UINode:
             self.content_desc = crt_layout['@content-desc']  # type: str
         else:
             self.content_desc = ""
-        self.checkable = (crt_layout['@checkable'] == 'true') or (crt_layout['@checkable'] == True)
-        self.checked = (crt_layout['@checked'] == 'true') or (crt_layout['@checked'] == True)
-        self.clickable = (crt_layout['@clickable'] == 'true') or (crt_layout['@clickable'] == True)
+        self.checkable = (crt_layout['@checkable'] ==
+                          'true') or (crt_layout['@checkable'] == True)
+        self.checked = (crt_layout['@checked'] ==
+                        'true') or (crt_layout['@checked'] == True)
+        self.clickable = (crt_layout['@clickable'] ==
+                          'true') or (crt_layout['@clickable'] == True)
         if '@enabled' in crt_layout:
-            self.enabled = (crt_layout['@enabled'] == 'true') or (crt_layout['@enabled'] == True)
+            self.enabled = (crt_layout['@enabled'] ==
+                            'true') or (crt_layout['@enabled'] == True)
         else:
             self.enabled = True
         if '@focusable' in crt_layout:
-            self.focusable = (crt_layout['@focusable'] == 'true') or (crt_layout['@focusable'] == True)
+            self.focusable = (
+                crt_layout['@focusable'] == 'true') or (crt_layout['@focusable'] == True)
         else:
             self.focusable = True
         if '@focused' in crt_layout:
-            self.focused = (crt_layout['@focused'] == 'true') or (crt_layout['@focused'] == True)
+            self.focused = (crt_layout['@focused'] ==
+                            'true') or (crt_layout['@focused'] == True)
         else:
             self.focused = False
         if '@scrollable' in crt_layout:
-            self.scrollable = (crt_layout['@scrollable'] == 'true') or (crt_layout['@scrollable'] == True)
+            self.scrollable = (
+                crt_layout['@scrollable'] == 'true') or (crt_layout['@scrollable'] == True)
         else:
             self.scrollable = False
-        self.long_clickable = (crt_layout['@long-clickable'] == 'true') or (crt_layout['@long-clickable'] == True)
+        self.long_clickable = (
+            crt_layout['@long-clickable'] == 'true') or (crt_layout['@long-clickable'] == True)
         # self.password = (crt_layout['@password'] == 'true')
         if '@selected' in crt_layout:
-            self.selected = (crt_layout['@selected'] == 'true') or (crt_layout['@selected'] == True)
+            self.selected = (
+                crt_layout['@selected'] == 'true') or (crt_layout['@selected'] == True)
         else:
             self.selected = False
         if '@nodeid' in crt_layout:
             self.ori_node_id = crt_layout['@nodeid']
         else:
             self.ori_node_id = None
-        self.editable = (crt_layout['@editable'] == 'true') or (crt_layout['@editable'] == True)
+        self.editable = (crt_layout['@editable'] ==
+                         'true') or (crt_layout['@editable'] == True)
         # self.accessibilityFocused = (crt_layout['@accessibilityFocused'] == 'true')
         # self.dismissable = (crt_layout['@dismissable'] == 'true')  # todo 这个属性如何利用
         self.executable = self.clickable | self.long_clickable | self.editable | self.scrollable
@@ -84,8 +94,9 @@ class UINode:
             ',')]  # type: List[int]  # 左上右下两个点四个坐标
         self.width = self.bound[2] - self.bound[0]
         self.height = self.bound[3] - self.bound[1]
-        self.center = [(self.bound[0] + self.bound[2]) / 2, (self.bound[1] + self.bound[3]) / 2]
-        #面积
+        self.center = [(self.bound[0] + self.bound[2]) / 2,
+                       (self.bound[1] + self.bound[3]) / 2]
+        # 面积
         self.area = self.width * self.height
         self.isVisible = (self.bound[0] < self.bound[2]
                           and self.bound[1] < self.bound[3])
@@ -170,9 +181,10 @@ class UINode:
         print "instance index: ",self.page_instance.index
         print "state index: ",self.page_instance.page_state.index
         print "page index: ",self.page_instance.page_instance.page.index'''
+
     def has_semantic_info(self):
-        #判断该节点以及它的所有子节点是否有语义信息
-        #语义信息指的是一个节点有没有text或者description或者content-desc
+        # 判断该节点以及它的所有子节点是否有语义信息
+        # 语义信息指的是一个节点有没有text或者description或者content-desc
         def hasSemanticInfo(self):
             if self.text != '' or self.content_desc != '':
                 return True
@@ -181,7 +193,7 @@ class UINode:
         if hasSemanticInfo(self):
             return True
         else:
-            #遍历所有后代
+            # 遍历所有后代
             all_children = [self]
             while all_children:
                 current_node = all_children.pop()
@@ -190,90 +202,120 @@ class UINode:
                 else:
                     all_children.extend(current_node.children)
             return False
+
     def generate_all_semantic_info(self):
-        #获得该节点和它的所有后代，所有的语义信息，以dict形式返回
-        #{"text":[],"content-desc":[],"description":[]}
-        res={"text":[],"content-desc":[]}
+        # 获得该节点和它的所有后代，所有的语义信息，以dict形式返回
+        # {"text":[],"content-desc":[],"description":[]}
+        res = {"text": [], "content-desc": [], "class": [], "Major_text": []}
+
         def generateAllSemanticInfo(self):
             semanticInfo = {}
             if self.text != '':
                 semanticInfo['text'] = [self.text]
             if self.content_desc != '':
                 semanticInfo['content-desc'] = [self.content_desc]
+            if self.node_class != '':
+                semanticInfo['class'] = [self.node_class.split('.')[-1]]
             return semanticInfo
         stack = [self]
         while stack:
             current_node = stack.pop()
-            stack.extend(current_node.children)
+            if current_node.children != [] and current_node.children is not None:
+                stack.extend(current_node.children[::-1])
             tmp_info = generateAllSemanticInfo(current_node)
             if "text" in tmp_info:
+                if res["Major_text"] == []:
+                    res["Major_text"] = tmp_info["text"]
                 res["text"].extend(tmp_info["text"])
             if "content-desc" in tmp_info:
                 res["content-desc"].extend(tmp_info["content-desc"])
+            if "class" in tmp_info:
+                if res["class"] == []:
+                    res["class"] = tmp_info["class"]
+        # 从text中去除Major_text
+
         return res
+
     def has_similar_children(self):
-        #如果一个节点的子节点中有半数以上的子节点的宽度和高度都在一个范围内，那么就认为这个节点有相似的子节点
-        #这个函数用于判断一个节点是否有相似的子节点
-        all={"width":[],"height":[]}
+        # 如果一个节点的子节点中有半数以上的子节点的宽度和高度都在一个范围内，那么就认为这个节点有相似的子节点
+        # 这个函数用于判断一个节点是否有相似的子节点
+        all = {"width": [], "height": []}
         if self.children != [] and len(self.children) > 1:
             for child in self.children:
                 all["width"].append(child.width)
                 all["height"].append(child.height)
-            #找到all中width和height的众数比例
-            widthModeRatio = all["width"].count(max(set(all["width"]), key=all["width"].count))/len(all["width"])
-            heightModeRatio = all["height"].count(max(set(all["height"]), key=all["height"].count))/len(all["height"])
+            # 找到all中width和height的众数比例
+            widthModeRatio = all["width"].count(
+                max(set(all["width"]), key=all["width"].count))/len(all["width"])
+            heightModeRatio = all["height"].count(
+                max(set(all["height"]), key=all["height"].count))/len(all["height"])
             # print("area:",widthModeRatio,heightModeRatio)
-            if widthModeRatio*heightModeRatio>0.8:
+            if widthModeRatio*heightModeRatio > 0.8:
                 return True
         return False
+
     def is_selected(self):
-            prob = 1
-            #如果节点的面积大于页面面积的0.4，给予惩罚
-            if self.area >1080*2310*0.4:
-                # print("area too large")
-                prob *= 0.3
-            if self.executable:
-                # print("executable")
-                prob *= 1.5
-            else :
-                # print("not executable")
-                prob *= 0.2
-            if self.has_semantic_info():
-                # print("has semantic info")
-                prob *= 1.5
-            else:
-                # print("no semantic info")
-                prob *= 0.5
-            if self.has_similar_children():
-                # print("has similar children")
-                prob *= 0.2
-            if self.editable:
-                # print("editable")
-                prob *= 2
-            # print(prob)
-            return prob
+        prob = 1
+        # 如果节点的面积大于页面面积的0.4，给予惩罚
+        if self.area > 1080*2310*0.4:
+            # print("area too large")
+            prob *= 0.3
+        if self.clickable:
+            # print("clickable")
+            prob *= 1
+        else:
+            # print("not clickable")
+            prob *= 0
+        if self.executable:
+            # print("executable")
+            prob *= 1.5
+        else:
+            # print("not executable")
+            prob *= 0.1
+        if self.has_semantic_info():
+            # print("has semantic info")
+            prob *= 1.5
+        else:
+            # print("no semantic info")
+            prob *= 0.5
+        if self.has_similar_children():
+            # print("has similar children")
+            prob *= 0.2
+        if self.editable:
+            # print("editable")
+            prob *= 2
+        # print(prob)
+        return prob
+
     def get_all_semantic_nodes(self):
-        #此函数的作用是获取当前页面中所有的有语义的节点
-        #从根节点开始
-        
-        stack=[self]
-        res={"nodes":[]}
+        # 此函数的作用是获取当前页面中所有的有语义的节点
+        # 从根节点开始
+
+        stack = [self]
+        res = {"nodes": []}
         while stack:
-            node=stack.pop()
-            if node.is_selected()>=0.8:
+            node = stack.pop()
+            if node.is_selected() >= 0.8:
                 res["nodes"].append(node)
             for child in node.children:
                 stack.append(child)
+        # 对res进行剪枝，规则为：若res中一节点是另一节点的祖先，则删除祖先节点
+        # print("before pruning:",len(res["nodes"]))
+        for i in range(len(res["nodes"])):
+            for j in range(len(res["nodes"])):
+                if i != j and res["nodes"][i].is_ancestor(res["nodes"][j]):
+                    res["nodes"][j] = None
+        res["nodes"] = [node for node in res["nodes"] if node is not None]
         return res
 
-    def common_ancestor(self, other1,other2):
+    def common_ancestor(self, other1, other2):
         if other1 is None or other2 is None:
             return None
         if other1.depth == other2.depth:
             if other1 == other2:
                 return other1
             else:
-                return self.common_ancestor(other1.parent,other2)
+                return self.common_ancestor(other1.parent, other2)
         if other1.depth > other2.depth:
             return self.common_ancestor(other1.parent, other2)
         else:
@@ -321,8 +363,9 @@ class UINode:
         else:
             self.blockRoot = self
         if self.blockRoot == None:
-            print("??",p, self)
+            print("??", p, self)
         return self.blockRoot
+
     def draw_the_tree(self, depth, file_name, screen_path):
         for i in range(depth):
             print("     ", end='')
@@ -965,15 +1008,15 @@ class UINode:
             if node.bound[0] <= x <= node.bound[2] and node.bound[1] <= y <= node.bound[3]:
                 res.append(node)
         return res
+
     def get_all_nodes_after(self):
         # type: () -> List[UINode]
-        #获得该节点的所有子孙节点
+        # 获得该节点的所有子孙节点
         res = []
         for child in self.children:
             res += child.get_all_nodes_after()
         res.append(self)
         return res
-
 
     def has_node_satisfy(self, cond):
         # type: (Callable[[UINode], bool]) -> bool
@@ -1180,7 +1223,7 @@ class UINode:
                     elif i == l1-1 and j == l2-1:
                         return 0
                 F[i][j] = max(F[i][j], tmp)
-        print(str(len(F)),str(len(F[0])),str(l1),str(l2))
+        print(str(len(F)), str(len(F[0])), str(l1), str(l2))
         matched_ratio = 2.0*F[l1-1][l2-1]/(l1+l2)
         return matched_ratio
 
@@ -1233,9 +1276,11 @@ class UINode:
 
     def cal_left(self, type):
         if type == 0:
-            left_ratio = float(self.bound[0])*1.0 / float(self.page_instance.ui_root.width())
+            left_ratio = float(self.bound[0])*1.0 / \
+                float(self.page_instance.ui_root.width())
         else:
-            left_ratio = float(self.bound[0])*1.0 / float(self.findBlockNode().width())
+            left_ratio = float(self.bound[0])*1.0 / \
+                float(self.findBlockNode().width())
         return left_ratio
 
     def cal_left_diff(self, node, type):
@@ -1243,16 +1288,20 @@ class UINode:
         left_diff = float(node.bound[0]-self.bound[0])*1.0
         relative_left_diff = 0
         if type == 0:
-            relative_left_diff = left_diff / float(self.page_instance.ui_root.width())
+            relative_left_diff = left_diff / \
+                float(self.page_instance.ui_root.width())
         else:
-            relative_left_diff = left_diff / float(self.findBlockNode().width())
+            relative_left_diff = left_diff / \
+                float(self.findBlockNode().width())
         return relative_left_diff
 
     def cal_right(self, type):
         if type == 0:
-            right_ratio = float(self.bound[2])*1.0 / float(self.page_instance.ui_root.width())
+            right_ratio = float(self.bound[2])*1.0 / \
+                float(self.page_instance.ui_root.width())
         else:
-            right_ratio = float(self.bound[2])*1.0 / float(self.findBlockNode().width())
+            right_ratio = float(self.bound[2])*1.0 / \
+                float(self.findBlockNode().width())
         return right_ratio
 
     def cal_right_diff(self, node, type):
@@ -1260,16 +1309,20 @@ class UINode:
         right_diff = float(node.bound[2]-self.bound[2])*1.0
         relative_right_diff = 0
         if type == 0:
-            relative_right_diff = right_diff / float(self.page_instance.ui_root.width())
+            relative_right_diff = right_diff / \
+                float(self.page_instance.ui_root.width())
         else:
-            relative_right_diff = right_diff / float(self.findBlockNode().width())
+            relative_right_diff = right_diff / \
+                float(self.findBlockNode().width())
         return relative_right_diff
 
     def cal_top(self, type):
         if type == 0:
-            top_ratio = float(self.bound[1])*1.0 / float(self.page_instance.ui_root.height())
+            top_ratio = float(self.bound[1])*1.0 / \
+                float(self.page_instance.ui_root.height())
         else:
-            top_ratio = float(self.bound[1])*1.0 / float(self.findBlockNode().height())
+            top_ratio = float(self.bound[1])*1.0 / \
+                float(self.findBlockNode().height())
         return top_ratio
 
     def cal_top_diff(self, node, type):
@@ -1277,16 +1330,19 @@ class UINode:
         top_diff = float(node.bound[1]-self.bound[1])*1.0
         relative_top_diff = 0
         if type == 0:
-            relative_top_diff = top_diff / float(self.page_instance.ui_root.height())
+            relative_top_diff = top_diff / \
+                float(self.page_instance.ui_root.height())
         else:
             relative_top_diff = top_diff / float(self.findBlockNode().height())
         return relative_top_diff
 
     def cal_bottom(self, type):
         if type == 0:
-            bottom_ratio = float(self.bound[3])*1.0 / float(self.page_instance.ui_root.height())
+            bottom_ratio = float(
+                self.bound[3])*1.0 / float(self.page_instance.ui_root.height())
         else:
-            bottom_ratio = float(self.bound[3])*1.0 / float(self.findBlockNode().height())
+            bottom_ratio = float(
+                self.bound[3])*1.0 / float(self.findBlockNode().height())
         return bottom_ratio
 
     def cal_bottom_diff(self, node, type):
@@ -1294,41 +1350,53 @@ class UINode:
         bottom_diff = float(node.bound[3]-self.bound[3])*1.0
         relative_bottom_diff = 0
         if type == 0:
-            relative_bottom_diff = bottom_diff / float(self.page_instance.ui_root.height())
+            relative_bottom_diff = bottom_diff / \
+                float(self.page_instance.ui_root.height())
         else:
-            relative_bottom_diff = bottom_diff / float(self.findBlockNode().height())
+            relative_bottom_diff = bottom_diff / \
+                float(self.findBlockNode().height())
         return relative_bottom_diff
 
     def cal_mid_x(self, type):
         if type == 0:
-            mid_x_ratio = float(self.bound[0]+self.bound[2])*1.0 / float(self.page_instance.ui_root.width())
+            mid_x_ratio = float(
+                self.bound[0]+self.bound[2])*1.0 / float(self.page_instance.ui_root.width())
         else:
-            mid_x_ratio = float(self.bound[0]+self.bound[2])*1.0 / float(self.findBlockNode().width())
+            mid_x_ratio = float(
+                self.bound[0]+self.bound[2])*1.0 / float(self.findBlockNode().width())
         return mid_x_ratio
 
     def cal_mid_x_diff(self, node, type):
-        mid_x_diff = float(node.bound[0]+node.bound[2]-self.bound[0]-self.bound[2]) * 0.5
+        mid_x_diff = float(
+            node.bound[0]+node.bound[2]-self.bound[0]-self.bound[2]) * 0.5
         relative_mid_x_diff = 0
         if type == 0:
-            relative_mid_x_diff = mid_x_diff / float(self.page_instance.ui_root.width())
+            relative_mid_x_diff = mid_x_diff / \
+                float(self.page_instance.ui_root.width())
         else:
-            relative_mid_x_diff = mid_x_diff / float(self.findBlockNode().width())
+            relative_mid_x_diff = mid_x_diff / \
+                float(self.findBlockNode().width())
         return relative_mid_x_diff
 
     def cal_mid_y(self, type):
         if type == 0:
-            mid_y_ratio = float(self.bound[1]+self.bound[3])*1.0 / float(self.page_instance.ui_root.height())
+            mid_y_ratio = float(
+                self.bound[1]+self.bound[3])*1.0 / float(self.page_instance.ui_root.height())
         else:
-            mid_y_ratio = float(self.bound[1]+self.bound[3])*1.0 / float(self.findBlockNode().height())
+            mid_y_ratio = float(
+                self.bound[1]+self.bound[3])*1.0 / float(self.findBlockNode().height())
         return mid_y_ratio
 
     def cal_mid_y_diff(self, node, type):
-        mid_y_diff = float(node.bound[1]+node.bound[3]-self.bound[1]-self.bound[3]) * 0.5
+        mid_y_diff = float(
+            node.bound[1]+node.bound[3]-self.bound[1]-self.bound[3]) * 0.5
         relative_mid_y_diff = 0
         if type == 0:
-            relative_mid_y_diff = mid_y_diff / float(self.page_instance.ui_root.height())
+            relative_mid_y_diff = mid_y_diff / \
+                float(self.page_instance.ui_root.height())
         else:
-            relative_mid_y_diff = mid_y_diff / float(self.findBlockNode().height())
+            relative_mid_y_diff = mid_y_diff / \
+                float(self.findBlockNode().height())
         return relative_mid_y_diff
 
     def get_all_leaf_id(self):
@@ -1707,7 +1775,7 @@ class PageInstance:
     MAX_STEP_NUM = 10
 
     def generate_jump_path_to_target(self, target_instance, target_node, used_jump_edge):
-        
+
         #         # 返回值的意义是  是不是成功地找到路径 所找到的最短的路径
 
         # 使用深度优先搜索的方式确定具体的跳转路径
@@ -2323,7 +2391,7 @@ class Application:
         return True, new_page_instance
 
     def get_page_state_belong_to(self, instance):
-        
+
         if instance is None:
             return None
 

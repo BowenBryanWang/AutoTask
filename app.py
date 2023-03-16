@@ -1,3 +1,13 @@
+from openai.embeddings_utils import (
+    get_embedding,
+    cosine_similarity,
+    distances_from_embeddings,
+    tsne_components_from_embeddings,
+    chart_from_components,
+    indices_of_nearest_neighbors_from_distances,
+)
+import pandas as pd
+import pickle
 import os
 
 import openai
@@ -21,51 +31,18 @@ import datetime
 
 app = Flask(__name__)
 
-openai.api_key = "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"
+openai.api_key = "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"
 layout = None
 screenshot = None
 imgdata = None
 cnt = 0
 semantic_nodes = []
 describermanagers = {}
-seq = ["8", "50", "141", "146", "167"]
-seq_semantic_info = [[
-    {"text": ["微信(20)"], "content-desc": ["更多功能按钮", "搜索"], "type":"标题"},
-    {"text": [], "content-desc": ["更多功能按钮"], "type":"按钮"},
-    {"text": [], "content-desc": ["搜索"], "type":"按钮"},
-    {"text": ["微信(20)"], "content-desc": [], "type":"文字"},
-    {"text": ["我"], "content-desc": [], "type":"按钮"},
-    {"text": ["发现"], "content-desc": [], "type":"按钮"},
-    {"text": ["通讯录"], "content-desc": [], "type":"按钮"},
-    {"text": ["微信", "20"], "content-desc": [], "type":"文字"},
-    {"text": ["安全登录提醒", "凌晨2:43", "微信团队", "1"],
-        "content-desc": [], "type":"消息"},
-    {
-        "text": ["微视频丨为谁辛苦为谁忙", "凌晨5:57", "腾讯新闻", "19"],
-        "content-desc": [], "type":"消息"
-    },
-    {"text": ["微信(20)", "小程序"], "content-desc": [], "type":"标题"}
-], [{'text': [], 'content-desc': ['发送视频动态']}, {'text': [], 'content-desc': ['发送视频动态']}, {'text': ['我'], 'content-desc': []}, {'text': ['发现'], 'content-desc': []}, {'text': ['通讯录'], 'content-desc': []}, {'text': ['微信'], 'content-desc': []}, {'text': ['设置'], 'content-desc': []}, {'text': [], 'content-desc': ['分隔栏']}, {'text': ['表情'], 'content-desc': []}, {'text': ['朋友圈'], 'content-desc': []}, {'text': ['收藏'], 'content-desc': []}, {'text': [], 'content-desc': ['分隔栏']}, {'text': ['支付'], 'content-desc': []}, {'text': [], 'content-desc': ['分隔栏']}, {'text': ['微信号：wxid_ziqw5ovbzej012', 'aa'], 'content-desc': []}, {'text': ['微信号：wxid_ziqw5ovbzej012', 'aa'], 'content-desc': []}, {'text': ['微信号：wxid_ziqw5ovbzej012'], 'content-desc': []}],
-    [{'text': ['退出'], 'content-desc': []}, {'text': [], 'content-desc': ['分隔栏']}, {'text': ['切换帐号'], 'content-desc': []}, {'text': [], 'content-desc': ['分隔栏']}, {'text': ['插件'], 'content-desc': []}, {'text': [], 'content-desc': ['分隔栏']}, {'text': ['帮助与反馈'], 'content-desc': []}, {'text': ['关于微信'], 'content-desc': []}, {'text': [], 'content-desc': ['分隔栏']},
-        {'text': ['通用'], 'content-desc': []}, {'text': ['隐私'], 'content-desc': []}, {'text': ['聊天'], 'content-desc': []}, {'text': ['勿扰模式'], 'content-desc': []}, {'text': ['新消息提醒'], 'content-desc': []}, {'text': [], 'content-desc': ['分隔栏']}, {'text': ['未开启', '青少年模式'], 'content-desc': []}, {'text': ['帐号与安全'], 'content-desc': []}, {'text': [], 'content-desc': ['返回']}],
-    [{'text': ['关闭后，视频号有新内容更新时，微信发现页不再出现红点提示。', '视频号'], 'content-desc': ['已开启']}, {'text': ['关闭后，有朋友发表朋友圈时，微信发现页不再出现红点提示。', '朋友圈'], 'content-desc': ['已开启']}, {'text': ['更新提醒'], 'content-desc': []}, {'text': ['收到语音和视频通话邀请的声音与振动', '语音和视频通话邀请'], 'content-desc': []},
-        {'text': ['声音与振动'], 'content-desc': []}, {'text': [], 'content-desc': ['分隔栏']}, {'text': ['接收语音和视频通话邀请通知'], 'content-desc': ['已开启']}, {'text': ['接收新消息通知'], 'content-desc': ['已关闭']}, {'text': ['通知开关'], 'content-desc': []}, {'text': [], 'content-desc': ['返回']}],
-    [
-    {"text": ["Default"], "content-desc": []},
-    {"text": ["Toys"], "content-desc": []},
-    {"text": ["Cupid"], "content-desc": []},
-    {"text": ["Celestial"], "content-desc": []},
-    {"text": ["Delight"], "content-desc": []},
-    {"text": ["Crystals"], "content-desc": []},
-    {"text": ["Fairy"], "content-desc": []},
-    {"text": ["Elegance"], "content-desc": []},
-]
-]
-ins_seq = ["Click 'Me'", "Click 'Settings'",
-           "Click'Message Notifications'", "Click 'Alert Sound'", "Click 'Toys'"]
+
 i = 0
 prompt_now = ""
 intention = ""
+intent_embedding = None
 html_detect = False
 agenda_detect = False
 upload_time = None
@@ -73,7 +50,52 @@ time_between_upload = 1
 all_text = ""  # 当前页面的所有文本
 describermanagers_init = False
 page_root = None
-semantic_info=[]
+semantic_info = []
+current_path = []
+current_path_str = "Begin"
+
+chart_data={
+        "labels": [],
+        "datasets": [
+            {
+                "data": [],
+                "backgroundColor": [
+                    "rgb(255, 99, 132)",
+                    "rgb(54, 162, 235)",
+                    "rgb(255, 205, 86)",
+                    "rgb(75, 192, 192)",
+                    "rgb(153, 102, 255)",
+                ],
+                "hoverOffset": 4,
+            },
+        ],
+    }
+EMBEDDING_MODEL = "text-embedding-ada-002"
+
+embedding_cache_path = "embeddings_cache.pkl"
+
+# load the cache if it exists, and save a copy to disk
+try:
+    embedding_cache = pd.read_pickle(embedding_cache_path)
+except FileNotFoundError:
+    embedding_cache = {}
+with open(embedding_cache_path, "wb") as embedding_cache_file:
+    pickle.dump(embedding_cache, embedding_cache_file)
+
+# define a function to retrieve embeddings from the cache if present, and otherwise request via the API
+
+
+def embedding_from_string(
+    string: str,
+    model: str = EMBEDDING_MODEL,
+    embedding_cache=embedding_cache
+) -> list:
+    """Return embedding of given string, using a cache to avoid recomputing."""
+    if (string, model) not in embedding_cache.keys():
+        embedding_cache[(string, model)] = get_embedding(string, model)
+        with open(embedding_cache_path, "wb") as embedding_cache_file:
+            pickle.dump(embedding_cache, embedding_cache_file)
+    return embedding_cache[(string, model)]
 
 
 @app.route('/detect', methods=['GET'])
@@ -115,7 +137,7 @@ def init_describer():
                 tmp_negative_ref_nodes = []
                 tmp_positive_nodes = []
                 for node_info in value["positive_ref"]:
-                    with open('data/'+'/page' + str(node_info["page_id"]) + '.json', 'r')as fp:
+                    with open('static/data/'+'page' + str(node_info["page_id"]) + '.json', 'r')as fp:
                         tmp_layout = json.loads(fp.read())
                     tmp_page_instance = PageInstance()
                     if isinstance(tmp_layout, list):
@@ -129,7 +151,7 @@ def init_describer():
                         (tmp_node.findBlockNode(), tmp_node))
                 for node_info in value["negative_ref"]:
                     print("node_info", node_info)
-                    with open('data/'+'/page' + str(node_info["page_id"]) + '.json', 'r')as fp:
+                    with open('static/data/'+'page' + str(node_info["page_id"]) + '.json', 'r')as fp:
                         tmp_layout = json.loads(fp.read())
                     tmp_page_instance = PageInstance()
                     if isinstance(tmp_layout, list):
@@ -144,7 +166,7 @@ def init_describer():
                     tmp_negative_ref_nodes.append(
                         (tmp_node.findBlockNode(), tmp_node))
                 for node_info in value["positive"]:
-                    with open('data/'+'/page' + str(node_info["page_id"]) + '.json', 'r')as fp:
+                    with open('static/data/'+'page' + str(node_info["page_id"]) + '.json', 'r')as fp:
                         tmp_layout = json.loads(fp.read())
                     tmp_page_instance = PageInstance()
                     if isinstance(tmp_layout, list):
@@ -170,6 +192,8 @@ def init_describer():
 
 @app.route('/demo', methods=['POST'])
 def demo():
+    if not describermanagers_init:
+        init_describer()
     global html_detect
     html_detect = True
     global cnt
@@ -196,12 +220,35 @@ def demo():
     page_instance.load_from_dict("", json.loads(layout))
     print("page loaded")
     page_root = page_instance.ui_root
-    global all_text,semantic_info
+    if len(page_root.children.children.children) == 2:
+        print("FUCK")
+        page_root.children.children.children = page_root.children.children.children[0]
+    global all_text, semantic_info, describermanagers
     all_text = page_root.generate_all_text()
     print("all_text", all_text)
     semantic_nodes = page_root.get_all_semantic_nodes()
+
+    # 创建与semantic_nodes["nodes"]等长的type列表，用于存放每个节点的类型
+    # semantic_nodes["type"] = ["" for ii in range(len(semantic_nodes["nodes"]))]
+    # for i in range(len(semantic_nodes["nodes"])):
+    #     semantic_nodes["nodes"][i].update_page_id(page_id_now)
+    #     dis = 99.0
+    #     for key, value in describermanagers.items():
+    #         if key == "Root Object;":
+    #             continue
+    #         tmp_dis = value.calculate(semantic_nodes["nodes"][i])
+    #         if tmp_dis < dis:
+    #             dis = tmp_dis
+    #             semantic_nodes["type"][i] = key.split(";")[-2]
+    # print("semantic_nodes", semantic_nodes["type"])
+
     semantic_info = [node.generate_all_semantic_info()
                      for node in semantic_nodes["nodes"]]
+
+    for i in range(len(semantic_info)):
+        semantic_info[i] = "{"+",".join([str(i) for i in semantic_info[i]["Major_text"]])+"}-{"+",".join([str(i) for i in semantic_info[i]["text"]])+"}-{"+",".join(
+            [str(i) for i in semantic_info[i]["content-desc"]])+"}-{"+",".join(
+            [str(i) for i in semantic_info[i]["class"]])+"}"
     print("semantic info,", semantic_info)
     print("semantic_nodes", len(semantic_nodes))
     end_time = time.time()
@@ -213,177 +260,95 @@ def demo():
     return json.dumps(result_json)
 
 
-def detect_html(str):
-    # 该函数检测str中是否有网址，如果有，返回网址字符串，否则返回空
-    # 网址的正则表达式
-    reg = r'(http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)'
-    # 匹配网址
-    url = re.findall(reg, str)
-    if url:
-        print("url:", url[0])
-        return url[0]
-    else:
-        return None
-
-
-def detect_money():
-    global describermanagers_init
-    if not describermanagers_init:
-        init_describer()
-        return None
-    else:
-        global describermanagers, page_root
-        count = 0
-        for key, value in describermanagers.items():
-            if value.find_node(page_root):
-                count += 1
-        print(count)
-        return count
-
-
-def detect_agenda(str):
-    # 构造若干规则判断该str里面是否包含日程信息
-
-    # time_mark=["今天","明天","后天","上午","下午","晚上","周一","周二","周三","周四","周五","周六","周日","星期一","星期二","星期三","星期四","星期五","星期六","星期日","年","月","日","点","时","分","秒","周","星期","年","月","日","点","时","分","秒","周","星期"]
-    time_mark = {
-        "今天": 5,
-        "明天": 5,
-        "后天": 5,
-        "上午": 5,
-        "下午": 5,
-        "晚上": 5,
-        "周一": 2,
-        "周二": 2,
-        "周三": 2,
-        "周四": 2,
-        "周五": 2,
-        "周六": 2,
-        "周日": 2,
-        "星期一": 2,
-        "星期二": 2,
-        "星期三": 2,
-        "星期四": 2,
-        "星期五": 2,
-        "星期六": 2,
-        "星期日": 2,
-        "年": 4,
-        "月": 4,
-        "日": 4,
-        "点": 4,
-        "时": 4,
-        "分": 4,
-        "秒": 4,
-        "周": 4,
-        "星期": 4,
-    }
-    # deadline_mark = ["之前","之后","前","后","截止","截止时间","ddl","due","转发","回复","@所有人"]
-    deadline_mark = {
-        "之前": 10,
-        "之后": 5,
-        "前": 1,
-        "后": 1,
-        "截止": 10,
-        "截止时间": 10,
-        "ddl": 10,
-        "转发": 1,
-        "回复": 5,
-        "@所有人": 10,
-    }
-
-    # 正则匹配时间,比如2:00
-    reg = r'([0-9]{1,2}:[0-9]{1,2})'
-    time = re.findall(reg, str)
-    # 计算time_mark和deaddline_mark在str中命中的分数
-    all = 0
-    time_mark_cnt = 0
-    deadline_mark_cnt = 0
-    for key in time_mark:
-        if key in str:
-            time_mark_cnt += time_mark[key]
-    for key in deadline_mark:
-        if key in str:
-            deadline_mark_cnt += deadline_mark[key]
-
-    all = time_mark_cnt + deadline_mark_cnt+len(time)*10
-    # 如果命中次数大于等于3，那么就认为这个str里面包含日程信息
-    print("time_mark_cnt", time_mark_cnt, "deadline_mark_cnt",
-          deadline_mark_cnt, "time", len(time)*10)
-    if all >= 10:
-        return True
-    return False
-
-# def detect_money():
-
-
 @app.route("/", methods=("GET", "POST"))
 def index():
-    global i, seq, ins_seq,  prompt_now, intention
+    global i, seq, ins_seq,  prompt_now, intention, intent_embedding
     print(request.form)
-    global semantic_info
+    global semantic_info, current_path, current_path_str,chart_data
     if request.method == "POST" and "intention" in request.form:
-        
+
         intention = request.form["intention"]
         initialize_prompt(intention)
+        intent_embedding = embedding_from_string(intention)
         print(prompt_now)
         print(semantic_info)
+    elif request.method == "POST" and "reset" in request.form:
+        if intention != "":
+            initialize_prompt(intention)
+            i = 0
+            current_path = []
+            current_path_str = "Begin"
     elif request.method == "POST" and "next" in request.form:
-        
+
         img_id = str(cnt)
         print(semantic_info)
-        semantic_info = str(semantic_info)[2:-2].replace(r"}, {", "\n")
+        possible_comp_str = [i.split("{")[1].split("}")[
+            0] for i in semantic_info if i.split("{")[1].split("}")[0] != ""]
+        print(possible_comp_str)
+        embeddings = [embedding_from_string(string)
+                      for string in possible_comp_str]
+        similarity = [cosine_similarity(
+            intent_embedding, embedding) for embedding in embeddings]
+        print(similarity)
+
+        semantic_info = str(semantic_info)[2:-2].replace(r"}, {", " ,")
         print(semantic_info)
+        if len(prompt_now) > 10:
+            prompt_now.pop(-2)
         print(generate_prompt(semantic_info=str(semantic_info)))
-        response = openai.Completion.create(
-            model="text-davinci-002",
-            prompt=prompt_now,
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=prompt_now,
             temperature=0,
-            max_tokens=20,
         )
         print(response)
-        result = response.choices[0].text
-        # #正则匹配result中的每句以.结尾的句子,并只保留该句子当中的单词或者数字或者标点符号，拼接起来以\n分割成一个新的字符串
-        # result=re.sub(r'[^a-zA-Z0-9,.?! ]', '', result)
-        # #将每一句话后接上一个换行符
-        # result=re.sub(r'([.?!])', r'\1\n', result)
-        
-        # 正则匹配到类似于"3,"的字符串，数字加一个逗号，做一个split
-        if "The page now has" in result:
-            result = result.split('The page now has')[0]
-        # if "\n" in result:
-        #     result = result.split("\n")[-2]
+        result = response['choices'][0]['message']['content']
+        prompt_now.append(response['choices'][0]['message'])
+        # 找到<SOC><EOC>之间的内容
+        comp_selected = result[result.find("<SOC>")+5:result.find("<EOC>")]
+        current_path.append(comp_selected)
+        current_path_str = "-".join(current_path)
+        print("current_path", current_path_str)
         print(result)
-        prompt_now = prompt_now+result+"\n"
-
-        return render_template("index.html", result=result, img_id=img_id, semantic_info=semantic_info)
-
-    # result = request.args.get("result")
-    # img_id = request.args.get("img_id")
-    # semantic_info = request.args.get("semantic_info")
-    return render_template("index.html")
+        return render_template("index.html", result=result, img_id=img_id, semantic_info=semantic_info,chart_data=chart_data)
+    return render_template("index.html", chart_data=chart_data)
 
 
 def generate_prompt(semantic_info):
     global prompt_now, i
-    prompt_now = prompt_now+"""{},The page now has the following components:"{}".The instruction is :
-""".format(
-        str(i+1), semantic_info
-    )
+    prompt_now.append({"role": "user",
+                       "content": """{},Current components:"{}".""".format(i+1, semantic_info)})
+    i += 1
     return prompt_now
 
 
 def initialize_prompt(init):
     global prompt_now
-    prompt_now = """A user's intention is to "Open Meituan  app to see how long it is to deliver my takeaway".
-1, The page now has following components: "Wechat","Meituan","Tiktok","Home","Settings". The instruction is : Click "Meituan".
-2, The page now has the following components: "Messages", "Shopping cart", "Me". The instruction is : Click "Me".
-3, The page now has the following components: "My orders", "My wallet", "My coupons". The instruction is : Click "My orders".
-4, The page now has the following components: "All orders", "To be paid", "To be delivered", "To be commented". The instruction is : Click "To be delivered".
-5, The page now has a list of orders. The user's intention is to find the order just placed, so he looks for the order with the latest order time.
-
-A user's intention is to "{}".
-""".format(
-        init.capitalize()
-    )
+    prompt_now = [
+        {"role": "system",
+         "content": """You are an assistant translating user's intention to UI actions.
+         Rules:
+         1,UI components are organized as {major text}-{all text}-{description}-{android class}.
+         2,Please strictly follow the answer format:"Expecting...Currently".
+         3,Only one short instruction is allowed to be generated per step.
+         4,Each instruction can only chooes from the components of the current page!"""},
+        {"role": "user",
+         "content": """A user's intention is to 'Turn off Dark mode in WeChat'."""},
+        {"role": "user",
+         "content": """1,Current page components:"['{Settings}-{}-{}-{LinearLayout}', '{Sticker Gallery}-{}-{}-{LinearLayout}', '{My Posts}-{}-{}-{LinearLayout}', '{Favorites}-{}-{}-{LinearLayout}', '{Services}-{}-{}-{LinearLayout}']"""},
+        {"role": "assistant",
+         "content": """The current page is:"Me page".Expecting the next page to appear :['{General}-{}-{}-{LinearLayout}'].Currently the instruction should be :[Click on <SOC>Settings<EOC> ]."""},
+        {"role": "user",
+         "content": """2,Current page components:"['{My Information & Authorizations}-{}-{}-{LinearLayout}', "{Friends' Permissions}-{}-{}-{LinearLayout}", '{Privacy}-{}-{}-{LinearLayout}', '{General}-{}-{}-{LinearLayout}', '{Chats}-{}-{}-{LinearLayout}', '{}-{}-{Back}-{LinearLayout}']"."""},
+        {"role": "assistant",
+         "content": """The current page is:"Settings page".Expecting the next page to appear :['{Dark Mode}-{}-{}-{LinearLayout}'].Currently the instruction should be :[Click on <SOC>General<EOC> ]."""},
+        {"role": "user",
+         "content": """3,Current page components:"['{Manage Discover}-{}-{}-{LinearLayout}', '{Photos, Videos, Files & Calls}-{}-{}-{LinearLayout}', '{Text Size}-{}-{}-{LinearLayout}','{Dark Mode}-{Auto}-{}-{LinearLayout}', '{}-{}-{Back}-{LinearLayout}']"."""},
+        {"role": "assistant",
+         "content": """The current page is:"Settings-General subpage".Expecting the next page to appear :["DONE!"].Currently the instruction should be :[Click on <SOC>Dark Mode<EOC> ].The Task is DONE!"""},
+    ]
+    prompt_now.append(
+        {"role": "user", "content": """A user's intention is to '{}'.""".format(init)})
 
 
 if __name__ == "__main__":

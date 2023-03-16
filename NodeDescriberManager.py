@@ -57,7 +57,8 @@ class NodeDescriberManager:
             data["positive"].append(
                 {"page_id": item[1].page_id, "index": item[1].get_id_relative_to(item[1].get_root())})
         return json.dumps(data)
-
+    def calculate(self,node):
+        return self.describer.calculate(node)
     def find_node(self, crt_node):
         print(self.type)
         if self.type == "list":
