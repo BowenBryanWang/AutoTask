@@ -1,5 +1,5 @@
 import openai
-openai.api_key = "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"
+openai.api_key = "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"
 # # a=[1,2,3,4,5]
 # # print(a.pop(-2))
 # # print(a)
@@ -43,29 +43,29 @@ def embedding_from_string(
 # a2=get_embedding("Homepage, Me, Settings, Dark Mode",engine="text-embedding-ada-002")
 # print(cosine_similarity(task,a1))
 # print(cosine_similarity(task,a2))
-tasks = [embedding_from_string("Check Wallet Transactions")]
+tasks = [embedding_from_string("Viewing the transaction history of their WeChat wallet.")]
 strings = [['Homepage', 'Homepage->Me', 'Homepage->Me->Services', 'Homepage->Me->Services->Wallet', 'Homepage->Me->Services->Wallet->Transactions']]
-tasks.append(embedding_from_string("""Enable Dark Mode in WeChat"""))
+tasks.append(embedding_from_string("""Enabling the dark mode feature in the WeChat app interface."""))
 strings.append(['Homepage', 'Homepage->Me', 'Homepage->Me->Settings', 'Homepage->Me->Settings->General', 'Homepage->Me->Settings->General->Dark'])
-tasks.append(embedding_from_string("""Send a 10 yuan red envelope to Bowen"""))
+tasks.append(embedding_from_string("""Sending a red packet with a value of 10¥ to the recipient named Bowen through the WeChat app."""))
 strings.append(['Homepage', 'Homepage->Bowen', 'Homepage->Bowen->More', 'Homepage->Bowen->More->Red Packet'])
-tasks.append(embedding_from_string("""Enter Bowen's Moments"""))
+tasks.append(embedding_from_string("""Accessing the social media feed or posts of the user named Bowen on WeChat, which is commonly referred to as 'Moments'"""))
 strings.append(['Homepage', 'Homepage->Bowen', 'Homepage->Bowen->Chat info', 'Homepage->Bowen->Chat info->Bowen', 'Homepage->Bowen->Chat info->Bowen->Moments'])
-tasks.append(embedding_from_string("""Cancel WeChat pay function"""))
+tasks.append(embedding_from_string("""Disabling or turning off the WeChat Pay feature in the WeChat app."""))
 strings.append(['Homepage', 'Homepage->Weixin Pay', 'Homepage->Weixin Pay->Switch to Messaging'])
-tasks.append(embedding_from_string("""Don't allow people to add me as a friend by 'Mobile'"""))
+tasks.append(embedding_from_string("""prevent people from finding and adding them as a friend on the WeChat app using their phone number"""))
 strings.append(['Homepage', 'Homepage->Me', 'Homepage->Me->Friends status', 'Homepage->Me->Friends status->Set status', 'Homepage->Me->Friends status->Set status->Customize Status','Homepage->Me->Friends status->Set status->Customize Status->Done'])
-tasks_i = [embedding_from_string("Check Wallet Transactions")]
+tasks_i = [embedding_from_string("Viewing the transaction history of their WeChat wallet.")]
 strings_i = [['Homepage', 'Me', 'Services', 'Wallet', 'Transactions']]
-tasks_i.append(embedding_from_string("""Enable Dark Mode in WeChat"""))
+tasks_i.append(embedding_from_string("""Enabling the dark mode feature in the WeChat app interface."""))
 strings_i.append(['Homepage', 'Me', 'Settings', 'General', 'Dark Mode'])
-tasks_i.append(embedding_from_string("""Send a 10 yuan red envelope to Bowen"""))
+tasks_i.append(embedding_from_string("""Sending a red packet with a value of 10¥ to the recipient named Bowen through the WeChat app."""))
 strings_i.append(['Homepage', 'Bowen', 'More', 'Red Packet'])
-tasks_i.append(embedding_from_string("""Enter Bowen's Moments"""))
+tasks_i.append(embedding_from_string("""Accessing the social media feed or posts of the user named Bowen on WeChat, which is commonly referred to as 'Moments'"""))
 strings_i.append(['Homepage', 'Bowen', 'Chat info', 'Bowen', 'Moments'])
-tasks_i.append(embedding_from_string("""Cancel WeChat pay function"""))
+tasks_i.append(embedding_from_string("""Disabling or turning off the WeChat Pay feature in the WeChat app."""))
 strings_i.append(['Homepage', 'Weixin Pay', 'Switch to Messaging'])
-tasks_i.append(embedding_from_string("""Don't allow people to add me as a friend by 'Mobile'"""))
+tasks_i.append(embedding_from_string("""prevent people from finding and adding them as a friend on the WeChat app using their phone number"""))
 strings_i.append(['Homepage', 'Me', 'Friends status', 'Set status', 'Customize Status','Done'])
 
 def get(i,j,a):
@@ -99,7 +99,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 for i in range(len(strings)):
     for j in range(len(tasks)):
-        res = get(i,j,0.5)
+        res = get(i,j,0.8)
         plt.subplot(len(strings),len(tasks),i*len(tasks)+j+1)
         
         plt.subplots_adjust(wspace=1, hspace=1)

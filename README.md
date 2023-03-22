@@ -1,7 +1,12 @@
-A user's intention is to Check Wallet Transactions in WeChat
-1,Current page components:"[{Me}-{Me}-{}-{RelativeLayout}', '{Discover}-{Discover}-{}-{RelativeLayout}', '{Contacts}-{Contacts}-{}-{RelativeLayout}', '{Chats}-{Chats}-{}-{RelativeLayout}', '{Settings}-{Settings}-{}-{LinearLayout}', '{Sticker Gallery}-{Sticker Gallery}-{}-{LinearLayout}', '{My Posts}-{My Posts}-{}-{LinearLayout}', '{Favorites}-{Favorites}-{}-{LinearLayout}', '{Services}-{Services}-{}-{LinearLayout}', "{}-{}-{Friends' Status}-{LinearLayout}", '{Status}-{Status}-{Add Status}-{LinearLayout}', '{}-{}-{My QR Code}-{RelativeLayout}', '{Weixin ID: saltyp0}-{Weixin ID: saltyp0}-{}-{TextView}]".
-The current page is:\"Me page\".Expecting the next page to appear :['{Wallet}-{Wallet}-{}-{LinearLayout}'].Currently choose one component :[Click on <SOC>Services"<EOC>].
-2,Current page components:"[{Hotels}-{Hotels}-{}-{RelativeLayout}', '{Ride Hailing}-{Ride Hailing}-{}-{RelativeLayout}', '{Rail & Flights}-{Rail & Flights}-{}-{RelativeLayout}', '{Mobility}-{Mobility}-{}-{RelativeLayout}', '{Health}-{Health}-{}-{RelativeLayout}', '{Tencent Charity}-{Tencent Charity}-{}-{RelativeLayout}', '{Public Services}-{Public Services}-{}-{RelativeLayout}', '{QQ Coins}-{QQ Coins}-{}-{RelativeLayout}', '{Utilities}-{Utilities}-{}-{RelativeLayout}', '{Mobile Top Up}-{Mobile Top Up}-{}-{RelativeLayout}', '{Wealth}-{Wealth}-{}-{RelativeLayout}', '{Card Repay}-{Card Repay}-{}-{RelativeLayout}', '{Wallet}-{Wallet}-{¥0.01}-{LinearLayout}', '{Money}-{Money}-{}-{LinearLayout}', '{}-{}-{More Info}-{ImageView}', '{}-{}-{Back}-{LinearLayout}]".
-The current page is:\"Services page\".Expecting the next page to appear :['{Transactions}-{}-{}-{LinearLayout}'].Currently choose one component :[Click on <SOC>Wallet"<EOC>].
-3,Current page components:"[{Help Center}-{Help Center}-{}-{TextView}', '{Payment Settings}-{Payment Settings}-{}-{LinearLayout}', '{ID Info}-{ID Info}-{}-{LinearLayout}', '{Consumer Protection}-{Consumer Protection}-{}-{LinearLayout}', '{Relative Cards}-{Relative Cards}-{}-{LinearLayout}', '{WeChat Pay Score}-{WeChat Pay Score}-{}-{LinearLayout}', '{Cards}-{Cards}-{}-{LinearLayout}', '{Mini Fund}-{Mini Fund,Yield2.09%}-{}-{LinearLayout}', '{Balance}-{Balance}-{¥0.01}-{LinearLayout}', '{Transactions}-{Transactions}-{}-{TextView}', '{}-{}-{Back}-{LinearLayout}]".
-The current page is:\"Wallet page\".Expecting the next page to appear :['{Transactions}-{Transactions}-{}-{LinearLayout}'].Currently choose one component :[Click on <SOC>Transactions"<EOC>].
+1,A user's intention is to "Don't allow others to friending me by 'search phone number' in WeChat"
+Expand this into a longer , more detailed instruction:
+A: prevent people from finding and adding them as a friend on the WeChat app using their phone number
+2, A user's intention is to "Enable NFC"
+Expand this into a longer , more detailed instruction:
+A: turning on the NFC (Near Field Communication) capabilities of their wechat
+3. A user's intention is to "Check Wallet Transactions"
+Expand this into a longer , more detailed instruction:
+A: 
+
+
+Enable NFC

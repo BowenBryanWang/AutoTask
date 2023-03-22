@@ -98,22 +98,6 @@ def embedding_from_string(
     return embedding_cache[(string, model)]
 
 
-@app.route('/detect', methods=['GET'])
-def detect():
-    global html_detect, all_text
-    print("detect")
-    detect_money()
-    while True:
-        if time.time()-upload_time <= time_between_upload:
-            continue
-        else:
-            html = detect_html(all_text)
-            if html:
-                return {"type": "html", "html": str(html)}
-            else:
-                continue
-
-
 def init_describer():
     print("loadmodel")
     global relation_dict

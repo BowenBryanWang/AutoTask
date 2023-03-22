@@ -104,10 +104,10 @@ class SpecialNodeDescriber(NodeDescriber):
         for positive_node_pair in self.positive_ref_nodes:
             dis = self.calNodeDistanceToDescriber(
                 node, positive_node_pair[1])
-            print(dis)
+            # print(dis)
             if dis <= minDis:
                 minDis = dis
-        print(minDis)
+        # print(minDis)
         return minDis
 
     def calNodeDistanceToDescriber(self, node: UINode, positive_node: UINode):
