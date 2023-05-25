@@ -1,2 +1,4 @@
 static/data/imagedata*
 static/data/page*
+node_modules
+src/static/data
