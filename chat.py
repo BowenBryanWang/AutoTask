@@ -1,5 +1,5 @@
 import openai
-openai.api_key = "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"
+openai.api_key = "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"
 # # a=[1,2,3,4,5]
 # # print(a.pop(-2))
 # # print(a)
@@ -43,30 +43,52 @@ def embedding_from_string(
 # a2=get_embedding("Homepage, Me, Settings, Dark Mode",engine="text-embedding-ada-002")
 # print(cosine_similarity(task,a1))
 # print(cosine_similarity(task,a2))
+
+test_task = embedding_from_string("prevent people from finding and adding them as a friend using their phone number")
+# ['1{Me}-{Me}-{}-{Tab}', '2{Discover}-{Discover}-{}-{Tab}', '3{Contacts}-{Contacts}-{}-{Tab}', '4{Chats}-{Chats}-{}-{Tab}', '5{Settings}-{Settings}-{}-{}', '6{Sticker Gallery}-{Sticker Gallery}-{}-{}', '7{My Posts}-{My Posts}-{}-{}', '8{Favorites}-{Favorites}-{}-{}', '9{Services}-{Services}-{}-{}', "10{}-{}-{Friends' Status}-{}", '11{Status}-{Status}-{Add Status}-{}', '12{}-{}-{My QR Code}-{Tab}', '13{Weixin ID: saltyp0}-{Weixin ID: saltyp0}-{}-{Title}']
+comps = ["Me","Discover","Contacts","Chats","Settings","Sticker Gallery","My Posts","Favorites","Services","Friends' Status","Status","Add Status","My QR Code","Weixin ID: saltyp0","Title"]
+embedding_comps = [embedding_from_string(comp) for comp in comps]
+distances = [cosine_similarity(test_task, comp) for comp in embedding_comps]
+print(distances)
+indices = indices_of_nearest_neighbors_from_distances(distances)
+print(indices)
+print([comps[i] for i in indices])
+exit()
+
+
 tasks = [embedding_from_string("Viewing the transaction history of their WeChat wallet.")]
-strings = [['Homepage', 'Homepage->Me', 'Homepage->Me->Services', 'Homepage->Me->Services->Wallet', 'Homepage->Me->Services->Wallet->Transactions']]
+strings = [['From the homepage, click on “Me” to access your profile or account settings.','From the homepage, click on “Me” to access your profile or account settings->Once on your profile page, navigate to the “Services” section of the website or application.','From the homepage, click on “Me” to access your profile or account settings->Once on your profile page, navigate to the “Services” section of the website or application->From the “Services” section, select “Wallet” to access your wallet settings.','From the homepage, click on “Me” to access your profile or account settings->Once on your profile page, navigate to the “Services” section of the website or application->From the “Services” section, select “Wallet” to access your wallet settings->Once in your wallet settings, click on “Transactions” to view your transaction history.']]
+
+
 tasks.append(embedding_from_string("""Enabling the dark mode feature in the WeChat app interface."""))
-strings.append(['Homepage', 'Homepage->Me', 'Homepage->Me->Settings', 'Homepage->Me->Settings->General', 'Homepage->Me->Settings->General->Dark'])
+strings.append(['Go to the homepage of the website or application.','Go to the homepage of the website or application->Once on the homepage, click on “Me” to access your user profile or account settings.','Go to the homepage of the website or application->Once on the homepage, click on “Me” to access your user profile or account settings->From there, navigate to the “Settings” section.','Go to the homepage of the website or application->Once on the homepage, click on “Me” to access your user profile or account settings->From there, navigate to the “Settings” section->In the “Settings” section, select “General”.','Go to the homepage of the website or application->Once on the homepage, click on “Me” to access your user profile or account settings->From there, navigate to the “Settings” section->In the “Settings” section, select “General”->Finally, click on “Dark Mode” to activate it and switch your interface to the dark mode.'])
 tasks.append(embedding_from_string("""Sending a red packet with a value of 10¥ to the recipient named Bowen through the WeChat app."""))
 strings.append(['Homepage', 'Homepage->Bowen', 'Homepage->Bowen->More', 'Homepage->Bowen->More->Red Packet'])
 tasks.append(embedding_from_string("""Accessing the social media feed or posts of the user named Bowen on WeChat, which is commonly referred to as 'Moments'"""))
-strings.append(['Homepage', 'Homepage->Bowen', 'Homepage->Bowen->Chat info', 'Homepage->Bowen->Chat info->Bowen', 'Homepage->Bowen->Chat info->Bowen->Moments'])
+# strings_i.append(['Go to the homepage','Navigate to Bowen’s profile from the homepage','Click on “Chat info” while on Bowen’s profile page','From the “Chat info” page, select Bowen’s profile.','Once on Bowen’s profile, click on “Moments”'])
+strings.append(['Go to the homepage','Go to the homepage->Navigate to Bowen’s profile from the homepage','Go to the homepage->Navigate to Bowen’s profile from the homepage->Click on “Chat info” while on Bowen’s profile page','Go to the homepage->Navigate to Bowen’s profile from the homepage->Click on “Chat info” while on Bowen’s profile page->From the “Chat info” page, select Bowen’s profile.','Go to the homepage->Navigate to Bowen’s profile from the homepage->Click on “Chat info” while on Bowen’s profile page->From the “Chat info” page, select Bowen’s profile->Once on Bowen’s profile, click on “Moments”'])
+
 tasks.append(embedding_from_string("""Disabling or turning off the WeChat Pay feature in the WeChat app."""))
 strings.append(['Homepage', 'Homepage->Weixin Pay', 'Homepage->Weixin Pay->Switch to Messaging'])
 tasks.append(embedding_from_string("""prevent people from finding and adding them as a friend on the WeChat app using their phone number"""))
-strings.append(['Homepage', 'Homepage->Me', 'Homepage->Me->Friends status', 'Homepage->Me->Friends status->Set status', 'Homepage->Me->Friends status->Set status->Customize Status','Homepage->Me->Friends status->Set status->Customize Status->Done'])
+strings.append(['Go to the homepage','Go to the homepage->Navigate to Bowen’s profile from the homepage','Go to the homepage->Navigate to Bowen’s profile from the homepage->Click on “Chat info” while on Bowen’s profile page','Go to the homepage->Navigate to Bowen’s profile from the homepage->Click on “Chat info” while on Bowen’s profile page->From the “Chat info” page, select Bowen’s profile.','Go to the homepage->Navigate to Bowen’s profile from the homepage->Click on “Chat info” while on Bowen’s profile page->From the “Chat info” page, select Bowen’s profile->Once on Bowen’s profile, click on “Moments”'])
+
 tasks_i = [embedding_from_string("Viewing the transaction history of their WeChat wallet.")]
-strings_i = [['Homepage', 'Me', 'Services', 'Wallet', 'Transactions']]
+strings_i = [['From the homepage, click on “Me” to access your profile or account settings.','Once on your profile page, navigate to the “Services” section of the website or application.','From the “Services” section, select “Wallet” to access your wallet settings.','Once in your wallet settings, click on “Transactions” to view your transaction history.']]
 tasks_i.append(embedding_from_string("""Enabling the dark mode feature in the WeChat app interface."""))
-strings_i.append(['Homepage', 'Me', 'Settings', 'General', 'Dark Mode'])
+
+
+strings_i.append(['Go to the homepage of the website or application.','Once on the homepage, click on “Me” to access your user profile or account settings.','From there, navigate to the “Settings” section.','In the “Settings” section, select “General”.','Finally, click on “Dark Mode” to activate it and switch your interface to the dark mode.'])
 tasks_i.append(embedding_from_string("""Sending a red packet with a value of 10¥ to the recipient named Bowen through the WeChat app."""))
 strings_i.append(['Homepage', 'Bowen', 'More', 'Red Packet'])
 tasks_i.append(embedding_from_string("""Accessing the social media feed or posts of the user named Bowen on WeChat, which is commonly referred to as 'Moments'"""))
-strings_i.append(['Homepage', 'Bowen', 'Chat info', 'Bowen', 'Moments'])
+strings_i.append(['Go to the homepage','Navigate to Bowen’s profile from the homepage','Click on “Chat info” while on Bowen’s profile page','From the “Chat info” page, select Bowen’s profile.','Once on Bowen’s profile, click on “Moments”'])
 tasks_i.append(embedding_from_string("""Disabling or turning off the WeChat Pay feature in the WeChat app."""))
 strings_i.append(['Homepage', 'Weixin Pay', 'Switch to Messaging'])
 tasks_i.append(embedding_from_string("""prevent people from finding and adding them as a friend on the WeChat app using their phone number"""))
-strings_i.append(['Homepage', 'Me', 'Friends status', 'Set status', 'Customize Status','Done'])
+strings_i.append(['Go to the homepage','Navigate to Bowen’s profile from the homepage','Click on “Chat info” while on Bowen’s profile page','From the “Chat info” page, select Bowen’s profile.','Once on Bowen’s profile, click on “Moments”'])
+
+
 
 def get(i,j,a):
     embeddings = [embedding_from_string(string) for string in strings[i]]
@@ -99,7 +121,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 for i in range(len(strings)):
     for j in range(len(tasks)):
-        res = get(i,j,0.8)
+        res = get(i,j,0.5)
         plt.subplot(len(strings),len(tasks),i*len(tasks)+j+1)
         
         plt.subplots_adjust(wspace=1, hspace=1)

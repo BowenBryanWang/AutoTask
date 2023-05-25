@@ -1,3 +1,5 @@
+import pickle
+import pandas as pd
 from openai.embeddings_utils import (
     get_embedding,
     cosine_similarity,
@@ -6,8 +8,6 @@ from openai.embeddings_utils import (
     chart_from_components,
     indices_of_nearest_neighbors_from_distances,
 )
-import pandas as pd
-import pickle
 import os
 
 import openai
@@ -18,6 +18,7 @@ from flask import Flask
 from flask import request
 import os
 import base64
+from Screen.init import Screen
 from WindowStructure import *
 import time
 from NodeDescriberManager import *
@@ -31,7 +32,8 @@ import datetime
 
 app = Flask(__name__)
 
-openai.api_key = "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"
+openai.api_key = "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"
+screen = Screen()
 layout = None
 screenshot = None
 imgdata = None
@@ -51,25 +53,45 @@ all_text = ""  # 当前页面的所有文本
 describermanagers_init = False
 page_root = None
 semantic_info = []
-current_path = []
-current_path_str = "Begin"
+chart_data = {
+    'labels': [],
+    'datasets': [
+        {
+            'data': [],
+            'backgroundColor': [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 205, 86)',
+                'rgb(75, 192, 192)',
+                'rgb(153, 102, 255)'
+            ],
+            'hoverOffset': 4
+        }
+    ]
+}
+line_data = {
+    "labels": [],
+    "datasets": [
+        {
+            "label": 'Similarity',
+            "data": [],
+            "pointStyle": 'circle',
+            "pointRadius": 10,
+            "pointHoverRadius": 15
+        }
+    ]
+}
+result = ""
+img_id = 1
+GLOBAL_STATE = "Not Started"
+center = {"x": 0, "y": 0}
 
-chart_data={
-        "labels": [],
-        "datasets": [
-            {
-                "data": [],
-                "backgroundColor": [
-                    "rgb(255, 99, 132)",
-                    "rgb(54, 162, 235)",
-                    "rgb(255, 205, 86)",
-                    "rgb(75, 192, 192)",
-                    "rgb(153, 102, 255)",
-                ],
-                "hoverOffset": 4,
-            },
-        ],
-    }
+
+current_path = ["Homepage"]
+current_path_str = "Homepage"
+anchors = []
+stepbacks = -1
+probs = []
 EMBEDDING_MODEL = "text-embedding-ada-002"
 
 embedding_cache_path = "embeddings_cache.pkl"
@@ -83,6 +105,7 @@ with open(embedding_cache_path, "wb") as embedding_cache_file:
     pickle.dump(embedding_cache, embedding_cache_file)
 
 # define a function to retrieve embeddings from the cache if present, and otherwise request via the API
+sims = []
 
 
 def embedding_from_string(
@@ -96,6 +119,34 @@ def embedding_from_string(
         with open(embedding_cache_path, "wb") as embedding_cache_file:
             pickle.dump(embedding_cache, embedding_cache_file)
     return embedding_cache[(string, model)]
+
+
+def expand_seq(inst_seq: list) -> list:
+    inst_seq_str = str(inst_seq)
+    q = [
+        {"role": "system",
+         "content": """You are an assistant translating user's instruction sequence to more detailed, longer, clearer and more precise description.One sentence only!"""},
+        {"role": "user",
+         "content": """['Homepage', 'Bowen', 'Chat Info','Bowen','Moments]"""},
+        {"role": "assistant",
+         "content": """['Go to the homepage','Navigate to Bowen's profile from the homepage','Click on “Chat info” while on Bowen's profile page','From the “Chat info” page, select Bowen's profile.','Once on Bowen's profile, click on “Moments”']"""},
+        {"role": "user",
+         "content": """['Homepahe','Me','Settings','General','Dark Mode']"""},
+        {"role": "assistant",
+         "content": """['Go to the homepage of the website or application.','Once on the homepage, click on “Me” to access your user profile or account settings.','From there, navigate to the “Settings” section.','In the “Settings” section, select “General”.','Finally, click on “Dark Mode” to activate it and switch your interface to the dark mode.']"""},
+        {"role": "user",
+         "content": inst_seq_str},
+    ]
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=q,
+        temperature=0.5,
+    )
+    inst_seq_str = response["choices"][0]["message"]["content"]
+    print(inst_seq_str)
+    inst_seq = inst_seq_str.split("','")
+    inst_seq = [inst.replace("['", "").replace("']", "") for inst in inst_seq]
+    return inst_seq
 
 
 def init_describer():
@@ -166,174 +217,392 @@ def init_describer():
                     tmp_positive_ref_nodes, tmp_negative_ref_nodes, tmp_positive_nodes)
     global describermanagers_init
     describermanagers_init = True
-    # with open('./static/data/'+'/relation_dict.json', 'r', encoding='utf-8') as file:
-    #     relation_dict = json.loads(file.read())
-    # with open('./static/data/'+'/model_structure.json', 'r', encoding='utf-8') as file:
-    #     model_data = json.loads(file.read())
-    #     print(model_data)
-    #     return model_data
 
 
 @app.route('/demo', methods=['POST'])
 def demo():
-    if not describermanagers_init:
-        init_describer()
-    global html_detect
-    html_detect = True
-    global cnt
-    cnt += 1
-    global layout,  screenshot, imgdata, img_np, page_instance, pageindex, page_id_now, page_root, semantic_nodes, semantic_info
-    start_time = time.time()
-    page_id_now = cnt
-    screenshot = request.form["screenshot"]
-    layout = request.form['layout']
-    # pageindex = request.form['pageindex']
-    imgdata = base64.b64decode(screenshot)
-    nparr = np.frombuffer(imgdata, np.uint8)
-    img_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    global screen
+    screen.update(request=request.form)
+    inprocessing = False
+    if GLOBAL_STATE == "Not Started":
+        return "Not Started"
+    elif GLOBAL_STATE == "Started" and not inprocessing:
+        inprocessing = True
+        if perform_one_step():
+            perform = {
+                "node_id": 1, "trail": "["+str(center["x"])+","+str(center["y"])+"]", "action_type": "click"}
+            print(perform)
+            time.sleep(2)
+            inprocessing = False
+            return json.dumps(perform)
+    elif GLOBAL_STATE == "Finished":
+        return "Finished"
+    if GLOBAL_STATE == "ERROR Handling":
+        perform_back = step_back()
+        stepbacks -= 1
+        print("stepbacks", stepbacks)
+        current_path.pop(-1)
+        print("current_path", current_path)
+        sims.pop(-1)
+        print("sims", sims)
+        anchors.pop(-1)
+        print("anchors", anchors)
+        if stepbacks == 0:
+            GLOBAL_STATE = "Started"
+            inprocessing = False
+        time.sleep(2)
 
-    result_json = {"state": "ok"}
-    fp = open('static/data/imagedata' + str(cnt) +
-              ".jpg", 'wb')  # 'wb'表示写二进制文件
-    fp.write(imgdata)
-    fp.close()
-    fp = open('static/data/page' + str(cnt) + ".json", 'w')
-    fp.write(layout)
-    fp.close()
-    page_instance = PageInstance()
-    page_instance.load_from_dict("", json.loads(layout))
-    print("page loaded")
-    page_root = page_instance.ui_root
-    if len(page_root.children.children.children) == 2:
-        print("FUCK")
-        page_root.children.children.children = page_root.children.children.children[0]
-    global all_text, semantic_info, describermanagers
-    all_text = page_root.generate_all_text()
-    print("all_text", all_text)
-    semantic_nodes = page_root.get_all_semantic_nodes()
+        return json.dumps(perform_back)
+    return "0"
 
-    # 创建与semantic_nodes["nodes"]等长的type列表，用于存放每个节点的类型
-    # semantic_nodes["type"] = ["" for ii in range(len(semantic_nodes["nodes"]))]
-    # for i in range(len(semantic_nodes["nodes"])):
-    #     semantic_nodes["nodes"][i].update_page_id(page_id_now)
-    #     dis = 99.0
-    #     for key, value in describermanagers.items():
-    #         if key == "Root Object;":
-    #             continue
-    #         tmp_dis = value.calculate(semantic_nodes["nodes"][i])
-    #         if tmp_dis < dis:
-    #             dis = tmp_dis
-    #             semantic_nodes["type"][i] = key.split(";")[-2]
-    # print("semantic_nodes", semantic_nodes["type"])
 
-    semantic_info = [node.generate_all_semantic_info()
-                     for node in semantic_nodes["nodes"]]
+def detect_error(sims, probs):
+    mark = 1
+    entropy = sum([-i*math.log(i) for i in probs.values()])
+    if entropy > 0.5:
+        mark *= (1.0+entropy)
+    else:
+        mark *= 0.9
+    if len(sims) > 1:
+        if sims[-1] < sims[-2]:
+            delta = (sims[-2] - sims[-1])/sims[-2]
+            mark *= (1+delta)
+            if sims[-1] < 0.75:
+                mark *= 1.2
 
-    for i in range(len(semantic_info)):
-        semantic_info[i] = "{"+",".join([str(i) for i in semantic_info[i]["Major_text"]])+"}-{"+",".join([str(i) for i in semantic_info[i]["text"]])+"}-{"+",".join(
-            [str(i) for i in semantic_info[i]["content-desc"]])+"}-{"+",".join(
-            [str(i) for i in semantic_info[i]["class"]])+"}"
-    print("semantic info,", semantic_info)
-    print("semantic_nodes", len(semantic_nodes))
-    end_time = time.time()
-    global upload_time  # 上一次上传的时间
-    upload_time = end_time  # 记录本次上传的时间
-    print("upload_time", upload_time)
-    print("time:", end_time-start_time, flush=True)
-    result_json["time"] = (end_time-start_time)*1000
-    return json.dumps(result_json)
+    print("error", mark)
+    if mark > 0:
+        return mark, True
+    else:
+        return mark, False
+
+
+def error_handler():
+    global result, img_id, i, seq, ins_seq,  prompt_now, intention, semantic_info, chart_data, current_path, current_path_str, intent_embedding, sims, line_data, GLOBAL_STATE, center, anchors, stepbacks
+    GLOBAL_STATE = "ERROR Handling"
+    max_score = 0
+    if anchors:
+        for i in range(len(anchors)):
+            if anchors[i][1] > max_score:
+                max_score = anchors[i][1]
+                center = anchors[i][0]
+        prompt_now += "Warning : After and exploration, the step selected in step " + \
+            str(center)+" is False. So we step back to that page , select again.\n"
+        stepbacks = len(current_path)-center
+
+        print("stepbacks", stepbacks)
+    return False
+
+
+def step_back():
+    global result, img_id, i, seq, ins_seq,  prompt_now, intention, semantic_info, chart_data, current_path, current_path_str, intent_embedding, sims, line_data, GLOBAL_STATE, center, anchors, stepbacks
+    tmp_num = -1
+    for info in semantic_info:
+        if "{返回}" in info or "{Back}" in info or "{back}" in info:
+            tmp_num = info.split("{")[0]
+            print("step back", tmp_num)
+    if tmp_num != -1:
+        node_selected = semantic_nodes["nodes"][int(tmp_num)-1]
+        center = {"x": (node_selected.bound[0]+node_selected.bound[2])//2,
+                  "y": (node_selected.bound[1]+node_selected.bound[3])//2}
+        perform = {
+            "node_id": 1, "trail": "["+str(center["x"])+","+str(center["y"])+"]", "action_type": "click"}
+        return perform
+    if tmp_num == -1:
+        return "0"
+
+def update_knowledge(item,page):
+    with open("./static/knowledge.json", "r") as f:
+        knowledge = json.load(f)
+    knowledge[item] = page
+    with open("./static/knowledge.json", "w") as f:
+        json.dump(knowledge, f)
+
+def find_from_knowledge(semantic_info: str):
+    #打开/static/knowledge.json
+    with open("./static/knowledge.json", "r") as f:
+        knowledge = json.load(f)
+    for key in knowledge.keys():
+        if semantic_info in key:
+            return knowledge[key]
+    return None
+
+def expand_semantic(semantic_info: list):
+    hist = semantic_info.copy()
+    for item in range(len(semantic_info)):
+        if find_from_knowledge(semantic_info[item]) is not None:
+            semantic_info[item] = semantic_info[item] + ":"+str(find_from_knowledge(semantic_info[item]))
+            print("-----------",semantic_info[item])
+        else:
+            intention = [
+                {"role": "system",
+                    "content": """You are a highly intelligent assistant capable of deriving and predicting GUI interface information. You are a highly intelligent assistant capable of deriving and predicting GUI interface information. You would be given a page and the selected components, you should predict the after-page."""},
+                {"role": "user",
+                    "content": """The page:['1{}-{}-{More function buttons}-{Tab}', '2{}-{}-{Search}-{Tab}', '3{Me}-{Me}-{}-{Tab}', '4{Discover}-{Discover}-{}-{Tab}', '5{Contacts}-{Contacts}-{}-{Tab}', '6{Chats}-{Chats}-{}-{Tab}', '7{Bowen}-{Bowen,3/22/23,398178}-{}-{}', '8{Weixin Team}-{Weixin Team,3/22/23,Welcome back! Feel free to tell…}-{}-{}', '9{Subscriptions}-{Subscriptions,4:04 PM,[10 message(s)] 清华大学:“00后”清华女…}-{}-{}', '10{OOVTest}-{OOVTest,3/22/23}-{}-{}'].The component selected:['3{Me}-{Me}-{}-{Tab}',]."""},
+                {"role": "assistant",
+                    "content": """After-page:['{Me}-{Me}-{}-{Tab}', '{Discover}-{Discover}-{}-{Tab}', '{Contacts}-{Contacts}-{}-{Tab}', '{Chats}-{Chats}-{}-{Tab}', '{Settings}-{Settings}-{}-{}', '{Sticker Gallery}-{Sticker Gallery}-{}-{}', '{My Posts}-{My Posts}-{}-{}', '{Favorites}-{Favorites}-{}-{}', '{Services}-{Services}-{}-{}', "{}-{}-{Friends' Status}-{}", '{Status}-{Status}-{Add Status}-{}', '{}-{}-{My QR Code}-{Tab}', '{Weixin ID: saltyp0}-{Weixin ID: saltyp0}-{}-{Title}']"""},
+                {"role": "user",
+                    "content": """The page:['1{Plus}-{Plus}-{}-{}', '2{Help & Feedback}-{Help & Feedback}-{}-{}', '3{About}-{About}-{}-{}', '4{Information Shared with Third Parties}-{Information Shared with Third Parties}-{}-{}', '5{Collected Personal Information}-{Collected Personal Information}-{}-{}', '6{My Information & Authorizations}-{My Information & Authorizations}-{}-{}', "7{Friends' Permissions}-{Friends' Permissions}-{}-{}", '8{Privacy}-{Privacy}-{}-{}', '9{General}-{General}-{}-{}', '10{Chats}-{Chats}-{}-{}', '11{Message Notifications}-{Message Notifications}-{}-{}', '12{Easy Mode}-{Easy Mode}-{}-{}', '13{Parental Control Mode}-{Parental Control Mode}-{}-{}', '14{Account Security}-{Account Security}-{}-{}', '15{}-{}-{Back}-{}'].The component selected:'9{General}-{General}-{}-{}'."""},
+                {"role": "assistant",
+                    "content": """After-page:['{Storage}-{Storage}-{}-{}', '{Tools}-{Tools}-{}-{}', '{Manage Discover}-{Manage Discover}-{}-{}', '{Photos, Videos, Files & Calls}-{Photos, Videos, Files & Calls}-{}-{}', '{Text Size}-{Text Size}-{}-{}', '6{Language}-{Language,Auto}-{}-{}', '{Auto-Update Weixin}-{Auto-Update Weixin,Wi-Fi Only}-{}-{}', '{Dark Mode}-{Dark Mode,Auto}-{}-{}', '{}-{}-{Back}-{}']"""},
+                {"role": "user",
+                    "content": "The page:"+str(hist)+".The component selected:"+str(semantic_info[item])+"."},
+            ]
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=intention,
+                temperature=0.7,
+            )
+            print(response)
+            update_knowledge(semantic_info[item], response["choices"][0]["message"]["content"].split("After-page:")[1])
+            semantic_info[item] = semantic_info[item]+":"+response["choices"][0]["message"]["content"].split("After-page:")[1]
+            print("+++++++++",semantic_info[item])
+            
+    print("semantic_info", semantic_info)
+    return semantic_info
+
+
+def perform_one_step():
+    global result, img_id, i, seq, ins_seq,  prompt_now, intention, semantic_info, chart_data, current_path, current_path_str, intent_embedding, sims, line_data, GLOBAL_STATE, center, anchors, stepbacks, probs
+
+    if prompt_now.count("[Begin]") == 1 and "[End]" not in prompt_now:
+        return False
+    if probs != []:
+        score, error = detect_error(sims, probs)
+        if error:
+            anchor = current_path[-1]
+            anchor_index = len(current_path)-1
+            anchors.append((anchor_index, score))
+            print("!!!!!!!!!!!!!!!!anchor!!!!!!!!!!!!!!!!!!!!!!!!", anchor)
+            print(anchors)
+            # 如果在这里判断应该进入错误处理流程
+            if len(sims) >= 3:
+                # 计算sim倒数三项的方差
+                var = np.var(sims[-3:])
+                print("var", var)
+                if var < 0.1:
+                    return error_handler()
+                if np.mean(sims[-3:]) < 73:
+                    return error_handler()
+                if len(sims) >= 5:
+                    if sims[-1] < 80:
+                        return error_handler()
+
+    img_id = str(cnt)
+    print(semantic_info)
+    print("semantic_info", semantic_info)
+    if "[Begin]" in prompt_now and "[End]" in prompt_now:
+        prompt_now = prompt_now.split(
+            "[Begin]")[0]+prompt_now.split("[End]")[-1]
+
+    print("prompt_now_len", len(prompt_now))
+    print("==================================================")
+    # semantic_info = expand_semantic(semantic_info)
+    print("semantic_info", semantic_info)
+    print("==================================================")
+    generate_prompt(semantic_info=str(semantic_info))
+    print("prompt_now_len", len(prompt_now))
+    print("prompt_now", prompt_now)
+    if len(prompt_now) > 7500:
+        return False
+    response = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=prompt_now,
+        temperature=0,
+        max_tokens=512,
+        logprobs=5,
+        stop="<EOC>",
+    )
+    tokens = response["choices"][0]["logprobs"]["tokens"]
+    # 判断"S","OC"是否连续出现在tokens中
+    index_i = 0
+    if "S" in tokens and "OC" in tokens:
+        index_S, index_OC = tokens.index("S"), tokens.index("OC")
+        if index_S == index_OC-1:
+            index_i = index_OC+2
+    print(tokens[index_i])
+    probs = response["choices"][0]["logprobs"]["top_logprobs"][index_i]
+    for key, value in probs.items():
+        probs[key] = math.exp(value)
+    print(probs)
+
+    chart_data = {
+        'labels': list(probs.keys()),
+        'datasets': [
+            {
+                'data': list(probs.values()),
+                'backgroundColor': [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(153, 102, 255)'
+                ],
+                'hoverOffset': 4
+            }
+        ]
+    }
+    print(chart_data)
+    result = response.choices[0].text
+    result = result.replace("choose one component",
+                            "[End]choose one component")
+    result += "<EOC>].\n"
+    if "DONE" in result:
+        GLOBAL_STATE = "Finished"
+        return False
+    prompt_now = prompt_now+result
+    comp_selected = result[result.find("<SOC>")+5:result.find("<EOC>")]
+    current_path.append(comp_selected.split(",")[-1])
+    # current_path = expand_seq(current_path)
+    current_path_str = ";".join(current_path)
+    similarity = cosine_similarity(intent_embedding, embedding_from_string(
+        current_path_str))*0.8+0.2*cosine_similarity(intent_embedding, embedding_from_string(comp_selected))
+    sims.append(100*similarity)
+
+    line_data = {
+        "labels": current_path,
+        "datasets": [
+            {
+                "label": 'Similarity',
+                "data": sims,
+                "pointStyle": 'circle',
+                "pointRadius": 10,
+                "pointHoverRadius": 15
+            }
+        ]
+    }
+    print("current_path", current_path)
+    print("sims", sims)
+
+    if "choose one component" in result:
+        result = result.split("choose one component")[-1]
+    print(result)
+    pattern = re.compile(r"\d+")
+    number = re.findall(pattern, result)[0]
+    node_selected = semantic_nodes["nodes"][int(number)-1]
+    center = {"x": (node_selected.bound[0]+node_selected.bound[2])//2,
+              "y": (node_selected.bound[1]+node_selected.bound[3])//2}
+    print("center", center)
+    return True
 
 
 @app.route("/", methods=("GET", "POST"))
 def index():
-    global i, seq, ins_seq,  prompt_now, intention, intent_embedding
     print(request.form)
-    global semantic_info, current_path, current_path_str,chart_data
+    global result, img_id, i, seq, ins_seq,  prompt_now, intention, semantic_info, chart_data, current_path, current_path_str, intent_embedding, sims, line_data, GLOBAL_STATE, center
     if request.method == "POST" and "intention" in request.form:
 
         intention = request.form["intention"]
-        initialize_prompt(intention)
+        intention = [
+            {"role": "system",
+             "content": """You are an assistant translating user's intention to more detailed, longer, clearer and more precise description.One sentence only!"""},
+            {"role": "user",
+             "content": """Don't allow others to friending me by 'search phone number' in WeChat"""},
+            {"role": "assistant",
+             "content": """Prevent people from finding and adding them as a friend on the WeChat app using their phone number"""},
+            {"role": "user",
+             "content": """Check Wallet Transactions"""},
+            {"role": "assistant",
+                "content": """Viewing the transaction history of their WeChat wallet"""},
+            {"role": "user",
+                "content": """Enter Bowen's Moments"""},
+            {"role": "assistant",
+                "content": """Accessing the social media feed or posts of the user named Bowen on WeChat, which is commonly referred to as 'Moments'"""},
+            {"role": "user",
+                "content": intention+". Note that do not show app name in the description."},
+        ]
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=intention,
+            temperature=0.5,
+        )
+        print(response)
+        intention = response["choices"][0]["message"]["content"]
+        print(intention)
         intent_embedding = embedding_from_string(intention)
-        print(prompt_now)
-        print(semantic_info)
+        sims.append(100*cosine_similarity(intent_embedding,
+                    embedding_from_string("Homepage")))
+        initialize_prompt(intention)
+        GLOBAL_STATE = "Not Started"
+    elif request.method == "POST" and "start" in request.form:
+        GLOBAL_STATE = "Started"
     elif request.method == "POST" and "reset" in request.form:
         if intention != "":
             initialize_prompt(intention)
+            current_path = ["Homepage"]
+            current_path_str = "Homepage"
+            intent_embedding = None
+            sims = []
+            chart_data = {
+                'labels': [],
+                'datasets': [
+                    {
+                        'data': [],
+                        'backgroundColor': [
+                            'rgb(255, 99, 132)',
+                            'rgb(54, 162, 235)',
+                            'rgb(255, 205, 86)',
+                            'rgb(75, 192, 192)',
+                            'rgb(153, 102, 255)'
+                        ],
+                        'hoverOffset': 4
+                    }
+                ]
+            }
+            line_data = {
+                "labels": [],
+                "datasets": [
+                    {
+                        "label": 'Similarity',
+                        "data": [],
+                        "pointStyle": 'circle',
+                        "pointRadius": 10,
+                        "pointHoverRadius": 15
+                    }
+                ]
+            }
             i = 0
-            current_path = []
-            current_path_str = "Begin"
-    elif request.method == "POST" and "next" in request.form:
+            GLOBAL_STATE = "Not Started"
 
-        img_id = str(cnt)
-        print(semantic_info)
-        possible_comp_str = [i.split("{")[1].split("}")[
-            0] for i in semantic_info if i.split("{")[1].split("}")[0] != ""]
-        print(possible_comp_str)
-        embeddings = [embedding_from_string(string)
-                      for string in possible_comp_str]
-        similarity = [cosine_similarity(
-            intent_embedding, embedding) for embedding in embeddings]
-        print(similarity)
-
-        semantic_info = str(semantic_info)[2:-2].replace(r"}, {", " ,")
-        print(semantic_info)
-        if len(prompt_now) > 10:
-            prompt_now.pop(-2)
-        print(generate_prompt(semantic_info=str(semantic_info)))
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=prompt_now,
-            temperature=0,
-        )
-        print(response)
-        result = response['choices'][0]['message']['content']
-        prompt_now.append(response['choices'][0]['message'])
-        # 找到<SOC><EOC>之间的内容
-        comp_selected = result[result.find("<SOC>")+5:result.find("<EOC>")]
-        current_path.append(comp_selected)
-        current_path_str = "-".join(current_path)
-        print("current_path", current_path_str)
-        print(result)
-        return render_template("index.html", result=result, img_id=img_id, semantic_info=semantic_info,chart_data=chart_data)
-    return render_template("index.html", chart_data=chart_data)
+    return render_template("index.html", elements=json.dumps({"result": result, "image_id": img_id}), chart_data=json.dumps(chart_data), line_data=json.dumps(line_data))
 
 
-def generate_prompt(semantic_info):
+@app.route('/test_data', methods=['GET'])
+def test_data():
+    global result, img_id, i, seq, ins_seq, intention, semantic_info, chart_data, current_path, current_path_str, intent_embedding, sims, line_data, GLOBAL_STATE, center
+    if result != "" and img_id != 0:
+        return json.dumps({"result": result, "image_id": img_id, "semantic_info": semantic_info, "chart_data": chart_data, "line_data": line_data})
+    return json.dumps({"result": "", "image_id": 1, "semantic_info": semantic_info, "chart_data": chart_data, "line_data": line_data})
+
+
+def generate_prompt(semantic_info: str) -> str:
     global prompt_now, i
-    prompt_now.append({"role": "user",
-                       "content": """{},Current components:"{}".""".format(i+1, semantic_info)})
+    print(type(semantic_info))
+    prompt_now = prompt_now+"""{},[Begin]Current page components:"[{}]".
+""".format(
+        str(i+1), semantic_info
+    )
     i += 1
     return prompt_now
 
 
 def initialize_prompt(init):
     global prompt_now
-    prompt_now = [
-        {"role": "system",
-         "content": """You are an assistant translating user's intention to UI actions.
-         Rules:
-         1,UI components are organized as {major text}-{all text}-{description}-{android class}.
-         2,Please strictly follow the answer format:"Expecting...Currently".
-         3,Only one short instruction is allowed to be generated per step.
-         4,Each instruction can only chooes from the components of the current page!"""},
-        {"role": "user",
-         "content": """A user's intention is to 'Turn off Dark mode in WeChat'."""},
-        {"role": "user",
-         "content": """1,Current page components:"['{Settings}-{}-{}-{LinearLayout}', '{Sticker Gallery}-{}-{}-{LinearLayout}', '{My Posts}-{}-{}-{LinearLayout}', '{Favorites}-{}-{}-{LinearLayout}', '{Services}-{}-{}-{LinearLayout}']"""},
-        {"role": "assistant",
-         "content": """The current page is:"Me page".Expecting the next page to appear :['{General}-{}-{}-{LinearLayout}'].Currently the instruction should be :[Click on <SOC>Settings<EOC> ]."""},
-        {"role": "user",
-         "content": """2,Current page components:"['{My Information & Authorizations}-{}-{}-{LinearLayout}', "{Friends' Permissions}-{}-{}-{LinearLayout}", '{Privacy}-{}-{}-{LinearLayout}', '{General}-{}-{}-{LinearLayout}', '{Chats}-{}-{}-{LinearLayout}', '{}-{}-{Back}-{LinearLayout}']"."""},
-        {"role": "assistant",
-         "content": """The current page is:"Settings page".Expecting the next page to appear :['{Dark Mode}-{}-{}-{LinearLayout}'].Currently the instruction should be :[Click on <SOC>General<EOC> ]."""},
-        {"role": "user",
-         "content": """3,Current page components:"['{Manage Discover}-{}-{}-{LinearLayout}', '{Photos, Videos, Files & Calls}-{}-{}-{LinearLayout}', '{Text Size}-{}-{}-{LinearLayout}','{Dark Mode}-{Auto}-{}-{LinearLayout}', '{}-{}-{Back}-{LinearLayout}']"."""},
-        {"role": "assistant",
-         "content": """The current page is:"Settings-General subpage".Expecting the next page to appear :["DONE!"].Currently the instruction should be :[Click on <SOC>Dark Mode<EOC> ].The Task is DONE!"""},
-    ]
-    prompt_now.append(
-        {"role": "user", "content": """A user's intention is to '{}'.""".format(init)})
+    prompt_now = """A user's intention is to 'Turn off Dark mode in WeChat'.
+1,Current page components:"['1,{}-{}-{More function buttons}-{RelativeLayout}', '2,{}-{}-{Search}-{RelativeLayout}', '3,{Me}-{Me}-{}-{RelativeLayout}', '4,{Discover}-{Discover}-{}-{RelativeLayout}', '5,{Contacts}-{Contacts}-{}-{RelativeLayout}', '6,{Chats}-{Chats}-{}-{RelativeLayout}']".The current page is:"Homepage".Expecting the next page to appear :['{Settings}-{}-{}-{LinearLayout}'].Currently choose one component :[Click on <SOC>3,Me<EOC> ].
+2,Current page components:"['1,{Settings}-{}-{}-{LinearLayout}', '2,{Sticker Gallery}-{}-{}-{LinearLayout}', '3,{My Posts}-{}-{}-{LinearLayout}', '4,{Favorites}-{}-{}-{LinearLayout}', '5,{Services}-{}-{}-{LinearLayout}']".The current page is:"Me page".Expecting the next page to appear :['{General}-{}-{}-{LinearLayout}'].Currently choose one component :[Click on <SOC>1,Settings<EOC> ].
+3,Current page components:"['1,{My Information & Authorizations}-{}-{}-{LinearLayout}', "2,{Friends' Permissions}-{}-{}-{LinearLayout}", '3,{Privacy}-{}-{}-{LinearLayout}', '4,{General}-{}-{}-{LinearLayout}', '5,{Chats}-{}-{}-{LinearLayout}', '6,{}-{}-{Back}-{LinearLayout}']".The current page is:"Settings page".Expecting the next page to appear :['{Dark Mode}-{}-{}-{LinearLayout}'].Currently choose one component :[Click on <SOC>4,General<EOC> ].
+4,Current page components:"['1,{Manage Discover}-{}-{}-{LinearLayout}', '2,{Photos, Videos, Files & Calls}-{}-{}-{LinearLayout}', '3,{Text Size}-{}-{}-{LinearLayout}','4,{Dark Mode}-{Auto}-{}-{LinearLayout}', '5,{}-{}-{Back}-{LinearLayout}']".The current page is:"Settings-General subpage".Expecting the next page to appear :["DONE!"].Currently choose one component :[Click on <SOC>4,Dark Mode, The Task is DONE!<EOC> ].
+
+Rules:
+1,UI components are organized as {major text}-{all text}-{description}-{android class}.
+2,Please strictly follow the answer format:"Expecting...Currently".
+3,Only one short instruction is allowed to be generated per step.
+4,Each instruction can only choose from the current components.Indicate the serial number!
+A user's intention is to """ + "["+init+"]\n"
 
 
 if __name__ == "__main__":
+    global screen
+    screen = Screen()
     app.run(host='0.0.0.0', port=5000)
