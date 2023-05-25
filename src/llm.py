@@ -25,7 +25,8 @@ class LLM:
         # semantic_info = expand_semantic(semantic_info)
         print("semantic_info", self.screen.semantic_info)
         print("==================================================")
-        self.generate_prompt(semantic_info=str(self.screen.semantic_info))
+        self.generate_decision_prompt(
+            semantic_info=str(self.screen.semantic_info))
         if len(self.prom_decision) > 7500:
             return False
         response = openai.Completion.create(
