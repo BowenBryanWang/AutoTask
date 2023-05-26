@@ -1,5 +1,8 @@
 import math
+import numpy as np
 import openai
+import pandas as pd
+import scipy
 from Screen.init import Screen
 
 
@@ -13,26 +16,10 @@ class LLM:
     candidate = []  # 当前的候选项编号
     decision_result = []  # 决策输出的候选项概率
     evaluate_result = []  # 评估输出的候选项概率
-
-    gamma = {}
+    gamma = [1, 1, 1, 1, 1]
 
     def __init__(self, screen) -> None:
         self.screen = screen
-        
-    def update(self,screen):
-        """
-        @description: 更新LLM的状态
-        @param {*}
-        @return {*}
-        """
-        self.description = ""
-        self.screen = screen
-        self.prom_decision = ""
-        self.index = self.index+1
-        self.candidate = []
-        self.decision_result = []
-        self.evaluate_result = []
-        
 
     def decision(self):
         """
@@ -46,8 +33,8 @@ class LLM:
         print("==================================================")
         self.generate_decision_prompt(
             semantic_info=str(self.screen.semantic_info))
-        if len(self.prom_decision) > 7500:
-            return False
+        # if len(self.prom_decision) > 7500:
+        #     return False
         response = openai.Completion.create(
             model="text-davinci-003",
             prompt=self.prom_decision,
@@ -72,7 +59,7 @@ class LLM:
             self.decision_result.append(math.exp(value))
         print(self.candidate)
 
-    def generate_prompt_decision(self, semantic_info: str) -> str:
+    def generate_decision_prompt(self, semantic_info: str) -> str:
         """
         @description: 产生decision结构的prompt
         @param {semantic_info: str} 语义信息
@@ -110,8 +97,9 @@ class LLM:
         1，由LLM判断各个候选项对完成任务的帮助程度；
         2，由知识库（KB，Knoeledge Base）评估候选项（TODO）
         3，由app使用经验评估候选项（TODO）
+        4，惩罚因子如何发挥作用（TODO）
         可能有以下挑战：
-        1，决策给出的top5的候选项都不对，根据先验知识应该选择另外一个top5之外的控件（待解决，不难）
+        1，决策给出的top5的候选项都不对，根据先验知识应该选择另外一个top5之外的控件（待解决）
         """
         if self.candidate == []:
             raise Exception("Please call decision function first!")
@@ -125,7 +113,7 @@ class LLM:
         result = response.choices[0].text
         result = result[result.find("The score is")+13:]
         result = result.replace("[", "").replace("]", "").split(",")
-        result = [int(result[i])/10*gamma[i] for i in range(len(result))]
+        result = [int(result[i])/10*self.gamma[i] for i in range(len(result))]
         self.evaluate_result = result
 
     def initialize_evaluate_prompt(self, components):
@@ -162,7 +150,7 @@ Provide reasoning and explanations for why each option receives the confidence r
 
     def initialize_predict_prompt(self):
         self.prom_evaluate = """Example:
-You are a mobile phone user with the intent to [check your WeChat wallet balance]. Currently, you are on the [home page] with components organized as HTML-like format:
+You are a mobile phone user. Currently, you are on the [home page] with major components organized as HTML-like format:
 <body>
     <List class="container">
         <ListItem class="messager">Bowen</ListItem>
@@ -176,7 +164,6 @@ You are a mobile phone user with the intent to [check your WeChat wallet balance
     </TabList>
 </body>
 As an AI assistant aiming to predict page-components after clicking each item, give the extended page HTML-like format:
-
 """
 
     def find_by_knowledge_base(self):
@@ -186,11 +173,34 @@ As an AI assistant aiming to predict page-components after clicking each item, g
         @return {*}
         """
         pass
-    
+
     def error_detection(self):
         """
-        @description: 验证当前决策中是否存在错误
+        @description: 异常检测模块，验证当前决策中是否存在错误
         @param {self.decision_result,self.screen,self.evaluate_result}
         @return {*}
+        实现思路：
+        1，根据观察这一步的【决策、评估】中输出的概率的分布情况来判断异常
+        2，根据上一步预测的结果与真实结果的差异来判断异常(TODO)
         """
-        pass
+        stddev = np.std(self.decision_result)
+        kurt = pd.Series(self.decision_result).kurt()
+        entropy = scipy.stats.entropy(self.decision_result)
+        if (stddev > 0.1) or (kurt > 0.5) or (entropy < 0.5):
+            return True
+        mean = np.mean(self.evaluate_result)
+        if (mean < 3):
+            return True
+        return False
+
+    def get_result(self):
+        """
+        @description: 获取当前的评估结果
+        @param {*}
+        @return {*}
+        """
+        try:
+            result = self.evaluate_result*self.decision_result
+            return result
+        except:
+            raise Exception("Please call evaluate function first!")
