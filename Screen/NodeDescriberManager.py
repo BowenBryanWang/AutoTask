@@ -1,17 +1,17 @@
 from multiprocessing.dummy import Manager
-from NodeDescriber import *
+from Screen.NodeDescriber import *
 
 ratio = 3.3
 
 
 class NodeDescriberManager:
-    def __init__(self, type="", fa_describer=None,model_node_id=""):
-        self.model_node_id  = model_node_id
+    def __init__(self, type="", fa_describer=None, model_node_id=""):
+        self.model_node_id = model_node_id
         self.describer = SpecialNodeDescriber([], [])
         self.type = type
         self.fa_describer = fa_describer
         if fa_describer:
-            self.fa_type= fa_describer.type
+            self.fa_type = fa_describer.type
         else:
             self.fa_type = None
         self.children = []
@@ -36,12 +36,12 @@ class NodeDescriberManager:
         self.describer.update(ref_positive_nodes,
                               ref_negative_nodes, positive_nodes)
         print("update")
+
     def update_children(self, child):
         self.children.append(child)
 
-
     def save_to_json(self, pageindex):
-        data = {"type": self.type, "describer_type":self.describer.tag, "positive_ref": [],
+        data = {"type": self.type, "describer_type": self.describer.tag, "positive_ref": [],
                 "negative_ref": [], "positive": [], "pageindex": pageindex}
         for item in self.describer.positive_ref_nodes:
             data["positive_ref"].append(
@@ -57,8 +57,10 @@ class NodeDescriberManager:
             data["positive"].append(
                 {"page_id": item[1].page_id, "index": item[1].get_id_relative_to(item[1].get_root())})
         return json.dumps(data)
-    def calculate(self,node):
+
+    def calculate(self, node):
         return self.describer.calculate(node)
+
     def find_node(self, crt_node):
         print(self.type)
         if self.type == "list":

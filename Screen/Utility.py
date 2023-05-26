@@ -2,7 +2,7 @@
 #  提供一些常用的接口
 import os
 import numpy as np
-import WindowStructure
+import Screen.WindowStructure
 from queue import deque
 from string import digits
 import random
@@ -14,10 +14,13 @@ except ImportError:
 
 TOO_LONG_TEXT_TH = 10
 
+
 def load_screen(save_path):
     android_root = os.environ['ANDROID_SDK_ROOT'] or '/Users/kinnplh/Library/Android/sdk/'
-    os.system(os.path.join(android_root, 'platform-tools/adb') + ' shell screencap -p /sdcard/tmp.jpg')
-    os.system(os.path.join(android_root, 'platform-tools/adb') + ' pull /sdcard/tmp.jpg %s' % save_path)
+    os.system(os.path.join(android_root, 'platform-tools/adb') +
+              ' shell screencap -p /sdcard/tmp.jpg')
+    os.system(os.path.join(android_root, 'platform-tools/adb') +
+              ' pull /sdcard/tmp.jpg %s' % save_path)
 
 
 def getLongestSubstring_dp2(str1, str2):
@@ -72,24 +75,27 @@ def getLongestSubstring_dp2(str1, str2):
 def is_str_similar(str1, str2):
     if len(str1) == 0 or len(str2) == 0:
         return False
-    str_similarity = 2 * getLongestSubstring_dp2(str1, str2) / float((len(str1) + len(str2)))
+    str_similarity = 2 * \
+        getLongestSubstring_dp2(str1, str2) / float((len(str1) + len(str2)))
     print(str1, str2, 'similarity: ', str_similarity)
     return str_similarity > 0.5
 
 
 def get_static_ui_diff(page_instance1, page_instance2):
-    res = []  
+    res = []
     if page_instance1.ui_root.node_class != page_instance2.ui_root.node_class:
         return [(page_instance1.ui_root, page_instance2.ui_root)]
-    comp_ui_node(page_instance1.ui_root, page_instance2.ui_root, res, only_static=True)
+    comp_ui_node(page_instance1.ui_root,
+                 page_instance2.ui_root, res, only_static=True)
     return res
 
 
 def get_global_ui_diff(page_instance1, page_instance2):
-    res = []  
+    res = []
     if page_instance1.ui_root.node_class != page_instance2.ui_root.node_class:
         return [(page_instance1.ui_root, page_instance2.ui_root)]
-    comp_ui_node(page_instance1.ui_root, page_instance2.ui_root, res, only_static=False)
+    comp_ui_node(page_instance1.ui_root,
+                 page_instance2.ui_root, res, only_static=False)
     return res
 
 
@@ -146,7 +152,8 @@ def get_instance_in_page_state_share_similar_dynamic(page_instance1, another_pag
     for instance2 in another_page_state2.page_instances:
         is_first_level_dynamic_entrance_same = True
 
-        dynamic_entrance_id_2 = [x.absolute_id for x in instance2.dynamic_entrance]
+        dynamic_entrance_id_2 = [
+            x.absolute_id for x in instance2.dynamic_entrance]
         for dynamic_entrance1 in page_instance1.dynamic_entrance:
             if not dynamic_entrance1.is_in_static_region:  # 只有在 static region 的 dynamic entrance 才是最外面一层的 entrance
                 continue
@@ -162,7 +169,8 @@ def get_instance_in_page_state_share_similar_dynamic(page_instance1, another_pag
         for dynamic_entrance1 in page_instance1.dynamic_entrance:
             if not dynamic_entrance1.is_in_static_region:
                 continue
-            dynamic_entrance2 = instance2.absolute_id_2_node.get(dynamic_entrance1.absolute_id, None)
+            dynamic_entrance2 = instance2.absolute_id_2_node.get(
+                dynamic_entrance1.absolute_id, None)
             assert dynamic_entrance2 is not None
             is_similar_structure_found = False
             for dynamic_root1, dynamic_root2 in [(x, y) for x in dynamic_entrance1.children for y in
@@ -170,7 +178,7 @@ def get_instance_in_page_state_share_similar_dynamic(page_instance1, another_pag
                 if dynamic_root1.is_sub_tree_same(dynamic_root2,
                                                   is_text_diff_allowed=True,
                                                   stop_situation=lambda a,
-                                                                        b: a.is_dynamic_entrance or b.is_dynamic_entrance,
+                                                  b: a.is_dynamic_entrance or b.is_dynamic_entrance,
                                                   is_important_interaction_diff_allowed=False):
                     is_similar_structure_found = True
                     break
@@ -220,14 +228,15 @@ def is_crt_info_match(node1, node2):
     # and node1.index == node2.index\
     # edit text 中的文本也要求一致吧  但是不知道会发生什么
     return node1.node_class == node2.node_class \
-           and node1.editable == node2.editable \
-           and (is_two_str_same_without_num(node1.text, node2.text) or node1.editable) \
-           and node1.clickable == node2.clickable \
-           and node1.enabled == node2.enabled \
-           and is_two_str_same_without_num(node1.resource_id, node2.resource_id) \
-           and node1.is_dynamic_entrance == node2.is_dynamic_entrance \
-           and (len(node1.children) > 0 or len(node2.children) > 0
-                or is_two_str_same_without_num(node1.content_desc, node2.content_desc))
+        and node1.editable == node2.editable \
+        and (is_two_str_same_without_num(node1.text, node2.text) or node1.editable) \
+        and node1.clickable == node2.clickable \
+        and node1.enabled == node2.enabled \
+        and is_two_str_same_without_num(node1.resource_id, node2.resource_id) \
+        and node1.is_dynamic_entrance == node2.is_dynamic_entrance \
+        and (len(node1.children) > 0 or len(node2.children) > 0
+             or is_two_str_same_without_num(node1.content_desc, node2.content_desc))
+
 
 def is_region_interactable(root):
     # type: (WindowStructure.UINode)->bool
@@ -254,7 +263,8 @@ def lcs_node(list1, list2):
             if is_crt_info_match(node1, node2):
                 if index1 > 0 and index2 > 0:
                     dp[index1][index2] = dp[index1 - 1][index2 - 1] + 1
-                    record[index1][index2].extend(record[index1 - 1][index2 - 1])
+                    record[index1][index2].extend(
+                        record[index1 - 1][index2 - 1])
                     record[index1][index2].append((index1, index2))
                 else:
                     dp[index1][index2] = 1
@@ -263,10 +273,12 @@ def lcs_node(list1, list2):
                 if index1 != 0 and index2 != 0:
                     if dp[index1 - 1][index2] > dp[index1][index2 - 1]:
                         dp[index1][index2] = dp[index1 - 1][index2]
-                        record[index1][index2].extend(record[index1 - 1][index2])
+                        record[index1][index2].extend(
+                            record[index1 - 1][index2])
                     else:
                         dp[index1][index2] = dp[index1][index2 - 1]
-                        record[index1][index2].extend(record[index1][index2 - 1])
+                        record[index1][index2].extend(
+                            record[index1][index2 - 1])
                 elif index1 != 0:
                     dp[index1][index2] = dp[index1 - 1][index2]
                     record[index1][index2].extend(record[index1 - 1][index2])
@@ -308,7 +320,8 @@ def comp_ui_node(ui_src, ui_des, res, only_static):
         des_child_list = ui_des.children[:]
         lcs = lcs_node(src_child_list, des_child_list)
         for index1, index2 in lcs:
-            comp_ui_node(src_child_list[index1], des_child_list[index2], res, only_static)
+            comp_ui_node(src_child_list[index1],
+                         des_child_list[index2], res, only_static)
             src_child_list[index1] = None
             des_child_list[index2] = None
         src_child_list = filter(lambda x: x is not None, src_child_list)
@@ -329,13 +342,15 @@ def comp_ui_node(ui_src, ui_des, res, only_static):
             des_child_list = ui_des.children[:]  # type: List[Optional[UINode]]
             lcs = lcs_node(src_child_list, des_child_list)
             for index1, index2 in lcs:
-                comp_ui_node(src_child_list[index1], des_child_list[index2], res, only_static)
+                comp_ui_node(
+                    src_child_list[index1], des_child_list[index2], res, only_static)
                 src_child_list[index1] = None
                 des_child_list[index2] = None
             src_child_list = filter(lambda x: x is not None, src_child_list)
             des_child_list = filter(lambda x: x is not None, des_child_list)
             assert len(src_child_list) > len(des_child_list)
-            des_child_list.extend(None for _ in range(len(src_child_list) - len(des_child_list)))
+            des_child_list.extend(None for _ in range(
+                len(src_child_list) - len(des_child_list)))
             for src_child, des_child in zip(src_child_list, des_child_list):
                 res.append((src_child, des_child))
     else:
@@ -350,13 +365,15 @@ def comp_ui_node(ui_src, ui_des, res, only_static):
             des_child_list = ui_des.children[:]  # type: List[Optional[UINode]]
             lcs = lcs_node(src_child_list, des_child_list)
             for index1, index2 in lcs:
-                comp_ui_node(src_child_list[index1], des_child_list[index2], res, only_static)
+                comp_ui_node(
+                    src_child_list[index1], des_child_list[index2], res, only_static)
                 src_child_list[index1] = None
                 des_child_list[index2] = None
             src_child_list = filter(lambda x: x is not None, src_child_list)
             des_child_list = filter(lambda x: x is not None, des_child_list)
             assert len(src_child_list) < len(des_child_list)
-            src_child_list.extend(None for _ in range(len(des_child_list) - len(src_child_list)))
+            src_child_list.extend(None for _ in range(
+                len(des_child_list) - len(src_child_list)))
             for src_child, des_child in zip(src_child_list, des_child_list):
                 res.append((src_child, des_child))
 
@@ -387,9 +404,11 @@ def cal_diff_area_ratio(instance1, instance2, is_force_static, use_parent_when_c
         if n2 is None:
             n2 = node2
         total_diff_area += \
-            max(n1.get_area() if n1 is not None else 0, n2.get_area() if n2 is not None else 0)
+            max(n1.get_area() if n1 is not None else 0,
+                n2.get_area() if n2 is not None else 0)
 
-    min_area = min(float(instance1.ui_root.get_area()), float(instance2.ui_root.get_area()))
+    min_area = min(float(instance1.ui_root.get_area()),
+                   float(instance2.ui_root.get_area()))
     if min_area == 0:
         print("small area strange")
         min_area = 0.1
@@ -401,8 +420,10 @@ def cal_diff_area_ratio(instance1, instance2, is_force_static, use_parent_when_c
     total_diff_node_num = 0
     for node1, node2 in diff_info:
         # 如果子节点中没有可以操作的节点的话，必须找到祖先节点的
-        n1 = get_interact_parent(node1, use_parent_when_count_num) if count_interactable_node_in_region(node1) == 0 else node1
-        n2 = get_interact_parent(node2, use_parent_when_count_num) if count_interactable_node_in_region(node2) == 0 else node2
+        n1 = get_interact_parent(
+            node1, use_parent_when_count_num) if count_interactable_node_in_region(node1) == 0 else node1
+        n2 = get_interact_parent(
+            node2, use_parent_when_count_num) if count_interactable_node_in_region(node2) == 0 else node2
         if n1 is None:
             n1 = node1
         if n2 is None:
@@ -433,8 +454,10 @@ def cal_global_area_ratio(instance1, instance2):
     total_diff_area = 0
     for node1, node2 in diff_info:
         total_diff_area += \
-            max(node1.get_area() if node1 is not None else 0, node2.get_area() if node2 is not None else 0)
-    min_area = min(float(instance1.ui_root.get_area()), float(instance2.ui_root.get_area()));
+            max(node1.get_area() if node1 is not None else 0,
+                node2.get_area() if node2 is not None else 0)
+    min_area = min(float(instance1.ui_root.get_area()),
+                   float(instance2.ui_root.get_area()))
     if min_area == 0:
         print("small area strange")
         min_area = 0.1
@@ -445,6 +468,7 @@ def is_two_region_same(root1, root2, allow_text_diff):
     # type: (UINode, UINode, bool) -> bool
     return root1.is_sub_tree_same(root2, allow_text_diff)
 
+
 def can_instance1_skip_to_instance2(instance1, instance2):
     # type: (WindowStructure.PageInstance, WindowStructure.PageInstance) -> bool
     for last_action in instance1.last_actions_into:
@@ -452,19 +476,22 @@ def can_instance1_skip_to_instance2(instance1, instance2):
             return True
     return False
 
+
 def can_intance1_scroll_to_instance2(instance1, instance2):
     # type: (WindowStructure.PageInstance, WindowStructure.PageInstance) -> bool
     for last_action in instance1.last_actions_into:
         if (last_action.page_instance == instance2) \
-        and (last_action.type == WindowStructure.Action.SCROLL):
+                and (last_action.type == WindowStructure.Action.SCROLL):
             return True
     return False
+
 
 def is_two_instance_only_scroll_diff(instance1, instance2):
     # type: (WindowStructure.PageInstance, WindowStructure.PageInstance) -> bool
     # 判断其中一个instance是否能够通过滚动到达另一个instance
-    return (can_intance1_scroll_to_instance2(instance1,instance2)) or \
-           (can_intance1_scroll_to_instance2(instance2,instance1))
+    return (can_intance1_scroll_to_instance2(instance1, instance2)) or \
+           (can_intance1_scroll_to_instance2(instance2, instance1))
+
 
 def get_last_no_scroll_action(instance):
     # type: (WindowStructure.PageInstance) -> WindowStructure.Action
@@ -539,8 +566,10 @@ def get_same_node_from_other_instance(node, other_instance):
     # 由于动态区域的嵌套的情况，以及动态区域本身内部的数据就可能的重复的情况，这里返回的是一个列表
     # 首先还是要求这两个在同一个 page 内部吧
     res = []
-    pages1, states1 = WindowStructure.Application.THIS.get_page_state_belong_to(node.page_instance)
-    pages2, states2 = WindowStructure.Application.THIS.get_page_state_belong_to(other_instance)
+    pages1, states1 = WindowStructure.Application.THIS.get_page_state_belong_to(
+        node.page_instance)
+    pages2, states2 = WindowStructure.Application.THIS.get_page_state_belong_to(
+        other_instance)
 
     is_same_page_found = False
     for p1, p2 in [(x, y) for x in pages1 for y in pages2]:
@@ -556,10 +585,12 @@ def get_same_node_from_other_instance(node, other_instance):
     if node.is_in_static_region:
         if node.absolute_id in other_instance.absolute_id_2_node:
             # 仅要求子区域一致即可
-            node_in_other = other_instance.absolute_id_2_node.get(node.absolute_id)
+            node_in_other = other_instance.absolute_id_2_node.get(
+                node.absolute_id)
             if node.is_sub_tree_same(node_in_other, is_text_diff_allowed=False,
                                      stop_situation=lambda x, y: x.is_dynamic_entrance and y.is_dynamic_entrance):
-                res.append(other_instance.absolute_id_2_node.get(node.absolute_id))
+                res.append(other_instance.absolute_id_2_node.get(
+                    node.absolute_id))
         return res  # 在静态区域的节点只有可能有一get_same_node_from_other_instance个对应的节点
 
     dynamic_root = node.get_nearest_entrance_root()
@@ -567,16 +598,18 @@ def get_same_node_from_other_instance(node, other_instance):
     id_relative_to_dynamic_root = node.get_id_relative_to(dynamic_root)
     assert dynamic_entrance is not None
 
-    dynamic_entrance_list_in_other_instance = get_same_node_from_other_instance(dynamic_entrance, other_instance)
+    dynamic_entrance_list_in_other_instance = get_same_node_from_other_instance(
+        dynamic_entrance, other_instance)
     for dynamic_entrance_in_other in dynamic_entrance_list_in_other_instance:
         for dynamic_root_in_other in dynamic_entrance_in_other.children:
             # instance 数量太多的情况下 放宽对 text 的要求
             if not dynamic_root_in_other.is_sub_tree_same(dynamic_root,
                                                           is_text_diff_allowed=False,
                                                           stop_situation=lambda x,
-                                                                                y: x.is_dynamic_entrance or y.is_dynamic_entrance):
+                                                          y: x.is_dynamic_entrance or y.is_dynamic_entrance):
                 continue
-            node_in_other = dynamic_root_in_other.get_node_by_relative_id(id_relative_to_dynamic_root)
+            node_in_other = dynamic_root_in_other.get_node_by_relative_id(
+                id_relative_to_dynamic_root)
             assert node_in_other is not None
             res.append(node_in_other)
 
@@ -589,16 +622,18 @@ def get_same_node_from_other_instance(node, other_instance):
                 if not dynamic_root_in_other.is_sub_tree_same(dynamic_root,
                                                               is_text_diff_allowed=True,
                                                               stop_situation=lambda x,
-                                                                                    y: x.is_dynamic_entrance or y.is_dynamic_entrance):
+                                                              y: x.is_dynamic_entrance or y.is_dynamic_entrance):
                     continue
-                node_in_other = dynamic_root_in_other.get_node_by_relative_id(id_relative_to_dynamic_root)
+                node_in_other = dynamic_root_in_other.get_node_by_relative_id(
+                    id_relative_to_dynamic_root)
                 assert node_in_other is not None
                 res.append(node_in_other)
 
     if len(res) == 0 and (len(states1[0].page_instances) > 20
                           or len(states2[0].page_instances) > 20):
         # 只要 id 匹配就可以了
-        node_in_other = other_instance.absolute_id_2_node.get(node.absolute_id, None)
+        node_in_other = other_instance.absolute_id_2_node.get(
+            node.absolute_id, None)
         if node_in_other is not None:
             res.append(node_in_other)
 
@@ -614,7 +649,8 @@ def get_root_from_node(node_in_tree):
         crt_node = crt_node.parent
 
 
-back_texts = ['关闭', '清空', '返回', '返回上一级', '返回上一页', '返回上一层级', '转到上一级', '取消', '转到上一页', '转到上一层级', '离开', 'Navigate up']
+back_texts = ['关闭', '清空', '返回', '返回上一级', '返回上一页', '返回上一层级',
+              '转到上一级', '取消', '转到上一页', '转到上一层级', '离开', 'Navigate up']
 
 
 def is_backward_button(node):
@@ -640,9 +676,11 @@ def is_backward_action(action):
 
 
 def get_all_possible_next_instance_with_action_from_one_instance(page_instance, used_jump_edge):
-    all_possible_next_action = {}  
-    all_possible_next_instance = set()  # type: Set[WindowStructure.PageInstance]
-    pages_belong_to, states_belong_to = WindowStructure.Application.THIS.get_page_state_belong_to(page_instance)
+    all_possible_next_action = {}
+    # type: Set[WindowStructure.PageInstance]
+    all_possible_next_instance = set()
+    pages_belong_to, states_belong_to = WindowStructure.Application.THIS.get_page_state_belong_to(
+        page_instance)
     if len(pages_belong_to) == 0 or len(states_belong_to) == 0:
         return all_possible_next_action, all_possible_next_instance
 
@@ -657,7 +695,8 @@ def get_all_possible_next_instance_with_action_from_one_instance(page_instance, 
 
     while len(q) > 0:
         crt_focus_node = q.popleft()  # 这里的 focus node 实际上是在其他页面上的
-        similar_node_list = get_same_node_from_other_instance(crt_focus_node, page_instance)
+        similar_node_list = get_same_node_from_other_instance(
+            crt_focus_node, page_instance)
         if len(similar_node_list) == 0:
             continue
 
@@ -669,7 +708,8 @@ def get_all_possible_next_instance_with_action_from_one_instance(page_instance, 
                 if crt_action_id in used_jump_edge:
                     continue
 
-                res_to_add = list(filter(lambda x: not x.is_inferred, action_results))
+                res_to_add = list(
+                    filter(lambda x: not x.is_inferred, action_results))
                 if len(res_to_add) == 0:
                     res_to_add = action_results
 
@@ -678,7 +718,8 @@ def get_all_possible_next_instance_with_action_from_one_instance(page_instance, 
 
                         if crt_action_id not in all_possible_next_action:
                             all_possible_next_action[crt_action_id] = set()
-                        all_possible_next_action[crt_action_id].add(action_result.action_target)
+                        all_possible_next_action[crt_action_id].add(
+                            action_result.action_target)
                         all_possible_next_instance.add(
                             action_result.action_target)  # 不允许多个到达同一个 instance。同一个 instance 是可以"再进入"的，但是，允许在 instance 中再进行相同的操作
 
@@ -702,7 +743,8 @@ def is_action_info_back(info):
     return False
 
 
-INSTANCE_NUM_WHEN_CAN_INFER_BACK = 10  # 当一个 state 中的 instance 数量是 10 及以上的时候，可以对 back 进行推测
+# 当一个 state 中的 instance 数量是 10 及以上的时候，可以对 back 进行推测
+INSTANCE_NUM_WHEN_CAN_INFER_BACK = 10
 
 
 def is_state_too_many_instances(page_state):
@@ -771,7 +813,8 @@ def try_new_rule_res(crawler):
                         and not is_two_str_same_without_num(instance1.activity_name, instance2.activity_name):
                     continue
 
-                diff_ratio, diff_num_ratio = cal_diff_area_ratio(instance1, instance2, False)
+                diff_ratio, diff_num_ratio = cal_diff_area_ratio(
+                    instance1, instance2, False)
                 if diff_ratio <= 0.5 and diff_num_ratio < 0.5 and page_index1 == page_index2:
                     continue
                 if (diff_ratio > 0.5 or diff_num_ratio >= 0.5) and page_index1 != page_index2:
@@ -790,18 +833,20 @@ def count_node_num(root):
         res += count_node_num(c)
     return res
 
-def random_long(n = 13):
+
+def random_long(n=13):
     res = ""
     for i in range(n):
         id = int(random()*10)
         res += char(id+48)
     return int(res)
 
+
 def get_common_fix(text1, text2):
     # 公共前缀+公共后缀的长度
     len = 0
     i = 0
-    max_len = min(len(text1),len(text2))
+    max_len = min(len(text1), len(text2))
     while i < max_len:
         if text1[i] == text2[i]:
             len += 1
@@ -815,6 +860,7 @@ def get_common_fix(text1, text2):
             break
     return float(len)*1.0/len(text1)
 
+
 def get_common_length(text1, text2):
     l1 = len(text1)
     l2 = len(text2)
@@ -823,12 +869,12 @@ def get_common_length(text1, text2):
         F.append([])
         for j in range(l2):
             F[i].append(0)
-            if i!=0:
+            if i != 0:
                 F[i][j] = max(F[i][j], F[i-1][j])
-            if j!=0:
+            if j != 0:
                 F[i][j] = max(F[i][j], F[i][j-1])
             tmp = 0
-            if i!=0 and j!=0:
+            if i != 0 and j != 0:
                 tmp = F[i-1][j-1]
             if text1[i] == text2[j]:
                 tmp += 1

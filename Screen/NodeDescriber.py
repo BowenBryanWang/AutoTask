@@ -1,9 +1,9 @@
 from abc import ABCMeta, abstractmethod
 from pydoc import describe
 import queue
-#from asyncio.windows_events import None
+# from asyncio.windows_events import None
 # from selectors import EpollSelector
-from WindowStructure import *
+from Screen.WindowStructure import *
 import math
 import copy
 from sklearn import tree
@@ -11,12 +11,14 @@ from sklearn.tree import DecisionTreeClassifier, export_graphviz
 from sklearn.model_selection import train_test_split
 import pydotplus
 
+
 class NodeDescriber:
     # TODO:
-    positive_ref_nodes = [] #所有正例节点，(block_root, ref_node)
-    positive_nodes = [] #所有正例节点，(block_root, ref_node)
-    negative_ref_nodes = [] #所有负例节点，(block_root, ref_node)
+    positive_ref_nodes = []  # 所有正例节点，(block_root, ref_node)
+    positive_nodes = []  # 所有正例节点，(block_root, ref_node)
+    negative_ref_nodes = []  # 所有负例节点，(block_root, ref_node)
     tag = 'NodeDescriber'
+
     def __init__(self, positive_ref_nodes, negative_ref_nodes):
         self.positive_ref_nodes = positive_ref_nodes
         self.negative_ref_nodes = negative_ref_nodes
@@ -92,12 +94,12 @@ class SpecialNodeDescriber(NodeDescriber):
             for child in node.children:
                 stack.append(child)
         print(minDis)
-        if minDis <=0.0:
+        if minDis <= 0.0:
             return minDisNode
         else:
             return None
 
-    def calculate(self,node):
+    def calculate(self, node):
         if len(self.positive_ref_nodes) == 0:
             return None
         minDis = 99.0
@@ -125,7 +127,7 @@ class SpecialNodeDescriber(NodeDescriber):
         refBlockRoot = positive_node.findBlockNode()
         if refBlockRoot == None:
             refBlockRoot = root
-        
+
         nodeRect_width = node.width
         nodeRect_height = node.height
         screenRect_width = root.width
@@ -333,8 +335,8 @@ class PathNodeDescriber(NodeDescriber):
                 continue
             absolute_ids.add(ori_relative_id)
             if (check_node.text == "新的朋友"):
-                print("path strict match",ref_node.text)
-                print("path strict match",ori_relative_id)
+                print("path strict match", ref_node.text)
+                print("path strict match", ori_relative_id)
                 print(ref_block_root.absolute_id)
                 print(crt_root.absolute_id)
             #print("ori_relative_id:", ori_relative_id)
@@ -375,25 +377,25 @@ class AutoNodeDescriber(NodeDescriber):
     def init_all_features(self):
         # TODO:计算所有feature
         self.node_class_list = []
-        self.feature_name_list = ['node_class_id','clickable','editable','path_strict_match','path_match_ratio',
-                            'text_match_state','text_match_ratio',
-                            'content_match_state','content_match_ratio',
-                            'resource_id',
-                            'left: global','left: block',
-                            'right: global','right: block',
-                            'top: global','top: block',
-                            'bottom: global','bottom: block',
-                            'mid_x: global','mid_x: block',
-                            'mid_y: global','mid_y: block']
-        #正例
-        #for ref_node_pair in self.positive_ref_nodes:
-            #crt_feature_list = self.get_all_features_for_positive_node(ref_node_pair)
-            #self.positive_X.append(crt_feature_list)
+        self.feature_name_list = ['node_class_id', 'clickable', 'editable', 'path_strict_match', 'path_match_ratio',
+                                  'text_match_state', 'text_match_ratio',
+                                  'content_match_state', 'content_match_ratio',
+                                  'resource_id',
+                                  'left: global', 'left: block',
+                                  'right: global', 'right: block',
+                                  'top: global', 'top: block',
+                                  'bottom: global', 'bottom: block',
+                                  'mid_x: global', 'mid_x: block',
+                                  'mid_y: global', 'mid_y: block']
+        # 正例
+        # for ref_node_pair in self.positive_ref_nodes:
+        #crt_feature_list = self.get_all_features_for_positive_node(ref_node_pair)
+        # self.positive_X.append(crt_feature_list)
         self.recal_all_features_for_positive_nodes()
         self.recal_all_features_for_negative_ref_nodes()
 
     def recal_all_features_for_positive_nodes(self):
-        #正例
+        # 正例
         self.positive_X = []
         for ref_node_pair in self.positive_nodes:
             crt_feature_list = self.get_all_features(ref_node_pair)
@@ -416,7 +418,8 @@ class AutoNodeDescriber(NodeDescriber):
         crt_feature_list = []
         # TODO:
         # 1.1: node_class_id
-        node_class_id = self.node_class_list.index(ref_node_pair[1].node_class) if ref_node_pair[1].node_class in self.node_class_list else -1
+        node_class_id = self.node_class_list.index(
+            ref_node_pair[1].node_class) if ref_node_pair[1].node_class in self.node_class_list else -1
         if node_class_id == -1:
             self.node_class_list.append(ref_node_pair[1].node_class)
             node_class_id = len(self.node_class_list) - 1
@@ -468,7 +471,8 @@ class AutoNodeDescriber(NodeDescriber):
     def get_all_features(self, ref_node_pair):
         crt_feature_list = []
         # 1.1: node_class_id
-        node_class_id = self.node_class_list.index(ref_node_pair[1].node_class) if ref_node_pair[1].node_class in self.node_class_list else -1
+        node_class_id = self.node_class_list.index(
+            ref_node_pair[1].node_class) if ref_node_pair[1].node_class in self.node_class_list else -1
         if node_class_id == -1:
             self.node_class_list.append(ref_node_pair[1].node_class)
             node_class_id = len(self.node_class_list) - 1
@@ -478,37 +482,45 @@ class AutoNodeDescriber(NodeDescriber):
         # 1.3: editable
         crt_feature_list.append(int(ref_node_pair[1].editable))
         # 2.1: path_strict_match
-        node_describer = PathNodeDescriber(self.positive_ref_nodes, self.negative_ref_nodes)
-        crt_feature_list.append(int(node_describer.match(ref_node_pair[0], ref_node_pair[1])))
+        node_describer = PathNodeDescriber(
+            self.positive_ref_nodes, self.negative_ref_nodes)
+        crt_feature_list.append(
+            int(node_describer.match(ref_node_pair[0], ref_node_pair[1])))
         # 2.2: path_match_ratio
         path_match_raito = 0
         for positive_ref_node_pair in self.positive_ref_nodes:
-            path_match_raito = max(path_match_raito, positive_ref_node_pair[1].cal_path_match_raito(ref_node_pair[1]))
+            path_match_raito = max(
+                path_match_raito, positive_ref_node_pair[1].cal_path_match_raito(ref_node_pair[1]))
         crt_feature_list.append(path_match_raito)
         # 3.1: text_match_state
         text_match_state = 2
         for positive_ref_node_pair in self.positive_ref_nodes:
-            text_match_state = min(text_match_state, positive_ref_node_pair[1].get_text_match_state(ref_node_pair[1]))
+            text_match_state = min(
+                text_match_state, positive_ref_node_pair[1].get_text_match_state(ref_node_pair[1]))
         crt_feature_list.append(text_match_state)
         # 3.2: text_match_ratio
         text_match_ratio = 0
         for positive_ref_node_pair in self.positive_ref_nodes:
-            text_match_ratio = max(text_match_ratio, positive_ref_node_pair[1].cal_text_match_raito(ref_node_pair[1]))
+            text_match_ratio = max(
+                text_match_ratio, positive_ref_node_pair[1].cal_text_match_raito(ref_node_pair[1]))
         crt_feature_list.append(text_match_ratio)
         # 4.1: content_match_state
         content_match_state = 2
         for positive_ref_node_pair in self.positive_ref_nodes:
-            content_match_state = min(content_match_state, positive_ref_node_pair[1].cal_content_match_state(ref_node_pair[1]))
+            content_match_state = min(
+                content_match_state, positive_ref_node_pair[1].cal_content_match_state(ref_node_pair[1]))
         crt_feature_list.append(content_match_state)
         # 4.2: content_match_ratio
         content_match_ratio = 2
         for positive_ref_node_pair in self.positive_ref_nodes:
-            content_match_ratio = max(content_match_ratio, positive_ref_node_pair[1].cal_content_match_ratio(ref_node_pair[1]))
+            content_match_ratio = max(
+                content_match_ratio, positive_ref_node_pair[1].cal_content_match_ratio(ref_node_pair[1]))
         crt_feature_list.append(content_match_ratio)
         # 5: resource_id
         resource_id_match = 0
         for positive_ref_node_pair in self.positive_ref_nodes:
-            resource_id_match = max(resource_id_match, positive_ref_node_pair[1].check_resource_id(ref_node_pair[1]))
+            resource_id_match = max(
+                resource_id_match, positive_ref_node_pair[1].check_resource_id(ref_node_pair[1]))
         crt_feature_list.append(resource_id_match)
         # 6.1.1: left: global
         crt_feature_list.append(ref_node_pair[1].cal_left(0))
@@ -602,28 +614,30 @@ class AutoNodeDescriber(NodeDescriber):
         for candidate_negative_node in self.candidate_negative_nodes:
             self.X.append(candidate_negative_node[1])
             self.y.append(0)
-        print("positive: ",len(self.positive_X))
-        print("negative: ",len(self.negative_X))
+        print("positive: ", len(self.positive_X))
+        print("negative: ", len(self.negative_X))
         print("candidate negative: ", len(self.candidate_negative_nodes))
         print(self.p_nodes)
         for i in range(len(self.X)):
             for j in range(len(self.X)):
                 if self.X[i] == self.X[j] and self.y[i] != self.y[j]:
                     print(self.X[i])
-                    print(i,j)
+                    print(i, j)
                     if i < len(self.positive_X):
                         print(self.positive_nodes[i])
                     if j >= len(self.positive_X)+len(self.negative_X):
-                        print(self.candidate_negative_nodes[j-len(self.positive_X)-len(self.negative_X)])
+                        print(
+                            self.candidate_negative_nodes[j-len(self.positive_X)-len(self.negative_X)])
                     quit()
-        self.model = DecisionTreeClassifier(criterion='entropy',min_samples_split=2)
+        self.model = DecisionTreeClassifier(
+            criterion='entropy', min_samples_split=2)
         self.model.fit(self.X, self.y)
         self.show_model()
         print("model updated.")
 
     def show_model(self):
         dot_data = tree.export_graphviz(self.model, out_file=None, feature_names=self.feature_name_list,
-                                       filled=True, rounded=True, special_characters=True)
+                                        filled=True, rounded=True, special_characters=True)
         graph = pydotplus.graph_from_dot_data(dot_data)
         graph.write_pdf('model.pdf')
 
@@ -638,16 +652,17 @@ class AutoNodeDescriber(NodeDescriber):
             for child in node.children:
                 stack.append(child)
         X = []
-        print("check:",crt_root.generate_all_text())
-        print("y:",self.y)
-        print("predict_y:",self.model.predict(self.X))
+        print("check:", crt_root.generate_all_text())
+        print("y:", self.y)
+        print("predict_y:", self.model.predict(self.X))
         for node in nodes:
-            tmp_feature = self.get_all_features((crt_root,node))
+            tmp_feature = self.get_all_features((crt_root, node))
             X.append(tmp_feature)
             if node.text == "你好。" or node.text == "111":
-                print("crt_feature:",tmp_feature)
-                print("positive_x[0]:",self.X[0])
-                print("absolute_id same:",self.positive_ref_nodes[0][1].absolute_id == node.absolute_id)
+                print("crt_feature:", tmp_feature)
+                print("positive_x[0]:", self.X[0])
+                print("absolute_id same:",
+                      self.positive_ref_nodes[0][1].absolute_id == node.absolute_id)
 
         y = self.model.predict(X)
         for i in range(len(nodes)):
@@ -732,7 +747,8 @@ class AutoNodeDescriber(NodeDescriber):
                 for child in node.children:
                     stack.append(child)'''
         for ref_node_pair in positive_nodes:
-            print(ref_node_pair[0].generate_all_text(), ref_node_pair[1].generate_all_text())
+            print(ref_node_pair[0].generate_all_text(),
+                  ref_node_pair[1].generate_all_text())
             node = ref_node_pair[1].parent
             while node is not None:
                 if (node not in self.n_nodes) and (node not in self.p_nodes):
@@ -756,7 +772,7 @@ class AutoNodeDescriber(NodeDescriber):
                             (node.findBlockNode(), node))))
                 for child in node.children:
                     stack.append(child)
-        #print("res:",res)
+        # print("res:",res)
         return res
 
 

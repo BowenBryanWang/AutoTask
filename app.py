@@ -19,9 +19,9 @@ from flask import request
 import os
 import base64
 from Screen.init import Screen
-from WindowStructure import *
+from Screen.WindowStructure import *
 import time
-from NodeDescriberManager import *
+from Screen.NodeDescriberManager import *
 import json
 import numpy as np
 from flask_socketio import SocketIO
@@ -33,7 +33,6 @@ import datetime
 app = Flask(__name__)
 
 openai.api_key = "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"
-screen = Screen()
 layout = None
 screenshot = None
 imgdata = None
@@ -311,15 +310,17 @@ def step_back():
     if tmp_num == -1:
         return "0"
 
-def update_knowledge(item,page):
+
+def update_knowledge(item, page):
     with open("./static/knowledge.json", "r") as f:
         knowledge = json.load(f)
     knowledge[item] = page
     with open("./static/knowledge.json", "w") as f:
         json.dump(knowledge, f)
 
+
 def find_from_knowledge(semantic_info: str):
-    #打开/static/knowledge.json
+    # 打开/static/knowledge.json
     with open("./static/knowledge.json", "r") as f:
         knowledge = json.load(f)
     for key in knowledge.keys():
@@ -327,12 +328,14 @@ def find_from_knowledge(semantic_info: str):
             return knowledge[key]
     return None
 
+
 def expand_semantic(semantic_info: list):
     hist = semantic_info.copy()
     for item in range(len(semantic_info)):
         if find_from_knowledge(semantic_info[item]) is not None:
-            semantic_info[item] = semantic_info[item] + ":"+str(find_from_knowledge(semantic_info[item]))
-            print("-----------",semantic_info[item])
+            semantic_info[item] = semantic_info[item] + ":" + \
+                str(find_from_knowledge(semantic_info[item]))
+            print("-----------", semantic_info[item])
         else:
             intention = [
                 {"role": "system",
@@ -354,10 +357,13 @@ def expand_semantic(semantic_info: list):
                 temperature=0.7,
             )
             print(response)
-            update_knowledge(semantic_info[item], response["choices"][0]["message"]["content"].split("After-page:")[1])
-            semantic_info[item] = semantic_info[item]+":"+response["choices"][0]["message"]["content"].split("After-page:")[1]
-            print("+++++++++",semantic_info[item])
-            
+            update_knowledge(semantic_info[item], response["choices"]
+                             [0]["message"]["content"].split("After-page:")[1])
+            semantic_info[item] = semantic_info[item]+":" + \
+                response["choices"][0]["message"]["content"].split(
+                    "After-page:")[1]
+            print("+++++++++", semantic_info[item])
+
     print("semantic_info", semantic_info)
     return semantic_info
 
@@ -603,6 +609,4 @@ A user's intention is to """ + "["+init+"]\n"
 
 
 if __name__ == "__main__":
-    global screen
-    screen = Screen()
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5001)

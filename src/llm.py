@@ -7,17 +7,21 @@ class LLM:
     description = ""  # 用户初始的任务意图
     screen = Screen()  # 当前界面信息的包
     prom_decision = ""  # 当前的prompt
-    index = 0
-    current_path = []
+    index = 0  # 步骤索引，表明当前是第几步
+    current_path = []  # 当前的路径
     current_path_str = ""
-    candidate = {}
+    candidate = []  # 当前的候选项编号
+    decision_result = []  # 决策输出的候选项概率
+    evaluate_result = []  # 评估输出的候选项概率
+
+    gamma = {}
 
     def __init__(self, screen) -> None:
         self.screen = screen
 
     def decision(self):
         """
-        @description: 一步推理:将界面信息输入LLM,让LLM做出决策,只需要获得决策结果的top5的prob并更新到结构体即可
+        @description: 一步推理:将界面信息输入LLM,让LLM做出决策,只需要获得决策结果的top5的prob并更新到candidate即可
         @param {*}
         @return {*}
         """
@@ -48,7 +52,9 @@ class LLM:
         probs = response["choices"][0]["logprobs"]["top_logprobs"][index_of_choice]
         self.candidate = {}
         for key, value in probs.items():
-            self.candidate[int(key)] = math.exp(value)
+            self.candidate.append(
+                zip(int(key), self.screen.semantic_info[int(key)-1]))
+            self.decision_result.append(math.exp(value))
         print(self.candidate)
 
     def generate_prompt_decision(self, semantic_info: str) -> str:
@@ -78,38 +84,52 @@ class LLM:
     4,Each instruction can only choose from the current components.Indicate the serial number!
     A user's intention is to """ + "["+init+"]\n"
 
-    def evaluate(self, gamma):
+    def evaluate(self):
         """
-        @description: 评估当前的候选项对完成任务的概率
-        @param {gamma} 惩罚因子，衡量每一个组件被惩罚的概率
-        @param {*} candidate 当前的候选项，一共有五项
+        @description: 评估当前的候选项对完成任务的概率,实现机制：交给LLM判断该组件是否对完成任务有帮助
+        @param {self.gamma} 惩罚因子，衡量每一个组件被惩罚的概率
+        @param {self.candidate}  当前的候选项，一共有五项
         @return {*}
-        实现机制：交给LLM判断该组件是否对完成任务有帮助，如果有帮助则返回概率，否则返回0
+        
         """
-        pass
+        if self.candidate == {}:
+            raise Exception("Please call decision function first!")
+        self.initialize_evaluate_prompt([item[1] for item in self.candidate])
+        response = openai.Completion.create(
+            model="text-davinci-003",
+            prompt=self.prom_evaluate,
+            temperature=0.3,
+            max_tokens=512,
+        )
+        result = response.choices[0].text
+        result = result[result.find("The score is")+13:]
+        result = result.replace("[", "").replace("]", "").split(",")
+        result = [int(result[i])*gamma[i] for i in range(len(result))]
+        self.evaluate_result = result
 
-    def initialize_evaluate_prompt(self, intention, page_description, components):
+    def initialize_evaluate_prompt(self, components):
         self.prom_evaluate = """Example:
 You are a mobile phone user with the intent to [check your WeChat wallet balance]. Currently, you are on the [home page] which presents 5 options:
 ["Settings", "Services", "More", "Favorites", "Emoticons"]
 As an AI assistant aiming to help the user accomplish their goal, analyze each of these 5 options and rate them on a scale of 0-10 for confidence in helping the user complete their intended task.
 Provide reasoning and explanations for why each option receives the confidence rating you assign. Think step by step.
 
-1.Settings: [2]
 The "Settings" option usually provides various configuration and customization options for the app. While it might contain some general account-related settings, it is unlikely to have a direct option to check your WeChat wallet balance. It may have settings related to notifications, privacy, or general app preferences, but not specifically related to financial transactions.
-2.Services: [8]
+1.Settings: [2]
 The "Services" option typically contains a range of features and functionalities offered by WeChat. It is quite likely that the WeChat wallet, including balance information, would fall under the Services section. The Services section often includes various payment-related features and account management options, making it a strong candidate for finding the wallet balance.
-3.More: [5]
+2.Services: [8]
 The "More" option typically expands to show additional options or sub-menus. It is difficult to determine the exact content of the "More" section without further information. While it is possible that the WeChat wallet balance could be found here, there is no strong indication that it would be more likely than the other options.
-4.Favorites: [1]
+3.More: [5]
 The "Favorites" option generally contains saved or bookmarked items within the WeChat app, such as articles, posts, or media content. It is highly unlikely to find a direct option to check your WeChat wallet balance in this section. The Favorites section is more focused on personal preferences rather than financial transactions.
-5.Emoticons: [1]
+4.Favorites: [1]
 The "Emoticons" option is primarily related to emojis, stickers, or other visual expressions used in messaging. It does not have any direct relevance to checking your WeChat wallet balance. It is safe to assume that this option would not provide any functionality related to financial transactions.
+5.Emoticons: [1]
+The score is [2,8,5,1,1].
 
 You are a mobile phone user with the intent to [{}]. Currently, you are on the [{}] which presents 5 options:
 [{},{},{},{},{}]
 As an AI assistant aiming to help the user accomplish their goal, analyze each of these 5 options and rate them on a scale of 0-10 for confidence in helping the user complete their intended task.
-Provide reasoning and explanations for why each option receives the confidence rating you assign. Think step by step.""".format(intention, page_description, components[0], components[1], components[2], components[3], components[4])
+Provide reasoning and explanations for why each option receives the confidence rating you assign. Think step by step.""".format(self.description, self.screen.page_description, components[0], components[1], components[2], components[3], components[4])
 
     def predict(self):
         """
@@ -119,7 +139,7 @@ Provide reasoning and explanations for why each option receives the confidence r
         """
         pass
 
-    def initialize_predict_prompt(self, intention, page_description, components):
+    def initialize_predict_prompt(self):
         self.prom_evaluate = """Example:
 You are a mobile phone user with the intent to [check your WeChat wallet balance]. Currently, you are on the [home page] with components organized as HTML-like format:
 <body>
@@ -136,21 +156,7 @@ You are a mobile phone user with the intent to [check your WeChat wallet balance
 </body>
 As an AI assistant aiming to predict page-components after clicking each item, give the extended page HTML-like format:
 
-1.Settings: [2]
-The "Settings" option usually provides various configuration and customization options for the app. While it might contain some general account-related settings, it is unlikely to have a direct option to check your WeChat wallet balance. It may have settings related to notifications, privacy, or general app preferences, but not specifically related to financial transactions.
-2.Services: [8]
-The "Services" option typically contains a range of features and functionalities offered by WeChat. It is quite likely that the WeChat wallet, including balance information, would fall under the Services section. The Services section often includes various payment-related features and account management options, making it a strong candidate for finding the wallet balance.
-3.More: [5]
-The "More" option typically expands to show additional options or sub-menus. It is difficult to determine the exact content of the "More" section without further information. While it is possible that the WeChat wallet balance could be found here, there is no strong indication that it would be more likely than the other options.
-4.Favorites: [1]
-The "Favorites" option generally contains saved or bookmarked items within the WeChat app, such as articles, posts, or media content. It is highly unlikely to find a direct option to check your WeChat wallet balance in this section. The Favorites section is more focused on personal preferences rather than financial transactions.
-5.Emoticons: [1]
-The "Emoticons" option is primarily related to emojis, stickers, or other visual expressions used in messaging. It does not have any direct relevance to checking your WeChat wallet balance. It is safe to assume that this option would not provide any functionality related to financial transactions.
-
-You are a mobile phone user with the intent to [{}]. Currently, you are on the [{}] which presents 5 options:
-[{},{},{},{},{}]
-As an AI assistant aiming to help the user accomplish their goal, analyze each of these 5 options and rate them on a scale of 0-10 for confidence in helping the user complete their intended task.
-Provide reasoning and explanations for why each option receives the confidence rating you assign. Think step by step.""".format(intention, page_description, components[0], components[1], components[2], components[3], components[4])
+"""
 
     def confidence(self):
         """
