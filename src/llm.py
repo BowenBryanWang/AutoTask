@@ -18,6 +18,21 @@ class LLM:
 
     def __init__(self, screen) -> None:
         self.screen = screen
+        
+    def update(self,screen):
+        """
+        @description: 更新LLM的状态
+        @param {*}
+        @return {*}
+        """
+        self.description = ""
+        self.screen = screen
+        self.prom_decision = ""
+        self.index = self.index+1
+        self.candidate = []
+        self.decision_result = []
+        self.evaluate_result = []
+        
 
     def decision(self):
         """
@@ -71,6 +86,7 @@ class LLM:
         return self.prom_decision
 
     def initialize_descion_prompt(self, init):
+        self.description = init
         self.prom_decision = """A user's intention is to 'Turn off Dark mode in WeChat'.
     1,Current page components:"['1,{}-{}-{More function buttons}-{RelativeLayout}', '2,{}-{}-{Search}-{RelativeLayout}', '3,{Me}-{Me}-{}-{RelativeLayout}', '4,{Discover}-{Discover}-{}-{RelativeLayout}', '5,{Contacts}-{Contacts}-{}-{RelativeLayout}', '6,{Chats}-{Chats}-{}-{RelativeLayout}']".The current page is:"Homepage".Expecting the next page to appear :['{Settings}-{}-{}-{LinearLayout}'].Currently choose one component :[Click on <SOC>3,Me<EOC> ].
     2,Current page components:"['1,{Settings}-{}-{}-{LinearLayout}', '2,{Sticker Gallery}-{}-{}-{LinearLayout}', '3,{My Posts}-{}-{}-{LinearLayout}', '4,{Favorites}-{}-{}-{LinearLayout}', '5,{Services}-{}-{}-{LinearLayout}']".The current page is:"Me page".Expecting the next page to appear :['{General}-{}-{}-{LinearLayout}'].Currently choose one component :[Click on <SOC>1,Settings<EOC> ].
@@ -90,21 +106,26 @@ class LLM:
         @param {self.gamma} 惩罚因子，衡量每一个组件被惩罚的概率
         @param {self.candidate}  当前的候选项，一共有五项
         @return {*}
-        
+        在评估模块当中，可能受以下机制影响：
+        1，由LLM判断各个候选项对完成任务的帮助程度；
+        2，由知识库（KB，Knoeledge Base）评估候选项（TODO）
+        3，由app使用经验评估候选项（TODO）
+        可能有以下挑战：
+        1，决策给出的top5的候选项都不对，根据先验知识应该选择另外一个top5之外的控件（待解决，不难）
         """
-        if self.candidate == {}:
+        if self.candidate == []:
             raise Exception("Please call decision function first!")
         self.initialize_evaluate_prompt([item[1] for item in self.candidate])
         response = openai.Completion.create(
             model="text-davinci-003",
             prompt=self.prom_evaluate,
             temperature=0.3,
-            max_tokens=512,
+            max_tokens=1024,
         )
         result = response.choices[0].text
         result = result[result.find("The score is")+13:]
         result = result.replace("[", "").replace("]", "").split(",")
-        result = [int(result[i])*gamma[i] for i in range(len(result))]
+        result = [int(result[i])/10*gamma[i] for i in range(len(result))]
         self.evaluate_result = result
 
     def initialize_evaluate_prompt(self, components):
@@ -124,7 +145,7 @@ The "Favorites" option generally contains saved or bookmarked items within the W
 4.Favorites: [1]
 The "Emoticons" option is primarily related to emojis, stickers, or other visual expressions used in messaging. It does not have any direct relevance to checking your WeChat wallet balance. It is safe to assume that this option would not provide any functionality related to financial transactions.
 5.Emoticons: [1]
-The score is [2,8,5,1,1].
+The score is [2,8,5,1,1].<END>
 
 You are a mobile phone user with the intent to [{}]. Currently, you are on the [{}] which presents 5 options:
 [{},{},{},{},{}]
@@ -158,10 +179,18 @@ As an AI assistant aiming to predict page-components after clicking each item, g
 
 """
 
-    def confidence(self):
+    def find_by_knowledge_base(self):
         """
-        @description: 根据先验知识，判断当前的候选项是否应该选择，其中包含1，根据积累的知识判断当前的候选项是否应该选择，2，根据对控件的主观判断信息判断当前的候选项是否应该选择
+        @description: 根据知识库中的信息，对当前的决策进行指导
         @param {*}
+        @return {*}
+        """
+        pass
+    
+    def error_detection(self):
+        """
+        @description: 验证当前决策中是否存在错误
+        @param {self.decision_result,self.screen,self.evaluate_result}
         @return {*}
         """
         pass
