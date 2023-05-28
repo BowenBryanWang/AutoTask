@@ -18,8 +18,9 @@ class LLM:
     evaluate_result = []  # 评估输出的候选项概率
     gamma = [1, 1, 1, 1, 1]
 
-    def __init__(self, screen) -> None:
+    def __init__(self, screen, description) -> None:
         self.screen = screen
+        self.initialize_descion_prompt(description)
 
     def decision(self):
         """
@@ -98,6 +99,7 @@ class LLM:
         2，由知识库（KB，Knoeledge Base）评估候选项（TODO）
         3，由app使用经验评估候选项（TODO）
         4，惩罚因子如何发挥作用（TODO）
+        5，信息增益的实现（TODO）
         可能有以下挑战：
         1，决策给出的top5的候选项都不对，根据先验知识应该选择另外一个top5之外的控件（待解决）
         """
@@ -200,7 +202,6 @@ As an AI assistant aiming to predict page-components after clicking each item, g
         @return {*}
         """
         try:
-            result = self.evaluate_result*self.decision_result
-            return result
+            return self.candidate, self.evaluate_result*self.decision_result
         except:
             raise Exception("Please call evaluate function first!")

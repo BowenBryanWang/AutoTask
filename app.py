@@ -29,6 +29,8 @@ from flask import Flask
 from flask_sockets import Sockets
 import datetime
 
+from llm import LLM
+
 
 app = Flask(__name__)
 
@@ -220,39 +222,12 @@ def init_describer():
 
 @app.route('/demo', methods=['POST'])
 def demo():
-    global screen
+    screen = Screen()
     screen.update(request=request.form)
-    inprocessing = False
-    if GLOBAL_STATE == "Not Started":
-        return "Not Started"
-    elif GLOBAL_STATE == "Started" and not inprocessing:
-        inprocessing = True
-        if perform_one_step():
-            perform = {
-                "node_id": 1, "trail": "["+str(center["x"])+","+str(center["y"])+"]", "action_type": "click"}
-            print(perform)
-            time.sleep(2)
-            inprocessing = False
-            return json.dumps(perform)
-    elif GLOBAL_STATE == "Finished":
-        return "Finished"
-    if GLOBAL_STATE == "ERROR Handling":
-        perform_back = step_back()
-        stepbacks -= 1
-        print("stepbacks", stepbacks)
-        current_path.pop(-1)
-        print("current_path", current_path)
-        sims.pop(-1)
-        print("sims", sims)
-        anchors.pop(-1)
-        print("anchors", anchors)
-        if stepbacks == 0:
-            GLOBAL_STATE = "Started"
-            inprocessing = False
-        time.sleep(2)
-
-        return json.dumps(perform_back)
-    return "0"
+    llm = LLM(screen)
+    llm.decision()
+    llm.evaluate()
+    candidate, score = llm.get_result()
 
 
 def detect_error(sims, probs):
