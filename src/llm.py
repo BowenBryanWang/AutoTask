@@ -3,7 +3,7 @@ import numpy as np
 import openai
 import pandas as pd
 import scipy
-from Screen.init import Screen
+from page.init import Screen
 
 
 class LLM:
@@ -53,7 +53,7 @@ class LLM:
                 index_of_choice = index_OC+2
         print(tokens[index_of_choice])
         probs = response["choices"][0]["logprobs"]["top_logprobs"][index_of_choice]
-        self.candidate = {}
+        self.candidate = []
         for key, value in probs.items():
             self.candidate.append(
                 zip(int(key), self.screen.semantic_info[int(key)-1]))
@@ -148,24 +148,30 @@ Provide reasoning and explanations for why each option receives the confidence r
         @param {*}
         @return {*}
         """
+        semantic_info_nodes = self.screen.semantic_info.split("\n")
+        initialize_predict_prompt(semantic_info_nodes)
         pass
 
-    def initialize_predict_prompt(self):
-        self.prom_evaluate = """Example:
-You are a mobile phone user. Currently, you are on the [home page] with major components organized as HTML-like format:
-<body>
-    <List class="container">
-        <ListItem class="messager">Bowen</ListItem>
-        <ListItem class="group chat">OOVVCI</ListItem>
-    </List>
-    <TabList class="tab">
-        <TabItem class="tab-item">Chats</TabItem>
-        <TabItem class="tab-item">Contacts</TabItem>
-        <TabItem class="tab-item">Discover</TabItem>
-        <TabItem class="tab-item">Me</TabItem>
-    </TabList>
-</body>
-As an AI assistant aiming to predict page-components after clicking each item, give the extended page HTML-like format:
+    def initialize_predict_prompt(self,):
+        self.prom_evaluate = """You are an intelligent UI automation assistant that can predict the possible controls that appear when a specific UI element is clicked. Your task is to predict the potential controls that will be displayed after clicking a particular button on the UI. The current scenario is within the WeChat application's home screen.
+The UI element is a button with the following attributes:
+```HTML
+<button id=1 class='Dropdown menu' description='More function buttons'>  </button>
+```
+the example answer is:
+```HTML
+<div>Money</div>
+<div>Scan</div>
+<div>Add Contacts</div>
+<div>New Chat</div>
+```
+Now, let's consider other UI elements. This time, it's a page with the following elements:
+```HTML
+<button id=3 class='Tab'>Me</div>
+```
+
+Once again, please predict the possible controls that could be displayed after clicking this button. Format your answer in HTML, similar to the previous example.
+just give the html code, no further information!
 """
 
     def find_by_knowledge_base(self):

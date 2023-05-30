@@ -1,5 +1,5 @@
 from multiprocessing.dummy import Manager
-from Screen.NodeDescriber import *
+from page.NodeDescriber import *
 
 ratio = 3.3
 

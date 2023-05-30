@@ -18,10 +18,10 @@ from flask import Flask
 from flask import request
 import os
 import base64
-from Screen.init import Screen
-from Screen.WindowStructure import *
+from page.init import Screen
+from page.WindowStructure import *
 import time
-from Screen.NodeDescriberManager import *
+from page.NodeDescriberManager import *
 import json
 import numpy as np
 from flask_socketio import SocketIO
@@ -29,7 +29,7 @@ from flask import Flask
 from flask_sockets import Sockets
 import datetime
 
-from llm import LLM
+from src.llm import LLM
 
 
 app = Flask(__name__)
@@ -224,10 +224,10 @@ def init_describer():
 def demo():
     screen = Screen()
     screen.update(request=request.form)
-    llm = LLM(screen)
-    llm.decision()
-    llm.evaluate()
-    candidate, score = llm.get_result()
+    # llm = LLM(screen, "test")
+    # llm.decision()
+    # llm.evaluate()
+    # candidate, score = llm.get_result()
 
 
 def detect_error(sims, probs):

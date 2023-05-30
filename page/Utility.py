@@ -2,7 +2,7 @@
 #  提供一些常用的接口
 import os
 import numpy as np
-import Screen.WindowStructure
+import page.WindowStructure
 from queue import deque
 from string import digits
 import random

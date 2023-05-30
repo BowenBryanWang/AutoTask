@@ -3,7 +3,7 @@ from pydoc import describe
 import queue
 # from asyncio.windows_events import None
 # from selectors import EpollSelector
-from Screen.WindowStructure import *
+from page.WindowStructure import *
 import math
 import copy
 from sklearn import tree

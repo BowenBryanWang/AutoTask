@@ -2,7 +2,7 @@
 #  这个文件强调的是一个应用爬虫结果的组织形式
 
 import os.path
-import Screen.Utility
+from page import Utility
 import json
 from queue import Queue, deque
 import cv2
