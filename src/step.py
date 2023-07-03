@@ -1,4 +1,4 @@
-from src.llm import LLM
+from src.llm import Model
 
 
 class Step:
@@ -10,9 +10,9 @@ class Step:
     decision_result = []
     evaluate_result = []
     gamma = []
-    llm = LLM()
+    llm = Model()
 
-    def __init__(self, index, llm: LLM):
+    def __init__(self, index, llm: Model):
         self.index = index
         self.llm = llm
         try:

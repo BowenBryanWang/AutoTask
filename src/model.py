@@ -6,7 +6,7 @@ import scipy
 from page.init import Screen
 
 
-class LLM:
+class Model:
     description = ""  # 用户初始的任务意图
     screen = Screen()  # 当前界面信息的包
     prom_decision = ""  # 当前的prompt
@@ -18,11 +18,14 @@ class LLM:
     evaluate_result = []  # 评估输出的候选项概率
     gamma = [1, 1, 1, 1, 1]
 
-    def __init__(self, screen, description) -> None:
-        self.screen = screen
-        self.initialize_descion_prompt(description)
-
-    def decision(self):
+    
+    def __init__(self, screen=None, description=None) -> None:
+        if screen is not None:
+            self.screen = screen
+        if description is not None:
+            self.initialize_descion_prompt(description)
+    
+    def select(self):
         """
         @description: 一步推理:将界面信息输入LLM,让LLM做出决策,只需要获得决策结果的top5的prob并更新到candidate即可
         @param {*}
@@ -152,27 +155,46 @@ Provide reasoning and explanations for why each option receives the confidence r
         initialize_predict_prompt(semantic_info_nodes)
         pass
 
-    def initialize_predict_prompt(self,):
-        self.prom_evaluate = """You are an intelligent UI automation assistant that can predict the possible controls that appear when a specific UI element is clicked. Your task is to predict the potential controls that will be displayed after clicking a particular button on the UI. The current scenario is within the WeChat application's home screen.
-The UI element is a button with the following attributes:
-```HTML
-<button id=1 class='Dropdown menu' description='More function buttons'>  </button>
-```
-the example answer is:
-```HTML
-<div>Money</div>
-<div>Scan</div>
-<div>Add Contacts</div>
-<div>New Chat</div>
-```
-Now, let's consider other UI elements. This time, it's a page with the following elements:
-```HTML
-<button id=3 class='Tab'>Me</div>
-```
-
-Once again, please predict the possible controls that could be displayed after clicking this button. Format your answer in HTML, similar to the previous example.
-just give the html code, no further information!
-"""
+    def initialize_predict_prompt(self, node):
+        self.predict_prompt = [
+            {
+                "role": "system",
+                "content": "You are an intelligent UI automation assistant that can predict the possible controls that appear when a specific UI element is clicked. Your task is to predict the potential controls that will be displayed after clicking a particular button on the UI."
+            },
+            {
+                "role": "user",
+                "content": """
+                The current scenario is within the WeChat application's home screen.
+                The UI element is a button with the following attributes:
+                ```HTML
+                <button id=1 class='Dropdown menu' description='More function buttons'>  </button>
+                ```
+                Think step by step.
+                """
+            },
+            {
+                "role": "assistant",
+                "content": """
+                ```HTML
+                <div>Money</div>
+                <div>Scan</div>
+                <div>Add Contacts</div>
+                <div>New Chat</div>
+                ```
+                """
+            },
+            {
+                "role": "user",
+                "content": """
+                The current scenario is {}.
+                The UI element is a button with the following attributes:
+                ```HTML
+                {}
+                ```
+                Think step by step.
+                """.format(self.screen.page_description, node)
+            }
+        ]
 
     def find_by_knowledge_base(self):
         """

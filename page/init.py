@@ -27,6 +27,7 @@ class Screen:
     semantic_nodes = []
     semantic_info = []
     upload_time = 0
+    page_description = ""
 
     def __init__(self) -> None:
         pass

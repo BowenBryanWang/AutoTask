@@ -29,12 +29,12 @@ from flask import Flask
 from flask_sockets import Sockets
 import datetime
 
-from src.llm import LLM
+from src.model import Model
 
 
 app = Flask(__name__)
 
-openai.api_key = "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"
+openai.api_key = "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"
 layout = None
 screenshot = None
 imgdata = None
