@@ -1,30 +1,50 @@
 import math
+from typing import Optional
 import numpy as np
 import openai
 import pandas as pd
 import scipy
+from evaluate import Evaluate
 from page.init import Screen
+from predict import Predict
 
 
 class Model:
-    description = ""  # 用户初始的任务意图
-    screen = Screen()  # 当前界面信息的包
-    prom_decision = ""  # 当前的prompt
-    index = 0  # 步骤索引，表明当前是第几步
-    current_path = []  # 当前的路径
-    current_path_str = ""
-    candidate = []  # 当前的候选项编号
-    decision_result = []  # 决策输出的候选项概率
-    evaluate_result = []  # 评估输出的候选项概率
-    gamma = [1, 1, 1, 1, 1]
 
-    
-    def __init__(self, screen=None, description=None) -> None:
+    def __init__(self, screen: Optional[Screen] = None, description: str = "", prev_model=None):
+        """
+        Initializes a Model object with the given screen and description.
+
+        Args:
+        - screen: A Screen object representing the current screen information.
+        - description: A string representing the task description.
+        - prev_model: A Model object representing the previous model.
+
+        Returns:
+        None
+        """
+        
         if screen is not None:
             self.screen = screen
-        if description is not None:
-            self.initialize_descion_prompt(description)
-    
+        self.Task_description = description
+        if prev_model is not None:
+            self.prev_model = prev_model
+            prev_model.next_model = self
+            self.current_path = self.prev_model.current_path.copy().append(self.screen.page_description)
+            self.current_path_str = self.prev_model.current_path_str + self.screen.page_description
+            self.index = self.prev_model.index + 1
+        else:
+            self.index = 0
+            self.current_path = [self.screen.page_description]
+            self.current_path_str = self.screen.page_description
+        self.next_model=None
+        self.candidate = []
+        self.predict_module = Predict(self)
+        self.plan_module = Plan(self)
+        self.evaluate_module = Evaluate(self)
+        
+        
+
     def select(self):
         """
         @description: 一步推理:将界面信息输入LLM,让LLM做出决策,只需要获得决策结果的top5的prob并更新到candidate即可
@@ -91,145 +111,3 @@ class Model:
     4,Each instruction can only choose from the current components.Indicate the serial number!
     A user's intention is to """ + "["+init+"]\n"
 
-    def evaluate(self):
-        """
-        @description: 评估当前的候选项对完成任务的概率,实现机制：交给LLM判断该组件是否对完成任务有帮助
-        @param {self.gamma} 惩罚因子，衡量每一个组件被惩罚的概率
-        @param {self.candidate}  当前的候选项，一共有五项
-        @return {*}
-        在评估模块当中，可能受以下机制影响：
-        1，由LLM判断各个候选项对完成任务的帮助程度；
-        2，由知识库（KB，Knoeledge Base）评估候选项（TODO）
-        3，由app使用经验评估候选项（TODO）
-        4，惩罚因子如何发挥作用（TODO）
-        5，信息增益的实现（TODO）
-        可能有以下挑战：
-        1，决策给出的top5的候选项都不对，根据先验知识应该选择另外一个top5之外的控件（待解决）
-        """
-        if self.candidate == []:
-            raise Exception("Please call decision function first!")
-        self.initialize_evaluate_prompt([item[1] for item in self.candidate])
-        response = openai.Completion.create(
-            model="text-davinci-003",
-            prompt=self.prom_evaluate,
-            temperature=0.3,
-            max_tokens=1024,
-        )
-        result = response.choices[0].text
-        result = result[result.find("The score is")+13:]
-        result = result.replace("[", "").replace("]", "").split(",")
-        result = [int(result[i])/10*self.gamma[i] for i in range(len(result))]
-        self.evaluate_result = result
-
-    def initialize_evaluate_prompt(self, components):
-        self.prom_evaluate = """Example:
-You are a mobile phone user with the intent to [check your WeChat wallet balance]. Currently, you are on the [home page] which presents 5 options:
-["Settings", "Services", "More", "Favorites", "Emoticons"]
-As an AI assistant aiming to help the user accomplish their goal, analyze each of these 5 options and rate them on a scale of 0-10 for confidence in helping the user complete their intended task.
-Provide reasoning and explanations for why each option receives the confidence rating you assign. Think step by step.
-
-The "Settings" option usually provides various configuration and customization options for the app. While it might contain some general account-related settings, it is unlikely to have a direct option to check your WeChat wallet balance. It may have settings related to notifications, privacy, or general app preferences, but not specifically related to financial transactions.
-1.Settings: [2]
-The "Services" option typically contains a range of features and functionalities offered by WeChat. It is quite likely that the WeChat wallet, including balance information, would fall under the Services section. The Services section often includes various payment-related features and account management options, making it a strong candidate for finding the wallet balance.
-2.Services: [8]
-The "More" option typically expands to show additional options or sub-menus. It is difficult to determine the exact content of the "More" section without further information. While it is possible that the WeChat wallet balance could be found here, there is no strong indication that it would be more likely than the other options.
-3.More: [5]
-The "Favorites" option generally contains saved or bookmarked items within the WeChat app, such as articles, posts, or media content. It is highly unlikely to find a direct option to check your WeChat wallet balance in this section. The Favorites section is more focused on personal preferences rather than financial transactions.
-4.Favorites: [1]
-The "Emoticons" option is primarily related to emojis, stickers, or other visual expressions used in messaging. It does not have any direct relevance to checking your WeChat wallet balance. It is safe to assume that this option would not provide any functionality related to financial transactions.
-5.Emoticons: [1]
-The score is [2,8,5,1,1].<END>
-
-You are a mobile phone user with the intent to [{}]. Currently, you are on the [{}] which presents 5 options:
-[{},{},{},{},{}]
-As an AI assistant aiming to help the user accomplish their goal, analyze each of these 5 options and rate them on a scale of 0-10 for confidence in helping the user complete their intended task.
-Provide reasoning and explanations for why each option receives the confidence rating you assign. Think step by step.""".format(self.description, self.screen.page_description, components[0], components[1], components[2], components[3], components[4])
-
-    def predict(self):
-        """
-        @description: 根据当前screen的semantic_nodes预测下一个页面包含的内容，组织成html格式
-        @param {*}
-        @return {*}
-        """
-        semantic_info_nodes = self.screen.semantic_info.split("\n")
-        initialize_predict_prompt(semantic_info_nodes)
-        pass
-
-    def initialize_predict_prompt(self, node):
-        self.predict_prompt = [
-            {
-                "role": "system",
-                "content": "You are an intelligent UI automation assistant that can predict the possible controls that appear when a specific UI element is clicked. Your task is to predict the potential controls that will be displayed after clicking a particular button on the UI."
-            },
-            {
-                "role": "user",
-                "content": """
-                The current scenario is within the WeChat application's home screen.
-                The UI element is a button with the following attributes:
-                ```HTML
-                <button id=1 class='Dropdown menu' description='More function buttons'>  </button>
-                ```
-                Think step by step.
-                """
-            },
-            {
-                "role": "assistant",
-                "content": """
-                ```HTML
-                <div>Money</div>
-                <div>Scan</div>
-                <div>Add Contacts</div>
-                <div>New Chat</div>
-                ```
-                """
-            },
-            {
-                "role": "user",
-                "content": """
-                The current scenario is {}.
-                The UI element is a button with the following attributes:
-                ```HTML
-                {}
-                ```
-                Think step by step.
-                """.format(self.screen.page_description, node)
-            }
-        ]
-
-    def find_by_knowledge_base(self):
-        """
-        @description: 根据知识库中的信息，对当前的决策进行指导
-        @param {*}
-        @return {*}
-        """
-        pass
-
-    def error_detection(self):
-        """
-        @description: 异常检测模块，验证当前决策中是否存在错误
-        @param {self.decision_result,self.screen,self.evaluate_result}
-        @return {*}
-        实现思路：
-        1，根据观察这一步的【决策、评估】中输出的概率的分布情况来判断异常
-        2，根据上一步预测的结果与真实结果的差异来判断异常(TODO)
-        """
-        stddev = np.std(self.decision_result)
-        kurt = pd.Series(self.decision_result).kurt()
-        entropy = scipy.stats.entropy(self.decision_result)
-        if (stddev > 0.1) or (kurt > 0.5) or (entropy < 0.5):
-            return True
-        mean = np.mean(self.evaluate_result)
-        if (mean < 3):
-            return True
-        return False
-
-    def get_result(self):
-        """
-        @description: 获取当前的评估结果
-        @param {*}
-        @return {*}
-        """
-        try:
-            return self.candidate, self.evaluate_result*self.decision_result
-        except:
-            raise Exception("Please call evaluate function first!")

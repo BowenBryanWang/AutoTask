@@ -21,7 +21,7 @@ openai.ChatCompletion.create = reliableGPT(
 ) # type: ignore
 
 
-class Predict(Model):
+class Predict():
     """
     A class for predicting the possible controls that appear when a specific UI element is clicked.
 
@@ -36,13 +36,8 @@ class Predict(Model):
     comp_json : dict
         A dictionary of the prediction module's JSON, where each item is a component and its corresponding next page's components.
     """
-    nodes=[]
-    prompts = []
-    current_comp = []
-    next_comp = []
-    comp_json = {}
     
-    def __init__(self, nodes):
+    def __init__(self, model: Model):
         """
         Initializes a Predict object.
 
@@ -51,8 +46,12 @@ class Predict(Model):
         node : str
             The HTML attributes of the UI element being clicked.
         """
-        self.nodes=nodes
-        for node in nodes:
+        self.prompts = []
+        self.current_comp = []
+        self.next_comp = []
+        self.comp_json = {}
+        self.model = model
+        for node in self.model.screen.semantic_nodes:
             self.current_comp.append(node)
             self.prompts.append([
                 {
@@ -90,7 +89,7 @@ class Predict(Model):
                     {}
                     ```
                     Think step by step.Must give the HTML code warped with ```HTML```.
-                    """.format(self.screen.page_description, node)
+                    """.format(self.model.screen.page_description, node)
                 }
             ])
     
@@ -98,7 +97,7 @@ class Predict(Model):
         """
         Predicts the possible controls that appear when a specific UI element is clicked.
         """
-        for (node,prompt) in zip(self.nodes,self.prompts):
+        for (node,prompt) in zip(self.model.screen.semantic_nodes,self.prompts):
             if self.query(node):
                 self.next_comp.append(self.query(node))
                 continue
@@ -120,7 +119,7 @@ class Predict(Model):
     
     def query(self,node):
         """
-        Queries the knowledge from KB
+        TODO:Queries the knowledge from KB
         """
         return False
 

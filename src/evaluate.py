@@ -11,12 +11,26 @@ from model import Model
 NUM_JUDGES = 4
 
 
-class Evaluate(Model):
-    allocator = None  # Weight allocator
-    judges = []  # Judges
-    scores = []  # Scores
+class Evaluate():
+    """
+    This class represents the evaluation process of a model.
 
-    def __init__(self):
+    @attribute model:
+        The model to be evaluated.
+    @attribute allocator:
+        The weight allocator used to allocate weights to the judges.
+    @attribute judges:
+        The list of judges used to evaluate the candidate items.
+    @attribute scores:
+        The list of scores for each candidate item.
+
+    @method calculate_score:
+        This method scores the candidate items.
+        @return:
+            The final scores of the candidate items.
+    """
+
+    def __init__(self, model: Model):
         """
         Initializes the Evaluate class with an allocator, judges, and scores.
 
@@ -29,9 +43,10 @@ class Evaluate(Model):
         @return:
         None.
         """
-        self.allocator = Allocator()
-        self.judges = [LLM_Judge(), IG_Judge(),
-                       Prior_Judge(), Markov_Judge()]
+        self.model = model
+        self.allocator = Allocator(self)
+        self.judges = [LLM_Judge(self), IG_Judge(self),
+                       Prior_Judge(self), Markov_Judge(self)]
         self.scores = []
 
     def calculate_score(self):
@@ -50,19 +65,19 @@ class Evaluate(Model):
         """
         judge_scores = []
         for judge in self.judges:
-            judge_scores.append(judge.score(self.candidate))
+            judge_scores.append(judge.score(self.model.candidate))
         weights = self.allocator.allocate()
         self.score = np.dot(judge_scores, weights)
         return self.scores
 
 
-class Judge(Model):
+class Judge():
     """
     This class represents a judge template.
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, evaluate: Evaluate):
+        self.evaluate = evaluate
 
 
 class LLM_Judge(Judge):
@@ -82,11 +97,14 @@ class LLM_Judge(Judge):
     @method policy_update:
         This method updates the policy of the LLM algorithm.
     """
-    prompt = ""  # Prompt
-    result = []  # LLM Score Result
 
-    def __init__(self):
-        self.prom_evaluate = [
+    def __init__(self, evaluate: Evaluate):
+        """
+        TODO:测试prompt
+        """
+        super().__init__(evaluate)
+        self.result = []
+        self.prompt = [
             {
                 "role": "system",
                 "content": "You are a mobile phone user interface assistant. Your task is to help the user navigate through an app by analyzing the available options and predicting which ones will assist them in accomplishing their goal. For each option, provide a confidence rating from 0-10, where 0 means 'unlikely to help' and 10 means 'highly likely to help'. Provide reasoning for each rating."
@@ -133,13 +151,12 @@ class LLM_Judge(Judge):
                     4. [{}]
                     5. [{}]
                     Please rate each option on its potential to help me complete my task and provide the reasoning behind each rating.
-                """.format(self.description, self.screen.page_description, self.candidate[0], self.candidate[1], self.candidate[2], self.candidate[3], self.candidate[4])
+                """.format(self.evaluate.model.description, self.evaluate.model.screen.page_description, self.evaluate.model.candidate[0], self.evaluate.model.candidate[1], self.evaluate.model.candidate[2], self.evaluate.model.candidate[3], self.candidate[4])
             },
-
         ]
 
     def score(self):
-        if self.candidate == []:
+        if self.evaluate.model.candidate == []:
             raise Exception("Please call Select function first!")
         response = openai.Completion.create(
             model="gpt-3.5-turbo",
@@ -155,31 +172,33 @@ class LLM_Judge(Judge):
         return result
 
     def policy_update(self):
+        #TODO:更新policy
         pass
 
 
 class IG_Judge(Judge):
     """
-    This class represents a judge that evaluates a candidate item using Information Gain.
+    TODO：This class represents a judge that evaluates a candidate item using Information Gain.
     描述的是当点击一个控件后，任务完成的不确定性下降的程度，或者说带来的新信息有多少
     信息增益：熵-条件熵
     熵：在当前已完成的路径中，完成任务的概率（或者说之前讨论的覆盖率）
-    条件熵：【如果选择该节点，出现的新页面中节点被选择用来完成任务的概率分布】的熵
+    条件熵：【如果选择该节点，出现的新页面中节点的匹配度】的熵
     计算出信息增益后按照Minmax归一化到0-10分
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, evaluate: Evaluate):
+        super().__init__(evaluate)
 
 
 class Prior_Judge(Judge):
     """
+    TODO：
     This class represents a judge that evaluates a candidate item using the Prior algorithm.
     """
 
-    def __init__(self):
-        pass
-    
+    def __init__(self, evaluate: Evaluate):
+        super().__init__(evaluate)
+
     def query(self):
         pass
 
@@ -190,8 +209,8 @@ class Markov_Judge(Judge):
     基于历史数据的，在已完成的路径中，选择该节点后，下一个节点被选择的频率分布，例如某个按钮点击频率次数太低，就不会被选中。 
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, evaluate: Evaluate):
+        super().__init__(evaluate)
 
 
 class Allocator:
@@ -200,7 +219,8 @@ class Allocator:
     """
     weights = []  # 权重
 
-    def __init__(self):
+    def __init__(self, evaluate: Evaluate):
+        self.evaluate = evaluate
         for _ in range(NUM_JUDGES):
             self.weights.append(1/NUM_JUDGES)  # 初始化权重
 
@@ -215,7 +235,7 @@ class Allocator:
         This method updates the weights.
         """
         pass
-    
+
     def feedback(self):
         """
         This method updates the weights according to the feedback.

@@ -1,4 +1,4 @@
-from src.llm import Model
+from src.model import Model
 
 
 class Step:
