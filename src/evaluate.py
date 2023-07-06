@@ -49,7 +49,7 @@ class Evaluate():
                        Prior_Judge(self), Markov_Judge(self)]
         self.scores = []
 
-    def calculate_score(self):
+    def evaluate(self):
         """
         This method scores the candidate items.
 
@@ -151,7 +151,7 @@ class LLM_Judge(Judge):
                     4. [{}]
                     5. [{}]
                     Please rate each option on its potential to help me complete my task and provide the reasoning behind each rating.
-                """.format(self.evaluate.model.description, self.evaluate.model.screen.page_description, self.evaluate.model.candidate[0], self.evaluate.model.candidate[1], self.evaluate.model.candidate[2], self.evaluate.model.candidate[3], self.candidate[4])
+                """.format(self.evaluate.model.task, self.evaluate.model.screen.page_description, self.evaluate.model.candidate[0], self.evaluate.model.candidate[1], self.evaluate.model.candidate[2], self.evaluate.model.candidate[3], self.candidate[4])
             },
         ]
 
