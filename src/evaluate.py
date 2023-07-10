@@ -7,6 +7,7 @@ from page.init import Screen
 
 from page.init import Screen
 from model import Model
+from loguru import logger
 
 NUM_JUDGES = 4
 
@@ -63,11 +64,24 @@ class Evaluate():
         @return:
         The final scores of the candidate items.
         """
+        log_file = logger.add("logs/evaluate.log", rotation="500 MB")
+        logger.debug("Evaluate for Model {}".format(self.model.index))
+        logger.info("Current Page: {}".format(self.model.screen.page_description))
+        logger.info("Current Path: {}".format(self.model.current_path_str))
+        logger.info("Task: {}".format(self.model.task))
+
         judge_scores = []
         for judge in self.judges:
             judge_scores.append(judge.score(self.model.candidate))
         weights = self.allocator.allocate()
         self.score = np.dot(judge_scores, weights)
+
+        logger.info("Judge Scores: {}".format(judge_scores))
+        logger.info("Weights: {}".format(weights))
+        logger.warning("Score: {}".format(self.score))
+        logger.debug("Evaluate for Model {} Done".format(self.model.index))
+        logger.remove(log_file)
+
         return self.scores
 
 

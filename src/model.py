@@ -10,6 +10,7 @@ from feedback import Feedback
 from page.init import Screen
 from predict import Predict
 from suggest import Suggest
+from loguru import logger
 
 
 class Model:

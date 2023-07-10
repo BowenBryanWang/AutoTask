@@ -2,3 +2,5 @@ static/data/imagedata*
 static/data/page*
 node_modules
 src/static/data
+__pycache__
+**/__pycache__
