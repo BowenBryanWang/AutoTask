@@ -4,7 +4,7 @@ import openai
 import pandas as pd
 import scipy
 from page.init import Screen
-from model import Model
+
 
 import openai
 
@@ -12,7 +12,7 @@ openai.api_key = "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"
 
 
 class Suggest:
-    def __init__(self, model: Model) -> None:
+    def __init__(self, model) -> None:
         self.model = model
         self.prompt = [
             {

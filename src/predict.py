@@ -1,24 +1,20 @@
-import math
-import numpy as np
-import openai
-import pandas as pd
-import scipy
-from page.init import Screen
-from model import Model
 
+
+
+from langchain import FAISS
 import openai
 
-openai.api_key = "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"
 
-from reliablegpt import reliableGPT
 
-openai.ChatCompletion.create = reliableGPT(
-    openai.ChatCompletion.create,
-    user_email= "saltyp0rridge20@gmail.com",
-    queue_requests=True,
-    fallback_strategy=['gpt-3.5-turbo', 'text-davinci-003', 'gpt-3.5-turbo'],
-    model_limits_dir = {"gpt-4": {"max_token_capacity": 90000, "max_request_capacity": 3500	}}
-) # type: ignore
+# from reliablegpt import reliableGPT
+
+# openai.ChatCompletion.create = reliableGPT(
+#     openai.ChatCompletion.create,
+#     user_email= "saltyp0rridge20@gmail.com",
+#     queue_requests=True,
+#     fallback_strategy=['gpt-3.5-turbo', 'text-davinci-003', 'gpt-3.5-turbo'],
+#     model_limits_dir = {"gpt-4": {"max_token_capacity": 90000, "max_request_capacity": 3500	}}
+# ) # type: ignore
 
 
 class Predict():
@@ -37,7 +33,7 @@ class Predict():
         A dictionary of the prediction module's JSON, where each item is a component and its corresponding next page's components.
     """
     
-    def __init__(self, model: Model):
+    def __init__(self, model,pagejump):
         """
         Initializes a Predict object.
 
@@ -46,6 +42,7 @@ class Predict():
         node : str
             The HTML attributes of the UI element being clicked.
         """
+        self.pagejump = pagejump
         self.prompts = []
         self.current_comp = []
         self.next_comp = []
@@ -61,22 +58,27 @@ class Predict():
                 {
                     "role": "user",
                     "content": """
-                    The current scenario is within the WeChat application's home screen.
+                    The current scenario is "Whatsapp application's home screen".
                     The UI element is a button with the following attributes:
                     ```HTML
-                    <button id=1 class='Dropdown menu' description='More function buttons'>  </button>
+                    <button id=10 class='contact_photo' description='Wang Bowen'>  </button>
                     ```
-                    Think step by step.
+                    Think step by step. give the predicted UI component as a simple list warped with ```HTML```.Be short,simple and accurate..
                     """
                 },
                 {
                     "role": "assistant",
                     "content": """
+                    This appears to be a button that's typically found in a list of contacts on WhatsApp's home screen, representing the contact photo of "Wang Bowen". When this button is clicked, it should open the chat screen for that contact.
                     ```HTML
-                    <div>Money</div>
-                    <div>Scan</div>
-                    <div>Add Contacts</div>
-                    <div>New Chat</div>
+                    <p id=1 class='camera_btn' description='Camera'>  </p>
+                    <p id=2 class='input_attach_button' description='Attach'>  </p>
+                    <p id=3 class='entry' > Message </p>
+                    <p id=4 class='emoji_picker_btn' description='Emoji'>  </p>
+                    <p id=5 class='info' >   Messages and calls are end-to-end encrypted. No one outside of this chat, not even WhatsApp, can read or listen to them. Tap to learn more. </p>
+                    <button id=6 class='menuitem_overflow' description='More options'>  </button>
+                    <p id=7 class='' description='Voice call'>  </p>
+                    <p id=8 class='back' description='Navigate up'>  </p>w
                     ```
                     """
                 },
@@ -88,7 +90,7 @@ class Predict():
                     ```HTML
                     {}
                     ```
-                    Think step by step.Must give the HTML code warped with ```HTML```.
+                    Think step by step. give the predicted UI component as a simple list warped with ```HTML```.Be short,simple and accurate..
                     """.format(self.model.screen.page_description, node)
                 }
             ])
@@ -117,9 +119,9 @@ class Predict():
             
          
     
-    def query(self,node):
+    def query(self,page,node):
         """
         TODO:Queries the knowledge from KB
         """
-        return False
+        self.pagejump.find_next_page(page,node)
 

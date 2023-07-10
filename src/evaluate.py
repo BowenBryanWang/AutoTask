@@ -6,7 +6,7 @@ import scipy
 from page.init import Screen
 
 from page.init import Screen
-from model import Model
+
 
 NUM_JUDGES = 4
 
@@ -30,7 +30,7 @@ class Evaluate():
             The final scores of the candidate items.
     """
 
-    def __init__(self, model: Model):
+    def __init__(self, model):
         """
         Initializes the Evaluate class with an allocator, judges, and scores.
 

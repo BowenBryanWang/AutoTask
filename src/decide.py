@@ -6,11 +6,11 @@ import scipy
 from page.init import Screen
 
 from page.init import Screen
-from model import Model
 
 
-class Decide():
-    def __init__(self,model:Model) -> None:
+
+class Decide:
+    def __init__(self,model) -> None:
         self.model=model
         pass
 

@@ -4,12 +4,12 @@ import numpy as np
 import openai
 import pandas as pd
 import scipy
-from decide import Decide
-from evaluate import Evaluate
-from feedback import Feedback
+from src.decide import Decide
+from src.evaluate import Evaluate
+from src.feedback import Feedback
 from page.init import Screen
-from predict import Predict
-from suggest import Suggest
+from src.predict import Predict
+from src.suggest import Suggest
 
 
 class Model:
