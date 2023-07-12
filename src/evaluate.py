@@ -112,45 +112,55 @@ class LLM_Judge(Judge):
             {
                 "role": "user",
                 "content": """
-                    I need to accomplish the following task: ["check my WeChat wallet balance"]. Currently the page desription is ["Wechat Home Page"].There is the options:
-                    1. "Settings"
-                    2. "Services"
-                    3. "More"
-                    4. "Favorites"
-                    5. "Emotions"
-                    Please rate each option on its potential to help me complete my task and provide the reasoning behind each rating.
+                    I need to accomplish the following task: "Turn on Dark mode". Currently the page desription is "HomePage".Here are the options:
+                    '''HTML
+                        <button id=5 class='com.whatsapp:id/menuitem_overflow' description='More options'> </button>
+                        <button id=10 class='com.whatsapp:id/contact_photo' description='Wang Bowen'> </button>
+                        <button id=2 class='com.whatsapp:id/home_tab_layout' description='Calls'> </button>
+                        <button id=3 class='com.whatsapp:id/home_tab_layout' description='Status'> </button>
+                        <button id=4 class='com.whatsapp:id/home_tab_layout' description='Community'> </button>
+                    '''
+                    Please rate each option on its potential to help me complete my task and provide the reasoning behind each rating. Think step by step.
                 """
             },
             {
                 "role": "assistant",
                 "content": """
-                    The "Settings" option usually provides various configuration and customization options for the app. While it might contain some general account-related settings, it is unlikely to have a direct option to check your WeChat wallet balance. It may have settings related to notifications, privacy, or general app preferences, but not specifically related to financial transactions.
-                    1.Settings: [2]
+                    1: <button id=5 class='com.whatsapp:id/menuitem_overflow' description='More options'> </button>
+                    Score: 8/10
+                    Reasoning: This option is labeled as "More options" and is likely to provide additional settings and customization options. Since Dark Mode is a common feature in most apps, it is reasonable to expect that the option to enable Dark Mode may be found within the "More options" menu. Therefore, there is a high likelihood that this option will assist you in accomplishing your task.
 
-                    The "Services" option typically contains a range of features and functionalities offered by WeChat. It is quite likely that the WeChat wallet, including balance information, would fall under the Services section. The Services section often includes various payment-related features and account management options, making it a strong candidate for finding the wallet balance.
-                    2.Services: [8]
+                    2: <button id=10 class='com.whatsapp:id/contact_photo' description='Wang Bowen'> </button>
+                    Score: 2/10
+                    Reasoning: This option appears to be related to a contact photo and is unlikely to be directly associated with enabling Dark Mode. The description "Wang Bowen" suggests that it is specific to a particular contact, rather than a system-wide setting. Therefore, the likelihood of this option assisting you in turning on Dark Mode is low.
 
-                    The "More" option typically expands to show additional options or sub-menus. It is difficult to determine the exact content of the "More" section without further information. While it is possible that the WeChat wallet balance could be found here, there is no strong indication that it would be more likely than the other options.
-                    3.More: [5]
+                    3: <button id=2 class='com.whatsapp:id/home_tab_layout' description='Calls'> </button>
+                    Score: 2/10
+                    Reasoning: This option represents the "Calls" tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description "Calls" suggests that it is specific to the call-related functionality within WhatsApp. Therefore, the likelihood of this option helping you turn on Dark Mode is low.
 
-                    The "Favorites" option generally contains saved or bookmarked items within the WeChat app, such as articles, posts, or media content. It is highly unlikely to find a direct option to check your WeChat wallet balance in this section. The Favorites section is more focused on personal preferences rather than financial transactions.
-                    4.Favorites: [1]
+                    4: <button id=3 class='com.whatsapp:id/home_tab_layout' description='Status'> </button>
+                    Score: 2/10
+                    Reasoning: This option represents the "Status" tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description "Status" indicates that it is specific to the status-related functionality within WhatsApp. Therefore, the likelihood of this option assisting you in turning on Dark Mode is low.
 
-                    The "Emoticons" option is primarily related to emojis, stickers, or other visual expressions used in messaging. It does not have any direct relevance to checking your WeChat wallet balance. It is safe to assume that this option would not provide any functionality related to financial transactions.
-                    5.Emoticons: [1]
-                    So the score is  [2,8,5,1,1].
+                    5: <button id=4 class='com.whatsapp:id/home_tab_layout' description='Community'> </button>
+                    Score: 2/10
+                    Reasoning: This option represents the "Community" tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description "Community" suggests that it is specific to community-related features, which are unlikely to include Dark Mode settings. Therefore, the likelihood of this option helping you turn on Dark Mode is low.
+                    
+                    So the scores are <BEGIN>[8,2,2,2,2]<END>.
                 """
             },
             {
                 "role": "user",
                 "content": """
-                    I need to accomplish the following task: [{}]. I am currently on the [{}] screen which presents the following 5 options:
-                    1. [{}]
-                    2. [{}]
-                    3. [{}]
-                    4. [{}]
-                    5. [{}]
-                    Please rate each option on its potential to help me complete my task and provide the reasoning behind each rating.
+                    I need to accomplish the following task: "{}". Currently the page desription is "{}".Here are the options:
+                    '''HTML
+                    {}
+                    {}
+                    {}
+                    {}
+                    {}
+                    '''
+                    Please rate each option on its potential to help me complete my task and provide the reasoning behind each rating. Think step by step.
                 """.format(self.evaluate.model.task, self.evaluate.model.screen.page_description, self.evaluate.model.candidate[0], self.evaluate.model.candidate[1], self.evaluate.model.candidate[2], self.evaluate.model.candidate[3], self.candidate[4])
             },
         ]
@@ -172,7 +182,7 @@ class LLM_Judge(Judge):
         return result
 
     def policy_update(self):
-        #TODO:更新policy
+        # TODO:更新policy
         pass
 
 
