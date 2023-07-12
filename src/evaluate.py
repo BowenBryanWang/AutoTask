@@ -191,8 +191,9 @@ class IG_Judge(Judge):
     TODO：This class represents a judge that evaluates a candidate item using Information Gain.
     描述的是当点击一个控件后，任务完成的不确定性下降的程度，或者说带来的新信息有多少
     信息增益：熵-条件熵
-    熵：在当前已完成的路径中，完成任务的概率（或者说之前讨论的覆盖率）
-    条件熵：【如果选择该节点，出现的新页面中节点的匹配度】的熵
+    熵：当前任务完成的不确定性/混乱程度：所有candidate被选择的概率的熵
+    条件熵：在选择了一个candidate后，任务完成的不确定性：选择candidate后带来的新页面中，每个元素被选择的概率的熵
+    被选择的概率：通过语义相似度计算，计算出每个元素被选择的概率
     计算出信息增益后按照Minmax归一化到0-10分
     """
 
