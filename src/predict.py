@@ -3,7 +3,8 @@
 
 from langchain import FAISS
 import openai
-
+from loguru import logger
+import json
 
 
 # from reliablegpt import reliableGPT
@@ -99,7 +100,16 @@ class Predict():
         """
         Predicts the possible controls that appear when a specific UI element is clicked.
         """
+        log_file = logger.add("log/predict.log", rotation="500 MB")
+        logger.debug("Predict for Model {}".format(self.model.index))
+        logger.info("Current Page: {}".format(self.model.screen.page_description))
+        logger.info("Current Path: {}".format(self.model.current_path_str))
+        logger.info("Task: {}".format(self.model.task))
+
         for (node,prompt) in zip(self.model.screen.semantic_nodes,self.prompts):
+
+            logger.info("Prompt: {}".format(json.dumps(prompt[-1])))
+
             if self.query(node):
                 self.next_comp.append(self.query(node))
                 continue
@@ -113,9 +123,15 @@ class Predict():
             response_text = response_text[response_text.find("```HTML")+7:response_text.find("```")].split("\n")
             print(response_text)
             self.next_comp.append(response_text)
+
+            logger.info("Response: {}".format(response_text))
             
         for i in range(len(self.current_comp)):
             self.comp_json[self.current_comp[i]] = self.next_comp[i]
+
+        logger.warning("Components: {}".format(json.dumps(self.comp_json)))
+        logger.debug("Predict for Model {} Done".format(self.model.index))
+        logger.remove(log_file)
             
          
     

@@ -4,7 +4,9 @@ import openai
 import pandas as pd
 import scipy
 from page.init import Screen
-
+from model import Model
+from loguru import logger
+import json
 
 import openai
 
@@ -74,6 +76,13 @@ class Suggest:
 
     def suggest(self):
 
+        log_file = logger.add("logs/suggest.log", rotation="500 MB")
+        logger.debug("Suggest for Model {}".format(self.model.index))
+        logger.info("Current Page: {}".format(self.model.screen.page_description))
+        logger.info("Current Path: {}".format(self.model.current_path_str))
+        logger.info("Task: {}".format(self.model.task))
+        logger.info("Prompt: {}".format(json.dumps(self.prompt[-1])))
+
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=self.prompt,
@@ -85,6 +94,10 @@ class Suggest:
             "```HTML")+7:response_text.find("```")].split("\n")
         self.model.candidate = candidate
         print(candidate)
+
+        logger.warning("Response: {}".format(candidate))
+        logger.debug("Suggest for Model {} Done".format(self.model.index))
+        logger.remove(log_file)
 
     def plan(self):
         """
