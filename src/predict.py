@@ -1,6 +1,3 @@
-
-
-
 from langchain import FAISS
 import openai
 from loguru import logger

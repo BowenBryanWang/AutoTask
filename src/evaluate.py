@@ -9,6 +9,9 @@ from page.init import Screen
 from model import Model
 from loguru import logger
 
+from sklearn.metrics.pairwise import cosine_similarity
+import spacy
+
 NUM_JUDGES = 4
 
 
@@ -213,6 +216,57 @@ class IG_Judge(Judge):
 
     def __init__(self, evaluate: Evaluate):
         super().__init__(evaluate)
+        self.nlp = spacy.load('en_core_web_md')
+
+    def score(self):
+        # 计算初始熵
+        if self.evaluate.model.candidate == []:
+            raise Exception("Please call Select function first!")
+        initial_entropy, initial_probs = self.calculate_entropy(self.evaluate.model.candidate)
+
+        if self.evaluate.model.predict_module.comp_json == {}:
+            raise Exception("Please call Predict function first!")
+        information_gains = []
+        # 计算条件熵
+        for i in range(self.evaluate.model.candidate):
+            candidate = self.evaluate.model.candidate[i]
+            conditional_entropy, _ = self.calculate_entropy(self.evaluate.model.predict_module.comp_json[candidate])
+            # 计算信息增益
+            information_gains.append((initial_entropy - conditional_entropy) * initial_probs[i])
+
+        # 归一化
+        normalized_score = (information_gains - np.min(information_gains)) / (np.max(information_gains) - np.min(information_gains)) * 10
+
+        return normalized_score
+
+    def calculate_entropy(self, candidates):
+        """
+        计算熵
+        """
+        probs = []
+        # 使用spacy解析字符串，得到词向量
+        doc_task = self.nlp(self.evaluate.model.task)
+
+        # 将词向量转换为矩阵
+        matrix_task = np.array([token.vector for token in doc_task])
+
+        # 计算每个元素与任务描述的语义相似度
+        for candidate in candidates:
+            doc_candidate = self.nlp(candidate)
+            matrix_candidate = np.array([token.vector for token in doc_candidate])
+            similarity = cosine_similarity(matrix_task, matrix_candidate)
+            probs.append(similarity[0][0])
+
+        # 概率归一化
+        probs = np.array(probs)
+        probs = probs / probs.sum()
+        
+        # 计算熵
+        entropy = 0
+        for p in probs:
+            entropy -= p * math.log2(p)
+
+        return entropy, probs
 
 
 class Prior_Judge(Judge):
