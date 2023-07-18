@@ -4,6 +4,8 @@ import numpy as np
 import openai
 import pandas as pd
 import scipy
+from database import Database
+from knowledge import PageJump_KB, Task_KB
 from src.decide import Decide
 from src.evaluate import Evaluate
 from src.feedback import Feedback
@@ -53,7 +55,10 @@ class Model:
 
         #####################################################
         # 3. Submodules
-        self.predict_module = Predict(self)
+        self.database = Database(user="root",password="wbw12138zy,.",host="127.0.0.1",database="GUI_LLM")
+        self.PageJump_KB = PageJump_KB(self.database)
+        self.Task_KB = Task_KB(self.database)
+        self.predict_module = Predict(self,self.PageJump_KB)
         self.suggest_module = Suggest(self)
         self.evaluate_module = Evaluate(self)
         self.decide_module = Decide(self)

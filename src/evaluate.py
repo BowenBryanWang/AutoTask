@@ -11,7 +11,7 @@ from loguru import logger
 
 from sklearn.metrics.pairwise import cosine_similarity
 import spacy
-
+from concurrent.futures import ProcessPoolExecutor
 NUM_JUDGES = 4
 
 
@@ -74,8 +74,11 @@ class Evaluate():
         logger.info("Task: {}".format(self.model.task))
 
         judge_scores = []
-        for judge in self.judges:
-            judge_scores.append(judge.score(self.model.candidate))
+        with ProcessPoolExecutor() as executor:
+            # Submit the score method of each judge to the executor
+            judge_score_futures = [executor.submit(judge.score, self.model.candidate) for judge in self.judges]
+            # Retrieve the results from the futures
+            judge_scores = [future.result() for future in judge_score_futures]
         weights = self.allocator.allocate()
         self.score = np.dot(judge_scores, weights)
 
@@ -124,12 +127,18 @@ class LLM_Judge(Judge):
         self.prompt = [
             {
                 "role": "system",
-                "content": "You are a mobile phone user interface assistant. Your task is to help the user navigate through an app by analyzing the available options and predicting which ones will assist them in accomplishing their goal. For each option, provide a confidence rating from 0-10, where 0 means 'unlikely to help' and 10 means 'highly likely to help'. Provide reasoning for each rating."
+                "content": """You are a mobile phone user interface assistant. Your task is to help the user navigate through an app by analyzing the available options and predicting which ones will assist them in accomplishing their goal. For each option, provide a confidence rating from 0-10, where 0 means 'unlikely to help' and 10 means 'highly likely to help'.
+                Use the following steps to respond to user inputs. Fully restate each step before proceeding. i.e. "Step 1: Reason..."
+                Step 1:Reason step-by-step about how each option contributes to the user's goal.
+                Step 2:Output a JSON object structured like: {"score": []}.
+                """
             },
             {
                 "role": "user",
                 "content": """
-                    I need to accomplish the following task: "Turn on Dark mode". Currently the page desription is "HomePage".Here are the options:
+                    Task: "Turn on Dark mode". 
+                    Page desription: "HomePage".
+                    Options:
                     '''HTML
                         <button id=5 class='com.whatsapp:id/menuitem_overflow' description='More options'> </button>
                         <button id=10 class='com.whatsapp:id/contact_photo' description='Wang Bowen'> </button>
@@ -137,39 +146,36 @@ class LLM_Judge(Judge):
                         <button id=3 class='com.whatsapp:id/home_tab_layout' description='Status'> </button>
                         <button id=4 class='com.whatsapp:id/home_tab_layout' description='Community'> </button>
                     '''
-                    Please rate each option on its potential to help me complete my task and provide the reasoning behind each rating. Think step by step.
                 """
             },
             {
                 "role": "assistant",
                 "content": """
-                    1: <button id=5 class='com.whatsapp:id/menuitem_overflow' description='More options'> </button>
-                    Score: 8/10
+                    Step 1: 
+                    1,Score: 8/10
                     Reasoning: This option is labeled as "More options" and is likely to provide additional settings and customization options. Since Dark Mode is a common feature in most apps, it is reasonable to expect that the option to enable Dark Mode may be found within the "More options" menu. Therefore, there is a high likelihood that this option will assist you in accomplishing your task.
 
-                    2: <button id=10 class='com.whatsapp:id/contact_photo' description='Wang Bowen'> </button>
-                    Score: 2/10
+                    2: Score: 2/10
                     Reasoning: This option appears to be related to a contact photo and is unlikely to be directly associated with enabling Dark Mode. The description "Wang Bowen" suggests that it is specific to a particular contact, rather than a system-wide setting. Therefore, the likelihood of this option assisting you in turning on Dark Mode is low.
 
-                    3: <button id=2 class='com.whatsapp:id/home_tab_layout' description='Calls'> </button>
-                    Score: 2/10
+                    3: Score: 2/10
                     Reasoning: This option represents the "Calls" tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description "Calls" suggests that it is specific to the call-related functionality within WhatsApp. Therefore, the likelihood of this option helping you turn on Dark Mode is low.
 
-                    4: <button id=3 class='com.whatsapp:id/home_tab_layout' description='Status'> </button>
-                    Score: 2/10
+                    4: Score: 2/10
                     Reasoning: This option represents the "Status" tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description "Status" indicates that it is specific to the status-related functionality within WhatsApp. Therefore, the likelihood of this option assisting you in turning on Dark Mode is low.
 
-                    5: <button id=4 class='com.whatsapp:id/home_tab_layout' description='Community'> </button>
-                    Score: 2/10
+                    5: Score: 2/10
                     Reasoning: This option represents the "Community" tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description "Community" suggests that it is specific to community-related features, which are unlikely to include Dark Mode settings. Therefore, the likelihood of this option helping you turn on Dark Mode is low.
                     
-                    So the scores are <BEGIN>[8,2,2,2,2]<END>.
+                    Step 2:  {"score": [8, 2, 2, 2, 2]}
                 """
             },
             {
                 "role": "user",
                 "content": """
-                    I need to accomplish the following task: "{}". Currently the page desription is "{}".Here are the options:
+                    Task: "{}".
+                    Page desription: "{}".
+                    Options:
                     '''HTML
                     {}
                     {}
@@ -177,7 +183,6 @@ class LLM_Judge(Judge):
                     {}
                     {}
                     '''
-                    Please rate each option on its potential to help me complete my task and provide the reasoning behind each rating. Think step by step.
                 """.format(self.evaluate.model.task, self.evaluate.model.screen.page_description, self.evaluate.model.candidate[0], self.evaluate.model.candidate[1], self.evaluate.model.candidate[2], self.evaluate.model.candidate[3], self.candidate[4])
             },
         ]

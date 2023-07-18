@@ -14,6 +14,13 @@ import json
 #     model_limits_dir = {"gpt-4": {"max_token_capacity": 90000, "max_request_capacity": 3500	}}
 # ) # type: ignore
 
+def add_value_to_html_tag(key: str, value: str) -> str:
+    start_tag_index = key.find('>') + 1
+    end_tag_index = key.rfind('</')
+    wrapped_content = key[start_tag_index:end_tag_index]
+    wrapped_content_with_value = wrapped_content.strip() + str(value)
+    modified_key = key[:start_tag_index] + '/* Below are after-click components */\n'+wrapped_content_with_value + key[end_tag_index:]
+    return modified_key
 
 class Predict():
     """
@@ -41,11 +48,12 @@ class Predict():
             The HTML attributes of the UI element being clicked.
         """
         self.pagejump_KB = pagejump
+        self.model = model
         self.prompts = []
         self.current_comp = []
         self.next_comp = []
         self.comp_json = {}
-        self.model = model
+        
         for node in self.model.screen.semantic_nodes:
             self.current_comp.append(node)
             self.prompts.append([
@@ -93,6 +101,7 @@ class Predict():
                 }
             ])
     
+    
     def predict(self):
         """
         Predicts the possible controls that appear when a specific UI element is clicked.
@@ -120,11 +129,13 @@ class Predict():
             response_text = response_text[response_text.find("```HTML")+7:response_text.find("```")].split("\n")
             print(response_text)
             self.next_comp.append(response_text)
-
             logger.info("Response: {}".format(response_text))
             
         for i in range(len(self.current_comp)):
             self.comp_json[self.current_comp[i]] = self.next_comp[i]
+        #key是一个HTML的tag，把str(value)加到key包裹的内容当中即可
+        
+        self.model.extended_info = "\n".join([add_value_to_html_tag(key,"\n".join(value)) for key,value in self.comp_json.items()])
 
         logger.warning("Components: {}".format(json.dumps(self.comp_json)))
         logger.debug("Predict for Model {} Done".format(self.model.index))

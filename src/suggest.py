@@ -70,12 +70,12 @@ class Suggest:
                     {}
                     '''
                     Think step by step, select the top five most possible components to the user's intent. Summarize your selections at the end of your response warpped by '''HTML and '''.
-                """.format(self.model.task, self.model.current_path_str, self.model.screen.semantic_nodes)
+                """.format(self.model.task, self.model.current_path_str, self.model.extended_info)
             },
         ]
 
     def suggest(self):
-
+        
         log_file = logger.add("logs/suggest.log", rotation="500 MB")
         logger.debug("Suggest for Model {}".format(self.model.index))
         logger.info("Current Page: {}".format(self.model.screen.page_description))
