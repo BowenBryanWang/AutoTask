@@ -40,7 +40,7 @@ class Predict():
         node : str
             The HTML attributes of the UI element being clicked.
         """
-        self.pagejump = pagejump
+        self.pagejump_KB = pagejump
         self.prompts = []
         self.current_comp = []
         self.next_comp = []
@@ -107,8 +107,8 @@ class Predict():
 
             logger.info("Prompt: {}".format(json.dumps(prompt[-1])))
 
-            if self.query(node):
-                self.next_comp.append(self.query(node))
+            if self.query(self.model.screen.semantic_nodes,node):
+                self.next_comp.append(self.query(self.model.screen.semantic_nodes,node))
                 continue
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
@@ -134,7 +134,7 @@ class Predict():
     
     def query(self,page,node):
         """
-        TODO:Queries the knowledge from KB
+        Queries the knowledge from KB
         """
-        self.pagejump.find_next_page(page,node)
+        self.pagejump_KB.find_next_page(page,node)
 

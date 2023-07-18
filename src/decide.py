@@ -13,5 +13,8 @@ class Decide:
     def __init__(self,model) -> None:
         self.model=model
         pass
+    
+    def completion(self):
+        pass
 
 

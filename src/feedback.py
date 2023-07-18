@@ -9,7 +9,7 @@ from page.init import Screen
 
 
 
-class Feedback():
+class Feedback:
     def __init__(self,model) -> None:
         self.model=model
         pass

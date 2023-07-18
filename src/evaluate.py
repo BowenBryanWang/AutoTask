@@ -272,7 +272,7 @@ class IG_Judge(Judge):
 class Prior_Judge(Judge):
     """
     TODO：
-    This class represents a judge that evaluates a candidate item using the Prior algorithm.
+    This class represents a judge that evaluates a candidate item using the Prior knowledge.
     """
 
     def __init__(self, evaluate: Evaluate):
@@ -296,9 +296,9 @@ class Allocator:
     """
     This class represents a weight allocator that allocates weights to the judeges.
     """
-    weights = []  # 权重
 
     def __init__(self, evaluate: Evaluate):
+        self.weights = []
         self.evaluate = evaluate
         for _ in range(NUM_JUDGES):
             self.weights.append(1/NUM_JUDGES)  # 初始化权重
