@@ -232,12 +232,19 @@ class IG_Judge(Judge):
         if self.evaluate.model.predict_module.comp_json == {}:
             raise Exception("Please call Predict function first!")
         information_gains = []
-        # 计算条件熵
-        for i in range(self.evaluate.model.candidate):
-            candidate = self.evaluate.model.candidate[i]
-            conditional_entropy, _ = self.calculate_entropy(self.evaluate.model.predict_module.comp_json[candidate])
-            # 计算信息增益
-            information_gains.append((initial_entropy - conditional_entropy) * initial_probs[i])
+
+        def calculate_information_gain(i, candidate, initial_entropy, initial_probs, predict_module):
+            conditional_entropy, _ = self.calculate_entropy(predict_module.comp_json[candidate])
+            return (initial_entropy - conditional_entropy) * initial_probs[i]
+
+        # 创建进程池
+        with ProcessPoolExecutor() as executor:
+            # 并行计算信息增益
+            futures = [executor.submit(calculate_information_gain, i, self.evaluate.model.candidate[i], initial_entropy, initial_probs, self.evaluate.model.predict_module) for i in range(len(self.evaluate.model.candidate))]
+                # 计算条件熵
+        
+        # 获取计算结果
+        information_gains = [future.result() for future in futures]
 
         # 归一化
         normalized_score = (information_gains - np.min(information_gains)) / (np.max(information_gains) - np.min(information_gains)) * 10
