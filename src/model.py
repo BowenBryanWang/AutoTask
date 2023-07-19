@@ -1,9 +1,5 @@
-import math
+
 from typing import Optional
-import numpy as np
-import openai
-import pandas as pd
-import scipy
 from database import Database
 from knowledge import PageJump_KB, Task_KB
 from src.decide import Decide
@@ -13,6 +9,7 @@ from page.init import Screen
 from src.predict import Predict
 from src.suggest import Suggest
 from loguru import logger
+
 
 class Model:
 
@@ -34,6 +31,8 @@ class Model:
             self.screen = screen  # Screen类，用于存储界面信息
         self.task = description  # 任务描述
         self.candidate = []  # 用于存储候选的控件,首次应该在suggest中初始化
+        self.node_selected = None  # 用于存储用户选择的控件
+        self.node_selected_id: int = 0  # 用于存储用户选择的控件的id
         #####################################################
 
         #####################################################
@@ -55,10 +54,11 @@ class Model:
 
         #####################################################
         # 3. Submodules
-        self.database = Database(user="root",password="wbw12138zy,.",host="127.0.0.1",database="GUI_LLM")
+        self.database = Database(
+            user="root", password="wbw12138zy,.", host="127.0.0.1", database="GUI_LLM")
         self.PageJump_KB = PageJump_KB(self.database)
         self.Task_KB = Task_KB(self.database)
-        self.predict_module = Predict(self,self.PageJump_KB)
+        self.predict_module = Predict(self, self.PageJump_KB)
         self.suggest_module = Suggest(self)
         self.evaluate_module = Evaluate(self)
         self.decide_module = Decide(self)
@@ -84,4 +84,15 @@ class Model:
         self.predict_module.predict()
         self.suggest_module.suggest()
         self.evaluate_module.evaluate()
-        self.decide_module.decide()
+        s=self.decide_module.decide()
+        if s == "completed":
+            return "completed"
+        elif s == "wrong":
+            # self.feedback_module.feedback()
+            return "wrong"
+        elif s == "partly completed":
+            node = self.screen.semantic_nodes["nodes"][self.node_selected_id-1]
+            center = {"x": (node.bound[0]+node.bound[2])//2,"y": (node.bound[1]+node.bound[3])//2}
+            perform = {"node_id": 1, "trail": "["+str(center["x"])+","+str(center["y"])+"]", "action_type": "click"}
+            return perform
+        

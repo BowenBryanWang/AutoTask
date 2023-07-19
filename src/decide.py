@@ -14,18 +14,20 @@ class Decide:
         self.prompt = [{
             "role": "system",
             "content": """You are a professor with in-depth knowledge of User Interface (UI) tasks and their action traces. You are assigned a specific UI task along with an action trace. Your task is to evaluate if the action trace aligns with the assigned task, categorizing the trace as: completion, exception, or not completed yet. Several examples of similar UI tasks are provided for your reference.
-                        Use the following steps to respond to user inputs. Fully restate each step before proceeding. i.e. "Step 1: Reason...".
-                        Step 1:Reason step-by-step about the relationship of  the action trace  and UI task either: partly completed, fully completed, a superset.
-                        Step 2:Reason step-by-step about whether the final action(s) in the trace deviate from the correct execution path for the given task ,which means if the trace goes on it will never complete the task anymore, described as "wrong".
-                        Step 3:Output a JSON object structured like: {"status": "completed" or "wrong" or "partly completed", "reason": reason for the decision}."""},
+                Use the following steps to respond to user inputs. Fully restate each step before proceeding. i.e. "Step 1: Reason...".
+                Step 1:Reason step-by-step about the relationship of  the action trace  and UI task either: partly completed, fully completed, a superset.
+                Step 2:Reason step-by-step about whether the final action(s) in the trace deviate from the correct execution path for the given task ,which means if the trace goes on it will never complete the task anymore, described as "wrong".
+                Step 3:Output a JSON object structured like: {"status": "completed" or "wrong" or "partly completed", "reason": reason for the decision}."""
+        },
             {
             "role": "user",
             "content": """
             Examples:
             []
-            Task:
-            Action trace:
-            """}]
+            Task:{}
+            Action trace:{}
+            """.format(self.model.task, self.model.current_path_str)
+        }]
 
     def decide(self):
         """

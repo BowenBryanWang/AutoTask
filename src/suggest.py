@@ -75,21 +75,22 @@ class Suggest:
         ]
 
     def suggest(self):
-        
+
         log_file = logger.add("logs/suggest.log", rotation="500 MB")
         logger.debug("Suggest for Model {}".format(self.model.index))
-        logger.info("Current Page: {}".format(self.model.screen.page_description))
+        logger.info("Current Page: {}".format(
+            self.model.screen.page_description))
         logger.info("Current Path: {}".format(self.model.current_path_str))
         logger.info("Task: {}".format(self.model.task))
         logger.info("Prompt: {}".format(json.dumps(self.prompt[-1])))
 
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4",
             messages=self.prompt,
             temperature=0.5,
         )
-        print(response["choices"][0]["message"]["content"])
         response_text = response["choices"][0]["message"]["content"]
+        print(response_text)
         candidate = response_text[response_text.find(
             "```HTML")+7:response_text.find("```")].split("\n")
         self.model.candidate = candidate

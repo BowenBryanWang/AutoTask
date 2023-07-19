@@ -124,8 +124,8 @@ class Predict():
                 messages=prompt,
                 temperature=0.5,
             )
-            print(response["choices"][0]["message"]["content"])
             response_text = response["choices"][0]["message"]["content"]
+            print(response_text)
             response_text = response_text[response_text.find("```HTML")+7:response_text.find("```")].split("\n")
             print(response_text)
             self.next_comp.append(response_text)

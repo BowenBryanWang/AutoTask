@@ -3,33 +3,23 @@ import pandas as pd
 from openai.embeddings_utils import (
     get_embedding,
     cosine_similarity,
-    distances_from_embeddings,
-    tsne_components_from_embeddings,
-    chart_from_components,
-    indices_of_nearest_neighbors_from_distances,
 )
-import os
+
 
 import openai
 import re
-from flask import Flask, redirect, render_template, request, url_for
-import cv2
-from flask import Flask
-from flask import request
-import os
-import base64
+from flask import Flask, render_template, request
+
 from page.init import Screen
 from page.WindowStructure import *
-import time
+
 from page.NodeDescriberManager import *
 import json
 import numpy as np
-from flask_socketio import SocketIO
-from flask import Flask
-from flask_sockets import Sockets
-import datetime
 
-from src.model import Model
+from flask import Flask
+
+
 
 
 app = Flask(__name__)
