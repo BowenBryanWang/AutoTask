@@ -1,0 +1,99 @@
+2023-07-25 14:19:25.237 | DEBUG    | src.evaluate:evaluate:67 - Evaluate for Model 0
+2023-07-25 14:19:25.238 | INFO     | src.evaluate:evaluate:68 - Current Page: 
+2023-07-25 14:19:25.239 | INFO     | src.evaluate:evaluate:69 - Current Path: 
+2023-07-25 14:19:25.242 | INFO     | src.evaluate:evaluate:70 - Task: Send a message to Bowen
+2023-07-25 14:59:55.381 | DEBUG    | src.evaluate:evaluate:67 - Evaluate for Model 0
+2023-07-25 14:59:55.382 | INFO     | src.evaluate:evaluate:68 - Current Page: 
+2023-07-25 14:59:55.383 | INFO     | src.evaluate:evaluate:69 - Current Path: 
+2023-07-25 14:59:55.383 | INFO     | src.evaluate:evaluate:70 - Task: Send a message to Bowen
+2023-07-25 15:04:40.049 | DEBUG    | src.evaluate:evaluate:67 - Evaluate for Model 0
+2023-07-25 15:04:40.049 | INFO     | src.evaluate:evaluate:68 - Current Page: 
+2023-07-25 15:04:40.050 | INFO     | src.evaluate:evaluate:69 - Current Path: 
+2023-07-25 15:04:40.050 | INFO     | src.evaluate:evaluate:70 - Task: Send a message to Bowen
+2023-07-25 15:10:44.069 | DEBUG    | src.evaluate:evaluate:68 - Evaluate for Model 0
+2023-07-25 15:10:44.071 | INFO     | src.evaluate:evaluate:69 - Current Page: 
+2023-07-25 15:10:44.072 | INFO     | src.evaluate:evaluate:70 - Current Path: 
+2023-07-25 15:10:44.072 | INFO     | src.evaluate:evaluate:71 - Task: Send a message to Bowen
+2023-07-25 15:27:13.954 | DEBUG    | src.evaluate:evaluate:68 - Evaluate for Model 0
+2023-07-25 15:27:13.954 | INFO     | src.evaluate:evaluate:69 - Current Page: 
+2023-07-25 15:27:13.955 | INFO     | src.evaluate:evaluate:71 - Current Path: 
+2023-07-25 15:27:13.955 | INFO     | src.evaluate:evaluate:72 - Task: Send a message to Bowen
+2023-07-25 15:32:46.216 | DEBUG    | src.evaluate:evaluate:68 - Evaluate for Model 0
+2023-07-25 15:32:46.217 | INFO     | src.evaluate:evaluate:69 - Current Page: 
+2023-07-25 15:32:46.217 | INFO     | src.evaluate:evaluate:71 - Current Path: 
+2023-07-25 15:32:46.217 | INFO     | src.evaluate:evaluate:72 - Task: Send a message to Bowen
+2023-07-25 15:39:01.200 | DEBUG    | src.evaluate:evaluate:68 - Evaluate for Model 0
+2023-07-25 15:39:01.200 | INFO     | src.evaluate:evaluate:69 - Current Page: 
+2023-07-25 15:39:01.201 | INFO     | src.evaluate:evaluate:71 - Current Path: 
+2023-07-25 15:39:01.201 | INFO     | src.evaluate:evaluate:72 - Task: Send a message to Bowen
+2023-07-25 16:03:16.005 | DEBUG    | src.evaluate:evaluate:68 - Evaluate for Model 0
+2023-07-25 16:03:16.006 | INFO     | src.evaluate:evaluate:69 - Current Page: 
+2023-07-25 16:03:16.006 | INFO     | src.evaluate:evaluate:71 - Current Path: 
+2023-07-25 16:03:16.007 | INFO     | src.evaluate:evaluate:72 - Task: Send a message to Bowen
+2023-07-25 16:07:26.804 | DEBUG    | src.evaluate:evaluate:68 - Evaluate for Model 0
+2023-07-25 16:07:26.805 | INFO     | src.evaluate:evaluate:69 - Current Page: 
+2023-07-25 16:07:26.805 | INFO     | src.evaluate:evaluate:71 - Current Path: 
+2023-07-25 16:07:26.806 | INFO     | src.evaluate:evaluate:72 - Task: Send a message to Bowen
+2023-07-25 16:08:58.023 | DEBUG    | src.evaluate:evaluate:68 - Evaluate for Model 0
+2023-07-25 16:08:58.024 | INFO     | src.evaluate:evaluate:69 - Current Page: 
+2023-07-25 16:08:58.024 | INFO     | src.evaluate:evaluate:71 - Current Path: 
+2023-07-25 16:08:58.025 | INFO     | src.evaluate:evaluate:72 - Task: Send a message to Bowen
+2023-07-25 16:11:24.456 | DEBUG    | src.evaluate:evaluate:68 - Evaluate for Model 0
+2023-07-25 16:11:24.457 | INFO     | src.evaluate:evaluate:69 - Current Page: 
+2023-07-25 16:11:24.457 | INFO     | src.evaluate:evaluate:71 - Current Path: 
+2023-07-25 16:11:24.457 | INFO     | src.evaluate:evaluate:72 - Task: Send a message to Bowen
+2023-07-25 16:16:36.130 | DEBUG    | src.evaluate:evaluate:68 - Evaluate for Model 0
+2023-07-25 16:16:36.132 | INFO     | src.evaluate:evaluate:69 - Current Page: 
+2023-07-25 16:16:36.132 | INFO     | src.evaluate:evaluate:71 - Current Path: 
+2023-07-25 16:16:36.132 | INFO     | src.evaluate:evaluate:72 - Task: Send a message to Bowen
+2023-07-25 16:17:49.875 | DEBUG    | src.predict:predict:114 - Predict for Model 0
+2023-07-25 16:17:49.876 | INFO     | src.predict:predict:116 - Current Path: 
+2023-07-25 16:17:49.877 | INFO     | src.predict:predict:117 - Task: Send a message to Bowen
+2023-07-25 16:18:41.707 | DEBUG    | src.evaluate:evaluate:68 - Evaluate for Model 0
+2023-07-25 16:18:41.707 | INFO     | src.evaluate:evaluate:69 - Current Page: 
+2023-07-25 16:18:41.708 | INFO     | src.evaluate:evaluate:71 - Current Path: 
+2023-07-25 16:18:41.708 | INFO     | src.evaluate:evaluate:72 - Task: Send a message to Bowen
+2023-07-25 16:23:41.939 | DEBUG    | src.evaluate:evaluate:68 - Evaluate for Model 0
+2023-07-25 16:23:41.940 | INFO     | src.evaluate:evaluate:69 - Current Page: 
+2023-07-25 16:23:41.940 | INFO     | src.evaluate:evaluate:71 - Current Path: 
+2023-07-25 16:23:41.940 | INFO     | src.evaluate:evaluate:72 - Task: Send a message to Bowen
+2023-07-25 16:26:01.278 | DEBUG    | src.evaluate:evaluate:68 - Evaluate for Model 0
+2023-07-25 16:26:01.278 | INFO     | src.evaluate:evaluate:69 - Current Page: 
+2023-07-25 16:26:01.279 | INFO     | src.evaluate:evaluate:71 - Current Path: 
+2023-07-25 16:26:01.279 | INFO     | src.evaluate:evaluate:72 - Task: Send a message to Bowen
+2023-07-25 16:27:31.064 | DEBUG    | src.evaluate:evaluate:68 - Evaluate for Model 0
+2023-07-25 16:27:31.065 | INFO     | src.evaluate:evaluate:69 - Current Page: 
+2023-07-25 16:27:31.065 | INFO     | src.evaluate:evaluate:71 - Current Path: 
+2023-07-25 16:27:31.065 | INFO     | src.evaluate:evaluate:72 - Task: Send a message to Bowen
+2023-07-25 16:30:34.159 | DEBUG    | src.evaluate:evaluate:68 - Evaluate for Model 0
+2023-07-25 16:30:34.159 | INFO     | src.evaluate:evaluate:69 - Current Page: 
+2023-07-25 16:30:34.160 | INFO     | src.evaluate:evaluate:71 - Current Path: 
+2023-07-25 16:30:34.160 | INFO     | src.evaluate:evaluate:72 - Task: Send a message to Bowen
+2023-07-25 16:36:26.518 | DEBUG    | src.evaluate:evaluate:68 - Evaluate for Model 0
+2023-07-25 16:36:26.518 | INFO     | src.evaluate:evaluate:69 - Current Page: 
+2023-07-25 16:36:26.518 | INFO     | src.evaluate:evaluate:71 - Current Path: 
+2023-07-25 16:36:26.519 | INFO     | src.evaluate:evaluate:72 - Task: Send a message to Bowen
+2023-07-25 16:39:59.666 | DEBUG    | src.evaluate:evaluate:68 - Evaluate for Model 0
+2023-07-25 16:39:59.667 | INFO     | src.evaluate:evaluate:69 - Current Page: 
+2023-07-25 16:39:59.667 | INFO     | src.evaluate:evaluate:71 - Current Path: 
+2023-07-25 16:39:59.667 | INFO     | src.evaluate:evaluate:72 - Task: Send a message to Bowen
+2023-07-25 16:43:43.574 | DEBUG    | src.evaluate:evaluate:68 - Evaluate for Model 0
+2023-07-25 16:43:43.575 | INFO     | src.evaluate:evaluate:69 - Current Page: 
+2023-07-25 16:43:43.575 | INFO     | src.evaluate:evaluate:71 - Current Path: 
+2023-07-25 16:43:43.575 | INFO     | src.evaluate:evaluate:72 - Task: Send a message to Bowen
+2023-07-25 16:45:49.883 | DEBUG    | src.evaluate:evaluate:68 - Evaluate for Model 0
+2023-07-25 16:45:49.884 | INFO     | src.evaluate:evaluate:69 - Current Page: 
+2023-07-25 16:45:49.884 | INFO     | src.evaluate:evaluate:71 - Current Path: 
+2023-07-25 16:45:49.884 | INFO     | src.evaluate:evaluate:72 - Task: Send a message to Bowen
+2023-07-25 16:47:30.169 | DEBUG    | src.evaluate:evaluate:68 - Evaluate for Model 0
+2023-07-25 16:47:30.170 | INFO     | src.evaluate:evaluate:69 - Current Page: 
+2023-07-25 16:47:30.170 | INFO     | src.evaluate:evaluate:71 - Current Path: 
+2023-07-25 16:47:30.170 | INFO     | src.evaluate:evaluate:72 - Task: Send a message to Bowen
+2023-07-25 16:54:32.329 | DEBUG    | src.evaluate:evaluate:66 - Evaluate for Model 0
+2023-07-25 16:54:32.330 | INFO     | src.evaluate:evaluate:67 - Current Page: 
+2023-07-25 16:54:32.330 | INFO     | src.evaluate:evaluate:69 - Current Path: 
+2023-07-25 16:54:32.330 | INFO     | src.evaluate:evaluate:70 - Task: send a message to Bowen
+2023-07-25 16:54:46.249 | INFO     | src.evaluate:evaluate:96 - Judge Scores: [nan nan nan nan nan]
+2023-07-25 16:54:46.249 | INFO     | src.evaluate:evaluate:97 - Weights: [0.5, 0.5]
+2023-07-25 16:54:46.249 | WARNING  | src.evaluate:evaluate:98 - Score: [nan nan nan nan nan]
+2023-07-25 16:54:46.249 | DEBUG    | src.evaluate:evaluate:99 - Evaluate for Model 0 Done

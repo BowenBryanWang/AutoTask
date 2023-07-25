@@ -1,14 +1,11 @@
+import os
 from langchain import FAISS
-from langchain.embeddings import OpenAIEmbeddings
+from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
-from langchain.vectorstores.redis import Redis
-
+from langchain.vectorstores import FAISS
 from langchain.document_loaders import TextLoader
-from src.database import Database
-import csv
+ 
 
-
-EMBEDDING_DIM = OpenAIEmbeddings(openai_api_key="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")
 class KnowledgeBase:
     def __init__(self,database):
         self.database = database
@@ -17,8 +14,9 @@ class KnowledgeBase:
 class PageJump_KB(KnowledgeBase):
     def __init__(self,database):
         super().__init__(database)
-        self.pages = []
-        self.embeddings = EMBEDDING_DIM
+        self.pages = TextLoader(file_path='./page/static/data/page1.txt').load()
+        print(self.pages)
+        self.embeddings = OpenAIEmbeddings(client="GUI_LLM",openai_api_key="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")
         self.db = FAISS.from_documents(self.pages, self.embeddings)
 
     
@@ -26,26 +24,27 @@ class PageJump_KB(KnowledgeBase):
         self.pages+=TextLoader(file_path='./page/static/data/page'+str(page_id)+'.txt').load()
         self.db.add_documents(TextLoader(file_path='./page/static/data/page'+str(page_id)+'.txt').load())
         
-    def find_most_similar_page(self,query):
-        docs = self.db.similarity_search(query)
-        print(docs[0].page_content)
-        return docs[0].page_content
+    def find_most_similar_page(self,query:str):
+        docs = self.db.similarity_search_with_score(query)
+        print("内容",docs[0][0].page_content)
+        print("分数",docs[0][1])
+        return docs[0][0].page_content
     
     def find_next_page(self,query,edge):
         Start = self.find_most_similar_page(query)
-        return self.database.get_description(Start,edge)
+        return self.database.get_destination(Start,edge)
 
 class Task_KB(KnowledgeBase):
     def __init__(self, database):
         super().__init__(database)
         self.tasks = [] 
-        #读取history.csv中的task列，并在此处加载到这里的tasks中
-        with open("history.csv", 'r', newline='') as csvfile:
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                self.tasks.append(row['task'])
-        self.embeddings = EMBEDDING_DIM
-        self.db = FAISS.from_documents(self.tasks, self.embeddings)
+       
+        # with open("./src/history.csv", 'r', newline='') as csvfile:
+        #      #读取history.csv中的task列，并在此处加载到这里的tasks中
+        #     reader = csv.reader(csvfile)
+        #     self.tasks = [row[0] for row in reader]
+        # self.embeddings = EMBEDDING_DIM
+        # self.db = FAISS.from_documents(self.tasks, self.embeddings)
 
     def update_datas(self,new_task):
         self.tasks+=new_task

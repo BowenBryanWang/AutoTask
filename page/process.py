@@ -47,4 +47,4 @@ def transfer_2_html(semantic_nodes):
                     node.generate_all_semantic_info()["content-desc"]) != "" else "",
                 ",".join(node.generate_all_semantic_info()["Major_text"]))
             html_components.append(html_element)
-    return "".join(html_components)
+    return html_components

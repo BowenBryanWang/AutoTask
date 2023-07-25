@@ -1,7 +1,7 @@
 
 from typing import Optional
-from database import Database
-from knowledge import PageJump_KB, Task_KB
+from .database import Database
+from .knowledge import PageJump_KB, Task_KB
 from src.decide import Decide
 from src.evaluate import Evaluate
 from src.feedback import Feedback
@@ -59,6 +59,7 @@ class Model:
         self.PageJump_KB = PageJump_KB(self.database)
         self.Task_KB = Task_KB(self.database)
         self.predict_module = Predict(self, self.PageJump_KB)
+        self.predict_module.predict()
         self.suggest_module = Suggest(self)
         self.evaluate_module = Evaluate(self)
         self.decide_module = Decide(self)
@@ -81,7 +82,6 @@ class Model:
             raise Exception("No Screen input")
         if self.task == "":
             raise Exception("No task description input")
-        self.predict_module.predict()
         self.suggest_module.suggest()
         self.evaluate_module.evaluate()
         s=self.decide_module.decide()

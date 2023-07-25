@@ -1,0 +1,8 @@
+<button id=1 class='com.whatsapp:id/home_tab_layout' description='Calls'> Calls </button>
+<button id=2 class='com.whatsapp:id/home_tab_layout' description='Status'> Status </button>
+<button id=3 class='com.whatsapp:id/home_tab_layout' description='Community'>  </button>
+<button id=4 class='com.whatsapp:id/menuitem_overflow' description='More options'>  </button>
+<p id=5 class='com.whatsapp:id/menuitem_search' description='Search'>  </p>
+<p id=6 class='com.whatsapp:id/menuitem_camera' description='Camera'>  </p>
+<button id=7 class='com.whatsapp:id/contact_photo' description='Yellow'>  </button>
+<button id=8 class='com.whatsapp:id/contact_photo' description='Wang Bowen'>  </button>

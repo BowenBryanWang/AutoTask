@@ -1,18 +1,15 @@
+from concurrent.futures import ProcessPoolExecutor
+import spacy
+from sklearn.metrics.pairwise import cosine_similarity
+from loguru import logger
+import json
 import math
+import os
 import numpy as np
 import openai
-import pandas as pd
-import scipy
-from page.init import Screen
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
-from page.init import Screen
-from model import Model
-from loguru import logger
-
-from sklearn.metrics.pairwise import cosine_similarity
-import spacy
-from concurrent.futures import ProcessPoolExecutor
-NUM_JUDGES = 4
+NUM_JUDGES = 2
 
 
 class Evaluate():
@@ -48,9 +45,7 @@ class Evaluate():
         None.
         """
         self.model = model
-        self.allocator = Allocator(self)
-        self.judges = [LLM_Judge(self), IG_Judge(self),
-                       Prior_Judge(self), Markov_Judge(self)]
+        
         self.scores = []
 
     def evaluate(self):
@@ -69,26 +64,45 @@ class Evaluate():
         """
         log_file = logger.add("logs/evaluate.log", rotation="500 MB")
         logger.debug("Evaluate for Model {}".format(self.model.index))
-        logger.info("Current Page: {}".format(self.model.screen.page_description))
+        logger.info("Current Page: {}".format(
+            self.model.screen.page_description))
         logger.info("Current Path: {}".format(self.model.current_path_str))
         logger.info("Task: {}".format(self.model.task))
-
+        self.allocator = Allocator(self)
+        self.judges = [LLM_Judge(self), IG_Judge(self)]
         judge_scores = []
-        with ProcessPoolExecutor() as executor:
-            # Submit the score method of each judge to the executor
-            judge_score_futures = [executor.submit(judge.score, self.model.candidate) for judge in self.judges]
-            # Retrieve the results from the futures
-            judge_scores = [future.result() for future in judge_score_futures]
+        # with ProcessPoolExecutor() as executor:
+        #     # Submit the score method of each judge to the executor
+        #     judge_score_futures = [executor.submit(judge.score, self.model.candidate) for judge in self.judges]
+        #     # Retrieve the results from the futures
+        #     judge_scores = [future.result() for future in judge_score_futures]
         weights = self.allocator.allocate()
-        self.score = np.dot(judge_scores, weights)
+        self.score = np.zeros(len(self.model.candidate), dtype=np.float64)  # 初始化一个长度为5的全零数组作为总得分
+
+        for judge in self.judges:
+            # 获取当前评委的打分结果，并将其转换为浮点数数组
+            judge_scores = np.array(judge.score(), dtype=np.float64)
+            print("judge_scores",judge_scores)
+            # 将当前评委的打分结果与对应的权重相乘
+            weighted_scores = judge_scores * weights[self.judges.index(judge)]
+
+            # 将当前评委的加权打分结果累加到总得分中
+            self.score += weighted_scores
+
+            
+        
+        print("judge_scores",judge_scores)
 
         logger.info("Judge Scores: {}".format(judge_scores))
         logger.info("Weights: {}".format(weights))
         logger.warning("Score: {}".format(self.score))
         logger.debug("Evaluate for Model {} Done".format(self.model.index))
         logger.remove(log_file)
-
-        return self.scores
+        self.node_selected = self.model.candidate[np.argmax(self.score)]
+        self.node_selected_id = self.node_selected.split("id=")[1].split(" ")[0]
+        self.model.current_path.append(self.node_selected)
+        self.model.current_path_str += self.node_selected
+        return self.score
 
 
 class Judge():
@@ -137,7 +151,7 @@ class LLM_Judge(Judge):
                 "role": "user",
                 "content": """
                     Task: "Turn on Dark mode". 
-                    Page desription: "HomePage".
+                    Current path: "HomePage".
                     Options:
                     '''HTML
                         <button id=5 class='com.whatsapp:id/menuitem_overflow' description='More options'> </button>
@@ -174,32 +188,30 @@ class LLM_Judge(Judge):
                 "role": "user",
                 "content": """
                     Task: "{}".
-                    Page desription: "{}".
+                    Current path: "{}".
                     Options:
                     '''HTML
                     {}
-                    {}
-                    {}
-                    {}
-                    {}
                     '''
-                """.format(self.evaluate.model.task, self.evaluate.model.screen.page_description, self.evaluate.model.candidate[0], self.evaluate.model.candidate[1], self.evaluate.model.candidate[2], self.evaluate.model.candidate[3], self.candidate[4])
+                """.format(self.evaluate.model.task, self.evaluate.model.current_path_str, "".join([self.evaluate.model.screen.semantic_info[i-1] for i in self.evaluate.model.candidate]))
             },
         ]
-
+        
     def score(self):
         if self.evaluate.model.candidate == []:
             raise Exception("Please call Select function first!")
-        response = openai.Completion.create(
-            model="gpt-3.5-turbo",
-            messages=self.prompt,
+        print(self.prompt)
+        response = openai.ChatCompletion.create(
+            model = "gpt-3.5-turbo",
+            messages = self.prompt,
             temperature=0.3,
-            max_tokens=1024,
         )
         result = response.choices[0]["message"]["content"]
-        result = result[result.find("the score is")+13:]
-        result = result.replace("[", "").replace("]", "").split(",")
-        result = [int(result[i])/10 for i in range(len(result))]
+        print(result)
+        result = json.loads(result[result.find("{"):result.find("}")+1])
+        print(result)
+        result = result["score"]
+        result = [int(result[i]) for i in range(len(result))]
         self.result = result
         return result
 
@@ -227,30 +239,38 @@ class IG_Judge(Judge):
         # 计算初始熵
         if self.evaluate.model.candidate == []:
             raise Exception("Please call Select function first!")
-        initial_entropy, initial_probs = self.calculate_entropy(self.evaluate.model.candidate)
+        initial_entropy, initial_probs = self.calculate_entropy(
+            [self.evaluate.model.screen.semantic_info[i-1] for i in self.evaluate.model.candidate])
 
         if self.evaluate.model.predict_module.comp_json == {}:
             raise Exception("Please call Predict function first!")
         information_gains = []
 
-        def calculate_information_gain(i, candidate, initial_entropy, initial_probs, predict_module):
-            conditional_entropy, _ = self.calculate_entropy(predict_module.comp_json[candidate])
-            return (initial_entropy - conditional_entropy) * initial_probs[i]
-
-        # 创建进程池
-        with ProcessPoolExecutor() as executor:
-            # 并行计算信息增益
-            futures = [executor.submit(calculate_information_gain, i, self.evaluate.model.candidate[i], initial_entropy, initial_probs, self.evaluate.model.predict_module) for i in range(len(self.evaluate.model.candidate))]
-                # 计算条件熵
         
+
+        # # 创建进程池
+        # with ProcessPoolExecutor() as executor:
+        #     # 并行计算信息增益
+        #     futures = [executor.submit(self.calculate_information_gain, i, self.evaluate.model.candidate[i], initial_entropy,
+        #                                initial_probs, self.evaluate.model.predict_module) for i in range(len(self.evaluate.model.candidate))]
+        #     # 计算条件熵
+
         # 获取计算结果
-        information_gains = [future.result() for future in futures]
+        # information_gains = [future.result() for future in futures]
+        for i in range(len(self.evaluate.model.candidate)):
+            information_gains.append(self.calculate_information_gain(i, self.evaluate.model.screen.semantic_info[self.evaluate.model.candidate[i]-1], initial_entropy,
+                                       initial_probs, self.evaluate.model.predict_module))
 
         # 归一化
-        normalized_score = (information_gains - np.min(information_gains)) / (np.max(information_gains) - np.min(information_gains)) * 10
+        normalized_score = (information_gains - np.min(information_gains)) / \
+            (np.max(information_gains) - np.min(information_gains)) * 10
 
         return normalized_score
 
+    def calculate_information_gain(self,i, candidate, initial_entropy, initial_probs, predict_module):
+            conditional_entropy, _ = self.calculate_entropy(
+                predict_module.comp_json[candidate])
+            return (initial_entropy - conditional_entropy) * initial_probs[i]
     def calculate_entropy(self, candidates):
         """
         计算熵
@@ -265,14 +285,15 @@ class IG_Judge(Judge):
         # 计算每个元素与任务描述的语义相似度
         for candidate in candidates:
             doc_candidate = self.nlp(candidate)
-            matrix_candidate = np.array([token.vector for token in doc_candidate])
+            matrix_candidate = np.array(
+                [token.vector for token in doc_candidate])
             similarity = cosine_similarity(matrix_task, matrix_candidate)
             probs.append(similarity[0][0])
 
         # 概率归一化
         probs = np.array(probs)
         probs = probs / probs.sum()
-        
+
         # 计算熵
         entropy = 0
         for p in probs:
@@ -290,7 +311,7 @@ class Prior_Judge(Judge):
     def __init__(self, evaluate: Evaluate):
         super().__init__(evaluate)
         self.sim_tasks = []
-        #self.sim_tasks = self.Task_KB.find_most similar_tasks(self.model.task)
+        # self.sim_tasks = self.Task_KB.find_most similar_tasks(self.model.task)
         self.sim_paths = []
         #self.sim_paths = [self.Task_KB.get_path(task) for task in sim_tasks]
         self.result = []
@@ -356,14 +377,6 @@ class Prior_Judge(Judge):
                     {}
                     '''
                     Please rate each option on its potential to help me complete my task according to the successful examples and provide the reasoning behind each rating. Think step by step.
-                    Here are some successful examples:
-                    | Task | Path |
-                    | ---- | ---- |
-                    |{}|{}|
-                    |{}|{}|
-                    |{}|{}|
-                    |{}|{}|
-                    |{}|{}|
                 """.format(self.evaluate.model.task, self.evaluate.model.screen.page_description, self.evaluate.model.candidate[0], self.evaluate.model.candidate[1], self.evaluate.model.candidate[2], self.evaluate.model.candidate[3], self.candidate[4], self.sim_tasks[0], self.sim_paths[0], self.sim_tasks[1], self.sim_paths[1], self.sim_tasks[2], self.sim_paths[2], self.sim_tasks[3], self.sim_paths[3], self.sim_tasks[4], self.sim_paths[4])
             },
         ]
@@ -380,10 +393,9 @@ class Prior_Judge(Judge):
         result = response.choices[0]["message"]["content"]
         result = result[result.find("the score is")+13:]
         result = result.replace("[", "").replace("]", "").split(",")
-        result = [int(result[i])/10 for i in range(len(result))]
+        result = [int(result[i]) for i in range(len(result))]
         self.result = result
         return result
-        
 
     def query(self):
         pass

@@ -70,6 +70,9 @@ class Screen:
         print("semantic_nodes", self.semantic_nodes["type"])
 
         self.semantic_info = transfer_2_html(self.semantic_nodes["nodes"])
+        self.semantic_info_str = "".join(self.semantic_info)
+        with open('./page/static/data/page{}.txt'.format(self.cnt), 'w') as fp:
+            fp.write("".join(self.semantic_info))
         print("semantic_info", self.semantic_info)
         print("semantic_nodes", len(self.semantic_nodes))
         end_time = time.time()

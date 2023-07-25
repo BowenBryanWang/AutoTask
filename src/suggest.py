@@ -1,16 +1,15 @@
-import math
-import numpy as np
+
+
+import os
 import openai
-import pandas as pd
-import scipy
-from page.init import Screen
-from model import Model
+
+
 from loguru import logger
 import json
 
 import openai
 
-openai.api_key = "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"
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 class Suggest:
@@ -19,7 +18,10 @@ class Suggest:
         self.prompt = [
             {
                 "role": "system",
-                "content": "You are an AI assistant specialized in UI Automation. Based on user's intent and the current screen's components, your task is to analyze, understand the screen. SELECT the top five most possible components to the user's intent thinking step by step. Summarize your selections at the end of your response."
+                "content": """You are an AI assistant specialized in UI Automation. Based on user's intent and the current screen's components, your task is to analyze, understand the screen. SELECT the top five most possible components to the user's intent thinking step by step. Summarize your selections at the end of your response.
+                Think step by step, select the top five most possible components to the user's intent.
+                    Output a JSON object structured like {"result":[]-the number of selected candidate} at the end of your response.
+                    Do not select after-click components."""
             },
             {
                 "role": "user",
@@ -39,7 +41,6 @@ class Suggest:
                     <button id=9 class='com.whatsapp:id/contact_photo' description='Yellow'>  </button>
                     <button id=10 class='com.whatsapp:id/contact_photo' description='Wang Bowen'>  </button>
                     '''
-                    Think step by step, select the top five most possible components to the user's intent. Summarize your selections at the end of your response warpped by '''HTML and '''.
                 """
             },
             {
@@ -51,13 +52,9 @@ class Suggest:
                 <button id=3 class='com.whatsapp:id/home_tab_layout' description='Status'>: Similar to the "Calls" tab, the "Status" tab might contain accessibility or appearance-related options, including Dark mode.
                 <button id=4 class='com.whatsapp:id/home_tab_layout' description='Community'>: Although the description is empty for this component, it is worth exploring as it could potentially lead to settings related to appearance or themes, including Dark mode.
                 So the top five most possible components to the user's intent are:
-                '''HTML
-                <button id=5 class='com.whatsapp:id/menuitem_overflow' description='More options'> </button>
-                <button id=10 class='com.whatsapp:id/contact_photo' description='Wang Bowen'> </button>
-                <button id=2 class='com.whatsapp:id/home_tab_layout' description='Calls'> </button>
-                <button id=3 class='com.whatsapp:id/home_tab_layout' description='Status'> </button>
-                <button id=4 class='com.whatsapp:id/home_tab_layout' description='Community'> </button>
-                '''
+                {
+                    "result": [5,10,2,3,4]
+                }
                 """
             },
             {
@@ -69,7 +66,6 @@ class Suggest:
                     '''HTML
                     {}
                     '''
-                    Think step by step, select the top five most possible components to the user's intent. Summarize your selections at the end of your response warpped by '''HTML and '''.
                 """.format(self.model.task, self.model.current_path_str, self.model.extended_info)
             },
         ]
@@ -85,14 +81,15 @@ class Suggest:
         logger.info("Prompt: {}".format(json.dumps(self.prompt[-1])))
 
         response = openai.ChatCompletion.create(
-            model="gpt-4",
+            model="gpt-3.5-turbo",
             messages=self.prompt,
             temperature=0.5,
         )
         response_text = response["choices"][0]["message"]["content"]
         print(response_text)
-        candidate = response_text[response_text.find(
-            "```HTML")+7:response_text.find("```")].split("\n")
+        candidate: list[int] = json.loads(
+            response_text[response_text.find("{"):response_text.find("}")+1])["result"]
+
         self.model.candidate = candidate
         print(candidate)
 

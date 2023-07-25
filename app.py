@@ -24,7 +24,8 @@ from flask import Flask
 
 app = Flask(__name__)
 
-openai.api_key = "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"
+
+
 layout = None
 screenshot = None
 imgdata = None
