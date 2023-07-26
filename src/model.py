@@ -84,7 +84,7 @@ class Model:
             raise Exception("No task description input")
         self.suggest_module.suggest()
         self.evaluate_module.evaluate()
-        s=self.decide_module.decide()
+        s = self.decide_module.decide()
         if s == "completed":
             return "completed"
         elif s == "wrong":
@@ -92,7 +92,9 @@ class Model:
             return "wrong"
         elif s == "partly completed":
             node = self.screen.semantic_nodes["nodes"][self.node_selected_id-1]
-            center = {"x": (node.bound[0]+node.bound[2])//2,"y": (node.bound[1]+node.bound[3])//2}
-            perform = {"node_id": 1, "trail": "["+str(center["x"])+","+str(center["y"])+"]", "action_type": "click"}
+            center = {"x": (node.bound[0]+node.bound[2]) //
+                      2, "y": (node.bound[1]+node.bound[3])//2}
+            perform = {
+                "node_id": 1, "trail": "["+str(center["x"])+","+str(center["y"])+"]", "action_type": "click"}
+            print(perform)
             return perform
-        

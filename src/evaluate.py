@@ -9,7 +9,7 @@ import numpy as np
 import openai
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-NUM_JUDGES = 2
+NUM_JUDGES = 1
 
 
 class Evaluate():
@@ -69,7 +69,7 @@ class Evaluate():
         logger.info("Current Path: {}".format(self.model.current_path_str))
         logger.info("Task: {}".format(self.model.task))
         self.allocator = Allocator(self)
-        self.judges = [LLM_Judge(self), IG_Judge(self)]
+        self.judges = [LLM_Judge(self)]
         judge_scores = []
         # with ProcessPoolExecutor() as executor:
         #     # Submit the score method of each judge to the executor
@@ -98,7 +98,7 @@ class Evaluate():
         logger.warning("Score: {}".format(self.score))
         logger.debug("Evaluate for Model {} Done".format(self.model.index))
         logger.remove(log_file)
-        self.node_selected = self.model.candidate[np.argmax(self.score)]
+        self.node_selected = self.model.candidate_str[np.argmax(self.score)]
         self.node_selected_id = self.node_selected.split("id=")[1].split(" ")[0]
         self.model.current_path.append(self.node_selected)
         self.model.current_path_str += self.node_selected

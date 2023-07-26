@@ -91,6 +91,7 @@ class Suggest:
             response_text[response_text.find("{"):response_text.find("}")+1])["result"]
 
         self.model.candidate = candidate
+        self.model.candidate_str = [self.model.screen.semantic_info[i-1] for i in candidate]
         print(candidate)
 
         logger.warning("Response: {}".format(candidate))

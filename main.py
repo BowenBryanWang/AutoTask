@@ -13,15 +13,23 @@ app = Flask(__name__)
 TASK = ""
 STATUS = "stop"
 
+from flask import jsonify
+
 @app.route('/demo', methods=['POST'])
 def demo_route() -> Union[str, Response]:
-    global TASK,STATUS
-    if STATUS =="start":
+    global TASK, STATUS
+    if STATUS == "start":
         screen = Screen()
         screen.update(request=request.form)
         model = Model(screen=screen, description=TASK)
-        model.work()
-    return "Hello, World!"
+        result = model.work()
+        if isinstance(result, dict):
+            return jsonify(result)
+        elif result == "completed":
+            return Response("Task completed successfully!")
+        else:
+            return Response("Task failed.")
+    return Response("0")
 
 
 @app.route("/", methods=("GET", "POST"))

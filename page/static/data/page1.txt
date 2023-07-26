@@ -1,8 +1,89 @@
-<button id=1 class='com.whatsapp:id/home_tab_layout' description='Calls'> Calls </button>
-<button id=2 class='com.whatsapp:id/home_tab_layout' description='Status'> Status </button>
-<button id=3 class='com.whatsapp:id/home_tab_layout' description='Community'>  </button>
-<button id=4 class='com.whatsapp:id/menuitem_overflow' description='More options'>  </button>
-<p id=5 class='com.whatsapp:id/menuitem_search' description='Search'>  </p>
-<p id=6 class='com.whatsapp:id/menuitem_camera' description='Camera'>  </p>
-<button id=7 class='com.whatsapp:id/contact_photo' description='Yellow'>  </button>
-<button id=8 class='com.whatsapp:id/contact_photo' description='Wang Bowen'>  </button>
+<p id=1 class='' description='CameraCan be expanded into a service widget,Apps in the dock'>  </p>
+<p id=2 class='' description='BrowserCan be expanded into a service widget,Apps in the dock'>  </p>
+<p id=3 class='' description='淘宝, 1 notification'> 淘宝 </p>
+<p id=4 class='' description='抖音, 114 notifications'> 抖音 </p>
+<p id=5 class='' description='U校园,App is in the large folder'>  </p>
+<p id=6 class='' description='中国移动安徽, 11 notifications,App is in the large folder'>  </p>
+<p id=7 class='' description='中国银行,App is in the large folder'>  </p>
+<p id=8 class='' description='智能投屏'> 智能投屏 </p>
+<p id=9 class='' description='ToDesk'> ToDesk </p>
+<p id=10 class='' description='yisdk'> yisdk </p>
+<p id=11 class='' description='百度文库'> 百度文库 </p>
+<p id=12 class='' description='Fake Location'> Fake Location </p>
+<p id=13 class='' description='多搜'> 多搜 </p>
+<p id=14 class='' description='HUAWEI Assistant'> HUAWEI Assistant </p>
+<div id=15 class='' description='Folder: Top Apps'> Top Apps </div>
+<p id=16 class='' description='EduCenter'> EduCenter </p>
+<p id=17 class='' description='百词斩'> 百词斩 </p>
+<p id=18 class='' description='Email, 1 notification,App is in the large folder'>  </p>
+<p id=19 class='' description='Avocado,App is in the large folder'>  </p>
+<p id=20 class='' description='Clash,App is in the large folder'>  </p>
+<p id=21 class='' description='Alipay, 7 notifications,App is in the large folder'>  </p>
+<p id=22 class='' description='出境易,App is in the large folder'>  </p>
+<p id=23 class='' description='ActionRecord,App is in the large folder'>  </p>
+<p id=24 class='' description='Phone,App is in the large folder'>  </p>
+<p id=25 class='' description='Messaging, 3 notifications,App is in the large folder'>  </p>
+<p id=26 class='' description='剪映, 96 notifications,App is in the large folder'>  </p>
+<p id=27 class='' description='learnX,App is in the large folder'>  </p>
+<p id=28 class='' description='HUAWEI Video,App is in the large folder'>  </p>
+<p id=29 class='' description='爱奇艺, 11 notifications,App is in the large folder'>  </p>
+<p id=30 class='' description='Sunlogin Remote Control,App is in the large folder'>  </p>
+<p id=31 class='' description='小睡眠,App is in the large folder'>  </p>
+<p id=32 class='' description='TIDE,App is in the large folder'>  </p>
+<p id=33 class='' description='乐动力,App is in the large folder'>  </p>
+<p id=34 class='' description='Keep,App is in the large folder'>  </p>
+<p id=35 class='' description='Qunar Travel,App is in the large folder'>  </p>
+<p id=36 class='' description='Railway 12306,App is in the large folder'>  </p>
+<p id=37 class='' description='DiDi,App is in the large folder'>  </p>
+<p id=38 class='' description='北京公交,App is in the large folder'>  </p>
+<p id=39 class='' description='Amap, 9 notifications,App is in the large folder'>  </p>
+<p id=40 class='' description='Metro大都会,App is in the large folder'>  </p>
+<p id=41 class='' description='醒图, 3 notifications,App is in the large folder'>  </p>
+<p id=42 class='' description='B612咔叽,App is in the large folder'>  </p>
+<p id=43 class='' description='To Do,App is in the large folder'>  </p>
+<p id=44 class='' description='微信读书,App is in the large folder'>  </p>
+<p id=45 class='' description='Weibo, 37 notifications,App is in the large folder'>  </p>
+<p id=46 class='' description='QQ, 3 notifications,App is in the large folder'>  </p>
+<p id=47 class='' description='NetEase Music,App is in the large folder'>  </p>
+<p id=48 class='' description='小猿搜题'> 小猿搜题 </p>
+<p id=49 class='' description='得物'> 得物 </p>
+<p id=50 class='' description='HappyCast'> HappyCast </p>
+<div id=51 class='' description='Folder 1 Small folder 2 apps,'> Folder 1 </div>
+<p id=52 class='' description='Play Store'> Play Store </p>
+<p id=53 class='' description='DingTalk'> DingTalk </p>
+<p id=54 class='' description='大麦'> 大麦 </p>
+<div id=55 class='' description='Folder: Tools'> Tools </div>
+<p id=56 class='' description='万象灵动岛'> 万象灵动岛 </p>
+<p id=57 class='' description='TipsCan be expanded into a service widget'> Tips </p>
+<p id=58 class='' description='小红书'> 小红书 </p>
+<p id=59 class='' description='全民反诈'> 全民反诈 </p>
+<p id=60 class='' description='CalendarCan be expanded into a service widget'> Calendar </p>
+<p id=61 class='' description='Cubox'> Cubox </p>
+<p id=62 class='' description='Optimizer'> Optimizer </p>
+<p id=63 class='' description='拼多多'> 拼多多 </p>
+<p id=64 class='' description='Life Service'> Life Service </p>
+<p id=65 class='' description='My HUAWEI'> My HUAWEI </p>
+<p id=66 class='' description='duoCo Strip'> duoCo Strip </p>
+<p id=67 class='' description='智慧语音'> 智慧语音 </p>
+<p id=68 class='' description='AI LifeCan be expanded into a service widget'> AI Life </p>
+<p id=69 class='' description='闲鱼, 1 notification'> 闲鱼 </p>
+<p id=70 class='' description='GalleryCan be expanded into a service widget'> Gallery </p>
+<p id=71 class='' description='Settings'> Settings </p>
+<p id=72 class='' description='MeeTimeCan be expanded into a service widget, 109 notifications'> MeeTime </p>
+<p id=73 class='' description='AppGallery, 69 notifications'> AppGallery </p>
+<p id=74 class='' description='VMALL'> VMALL </p>
+<p id=75 class='' description='WalletCan be expanded into a service widget'> Wallet </p>
+<p id=76 class='' description='ThemesCan be expanded into a service widget'> Themes </p>
+<p id=77 class='' description='Books'> Books </p>
+<p id=78 class='' description='MusicCan be expanded into a service widget, 1 notification'> Music </p>
+<p id=79 class='' description='NotepadCan be expanded into a service widget'> Notepad </p>
+<p id=80 class='' description='ClockCan be expanded into a service widget'> Clock </p>
+<p id=81 class='' description='WeatherCan be expanded into a service widget'> Weather </p>
+<div id=82 class='com.huawei.android.totemweather:id/time_display' description='9:24'> 9:24 </div>
+<div id=83 class='com.huawei.android.totemweather:id/widget_app_temperature_icon' description=', , , Overcast, current temperature 29℃, ,Overcast,29'> 29 </div>
+<p id=84 class='com.huawei.android.totemweather:id/widget_city_date' description='Tue, Jul 25  六月初八'> Tue, Jul 25  六月初八 </p>
+<button id=85 class='com.huawei.android.launcher:id/clear_all_recents_image_button' description='Close all recent apps'>  </button>
+<button id=86 class='com.huawei.android.launcher:id/icon' description='WhatsApp'>  </button>
+<button id=87 class='com.huawei.android.launcher:id/splitscreen_task' description='Touch to open in floating window'>  </button>
+<button id=88 class='com.huawei.android.launcher:id/icon' description='ActionRecord'>  </button>
+<button id=89 class='com.huawei.android.launcher:id/splitscreen_task' description='Touch to open in floating window'>  </button>
