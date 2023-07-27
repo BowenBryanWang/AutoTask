@@ -1,5 +1,6 @@
 import json
 import openai
+from loguru import logger
 
 
 class Decide:
@@ -55,6 +56,15 @@ Based on the evaluation, the JSON object would be:
             Action trace:{}
             """.format(self.model.task, self.model.current_path_str)
         }]
+
+        log_file = logger.add("logs/decide.log", rotation="500 MB")
+        logger.debug("Suggest for Model {}".format(self.model.index))
+        logger.info("Current Page: {}".format(
+            self.model.screen.page_description))
+        logger.info("Current Path: {}".format(self.model.current_path_str))
+        logger.info("Task: {}".format(self.model.task))
+        logger.info("Prompt: {}".format(json.dumps(self.prompt[-1])))
+
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=self.prompt,
@@ -67,4 +77,9 @@ Based on the evaluation, the JSON object would be:
         print(answer)
         print(answer["status"])
         print(answer["reason"])
+
+        logger.warning("Response: {}".format(json.dumps(answer)))
+        logger.debug("Decide for Model {} Done".format(self.model.index))
+        logger.remove(log_file)
+        
         return answer["status"]

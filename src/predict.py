@@ -110,7 +110,7 @@ class Predict():
         """
         Predicts the possible controls that appear when a specific UI element is clicked.
         """
-        log_file = logger.add("log/predict.log", rotation="500 MB")
+        log_file = logger.add("logs/predict.log", rotation="500 MB")
         logger.debug("Predict for Model {}".format(self.model.index))
 
         logger.info("Current Path: {}".format(self.model.current_path_str))
