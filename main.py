@@ -1,3 +1,4 @@
+from flask import jsonify
 from flask import Response
 from typing import List, Dict, Any, Union
 from flask import Flask, render_template, request
@@ -12,18 +13,19 @@ app = Flask(__name__)
 
 TASK = ""
 STATUS = "stop"
+INDEX = 0
 
-from flask import jsonify
 
 @app.route('/demo', methods=['POST'])
 def demo_route() -> Union[str, Response]:
-    global TASK, STATUS
+    global TASK, STATUS, INDEX
     if STATUS == "start":
-        screen = Screen()
+        screen = Screen(INDEX)
         screen.update(request=request.form)
         model = Model(screen=screen, description=TASK)
         result = model.work()
         if isinstance(result, dict):
+            INDEX += 1
             return jsonify(result)
         elif result == "completed":
             return Response("Task completed successfully!")
@@ -34,7 +36,7 @@ def demo_route() -> Union[str, Response]:
 
 @app.route("/", methods=("GET", "POST"))
 def index() -> Union[str, Response]:
-    global TASK,STATUS
+    global TASK, STATUS
     print("index")
     if request.method == "POST" and "intention" in request.form:
         TASK = request.form["intention"]

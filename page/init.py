@@ -29,8 +29,8 @@ class Screen:
     upload_time = 0
     page_description = ""
 
-    def __init__(self) -> None:
-        pass
+    def __init__(self,cnt=0) -> None:
+        self.cnt = cnt
 
     def update(self, request):
         # if not self.describermanagers_init:
