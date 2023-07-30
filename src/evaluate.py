@@ -8,7 +8,7 @@ import os
 import numpy as np
 import openai
 openai.api_key = os.getenv("OPENAI_API_KEY")
-
+from main import INDEX
 NUM_JUDGES = 1
 
 
@@ -62,7 +62,10 @@ class Evaluate():
         @return:
         The final scores of the candidate items.
         """
-        log_file = logger.add("logs/evaluate.log", rotation="500 MB")
+        global INDEX
+        with open("logs/log{}.log".format(INDEX), "w") as f:
+            f.write("--------------------Evaluate--------------------\n")
+        log_file = logger.add("logs/log{}.log".format(INDEX), rotation="500 MB")
         logger.debug("Evaluate for Model {}".format(self.model.index))
         logger.info("Current Page: {}".format(
             self.model.screen.page_description))

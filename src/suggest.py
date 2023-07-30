@@ -10,7 +10,7 @@ import json
 import openai
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
-
+from main import INDEX
 
 class Suggest:
     def __init__(self, model) -> None:
@@ -73,8 +73,10 @@ class Suggest:
 
 
     def suggest(self):
-
-        log_file = logger.add("logs/suggest.log", rotation="500 MB")
+        
+        with open("logs/log{}.log".format(INDEX), "w") as f:
+            f.write("--------------------Suggest--------------------\n")
+        log_file = logger.add("logs/log{}.log".format(INDEX), rotation="500 MB")
         logger.debug("Suggest for Model {}".format(self.model.index))
         logger.info("Current Page: {}".format(
             self.model.screen.page_description))
@@ -173,6 +175,11 @@ Candidates:{}""".__format__(self.model.task, self.model.screen.page_description,
             }   
             ]
 
+        with open("logs/log{}.log".format(INDEX), "w") as f:
+            f.write("--------------------Suggest--------------------\n")
+        log_file = logger.add("logs/log{}.log".format(INDEX), rotation="500 MB")
+        logger.debug("Plan for Model {}".format(self.model.index))
+        logger.info("Prompt: {}".format(json.dumps(self.prompt_plan[-1])))
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=self.prompt_plan,
@@ -188,3 +195,7 @@ Candidates:{}""".__format__(self.model.task, self.model.screen.page_description,
             self.model.candidate_action[i-1] = response["candidate{}".format(i)]["action"]
             self.model.candidate_text[i-1] = response["candidate{}".format(i)]["text"]
             # self.model.candidate_reason[i-1] = response["candidate{}".format(i)]["reason"]
+        logger.warning("Candidate Action: {}".format(self.model.candidate_action))
+        logger.warning("Candidate Text: {}".format(self.model.candidate_text))
+        logger.debug("Plan for Model {} Done".format(self.model.index))
+        logger.remove(log_file)
