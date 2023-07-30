@@ -82,6 +82,7 @@ class Model:
         if self.task == "":
             raise Exception("No task description input")
         self.suggest_module.suggest()
+        self.suggest_module.plan()
         self.evaluate_module.evaluate()
         s = self.decide_module.decide()
         if s == "completed":
