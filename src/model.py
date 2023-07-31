@@ -12,7 +12,7 @@ from src.suggest import Suggest
 
 class Model:
 
-    def __init__(self, screen: Optional[Screen] = None, description: str = "", prev_model=None):
+    def __init__(self, screen: Optional[Screen] = None, description: str = "", prev_model=None, index=0):
         """
         Initializes a Model object with the given screen and description.
 
@@ -32,6 +32,7 @@ class Model:
         self.candidate = []  # 用于存储候选的控件,首次应该在suggest中初始化
         self.node_selected = None  # 用于存储用户选择的控件
         self.node_selected_id: int = 0  # 用于存储用户选择的控件的id
+        self.index = index
         #####################################################
 
         #####################################################
@@ -39,13 +40,11 @@ class Model:
         if prev_model is not None:
             self.prev_model = prev_model
             prev_model.next_model = self
-            self.current_path = self.prev_model.current_path.copy().append(
-                self.screen.page_description)
-            self.current_path_str = self.prev_model.current_path_str + \
-                self.screen.page_description
-            self.index = self.prev_model.index + 1
+            # self.current_path = self.prev_model.current_path.copy().append(
+            #     self.screen.page_description)
+            # self.current_path_str = self.prev_model.current_path_str + \
+            #     self.screen.page_description
         else:
-            self.index = 0
             self.current_path = [self.screen.page_description]
             self.current_path_str = self.screen.page_description
         self.next_model = None
@@ -58,7 +57,7 @@ class Model:
         self.PageJump_KB = PageJump_KB(self.database)
         self.Task_KB = Task_KB(self.database)
         self.predict_module = Predict(self, self.PageJump_KB)
-        self.predict_module.predict()
+        
         self.suggest_module = Suggest(self)
         self.evaluate_module = Evaluate(self)
         self.decide_module = Decide(self)
@@ -81,6 +80,7 @@ class Model:
             raise Exception("No Screen input")
         if self.task == "":
             raise Exception("No task description input")
+        self.predict_module.predict()
         self.suggest_module.suggest()
         self.suggest_module.plan()
         self.evaluate_module.evaluate()

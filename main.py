@@ -14,7 +14,8 @@ app = Flask(__name__)
 TASK = ""
 STATUS = "stop"
 INDEX = 0
-COMPUTATINAL_GRAPH = []
+COMPUTATIONAL_GRAPH = []
+
 
 @app.route('/demo', methods=['POST'])
 def demo_route() -> Union[str, Response]:
@@ -26,15 +27,24 @@ def demo_route() -> Union[str, Response]:
     Returns:
         Union[str, Response]: A JSON object or a Response object.
     """
-    global TASK, STATUS, INDEX, COMPUTATINAL_GRAPH
+    global TASK, STATUS, INDEX, COMPUTATIONAL_GRAPH
+    print("demo")
     if STATUS == "start":
         screen = Screen(INDEX)
+        print("1")
         screen.update(request=request.form)
-        if COMPUTATINAL_GRAPH != []:
-            model = Model(screen=screen, description=TASK,prev_model=COMPUTATINAL_GRAPH[-1])
+        print("2")
+        if COMPUTATIONAL_GRAPH != []:
+            print("3")
+            model = Model(screen=screen, description=TASK,
+                          prev_model=COMPUTATIONAL_GRAPH[-1], index=INDEX)
         else:
-            model = Model(screen=screen, description=TASK)
-        COMPUTATINAL_GRAPH.append(model)
+            print("4")
+            model = Model(screen=screen, description=TASK,
+                          prev_model=None, index=INDEX)
+            print("5")
+        COMPUTATIONAL_GRAPH.append(model)
+        print("work")
         result = model.work()
         if isinstance(result, dict):
             INDEX += 1

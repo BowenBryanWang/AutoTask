@@ -3,7 +3,7 @@ from langchain import FAISS
 import openai
 from loguru import logger
 import json
-from main import INDEX
+
 openai.api_key = os.getenv("OPENAI_API_KEY")
 # from reliablegpt import reliableGPT
 
@@ -110,10 +110,10 @@ class Predict():
         """
         Predicts the possible controls that appear when a specific UI element is clicked.
         """
-        global INDEX
-        with open("logs/log{}.log".format(INDEX), "w") as f:
+
+        with open("logs/log{}.log".format(self.model.index), "w") as f:
             f.write("--------------------Predict--------------------\n")
-        log_file = logger.add("logs/log{}.log".format(INDEX), rotation="500 MB")
+        log_file = logger.add("logs/log{}.log".format(self.model.index), rotation="500 MB")
         logger.debug("Predict for Model {}".format(self.model.index))
 
         logger.info("Current Path: {}".format(self.model.current_path_str))
@@ -135,7 +135,7 @@ class Predict():
         print(response_text)
         response_text = json.loads(response_text[response_text.find("{"):response_text.find("}")+1])
         print("JSON:----",response_text)
-        self.model.screen.description = response_text["Page"]
+        self.model.page_description = response_text["Page"]
         for i in range(len(self.model.screen.semantic_info)):
             self.next_comp.append(response_text["id="+str(i+1)])
             self.comp_json[self.model.screen.semantic_info[i]] = response_text["id="+str(i+1)]

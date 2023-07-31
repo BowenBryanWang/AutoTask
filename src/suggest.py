@@ -10,11 +10,13 @@ import json
 import openai
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
-from main import INDEX
+
 
 class Suggest:
     def __init__(self, model) -> None:
         self.model = model
+
+    def suggest(self):
         self.prompt_select = [
             {
                 "role": "system",
@@ -69,17 +71,13 @@ class Suggest:
                 """.format(self.model.task, self.model.current_path_str, self.model.extended_info)
             },
         ]
-        
-
-
-    def suggest(self):
-        
-        with open("logs/log{}.log".format(INDEX), "w") as f:
+        with open("logs/log{}.log".format(self.model.index), "w") as f:
             f.write("--------------------Suggest--------------------\n")
-        log_file = logger.add("logs/log{}.log".format(INDEX), rotation="500 MB")
+        log_file = logger.add(
+            "logs/log{}.log".format(self.model.index), rotation="500 MB")
         logger.debug("Suggest for Model {}".format(self.model.index))
         logger.info("Current Page: {}".format(
-            self.model.screen.page_description))
+            self.model.page_description))
         logger.info("Current Path: {}".format(self.model.current_path_str))
         logger.info("Task: {}".format(self.model.task))
         logger.info("Prompt: {}".format(json.dumps(self.prompt_select[-1])))
@@ -136,8 +134,7 @@ Candidates:
             },
             {
                 "role": "assistant",
-                "content": """
-                {
+                "content": """{
   "candidate1": {
     "action": "click",
     "text": null,
@@ -163,21 +160,20 @@ Candidates:
     "text": null,
     "reason": "Switching to the 'Community' tab is not relevant to sending a message."
   }
-}
-
-                """},
+}"""},
             {
-                "role":"user",
-                "content":"""
+                "role": "user",
+                "content": """
                 Task: {},
 Current Page : {}:
-Candidates:{}""".__format__(self.model.task, self.model.screen.page_description, self.model.candidate_str)
-            }   
-            ]
+Candidates:{}""".format(self.model.task, self.model.page_description, self.model.candidate_str)
+            }
+        ]
 
-        with open("logs/log{}.log".format(INDEX), "w") as f:
+        with open("logs/log{}.log".format(self.model.index), "w") as f:
             f.write("--------------------Suggest--------------------\n")
-        log_file = logger.add("logs/log{}.log".format(INDEX), rotation="500 MB")
+        log_file = logger.add(
+            "logs/log{}.log".format(self.model.index), rotation="500 MB")
         logger.debug("Plan for Model {}".format(self.model.index))
         logger.info("Prompt: {}".format(json.dumps(self.prompt_plan[-1])))
         response = openai.ChatCompletion.create(
@@ -186,16 +182,20 @@ Candidates:{}""".__format__(self.model.task, self.model.screen.page_description,
             temperature=0,
         )
         response_text = response["choices"][0]["message"]["content"]
-        response = json.loads(response_text[response_text.find("{"):response_text.find("}")+1])
+        response = json.loads(
+            response_text)
         print(response)
         self.model.candidate_action = [None]*5
         self.model.candidate_text = [None]*5
         # self.model.candidate_reason = [None]*5
-        for i in range(1,6):
-            self.model.candidate_action[i-1] = response["candidate{}".format(i)]["action"]
-            self.model.candidate_text[i-1] = response["candidate{}".format(i)]["text"]
+        for i in range(1, 6):
+            self.model.candidate_action[i -
+                                        1] = response["candidate{}".format(i)]["action"]
+            self.model.candidate_text[i -
+                                      1] = response["candidate{}".format(i)]["text"]
             # self.model.candidate_reason[i-1] = response["candidate{}".format(i)]["reason"]
-        logger.warning("Candidate Action: {}".format(self.model.candidate_action))
+        logger.warning("Candidate Action: {}".format(
+            self.model.candidate_action))
         logger.warning("Candidate Text: {}".format(self.model.candidate_text))
         logger.debug("Plan for Model {} Done".format(self.model.index))
         logger.remove(log_file)

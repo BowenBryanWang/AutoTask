@@ -2,7 +2,7 @@ import json
 import openai
 from loguru import logger
 
-from main import INDEX
+
 
 class Decide:
     def __init__(self, model) -> None:
@@ -57,14 +57,14 @@ Based on the evaluation, the JSON object would be:
             Action trace:{}
             """.format(self.model.task, self.model.current_path_str)
         }]
-        global INDEX
 
-        with open("logs/log{}.log".format(INDEX), "w") as f:
+
+        with open("logs/log{}.log".format(self.model.index), "w") as f:
             f.write("--------------------Decide--------------------\n")
-        log_file = logger.add("logs/log{}.log".format(INDEX), rotation="500 MB")
+        log_file = logger.add("logs/log{}.log".format(self.model.index), rotation="500 MB")
         logger.debug("Decide for Model {}".format(self.model.index))
         logger.info("Current Page: {}".format(
-            self.model.screen.page_description))
+            self.model.page_description))
         logger.info("Current Path: {}".format(self.model.current_path_str))
         logger.info("Task: {}".format(self.model.task))
         logger.info("Prompt: {}".format(json.dumps(self.prompt[-1])))
