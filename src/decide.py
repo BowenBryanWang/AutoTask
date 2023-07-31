@@ -59,7 +59,7 @@ Based on the evaluation, the JSON object would be:
         }]
 
 
-        with open("logs/log{}.log".format(self.model.index), "w") as f:
+        with open("logs/log{}.log".format(self.model.index), "a") as f:
             f.write("--------------------Decide--------------------\n")
         log_file = logger.add("logs/log{}.log".format(self.model.index), rotation="500 MB")
         logger.debug("Decide for Model {}".format(self.model.index))

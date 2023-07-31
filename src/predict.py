@@ -111,7 +111,7 @@ class Predict():
         Predicts the possible controls that appear when a specific UI element is clicked.
         """
 
-        with open("logs/log{}.log".format(self.model.index), "w") as f:
+        with open("logs/log{}.log".format(self.model.index), "a") as f:
             f.write("--------------------Predict--------------------\n")
         log_file = logger.add("logs/log{}.log".format(self.model.index), rotation="500 MB")
         logger.debug("Predict for Model {}".format(self.model.index))

@@ -71,7 +71,7 @@ class Suggest:
                 """.format(self.model.task, self.model.current_path_str, self.model.extended_info)
             },
         ]
-        with open("logs/log{}.log".format(self.model.index), "w") as f:
+        with open("logs/log{}.log".format(self.model.index), "a") as f:
             f.write("--------------------Suggest--------------------\n")
         log_file = logger.add(
             "logs/log{}.log".format(self.model.index), rotation="500 MB")
@@ -170,7 +170,7 @@ Candidates:{}""".format(self.model.task, self.model.page_description, self.model
             }
         ]
 
-        with open("logs/log{}.log".format(self.model.index), "w") as f:
+        with open("logs/log{}.log".format(self.model.index), "a") as f:
             f.write("--------------------Suggest--------------------\n")
         log_file = logger.add(
             "logs/log{}.log".format(self.model.index), rotation="500 MB")
