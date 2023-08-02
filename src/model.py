@@ -58,7 +58,8 @@ class Model:
         self.database = Database(
             user="root", password="wbw12138zy,.", host="127.0.0.1", database="GUI_LLM")
         print("· database connected")
-        self.PageJump_KB = PageJump_KB(self.database)
+        self.PageJump_KB = PageJump_KB()
+        self.similar_tasks,self.similar_traces = self.PageJump_KB.find_most_similar_tasks(self.task)
         print("· pagejump_kb initialized")
         self.Task_KB = Task_KB(self.database)
         print("· task_kb initialized")
