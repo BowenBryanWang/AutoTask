@@ -1,4 +1,3 @@
-from concurrent.futures import ProcessPoolExecutor
 import spacy
 from sklearn.metrics.pairwise import cosine_similarity
 from loguru import logger
@@ -45,7 +44,6 @@ class Evaluate():
         None.
         """
         self.model = model
-        
         self.scores = []
 
     def evaluate(self):
@@ -88,12 +86,8 @@ class Evaluate():
             print("judge_scores",judge_scores)
             # 将当前评委的打分结果与对应的权重相乘
             weighted_scores = judge_scores * weights[self.judges.index(judge)]
-
             # 将当前评委的加权打分结果累加到总得分中
             self.score += weighted_scores
-
-            
-        
         print("judge_scores",judge_scores)
 
         logger.info("Judge Scores: {}".format(judge_scores))
@@ -102,11 +96,19 @@ class Evaluate():
         logger.debug("Evaluate for Model {} Done".format(self.model.index))
         logger.remove(log_file)
         self.node_selected = self.model.candidate_str[np.argmax(self.score)]
+        self.node_selected_action = self.model.candidate_action[np.argmax(self.score)]
+        self.node_selected_text = self.model.candidate_text[np.argmax(self.score)]
         self.node_selected_id = self.node_selected.split("id=")[1].split(" ")[0]
-        self.model.current_path.append(self.node_selected)
-        self.model.current_path_str += self.node_selected
+        self.model.current_path.append(process_action_info(self.node_selected_action, self.node_selected_text,self.node_selected))
+        self.model.current_path_str = "->".join(self.model.current_path)
         return self.score
 
+def process_action_info(action, params,node):
+    if action == "click":
+        return "Action: Click on {}".format(node) 
+    elif action == "edit":
+        return "Action: Edit {} with {}".format(node, params)
+    pass
 
 class Judge():
     """
@@ -136,9 +138,6 @@ class LLM_Judge(Judge):
     """
 
     def __init__(self, evaluate: Evaluate):
-        """
-        TODO:测试prompt
-        """
         super().__init__(evaluate)
         self.result = []
         self.prompt = [

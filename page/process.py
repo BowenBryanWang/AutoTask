@@ -38,7 +38,7 @@ def transfer_2_html(semantic_nodes):
                 ",".join(node.generate_all_semantic_info()["Major_text"]))
 
             html_components.append(html_element)
-        elif "TextView" in node.node_class:
+        else:
 
             html_element = "<p id={} class='{}' {}> {} </p>\n".format(
                 len(html_components)+1,

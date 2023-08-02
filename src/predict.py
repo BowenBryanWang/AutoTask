@@ -1,20 +1,9 @@
 import os
-from langchain import FAISS
 import openai
 from loguru import logger
 import json
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
-# from reliablegpt import reliableGPT
-
-# openai.ChatCompletion.create = reliableGPT(
-#     openai.ChatCompletion.create,
-#     user_email= "saltyp0rridge20@gmail.com",
-#     queue_requests=True,
-#     fallback_strategy=['gpt-3.5-turbo', 'text-davinci-003', 'gpt-3.5-turbo'],
-#     model_limits_dir = {"gpt-4": {"max_token_capacity": 90000, "max_request_capacity": 3500	}}
-# ) # type: ignore
-
 
 def add_value_to_html_tag(key: str, value: str) -> str:
     start_tag_index = key.find('>') + 1
@@ -24,7 +13,6 @@ def add_value_to_html_tag(key: str, value: str) -> str:
     modified_key = key[:start_tag_index] + '/* Below are after-click components */\n' + \
         wrapped_content_with_value + key[end_tag_index:]
     return modified_key
-
 
 class Predict():
     """
@@ -53,7 +41,6 @@ class Predict():
         """
         self.pagejump_KB = pagejump
         self.model = model
-        self.prompts = []
         self.current_comp = []
         self.next_comp = []
         self.comp_json = {}
@@ -118,24 +105,18 @@ class Predict():
 
         logger.info("Current Path: {}".format(self.model.current_path_str))
         logger.info("Task: {}".format(self.model.task))
-
-        # for (node, prompt) in zip(self.model.screen.semantic_info, self.prompts):
-
-        #     logger.info("Prompt: {}".format(json.dumps(prompt[-1])))
-        #     next_page = self.query(self.model.screen.semantic_info_str, node)
-        #     if next_page is not None:
-        #         self.next_comp.append(next_page)
-        #         continue
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=self.prompt,
-            temperature=0.5,
+            temperature=0.2,
         )
         response_text = response["choices"][0]["message"]["content"]
         print(response_text)
         response_text = json.loads(response_text[response_text.find("{"):response_text.find("}")+1])
         print("JSON:----",response_text)
         self.model.page_description = response_text["Page"]
+        self.model.current_path.append("Page:"+self.model.page_description)
+        self.model.current_path_str = " -> ".join(self.model.current_path)
         for i in range(len(self.model.screen.semantic_info)):
             self.next_comp.append(response_text["id="+str(i+1)])
             self.comp_json[self.model.screen.semantic_info[i]] = response_text["id="+str(i+1)]

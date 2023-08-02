@@ -30,27 +30,28 @@ def demo_route() -> Union[str, Response]:
     global TASK, STATUS, INDEX, COMPUTATIONAL_GRAPH
     print("demo")
     if STATUS == "start":
+        STATUS = "running"
         screen = Screen(INDEX)
-        print("1")
         screen.update(request=request.form)
-        print("2")
         if COMPUTATIONAL_GRAPH != []:
-            print("3")
             model = Model(screen=screen, description=TASK,
                           prev_model=COMPUTATIONAL_GRAPH[-1], index=INDEX)
         else:
-            print("4")
             model = Model(screen=screen, description=TASK,
                           prev_model=None, index=INDEX)
-            print("5")
         COMPUTATIONAL_GRAPH.append(model)
         print("work")
         result = model.work()
+        
         if isinstance(result, dict):
+            STATUS="start"
             INDEX += 1
-            return jsonify(result)
+            print(jsonify(result))
+            return Response(result)
         elif result == "completed":
+            STATUS = "stop"
             return Response("Task completed successfully!")
+        
         else:
             return Response("Task failed.")
     return Response("0")
@@ -77,4 +78,5 @@ def index() -> Union[str, Response]:
 
 
 if __name__ == "__main__":
+
     app.run(host='0.0.0.0', port=5000)

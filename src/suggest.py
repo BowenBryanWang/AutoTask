@@ -1,14 +1,8 @@
-
-
 import os
 import openai
-
-
 from loguru import logger
 import json
-
 import openai
-
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
@@ -22,26 +16,44 @@ class Suggest:
                 "role": "system",
                 "content": """You are an AI assistant specialized in UI Automation. Based on user's intent and the current screen's components, your task is to analyze, understand the screen. SELECT the top five most possible components to the user's intent thinking step by step. Summarize your selections at the end of your response.
                 Think step by step, select the top five most possible components to the user's intent.
-                    Output a JSON object structured like {"result":[]-the number of selected candidate} at the end of your response.
-                    Do not select after-click components."""
+                The components are organized as HTML format and after-click components are showed and warpped (if any) to support further reasoning.
+                Remember DO not select after-click components. Just select original components with id.
+                Output a JSON object structured like {"result":[]-the number of selected candidate} at the end of your response.
+                """
             },
             {
                 "role": "user",
                 "content": """
-                    User's intention is to 'Turn on Dark mode in Whatsapp'. Here are the details of the current pages and components:
-                    Current path: [Homepage]
-                    Current page Components:
+                    Intention:'send a message \"Hello\" to Bowen'
+                    Current path: -> Main interface of the WhatsApp application
+                    Components:
                     '''HTML
-                    <p id=1 class='com.whatsapp:id/fab' description='New chat'>  </p>
-                    <button id=2 class='com.whatsapp:id/home_tab_layout' description='Calls'> Calls </button>
-                    <button id=3 class='com.whatsapp:id/home_tab_layout' description='Status'> Status </button>
-                    <button id=4 class='com.whatsapp:id/home_tab_layout' description='Community'>  </button>
-                    <button id=5 class='com.whatsapp:id/menuitem_overflow' description='More options'>  </button>
-                    <p id=6 class='com.whatsapp:id/menuitem_search' description='Search'>  </p>
-                    <p id=7 class='com.whatsapp:id/menuitem_camera' description='Camera'>  </p>
-                    <p id=8 class='' description='end-to-end encrypted'>  </p>
-                    <button id=9 class='com.whatsapp:id/contact_photo' description='Yellow'>  </button>
-                    <button id=10 class='com.whatsapp:id/contact_photo' description='Wang Bowen'>  </button>
+                    <p id=1 class='com.whatsapp:id/fab' description='New chat'></p>
+                    <button id=2 class='com.whatsapp:id/home_tab_layout' description='Calls'> Calls
+                        /* Below are after-click components */
+                        <button description='Bowen'> </button>
+                    </button>
+                    <button id=3 class='com.whatsapp:id/home_tab_layout' description='Status'>Status
+                        /* Below are after-click components */
+                        <p description='My Status'> </p>
+                        <button description='Add Status'> </button>
+                    </button>
+                    <button id=4 class='com.whatsapp:id/home_tab_layout' description='Community'>
+                        /* Below are after-click components */
+                        <button description='Members'> </button>
+                        <button description='Add new Member'> </button>
+                        <p description='Connect'> </p>
+                    </button>
+                    <button id=5 class='com.whatsapp:id/menuitem_overflow' description='More options'>
+                        /* Below are after-click components */
+                        <button description='Settings'> </button>
+                        <button description='WhatsApp Web'> </button>
+                    </button>
+                    <p id=6 class='com.whatsapp:id/menuitem_search' description='Search'></p>
+                    <p id=7 class='com.whatsapp:id/menuitem_camera' description='Camera'></p>
+                    <p id=8 class='' description='end-to-end encrypted'></p>
+                    <button id=9 class='com.whatsapp:id/contact_photo' description='Yellow'></button>
+                    <button id=10 class='com.whatsapp:id/contact_photo' description='Wang Bowen'></button>
                     '''
                 """
             },
@@ -62,9 +74,9 @@ class Suggest:
             {
                 "role": "user",
                 "content": """
-                    User's intention is to '{}'. Here are the details of the current pages and components:
+                    Intention :'{}'.
                     Current path: {}
-                    Current page Components:
+                    Components:
                     '''HTML
                     {}
                     '''
@@ -89,9 +101,8 @@ class Suggest:
         )
         response_text = response["choices"][0]["message"]["content"]
         print(response_text)
-        candidate: list[int] = json.loads(
+        candidate = json.loads(
             response_text[response_text.find("{"):response_text.find("}")+1])["result"]
-
         self.model.candidate = candidate
         self.model.candidate_str = [
             self.model.screen.semantic_info[i-1] for i in candidate]
@@ -169,9 +180,8 @@ Current Page : {}:
 Candidates:{}""".format(self.model.task, self.model.page_description, self.model.candidate_str)
             }
         ]
-
         with open("logs/log{}.log".format(self.model.index), "a") as f:
-            f.write("--------------------Suggest--------------------\n")
+            f.write("--------------------Plan--------------------\n")
         log_file = logger.add(
             "logs/log{}.log".format(self.model.index), rotation="500 MB")
         logger.debug("Plan for Model {}".format(self.model.index))
