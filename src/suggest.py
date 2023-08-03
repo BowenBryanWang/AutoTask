@@ -18,6 +18,7 @@ class Suggest:
                 Think step by step, select the top five most possible components to the user's intent.
                 The components are organized as HTML format and after-click components are showed and warpped (if any) to support further reasoning.
                 Remember DO not select after-click components. Just select original components with id.
+                You can refer to some completed examples similar to user's intent. But don't follow the examples exactly, though; they serve only as hints.
                 Output a JSON object structured like {"result":[]-the number of selected candidate} at the end of your response.
                 """
             },
@@ -80,7 +81,9 @@ class Suggest:
                     '''HTML
                     {}
                     '''
-                """.format(self.model.task, self.model.current_path_str, self.model.extended_info)
+                    Examples:
+                    {}
+                """.format(self.model.task, self.model.current_path_str, self.model.extended_info,[j+":"+k for j,k in zip(self.model.similar_tasks,self.model.similar_traces)])
             },
         ]
         with open("logs/log{}.log".format(self.model.index), "a") as f:
