@@ -95,6 +95,7 @@ class Model:
                 return "completed"
             elif status == "wrong":
                 # self.prev_model.feedback_module.feedback()
+                print("wrong: feedback started")
                 return "wrong"
         if self.screen is None:
             raise Exception("No Screen input")
