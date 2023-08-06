@@ -52,28 +52,29 @@ class Screen:
             self.page_root.children[0].children[0].children = [
                 self.page_root.children[0].children[0].children[0]]
         print("all_text", self.page_root.generate_all_text())
-        self.semantic_nodes = self.page_root.get_all_semantic_nodes()
+        self.semantic_nodes,relation = self.page_root.get_all_semantic_nodes()
 
         # 创建与semantic_nodes["nodes"]等长的type列表，用于存放每个节点的类型
-        self.semantic_nodes["type"] = [
-            "" for ii in range(len(self.semantic_nodes["nodes"]))]
-        for i in range(len(self.semantic_nodes["nodes"])):
-            self.semantic_nodes["nodes"][i].update_page_id(self.page_id_now)
-            dis = 99.0
-            for key, value in self.describermanagers.items():
-                if key == "Root Object;":
-                    continue
-                tmp_dis = value.calculate(self.semantic_nodes["nodes"][i])
-                if tmp_dis < dis:
-                    dis = tmp_dis
-                    self.semantic_nodes["type"][i] = key.split(";")[-2]
-        print("semantic_nodes", self.semantic_nodes["type"])
+        # self.semantic_nodes["type"] = [
+        #     "" for ii in range(len(self.semantic_nodes["nodes"]))]
+        # for i in range(len(self.semantic_nodes["nodes"])):
+        #     self.semantic_nodes["nodes"][i].update_page_id(self.page_id_now)
+        #     dis = 99.0
+        #     for key, value in self.describermanagers.items():
+        #         if key == "Root Object;":
+        #             continue
+        #         tmp_dis = value.calculate(self.semantic_nodes["nodes"][i])
+        #         if tmp_dis < dis:
+        #             dis = tmp_dis
+        #             self.semantic_nodes["type"][i] = key.split(";")[-2]
+        # print("semantic_nodes", self.semantic_nodes["type"])
 
-        self.semantic_info = transfer_2_html(self.semantic_nodes["nodes"])
+        self.semantic_info,self.semantic_info_list,self.trans_relation = transfer_2_html(self.semantic_nodes["nodes"],relation)
+
         self.semantic_info_str = "".join(self.semantic_info)
         with open('./page/static/data/page{}.txt'.format(self.cnt), 'w') as fp:
             fp.write("".join(self.semantic_info))
-        print("semantic_info", self.semantic_info)
+        print("semantic_info", self.semantic_info_str)
         print("semantic_nodes", len(self.semantic_nodes))
         end_time = time.time()
         self.upload_time = end_time  # 记录本次上传的时间

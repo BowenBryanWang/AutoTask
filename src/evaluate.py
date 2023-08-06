@@ -98,7 +98,9 @@ class Evaluate():
         self.node_selected = self.model.candidate_str[np.argmax(self.score)]
         self.node_selected_action = self.model.candidate_action[np.argmax(self.score)]
         self.node_selected_text = self.model.candidate_text[np.argmax(self.score)]
-        self.node_selected_id = self.node_selected.split("id=")[1].split(" ")[0]
+        self.model.node_selected_id = int(self.node_selected.split("id=")[1].split(" ")[0])
+        print("node_selected",self.node_selected)
+        print("node_selected_id",self.model.node_selected_id)
         self.model.current_path.append(process_action_info(self.node_selected_action, self.node_selected_text,self.node_selected))
         self.model.current_path_str = "->".join(self.model.current_path)
         return self.score
@@ -174,16 +176,16 @@ class LLM_Judge(Judge):
                     2: Score: 2/10
                     Reasoning: This option appears to be related to a contact photo and is unlikely to be directly associated with enabling Dark Mode. The description "Wang Bowen" suggests that it is specific to a particular contact, rather than a system-wide setting. Therefore, the likelihood of this option assisting you in turning on Dark Mode is low.
 
-                    3: Score: 2/10
+                    3: Score: 3/10
                     Reasoning: This option represents the "Calls" tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description "Calls" suggests that it is specific to the call-related functionality within WhatsApp. Therefore, the likelihood of this option helping you turn on Dark Mode is low.
 
-                    4: Score: 2/10
+                    4: Score: 1/10
                     Reasoning: This option represents the "Status" tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description "Status" indicates that it is specific to the status-related functionality within WhatsApp. Therefore, the likelihood of this option assisting you in turning on Dark Mode is low.
 
-                    5: Score: 2/10
+                    5: Score: 4/10
                     Reasoning: This option represents the "Community" tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description "Community" suggests that it is specific to community-related features, which are unlikely to include Dark Mode settings. Therefore, the likelihood of this option helping you turn on Dark Mode is low.
                     
-                    Step 2:  {"score": [8, 2, 2, 2, 2]}
+                    Step 2:  {"score": [8, 2, 3, 1, 4]}
                 """
             },
             {
@@ -195,7 +197,7 @@ class LLM_Judge(Judge):
                     '''HTML
                     {}
                     '''
-                """.format(self.evaluate.model.task, self.evaluate.model.current_path_str, "".join([self.evaluate.model.screen.semantic_info[i-1] for i in self.evaluate.model.candidate]))
+                """.format(self.evaluate.model.task, self.evaluate.model.current_path_str, "".join([self.evaluate.model.screen.semantic_info_list[i-1] for i in self.evaluate.model.candidate]))
             },
         ]
         
@@ -206,7 +208,7 @@ class LLM_Judge(Judge):
         response = openai.ChatCompletion.create(
             model = "gpt-3.5-turbo",
             messages = self.prompt,
-            temperature=0.3,
+            temperature=0,
         )
         result = response.choices[0]["message"]["content"]
         print(result)
@@ -242,7 +244,7 @@ class IG_Judge(Judge):
         if self.evaluate.model.candidate == []:
             raise Exception("Please call Select function first!")
         initial_entropy, initial_probs = self.calculate_entropy(
-            [self.evaluate.model.screen.semantic_info[i-1] for i in self.evaluate.model.candidate])
+            [self.evaluate.model.screen.semantic_info_list[i-1] for i in self.evaluate.model.candidate])
 
         if self.evaluate.model.predict_module.comp_json == {}:
             raise Exception("Please call Predict function first!")
@@ -260,7 +262,7 @@ class IG_Judge(Judge):
         # 获取计算结果
         # information_gains = [future.result() for future in futures]
         for i in range(len(self.evaluate.model.candidate)):
-            information_gains.append(self.calculate_information_gain(i, self.evaluate.model.screen.semantic_info[self.evaluate.model.candidate[i]-1], initial_entropy,
+            information_gains.append(self.calculate_information_gain(i, self.evaluate.model.screen.semantic_info_list[self.evaluate.model.candidate[i]-1], initial_entropy,
                                        initial_probs, self.evaluate.model.predict_module))
 
         # 归一化

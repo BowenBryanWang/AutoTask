@@ -1,4 +1,7 @@
 
+import copy
+
+
 def mask(s):
     match s:
         case "com.tencent.mm:id/kd_":
@@ -17,34 +20,64 @@ def mask(s):
     return s
 
 
-def transfer_2_html(semantic_nodes):
+def transfer_2_html(semantic_nodes, relation: list[tuple]):
     html_components = []
     for node in semantic_nodes:
         if "LinearLayout" in node.node_class:
+            temp = node.generate_all_semantic_info()
+            print(temp)
             html_element = "<div id={} class='{}' {}> {} </div>\n".format(
                 len(html_components)+1,
                 mask(node.resource_id),
-                "description='"+",".join(node.generate_all_semantic_info()["content-desc"])+"'" if ",".join(
-                    node.generate_all_semantic_info()["content-desc"]) != "" else "",
-                ",".join(node.generate_all_semantic_info()["Major_text"]))
-
+                "description='"+",".join(temp["content-desc"])+"'" if ",".join(
+                    temp["content-desc"]) != "" else "",
+                "".join(temp["text"]) if temp["text"] == temp["Major_text"] else temp["Major_text"][0] + "\n    " + "".join(["<p> " + i + " </p>\n    " for i in temp["text"][1:]])[:-5])
             html_components.append(html_element)
         elif "ImageView" in node.node_class or "RelativeLayout" in node.node_class or "FrameLayout" in node.node_class:
+            temp = node.generate_all_semantic_info()
+            print(temp)
             html_element = "<button id={} class='{}' {}> {} </button>\n".format(
                 len(html_components)+1,
                 mask(node.resource_id),
-                "description='"+",".join(node.generate_all_semantic_info()["content-desc"])+"'" if ",".join(
-                    node.generate_all_semantic_info()["content-desc"]) != "" else "",
-                ",".join(node.generate_all_semantic_info()["Major_text"]))
-
+                "description='"+",".join(temp["content-desc"])+"'" if ",".join(
+                    temp["content-desc"]) != "" else "",
+                "".join(temp["text"]) if temp["text"] == temp["Major_text"] else temp["Major_text"][0] +
+                "\n    " +
+                "".join(["<p> " + i + " </p>\n    " for i in temp["text"][1:]])[:-5]
+            )
             html_components.append(html_element)
-        else:
-
-            html_element = "<p id={} class='{}' {}> {} </p>\n".format(
+        elif "Switch" in node.node_class:
+            html_element = "<switch id={} class='{}' clickable> {} </switch>\n".format(
                 len(html_components)+1,
                 mask(node.resource_id),
-                "description='"+",".join(node.generate_all_semantic_info()["content-desc"])+"'" if ",".join(
-                    node.generate_all_semantic_info()["content-desc"]) != "" else "",
-                ",".join(node.generate_all_semantic_info()["Major_text"]))
+                "On" if node.checked else "Off",
+            )
             html_components.append(html_element)
-    return html_components
+        else:
+            temp = node.generate_all_semantic_info()
+            print(temp)
+            html_element = "<div id={} class='{}' {}> {} </div>\n".format(
+                len(html_components)+1,
+                mask(node.resource_id),
+                "description='"+",".join(temp["content-desc"])+"'" if ",".join(
+                    temp["content-desc"]) != "" else "",
+                "".join(temp["text"]) if temp["text"] == temp["Major_text"] else temp["Major_text"][0] + "\n    " + "".join(["<p> " + i + " </p>\n    " for i in temp["text"][1:]])[:-5])
+            html_components.append(html_element)
+        
+    my_list = copy.deepcopy(html_components)
+    print(my_list)
+    trans_relation = []
+    for father, son in relation:
+        index_father = semantic_nodes.index(father)
+        index_son = semantic_nodes.index(son)
+        trans_relation.append((index_father, index_son))
+        last_index = html_components[index_father].rfind(" </")
+        if last_index != -1:
+            html_components[index_father] = html_components[index_father][:last_index] + "\n    " + \
+                html_components[index_son] + " </" + \
+                html_components[index_father][last_index + 3:]
+    for father, son in relation:
+        index_son = semantic_nodes.index(son)
+        html_components[index_son] = ""
+    html_components = [i for i in html_components if i != ""]
+    return html_components,my_list,trans_relation

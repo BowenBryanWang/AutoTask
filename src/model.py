@@ -1,4 +1,5 @@
 
+import copy
 from typing import Optional
 from .database import Database
 from .knowledge import PageJump_KB, Task_KB
@@ -45,8 +46,8 @@ class Model:
         if prev_model is not None:
             self.prev_model = prev_model
             prev_model.next_model = self
-            self.current_path = self.prev_model.current_path.copy()
-            self.current_path_str = self.prev_model.current_path_str.copy()
+            self.current_path = copy.deepcopy(self.prev_model.current_path)
+            self.current_path_str = copy.deepcopy(self.prev_model.current_path_str)
         else:
             self.current_path = [self.screen.page_description]
             self.current_path_str = self.screen.page_description
@@ -58,10 +59,11 @@ class Model:
         self.database = Database(
             user="root", password="wbw12138zy,.", host="127.0.0.1", database="GUI_LLM")
         print("· database connected")
-        self.PageJump_KB = PageJump_KB()
-        self.similar_tasks,self.similar_traces = self.PageJump_KB.find_most_similar_tasks(self.task)
+        self.PageJump_KB = PageJump_KB(None)
+        
         print("· pagejump_kb initialized")
-        self.Task_KB = Task_KB(self.database)
+        self.Task_KB = Task_KB()
+        self.similar_tasks,self.similar_traces = self.Task_KB.find_most_similar_tasks(self.task)
         print("· task_kb initialized")
         self.predict_module = Predict(self, self.PageJump_KB)
         print("· predict module initialized")
@@ -87,6 +89,13 @@ class Model:
         - Call the decide method of the decide module to decide the next screen.
         - Call the feedback method of the feedback module to provide feedback to the model.
         """
+        if self.prev_model:
+            status = self.prev_model.decide_module.decide(self.screen)
+            if status == "completed":
+                return "completed"
+            elif status == "wrong":
+                # self.prev_model.feedback_module.feedback()
+                return "wrong"
         if self.screen is None:
             raise Exception("No Screen input")
         if self.task == "":
@@ -95,17 +104,13 @@ class Model:
         self.suggest_module.suggest()
         self.suggest_module.plan()
         self.evaluate_module.evaluate()
-        s = self.decide_module.decide()
-        if s == "completed":
-            return "completed"
-        elif s == "wrong":
-            # self.feedback_module.feedback()
-            return "wrong"
-        elif s == "partly completed":
-            node = self.screen.semantic_nodes["nodes"][self.node_selected_id-1]
-            center = {"x": (node.bound[0]+node.bound[2]) //
-                      2, "y": (node.bound[1]+node.bound[3])//2}
-            perform = {
-                "node_id": 1, "trail": "["+str(center["x"])+","+str(center["y"])+"]", "action_type": "click"}
-            print(perform)
-            return perform
+        node = self.screen.semantic_nodes["nodes"][self.node_selected_id-1]
+        print(self.node_selected_id-1)
+        print(node.generate_all_semantic_info())
+        center = {"x": (node.bound[0]+node.bound[2]) //
+                    2, "y": (node.bound[1]+node.bound[3])//2}
+        perform = {
+            "node_id": 1, "trail": "["+str(center["x"])+","+str(center["y"])+"]", "action_type": "click"}
+        print(perform)
+        return perform
+        

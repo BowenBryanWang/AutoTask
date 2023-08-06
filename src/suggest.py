@@ -17,9 +17,9 @@ class Suggest:
                 "content": """You are an AI assistant specialized in UI Automation. Based on user's intent and the current screen's components, your task is to analyze, understand the screen. SELECT the top five most possible components to the user's intent thinking step by step. Summarize your selections at the end of your response.
                 Think step by step, select the top five most possible components to the user's intent.
                 The components are organized as HTML format and after-click components are showed and warpped (if any) to support further reasoning.
-                Remember DO not select after-click components. Just select original components with id.
+                Remember DO not select any components without id. Only select original components with id.
                 You can refer to some completed examples similar to user's intent. But don't follow the examples exactly, though; they serve only as hints.
-                Output a JSON object structured like {"result":[]-the number of selected candidate} at the end of your response.
+                Output a JSON object structured like {"result":[]-the number of selected candidate} at the end of your response. You must select five!
                 """
             },
             {
@@ -31,22 +31,22 @@ class Suggest:
                     '''HTML
                     <p id=1 class='com.whatsapp:id/fab' description='New chat'></p>
                     <button id=2 class='com.whatsapp:id/home_tab_layout' description='Calls'> Calls
-                        /* Below are after-click components */
+                        /* Below are predicted after-click components */
                         <button description='Bowen'> </button>
                     </button>
                     <button id=3 class='com.whatsapp:id/home_tab_layout' description='Status'>Status
-                        /* Below are after-click components */
+                        /* Below are predicted after-click components */
                         <p description='My Status'> </p>
                         <button description='Add Status'> </button>
                     </button>
                     <button id=4 class='com.whatsapp:id/home_tab_layout' description='Community'>
-                        /* Below are after-click components */
+                        /* Below are predicted after-click components */
                         <button description='Members'> </button>
                         <button description='Add new Member'> </button>
                         <p description='Connect'> </p>
                     </button>
                     <button id=5 class='com.whatsapp:id/menuitem_overflow' description='More options'>
-                        /* Below are after-click components */
+                        /* Below are predicted after-click components */
                         <button description='Settings'> </button>
                         <button description='WhatsApp Web'> </button>
                     </button>
@@ -81,9 +81,9 @@ class Suggest:
                     '''HTML
                     {}
                     '''
-                    Examples:
+                    Examples from Library:
                     {}
-                """.format(self.model.task, self.model.current_path_str, self.model.extended_info,[j+":"+k for j,k in zip(self.model.similar_tasks,self.model.similar_traces)])
+                """.format(self.model.task, self.model.current_path_str, self.model.extended_info,[j+":"+"=>".join(k) for j,k in zip(self.model.similar_tasks,self.model.similar_traces)])
             },
         ]
         with open("logs/log{}.log".format(self.model.index), "a") as f:
@@ -100,7 +100,7 @@ class Suggest:
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=self.prompt_select,
-            temperature=0,
+            temperature=0.2,
         )
         response_text = response["choices"][0]["message"]["content"]
         print(response_text)
@@ -108,8 +108,9 @@ class Suggest:
             response_text[response_text.find("{"):response_text.find("}")+1])["result"]
         self.model.candidate = candidate
         self.model.candidate_str = [
-            self.model.screen.semantic_info[i-1] for i in candidate]
+            self.model.screen.semantic_info_list[i-1] for i in candidate]
         print(candidate)
+        print(self.model.candidate_str)
 
         logger.warning("Response: {}".format(candidate))
         logger.debug("Suggest for Model {} Done".format(self.model.index))

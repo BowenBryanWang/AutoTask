@@ -1,0 +1,11 @@
+<div id=1 class='com.whatsapp:id/settings_help' > Help </div>
+<div id=2 class='com.whatsapp:id/settings_language' > App language </div>
+<div id=3 class='com.whatsapp:id/settings_data_usage' > Storage and data </div>
+<div id=4 class='com.whatsapp:id/settings_notifications' > Notifications </div>
+<div id=5 class='com.whatsapp:id/settings_chat' > Chats </div>
+<div id=6 class='com.whatsapp:id/settings_avatar' > Avatar </div>
+<div id=7 class='com.whatsapp:id/privacy_preference' > Privacy </div>
+<div id=8 class='com.whatsapp:id/settings_account_info' > Account </div>
+<div id=9 class='com.whatsapp:id/profile_info' description='You,QR code'> Haon Elsa Baby </div>
+<p id=10 class='com.whatsapp:id/menuitem_search' description='Search'>  </p>
+<p id=11 class='' description='Navigate up'>  </p>

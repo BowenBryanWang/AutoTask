@@ -1,3 +1,4 @@
+import time
 from flask import jsonify
 from flask import Response
 from typing import List, Dict, Any, Union
@@ -29,6 +30,8 @@ def demo_route() -> Union[str, Response]:
     """
     global TASK, STATUS, INDEX, COMPUTATIONAL_GRAPH
     print("demo")
+    screen = Screen(INDEX)
+    screen.update(request=request.form)
     if STATUS == "start":
         STATUS = "running"
         screen = Screen(INDEX)
@@ -47,7 +50,7 @@ def demo_route() -> Union[str, Response]:
             STATUS="start"
             INDEX += 1
             print(jsonify(result))
-            return Response(result)
+            return result
         elif result == "completed":
             STATUS = "stop"
             return Response("Task completed successfully!")
