@@ -261,7 +261,7 @@ class UINode:
             # print("area too large")
             prob *= 0.5
         if self.clickable:
-            prob *= 1.2
+            prob *= 1.8
         else:
             prob *= 0.5
         if self.executable:
@@ -270,25 +270,20 @@ class UINode:
             # print("not executable")
             prob *= 0.5
         if self.has_semantic_info():
-            # print("has semantic info")
             prob *= 1.5
         else:
-            # print("no semantic info")
             prob *= 0.5
         if self.has_similar_children():
-            # print("has similar children")
+
             prob *= 0.5
         if self.editable:
-            # print("editable")
+
             prob *= 1.5
         if self.node_class == "android.widget.EditText":
-
             prob *= 1.5
-            
-        # if self.node_class == "android.widget.ImageView":
-
-        #     prob *= 0.2
-        if self.parent and len(self.parent.children) >3:
+        if self.parent and len(self.parent.children) >6:
+            prob *= 2
+        elif self.parent and len(self.parent.children) > 3:
             prob *= 1.5
         else:
             prob *= 0.5
@@ -330,13 +325,14 @@ class UINode:
         # 从根节点开始
 
         stack = [self]
-        res = {"nodes": []}
+        res = {"nodes": [],"info":[]}
         with open('./我的.csv', 'a', newline='') as f:
             writer = csv.writer(f)
             while stack:
                 node = stack.pop()
                 if node.is_selected() >= 1:
                     res["nodes"].append(node)
+                    res["info"].append(node.generate_all_semantic_info())
                 else:
                     writer.writerow([node.depth, node.node_class, node.text!="", node.content_desc!="", node.area, node.clickable,
                                     node.long_clickable, node.editable, node.scrollable, node.selected, node.checked, node.checkable, node.enabled, node.focusable, node.focused, len(node.children), len(node.parent.children) if node.parent else 0,0])
@@ -346,20 +342,24 @@ class UINode:
             # print("before pruning:",len(res["nodes"]))
             relation = []
             for i in range(len(res["nodes"])):
-                for j in range(len(res["nodes"])):
-                    if res["nodes"][i] and res["nodes"][j] and i != j and res["nodes"][i].is_ancestor(res["nodes"][j]):
+                for j in range(i+1,len(res["nodes"])):
+                    if res["nodes"][i] and res["nodes"][j] and res["nodes"][i].is_ancestor(res["nodes"][j]):
                         print("????????????")
                         print("son",res["nodes"][i].text)
                         print("father",res["nodes"][j].text)
-                        # if res["nodes"][j].parent and len(res["nodes"][j].parent.children)>=3:
-                        #     res["nodes"][i] = None
-                        # else:
-                        #     res["nodes"][j] = None
                         relation.append((res["nodes"][j],res["nodes"][i]))
-            for node in res["nodes"]:
-                if node is not None:
-                    writer.writerow([node.depth, node.node_class, node.text!="", node.content_desc!="", node.area, node.clickable,
-                                    node.long_clickable, node.editable, node.scrollable, node.selected, node.checked, node.checkable, node.enabled, node.focusable, node.focused, len(node.children), len(node.parent.children) if node.parent else 0,1])
+                    elif res["nodes"][i] and res["nodes"][j] and res["nodes"][j].is_ancestor(res["nodes"][i]):
+                        print("????????????")
+                        print("son",res["nodes"][j].text)
+                        print("father",res["nodes"][i].text)
+                        relation.append((res["nodes"][i],res["nodes"][j]))
+                    elif res["nodes"][i] and res["nodes"][j]  and res["info"][i] == res["info"][j] and res["nodes"][i].bound ==  res["nodes"][j].bound:
+                        print("检测到相同",res["info"][i],res["info"][j],res["nodes"][i].bound,res["nodes"][j].bound)              
+                        res["nodes"][j] = None
+            # for node in res["nodes"]:
+            #     if node is not None:
+            #         writer.writerow([node.depth, node.node_class, node.text!="", node.content_desc!="", node.area, node.clickable,
+            #                         node.long_clickable, node.editable, node.scrollable, node.selected, node.checked, node.checkable, node.enabled, node.focusable, node.focused, len(node.children), len(node.parent.children) if node.parent else 0,1])
             res["nodes"] = [node for node in res["nodes"] if node is not None]
         return res,relation
 

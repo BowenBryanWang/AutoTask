@@ -34,8 +34,6 @@ def demo_route() -> Union[str, Response]:
     screen.update(request=request.form)
     if STATUS == "start":
         STATUS = "running"
-        screen = Screen(INDEX)
-        screen.update(request=request.form)
         if COMPUTATIONAL_GRAPH != []:
             model = Model(screen=screen, description=TASK,
                           prev_model=COMPUTATIONAL_GRAPH[-1], index=INDEX)

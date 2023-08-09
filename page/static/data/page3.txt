@@ -1,11 +1,13 @@
-<div id=1 class='com.whatsapp:id/settings_help' > Help </div>
-<div id=2 class='com.whatsapp:id/settings_language' > App language </div>
-<div id=3 class='com.whatsapp:id/settings_data_usage' > Storage and data </div>
-<div id=4 class='com.whatsapp:id/settings_notifications' > Notifications </div>
-<div id=5 class='com.whatsapp:id/settings_chat' > Chats </div>
-<div id=6 class='com.whatsapp:id/settings_avatar' > Avatar </div>
-<div id=7 class='com.whatsapp:id/privacy_preference' > Privacy </div>
-<div id=8 class='com.whatsapp:id/settings_account_info' > Account </div>
-<div id=9 class='com.whatsapp:id/profile_info' description='You,QR code'> Haon Elsa Baby </div>
-<p id=10 class='com.whatsapp:id/menuitem_search' description='Search'>  </p>
-<p id=11 class='' description='Navigate up'>  </p>
+<div id=1 class='' description='ClockCan be expanded into a service widget'> Clock </div>
+<div id=2 class='' description='YouTube'> YouTube </div>
+<div id=3 class='' description='BrowserCan be expanded into a service widget'> Browser </div>
+<div id=4 class='' description='Settings'> Settings </div>
+<div id=5 class='' description='WeatherCan be expanded into a service widget'> Weather </div>
+<div id=6 class='' description='Instagram'> Instagram </div>
+<div id=7 class='' description='X'> X </div>
+<div id=8 class='' description='Play Store'> Play Store </div>
+<div id=9 class='' description='Maps'> Maps </div>
+<div id=10 class='' description='Calendar'> Calendar </div>
+<div id=11 class='' description='Drive'> Drive </div>
+<div id=12 class='' description='Gmail'> Gmail </div>
+<div id=13 class='' description='Google'> Google </div>

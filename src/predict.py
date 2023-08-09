@@ -78,7 +78,6 @@ class Predict():
         predict_node=copy.deepcopy(self.model.screen.semantic_info_list)
         print("beforequery",self.model.screen.semantic_info_list)
         for i in tqdm.tqdm(range(len(self.model.screen.semantic_info_list))):
-            print("?",self.model.screen.semantic_info_list[i])
             res = self.query(self.model.screen.semantic_info_str, self.model.screen.semantic_info_list[i])
             if res: 
                 res = res[0].split("\\n")
@@ -146,6 +145,7 @@ Step 3: Output a JSON object structured.
             model="gpt-3.5-turbo",
             messages=self.prompt,
             temperature=0.3,
+            max_tokens=1024,
         )
         response_text = response["choices"][0]["message"]["content"]
         print(response_text)

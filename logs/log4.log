@@ -1,8 +1,0 @@
---------------------Predict--------------------
-2023-08-04 19:16:47.528 | DEBUG    | src.predict:predict:66 - Predict for Model 4
-2023-08-04 19:16:47.529 | INFO     | src.predict:predict:68 - Current Path: ->Page:Main interface of the WhatsApp application->Action: Click on <button id=5 class='com.whatsapp:id/menuitem_overflow' description='More options'>  </button>
-->Page:Settings page->Action: Click on <div id=1 class='' > Settings </div>
-->Page:Settings page of the WhatsApp application->Action: Click on <div id=4 class='com.whatsapp:id/settings_notifications' > Notifications </div>
-->Page:Settings page of the WhatsApp application->Action: Click on <div id=1 class='com.whatsapp:id/group_notification_tone_setting' > Notification tone </div>
-
-2023-08-04 19:16:47.529 | INFO     | src.predict:predict:69 - Task: turn notification dots on

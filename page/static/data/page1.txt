@@ -1,13 +1,12 @@
-<button id=1 class='com.google.android.apps.docs:id/menu_navigation_drives' description='文件'> 文件 </button>
-<button id=2 class='com.google.android.apps.docs:id/menu_navigation_shared' description='与我共享'> 与我共享 </button>
-<button id=3 class='com.google.android.apps.docs:id/menu_navigation_starred' description='已加星标'> 已加星标 </button>
-<div id=4 class='com.google.android.apps.docs:id/extended_fab' description='创建'>  </div>
-<div id=5 class='' description='通知'> 通知 </div>
-<div id=6 class='com.google.android.apps.docs:id/open_search_bar' description='Search Bar,更多导航选项,目前的登录者是saltyp0rridge20@gmail.com
-帐号和设置。'> 在云端硬盘中搜索
-    <p> 在云端硬盘中搜索 </p>
-    <button id=7 class='com.google.android.apps.docs:id/selected_account_disc' description='目前的登录者是saltyp0rridge20@gmail.com
-帐号和设置。'>  </button>
-
-    <div id=8 class='' description='更多导航选项'>  </div>
- </div>
+<div id=1 class='' description='Clock'> Clock </div>
+<div id=2 class='' description='YouTube'> YouTube </div>
+<div id=3 class='' description='BrowserCan be expanded into a service widget'> Browser </div>
+<div id=4 class='' description='Settings'> Settings </div>
+<div id=5 class='' description='Weather'> Weather </div>
+<div id=6 class='' description='Instagram'> Instagram </div>
+<div id=7 class='' description='Play Store'> Play Store </div>
+<div id=8 class='' description='Maps'> Maps </div>
+<div id=9 class='' description='Calendar'> Calendar </div>
+<div id=10 class='' description='Drive'> Drive </div>
+<div id=11 class='' description='Gmail'> Gmail </div>
+<div id=12 class='' description='Google'> Google </div>

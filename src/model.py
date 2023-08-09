@@ -43,6 +43,7 @@ class Model:
 
         #####################################################
         # 2. Take Model as Node for Computational Graph
+        self.prev_model = prev_model
         if prev_model is not None:
             self.prev_model = prev_model
             prev_model.next_model = self
@@ -89,7 +90,7 @@ class Model:
         - Call the decide method of the decide module to decide the next screen.
         - Call the feedback method of the feedback module to provide feedback to the model.
         """
-        if self.prev_model:
+        if self.prev_model is not None:
             status = self.prev_model.decide_module.decide(self.screen)
             if status == "completed":
                 return "completed"
