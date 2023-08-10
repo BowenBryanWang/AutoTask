@@ -91,15 +91,15 @@ Completed Examples from Library:
             """.format(self.model.task, self.model.current_path_str, new_screen.semantic_info, [j+":"+"=>".join(k) for j, k in zip(self.model.similar_tasks, self.model.similar_traces)])
         }]
 
-        with open("logs/decide_log{}.log".format(self.model.index), "a") as f:
-            f.write("--------------------Decide--------------------\n")
-        log_file = logger.add(
-            "logs/decide_log{}.log".format(self.model.index), rotation="500 MB")
-        logger.debug("Decide for Model {}".format(self.model.index))
-        logger.info("Current Page: {}".format(self.model.page_description))
-        logger.info("Current Path: {}".format(self.model.current_path_str))
-        logger.info("Task: {}".format(self.model.task))
-        logger.info("Prompt: {}".format(json.dumps(self.prompt[-1])))
+        # with open("logs/decide_log{}.log".format(self.model.index), "a") as f:
+        #     f.write("--------------------Decide--------------------\n")
+        # log_file = logger.add(
+        #     "logs/decide_log{}.log".format(self.model.index), rotation="500 MB")
+        # logger.debug("Decide for Model {}".format(self.model.index))
+        # logger.info("Current Page: {}".format(self.model.page_description))
+        # logger.info("Current Path: {}".format(self.model.current_path_str))
+        # logger.info("Task: {}".format(self.model.task))
+        # logger.info("Prompt: {}".format(json.dumps(self.prompt[-1])))
 
         response = openai.ChatCompletion.create(
             model="gpt-4",
@@ -110,8 +110,15 @@ Completed Examples from Library:
         answer = response["choices"][0]["message"]["content"]
         answer = json.loads(answer[answer.find("{"):answer.find("}")+1])
 
-        logger.warning("Response: {}".format(json.dumps(answer)))
-        logger.debug("Decide for Model {} Done".format(self.model.index))
-        logger.remove(log_file)
+        # logger.warning("Response: {}".format(json.dumps(answer)))
+        # logger.debug("Decide for Model {} Done".format(self.model.index))
+        # logger.remove(log_file)
+        log_info = {
+            "Name":"Decide",
+            "Description":"This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Input":self.prompt[-1],
+            "Output":answer
+        }
+        self.model.log_json["@Module"].append(log_info)
 
         return answer["status"]

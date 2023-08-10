@@ -67,14 +67,17 @@ class Predict():
         self.current_comp = self.model.screen.semantic_info_list
         self.next_comp = [""]*len(self.model.screen.semantic_info_list)
         self.comp_json = dict.fromkeys(self.model.screen.semantic_info_list,[])
-        with open("logs/predict_log{}.log".format(self.model.index), "a") as f:
-            f.write("--------------------Predict--------------------\n")
-        log_file = logger.add(
-            "logs/predict_log{}.log".format(self.model.index), rotation="500 MB")
-        logger.debug("Predict for Model {}".format(self.model.index))
+        # with open("logs/predict_log{}.log".format(self.model.index), "a") as f:
+        #     f.write("--------------------Predict--------------------\n")
+        # log_file = logger.add(
+        #     "logs/predict_log{}.log".format(self.model.index), rotation="500 MB")
+        # logger.debug("Predict for Model {}".format(self.model.index))
 
-        logger.info("Current Path: {}".format(self.model.current_path_str))
-        logger.info("Task: {}".format(self.model.task))
+        # logger.info("Current Path: {}".format(self.model.current_path_str))
+        # logger.info("Task: {}".format(self.model.task))
+
+        self.model
+
         predict_node=copy.deepcopy(self.model.screen.semantic_info_list)
         print("beforequery",self.model.screen.semantic_info_list)
         for i in tqdm.tqdm(range(len(self.model.screen.semantic_info_list))):
@@ -182,14 +185,21 @@ Step 3: Output a JSON object structured.
                 continue
                 
         print("next_comp: ", self.next_comp)
-        logger.info("Response: {}".format(response_text))
+        # logger.info("Response: {}".format(response_text))
         self.model.extended_info = [add_value_to_html_tag(key, "\n".join(value)) for key, value in self.comp_json.items()]
         print("extended_info: ", self.model.extended_info)
         self.model.extended_info = add_son_to_father(self.model.extended_info, self.model.screen.trans_relation)
         print("augmented_info: ", self.model.extended_info)
-        logger.warning("Components: {}".format(json.dumps(self.comp_json)))
-        logger.debug("Predict for Model {} Done".format(self.model.index))
-        logger.remove(log_file)
+        # logger.warning("Components: {}".format(json.dumps(self.comp_json)))
+        # logger.debug("Predict for Model {} Done".format(self.model.index))
+        # logger.remove(log_file)
+        log_info = {
+            "Name":"Predict",
+            "Description":"This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "Input":predict_node,
+            "Output":response_text
+        }
+        self.model.log_json["@Module"].append(log_info)
 
     def query(self, page, node):
         """

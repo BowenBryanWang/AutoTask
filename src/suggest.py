@@ -86,16 +86,16 @@ class Suggest:
                 """.format(self.model.task, self.model.current_path_str, self.model.extended_info,[j+":"+"=>".join(k) for j,k in zip(self.model.similar_tasks,self.model.similar_traces)])
             },
         ]
-        with open("logs/suggest_log{}.log".format(self.model.index), "a") as f:
-            f.write("--------------------Suggest--------------------\n")
-        log_file = logger.add(
-            "logs/suggest_log{}.log".format(self.model.index), rotation="500 MB")
-        logger.debug("Suggest for Model {}".format(self.model.index))
-        logger.info("Current Page: {}".format(
-            self.model.page_description))
-        logger.info("Current Path: {}".format(self.model.current_path_str))
-        logger.info("Task: {}".format(self.model.task))
-        logger.info("Prompt: {}".format(json.dumps(self.prompt_select[-1])))
+        # with open("logs/suggest_log{}.log".format(self.model.index), "a") as f:
+        #     f.write("--------------------Suggest--------------------\n")
+        # log_file = logger.add(
+        #     "logs/suggest_log{}.log".format(self.model.index), rotation="500 MB")
+        # logger.debug("Suggest for Model {}".format(self.model.index))
+        # logger.info("Current Page: {}".format(
+        #     self.model.page_description))
+        # logger.info("Current Path: {}".format(self.model.current_path_str))
+        # logger.info("Task: {}".format(self.model.task))
+        # logger.info("Prompt: {}".format(json.dumps(self.prompt_select[-1])))
 
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
@@ -112,9 +112,16 @@ class Suggest:
         print(candidate)
         print(self.model.candidate_str)
 
-        logger.warning("Response: {}".format(candidate))
-        logger.debug("Suggest for Model {} Done".format(self.model.index))
-        logger.remove(log_file)
+        # logger.warning("Response: {}".format(candidate))
+        # logger.debug("Suggest for Model {} Done".format(self.model.index))
+        # logger.remove(log_file)
+        log_info = {
+            "Name":"Select",
+            "Description":"This module is a selection model, selecting the top 5 most possible component to be acted on catering to user's intent",
+            "Input":self.model.current_path_str,
+            "Output":response_text
+        }
+        self.model.log_json["@Module"].append(log_info)
 
     def plan(self):
         """
@@ -184,12 +191,12 @@ Current Page : {}:
 Candidates:{}""".format(self.model.task, self.model.page_description, self.model.candidate_str)
             }
         ]
-        with open("logs/suggest_log{}.log".format(self.model.index), "a") as f:
-            f.write("--------------------Plan--------------------\n")
-        log_file = logger.add(
-            "logs/suggest_log{}.log".format(self.model.index), rotation="500 MB")
-        logger.debug("Plan for Model {}".format(self.model.index))
-        logger.info("Prompt: {}".format(json.dumps(self.prompt_plan[-1])))
+        # with open("logs/suggest_log{}.log".format(self.model.index), "a") as f:
+        #     f.write("--------------------Plan--------------------\n")
+        # log_file = logger.add(
+        #     "logs/suggest_log{}.log".format(self.model.index), rotation="500 MB")
+        # logger.debug("Plan for Model {}".format(self.model.index))
+        # logger.info("Prompt: {}".format(json.dumps(self.prompt_plan[-1])))
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=self.prompt_plan,
@@ -208,9 +215,16 @@ Candidates:{}""".format(self.model.task, self.model.page_description, self.model
             self.model.candidate_text[i -
                                       1] = response["candidate{}".format(i)]["text"]
             # self.model.candidate_reason[i-1] = response["candidate{}".format(i)]["reason"]
-        logger.warning("Candidate Action: {}".format(
-            self.model.candidate_action))
-        logger.warning("Candidate Text: {}".format(self.model.candidate_text))
-        # logger.warning("Candidate Reason: {}".format(self.model.candidate_reason))
-        logger.debug("Plan for Model {} Done".format(self.model.index))
-        logger.remove(log_file)
+        # logger.warning("Candidate Action: {}".format(
+        #     self.model.candidate_action))
+        # logger.warning("Candidate Text: {}".format(self.model.candidate_text))
+        # # logger.warning("Candidate Reason: {}".format(self.model.candidate_reason))
+        # logger.debug("Plan for Model {} Done".format(self.model.index))
+        # logger.remove(log_file)
+        log_info = {
+            "Name":"Plan",
+            "Description":"This module is a plan module, planning the next action based on the selected components, whether click or edit",
+            "Input":self.model.candidate_str,
+            "Output":response
+        }
+        self.model.log_json["@Module"].append(log_info)

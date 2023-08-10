@@ -9,6 +9,8 @@ from src.feedback import Feedback
 from page.init import Screen
 from src.predict import Predict
 from src.suggest import Suggest
+import json
+from main import INDEX
 
 
 class Model:
@@ -39,6 +41,7 @@ class Model:
         self.node_selected_id: int = 0  # 用于存储被选择的控件的id
         self.current_path: list[str] = []  # 用于存储当前的路径
         self.current_path_str: str = ""  # 用于存储当前的路径的字符串表示
+        self.log_json: dict = {}  # 用于存储日志信息
         #####################################################
 
         #####################################################
@@ -102,10 +105,20 @@ class Model:
             raise Exception("No Screen input")
         if self.task == "":
             raise Exception("No task description input")
+
+        self.log_json["@User_intent"] = self.task
+        self.log_json["@Page_description"] = self.screen.page_description
+        self.log_json["@Page_components"] = self.screen.semantic_info_list
+        self.log_json["@Module"] = []
+
         self.predict_module.predict()
         self.suggest_module.suggest()
         self.suggest_module.plan()
         self.evaluate_module.evaluate()
+
+        with open("logs/log{INDEX}.json", "w") as f:
+            json.dump(self.log_json, f, indent=4)
+
         node = self.screen.semantic_nodes["nodes"][self.node_selected_id-1]
         print(self.node_selected_id-1)
         print(node.generate_all_semantic_info())

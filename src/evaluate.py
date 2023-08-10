@@ -61,14 +61,14 @@ class Evaluate():
         The final scores of the candidate items.
         """
 
-        with open("logs/evaluate_log{}.log".format(self.model.index), "a") as f:
-            f.write("--------------------Evaluate--------------------\n")
-        log_file = logger.add("logs/evaluate_log{}.log".format(self.model.index), rotation="500 MB")
-        logger.debug("Evaluate for Model {}".format(self.model.index))
-        logger.info("Current Page: {}".format(
-            self.model.page_description))
-        logger.info("Current Path: {}".format(self.model.current_path_str))
-        logger.info("Task: {}".format(self.model.task))
+        # with open("logs/evaluate_log{}.log".format(self.model.index), "a") as f:
+        #     f.write("--------------------Evaluate--------------------\n")
+        # log_file = logger.add("logs/evaluate_log{}.log".format(self.model.index), rotation="500 MB")
+        # logger.debug("Evaluate for Model {}".format(self.model.index))
+        # logger.info("Current Page: {}".format(
+        #     self.model.page_description))
+        # logger.info("Current Path: {}".format(self.model.current_path_str))
+        # logger.info("Task: {}".format(self.model.task))
         self.allocator = Allocator(self)
         self.judges = [LLM_Judge(self)]
         judge_scores = []
@@ -90,11 +90,11 @@ class Evaluate():
             self.score += weighted_scores
         print("judge_scores",judge_scores)
 
-        logger.info("Judge Scores: {}".format(judge_scores))
-        logger.info("Weights: {}".format(weights))
-        logger.warning("Score: {}".format(self.score))
-        logger.debug("Evaluate for Model {} Done".format(self.model.index))
-        logger.remove(log_file)
+        # logger.info("Judge Scores: {}".format(judge_scores))
+        # logger.info("Weights: {}".format(weights))
+        # logger.warning("Score: {}".format(self.score))
+        # logger.debug("Evaluate for Model {} Done".format(self.model.index))
+        # logger.remove(log_file)
         self.node_selected = self.model.candidate_str[np.argmax(self.score)]
         self.node_selected_action = self.model.candidate_action[np.argmax(self.score)]
         self.node_selected_text = self.model.candidate_text[np.argmax(self.score)]
@@ -103,6 +103,15 @@ class Evaluate():
         print("node_selected_id",self.model.node_selected_id)
         self.model.current_path.append(process_action_info(self.node_selected_action, self.node_selected_text,self.node_selected))
         self.model.current_path_str = "->".join(self.model.current_path)
+
+        log_info = {
+            "Name":"Evaluate",
+            "Description":"This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Input":"".join([self.evaluate.model.screen.semantic_info_list[i-1] for i in self.evaluate.model.candidate]),
+            "Output":self.judge_scores
+        }
+        self.model.log_json["@Module"].append(log_info)
+        
         return self.score
 
 def process_action_info(action, params,node):
