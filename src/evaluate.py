@@ -61,9 +61,9 @@ class Evaluate():
         The final scores of the candidate items.
         """
 
-        with open("logs/log{}.log".format(self.model.index), "a") as f:
+        with open("logs/evaluate_log{}.log".format(self.model.index), "a") as f:
             f.write("--------------------Evaluate--------------------\n")
-        log_file = logger.add("logs/log{}.log".format(self.model.index), rotation="500 MB")
+        log_file = logger.add("logs/evaluate_log{}.log".format(self.model.index), rotation="500 MB")
         logger.debug("Evaluate for Model {}".format(self.model.index))
         logger.info("Current Page: {}".format(
             self.model.page_description))

@@ -91,10 +91,10 @@ Completed Examples from Library:
             """.format(self.model.task, self.model.current_path_str, new_screen.semantic_info, [j+":"+"=>".join(k) for j, k in zip(self.model.similar_tasks, self.model.similar_traces)])
         }]
 
-        with open("logs/log{}.log".format(self.model.index), "a") as f:
+        with open("logs/decide_log{}.log".format(self.model.index), "a") as f:
             f.write("--------------------Decide--------------------\n")
         log_file = logger.add(
-            "logs/log{}.log".format(self.model.index), rotation="500 MB")
+            "logs/decide_log{}.log".format(self.model.index), rotation="500 MB")
         logger.debug("Decide for Model {}".format(self.model.index))
         logger.info("Current Page: {}".format(self.model.page_description))
         logger.info("Current Path: {}".format(self.model.current_path_str))

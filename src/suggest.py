@@ -184,10 +184,10 @@ Current Page : {}:
 Candidates:{}""".format(self.model.task, self.model.page_description, self.model.candidate_str)
             }
         ]
-        with open("logs/log{}.log".format(self.model.index), "a") as f:
+        with open("logs/suggest_log{}.log".format(self.model.index), "a") as f:
             f.write("--------------------Plan--------------------\n")
         log_file = logger.add(
-            "logs/log{}.log".format(self.model.index), rotation="500 MB")
+            "logs/suggest_log{}.log".format(self.model.index), rotation="500 MB")
         logger.debug("Plan for Model {}".format(self.model.index))
         logger.info("Prompt: {}".format(json.dumps(self.prompt_plan[-1])))
         response = openai.ChatCompletion.create(
@@ -211,5 +211,6 @@ Candidates:{}""".format(self.model.task, self.model.page_description, self.model
         logger.warning("Candidate Action: {}".format(
             self.model.candidate_action))
         logger.warning("Candidate Text: {}".format(self.model.candidate_text))
+        # logger.warning("Candidate Reason: {}".format(self.model.candidate_reason))
         logger.debug("Plan for Model {} Done".format(self.model.index))
         logger.remove(log_file)

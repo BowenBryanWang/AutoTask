@@ -67,10 +67,10 @@ class Predict():
         self.current_comp = self.model.screen.semantic_info_list
         self.next_comp = [""]*len(self.model.screen.semantic_info_list)
         self.comp_json = dict.fromkeys(self.model.screen.semantic_info_list,[])
-        with open("logs/log{}.log".format(self.model.index), "a") as f:
+        with open("logs/predict_log{}.log".format(self.model.index), "a") as f:
             f.write("--------------------Predict--------------------\n")
         log_file = logger.add(
-            "logs/log{}.log".format(self.model.index), rotation="500 MB")
+            "logs/predict_log{}.log".format(self.model.index), rotation="500 MB")
         logger.debug("Predict for Model {}".format(self.model.index))
 
         logger.info("Current Path: {}".format(self.model.current_path_str))
