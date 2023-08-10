@@ -86,10 +86,10 @@ class Suggest:
                 """.format(self.model.task, self.model.current_path_str, self.model.extended_info,[j+":"+"=>".join(k) for j,k in zip(self.model.similar_tasks,self.model.similar_traces)])
             },
         ]
-        with open("logs/log{}.log".format(self.model.index), "a") as f:
+        with open("logs/suggest_log{}.log".format(self.model.index), "a") as f:
             f.write("--------------------Suggest--------------------\n")
         log_file = logger.add(
-            "logs/log{}.log".format(self.model.index), rotation="500 MB")
+            "logs/suggest_log{}.log".format(self.model.index), rotation="500 MB")
         logger.debug("Suggest for Model {}".format(self.model.index))
         logger.info("Current Page: {}".format(
             self.model.page_description))
