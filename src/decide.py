@@ -20,6 +20,7 @@ class Decide:
         Returns:
             str: The status of the decision made by the model.
         """
+        print("___________________________decide___________________________")
         self.prompt = [{
             "role": "system",
             "content": """You are a professor with in-depth knowledge of User Interface (UI) tasks and their action traces. You are assigned a specific UI task along with an action trace. Your task is to evaluate if the action trace aligns with the assigned task, categorizing the trace as: 
@@ -90,35 +91,25 @@ Completed Examples from Library:
 {}
             """.format(self.model.task, self.model.current_path_str, new_screen.semantic_info, [j+":"+"=>".join(k) for j, k in zip(self.model.similar_tasks, self.model.similar_traces)])
         }]
-
-        # with open("logs/decide_log{}.log".format(self.model.index), "a") as f:
-        #     f.write("--------------------Decide--------------------\n")
-        # log_file = logger.add(
-        #     "logs/decide_log{}.log".format(self.model.index), rotation="500 MB")
-        # logger.debug("Decide for Model {}".format(self.model.index))
-        # logger.info("Current Page: {}".format(self.model.page_description))
-        # logger.info("Current Path: {}".format(self.model.current_path_str))
-        # logger.info("Task: {}".format(self.model.task))
-        # logger.info("Prompt: {}".format(json.dumps(self.prompt[-1])))
-
         response = openai.ChatCompletion.create(
             model="gpt-4",
             messages=self.prompt,
-            temperature=0.8,
+            temperature=1,
         )
+        self.model.log_json["@Similar_task"] = [j+":"+"=>".join(k) for j, k in zip(self.model.similar_tasks, self.model.similar_traces)]
         # 提取回答当中的json部分
         answer = response["choices"][0]["message"]["content"]
         answer = json.loads(answer[answer.find("{"):answer.find("}")+1])
 
-        # logger.warning("Response: {}".format(json.dumps(answer)))
-        # logger.debug("Decide for Model {} Done".format(self.model.index))
-        # logger.remove(log_file)
         log_info = {
             "Name":"Decide",
             "Description":"This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
-            "Input":self.prompt[-1],
             "Output":answer
         }
         self.model.log_json["@Module"].append(log_info)
-
+        self.model.log_json["@Successive_Page"]=self.model.next_model.screen.semantic_info_str
+        with open("logs/log{}.json".format(self.model.index), "w") as f:
+            print("· log{} generated".format(self.model.index))
+            print(self.model.log_json)
+            json.dump(self.model.log_json, f, indent=4)
         return answer["status"]

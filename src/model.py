@@ -1,6 +1,9 @@
 
 import copy
+import time
 from typing import Optional
+
+import tqdm
 from .database import Database
 from .knowledge import PageJump_KB, Task_KB
 from src.decide import Decide
@@ -10,7 +13,7 @@ from page.init import Screen
 from src.predict import Predict
 from src.suggest import Suggest
 import json
-from main import INDEX
+
 
 
 class Model:
@@ -97,17 +100,23 @@ class Model:
             status = self.prev_model.decide_module.decide(self.screen)
             if status == "completed":
                 return "completed"
-            elif status == "wrong":
+            elif status == "Wrong":
                 # self.prev_model.feedback_module.feedback()
                 print("wrong: feedback started")
-                return "wrong"
-        if self.screen is None:
-            raise Exception("No Screen input")
+                return  {"node_id": 1, "trail": "[0,0]", "action_type": "back"},"wrong"
+
+        if not isinstance(self.screen, Screen):
+            raise Exception("Invalid Screen input")
+
         if self.task == "":
             raise Exception("No task description input")
 
+        # 日志记录
+        print("______________________Stop to avoid RTM__________________________")
+        for _ in tqdm.tqdm(range(10)):
+            time.sleep(1)
+
         self.log_json["@User_intent"] = self.task
-        self.log_json["@Page_description"] = self.screen.page_description
         self.log_json["@Page_components"] = self.screen.semantic_info_list
         self.log_json["@Module"] = []
 
@@ -116,16 +125,18 @@ class Model:
         self.suggest_module.plan()
         self.evaluate_module.evaluate()
 
-        with open("logs/log{INDEX}.json", "w") as f:
-            json.dump(self.log_json, f, indent=4)
-
-        node = self.screen.semantic_nodes["nodes"][self.node_selected_id-1]
-        print(self.node_selected_id-1)
-        print(node.generate_all_semantic_info())
-        center = {"x": (node.bound[0]+node.bound[2]) //
-                    2, "y": (node.bound[1]+node.bound[3])//2}
-        perform = {
-            "node_id": 1, "trail": "["+str(center["x"])+","+str(center["y"])+"]", "action_type": "click"}
-        print(perform)
-        return perform
+        if "nodes" in self.screen.semantic_nodes:
+            nodes = self.screen.semantic_nodes["nodes"]
+            if self.node_selected_id > 0 and self.node_selected_id <= len(nodes):
+                node = nodes[self.node_selected_id - 1]
+                print(self.node_selected_id - 1)
+                print(node.generate_all_semantic_info())
+                center = {"x": (node.bound[0] + node.bound[2]) // 2, "y": (node.bound[1] + node.bound[3]) // 2}
+                perform = {"node_id": 1, "trail": "[" + str(center["x"]) + "," + str(center["y"]) + "]", "action_type": "click"}
+                print(perform)
+                return perform,"Execute"
+            else:
+                raise Exception("Invalid node_selected_id")
+        else:
+            raise Exception("No semantic nodes found in the screen")
         

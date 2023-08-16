@@ -9,17 +9,21 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 class Suggest:
     def __init__(self, model) -> None:
         self.model = model
+        self.modified_result = None
+        self.insert_prompt = None
 
     def suggest(self):
         self.prompt_select = [
             {
                 "role": "system",
                 "content": """You are an AI assistant specialized in UI Automation. Based on user's intent and the current screen's components, your task is to analyze, understand the screen. SELECT the top five most possible components to the user's intent thinking step by step. Summarize your selections at the end of your response.
-                Think step by step, select the top five most possible components to the user's intent.
-                The components are organized as HTML format and after-click components are showed and warpped (if any) to support further reasoning.
-                Remember DO not select any components without id. Only select original components with id.
-                You can refer to some completed examples similar to user's intent. But don't follow the examples exactly, though; they serve only as hints.
-                Output a JSON object structured like {"result":[]-the number of selected candidate} at the end of your response. You must select five!
+Think step by step, select the top five most possible components to the user's intent.
+The components are organized as HTML format and after-click components are showed and warpped (if any) to support further reasoning.
+Remember DO not select any components without id. Only select original components with id.
+You can refer to some completed examples similar to user's intent. But don't follow the examples exactly, though; they serve only as hints.
+Hint:
+1, Some of the components may be warpped by its parent node (such as <div><node/></div>), thus it inherits attibutes from parent node. So when selecting candidates you should consider its relationship with its parent node's info.
+Output a JSON object structured like {"result":[]-the number of selected candidate,"reason":[]-reason for each candidate} at the end of your response. You must select five!
                 """
             },
             {
@@ -68,7 +72,14 @@ class Suggest:
                 <button id=4 class='com.whatsapp:id/home_tab_layout' description='Community'>: Although the description is empty for this component, it is worth exploring as it could potentially lead to settings related to appearance or themes, including Dark mode.
                 So the top five most possible components to the user's intent are:
                 {
-                    "result": [5,10,2,3,4]
+                    "result": [5,10,2,3,4],
+                    "reason":[
+                    "This component represents the overflow menu, which often contains additional settings and options. It's a common place to find settings related to appearance and themes, including Dark mode.",
+                    "This component likely represents a contact or profile photo. Tapping on a contact or profile photo often reveals additional options and settings, which may include Dark mode or appearance-related settings.",
+                    "While this component represents the 'Calls' tab, it is worth exploring as some apps provide accessibility options, including Dark mode, within the tab navigation.",
+                    "Similar to the 'Calls' tab, the 'Status' tab might contain accessibility or appearance-related options, including Dark mode.",
+                    "Although the description is empty for this component, it is worth exploring as it could potentially lead to settings related to appearance or themes, including Dark mode."
+                    ]
                 }
                 """
             },
@@ -86,42 +97,86 @@ class Suggest:
                 """.format(self.model.task, self.model.current_path_str, self.model.extended_info,[j+":"+"=>".join(k) for j,k in zip(self.model.similar_tasks,self.model.similar_traces)])
             },
         ]
-        # with open("logs/suggest_log{}.log".format(self.model.index), "a") as f:
-        #     f.write("--------------------Suggest--------------------\n")
-        # log_file = logger.add(
-        #     "logs/suggest_log{}.log".format(self.model.index), rotation="500 MB")
-        # logger.debug("Suggest for Model {}".format(self.model.index))
-        # logger.info("Current Page: {}".format(
-        #     self.model.page_description))
-        # logger.info("Current Path: {}".format(self.model.current_path_str))
-        # logger.info("Task: {}".format(self.model.task))
-        # logger.info("Prompt: {}".format(json.dumps(self.prompt_select[-1])))
 
+        if self.modified_result is not None:
+            response_text = self.modified_result
+        else:
+            if self.insert_prompt:
+                self.prompt_select.append(self.insert_prompt)
+            response = openai.ChatCompletion.create(
+                model="gpt-4",
+                messages=self.prompt_select,
+                temperature=1,
+            )
+            response_text = response["choices"][0]["message"]["content"]
+        print(response_text)
+        self.resp = response_text
+        candidate = json.loads(
+            response_text[response_text.find("{"):response_text.find("}")+1])
+        self.model.candidate = candidate["result"]
+        self.model.candidate_reason = candidate["reason"]
+        self.model.candidate_str = [
+            self.model.screen.semantic_info_list[i-1] for i in self.model.candidate]
+        print(self.model.candidate_str)
+        result_json={}
+        for i in range(len(self.model.candidate)):
+            result_json[self.model.candidate_str[i]]=self.model.candidate_reason[i]
+        log_info = {
+            "Name":"Select",
+            "Description":"This module is a selection model, selecting the 5 possible component without relativity ranking to be acted on catering to user's intent",
+            "Note":"This individual module only select 5 highly related components,without ranking them,and without analyzing the correctness of the components aligning with user's content ",
+            "Output": result_json,
+        }
+        self.model.log_json["@Module"].append(log_info)
+
+    def update(self, advice: dict):
+        self.update_prompt = [
+            {
+                "role": "system",
+                "content": """
+You are an intelligent [Select Module] updater. A [Select Module]'s task is to select the 5 possible component to be acted on current UI screen catering to user's intent.
+Now, the [End Human User](represents ground-truth) has provided feedback (criticisms) regarding the selection result from this former LLM result.
+You need to optimize the current [Select Module] based on this feedback and analyze how to utilize the feedback to this former LLM.
+You are given the feedback from end-user and description of [Select Module], you have 2 strategies to update the [Select Module]:
+1, [Insert]: Insert a slice prompt to the end of the original prompt of [Select Module]'s LLM based on the feedback, augmenting the decision process of it.
+2, [Modify]: Step over the LLM decision process of [Select Module] and directly modify the original output result based on the feedback.
+Think step-by-step about the process of updating the [Select Module] and output a json object structured like: {"strategy": Insert or Modify, "prompt": your inserted slice prompt, "output": your direct modified output based on the original output. Don't break the format}
+"""
+            }
+        ]
+        self.update_prompt.append({
+            "role": "user",
+            "content": """
+                Feedback from end-user(ground-truth):{}
+                """.format(advice)
+        })
+        self.update_prompt.append({
+            "role": "user",
+            "content": """
+                Original Output of [Select Module]:{}
+                """.format(self.resp)
+        })
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=self.prompt_select,
-            temperature=0.2,
+            model="gpt-4",
+            messages=self.update_prompt,
+            temperature=1,
         )
         response_text = response["choices"][0]["message"]["content"]
         print(response_text)
-        candidate = json.loads(
-            response_text[response_text.find("{"):response_text.find("}")+1])["result"]
-        self.model.candidate = candidate
-        self.model.candidate_str = [
-            self.model.screen.semantic_info_list[i-1] for i in candidate]
-        print(candidate)
-        print(self.model.candidate_str)
+        resp = json.loads(
+            response_text[response_text.find("{"):response_text.find("}")+1])
+        
+        strategy = resp["strategy"]
+        prompt = resp["prompt"]
+        output = resp["output"]
+        if strategy == "Insert":
+            self.insert_prompt = {
+                "role": "user",
+                "content": prompt,
+            }
+        else:
+            self.modified_result = output
 
-        # logger.warning("Response: {}".format(candidate))
-        # logger.debug("Suggest for Model {} Done".format(self.model.index))
-        # logger.remove(log_file)
-        log_info = {
-            "Name":"Select",
-            "Description":"This module is a selection model, selecting the top 5 most possible component to be acted on catering to user's intent",
-            "Input":self.model.current_path_str,
-            "Output":response_text
-        }
-        self.model.log_json["@Module"].append(log_info)
 
     def plan(self):
         """
@@ -206,6 +261,12 @@ Candidates:{}""".format(self.model.task, self.model.page_description, self.model
         response = json.loads(
             response_text)
         print(response)
+        log_info = {
+            "Name":"Plan",
+            "Description":"This module is a plan module, planning the next action based on the selected components, whether click or edit",
+            "Output": response
+        }
+        self.model.log_json["@Module"].append(log_info)
         self.model.candidate_action = [None]*5
         self.model.candidate_text = [None]*5
         # self.model.candidate_reason = [None]*5
@@ -214,17 +275,4 @@ Candidates:{}""".format(self.model.task, self.model.page_description, self.model
                                         1] = response["candidate{}".format(i)]["action"]
             self.model.candidate_text[i -
                                       1] = response["candidate{}".format(i)]["text"]
-            # self.model.candidate_reason[i-1] = response["candidate{}".format(i)]["reason"]
-        # logger.warning("Candidate Action: {}".format(
-        #     self.model.candidate_action))
-        # logger.warning("Candidate Text: {}".format(self.model.candidate_text))
-        # # logger.warning("Candidate Reason: {}".format(self.model.candidate_reason))
-        # logger.debug("Plan for Model {} Done".format(self.model.index))
-        # logger.remove(log_file)
-        log_info = {
-            "Name":"Plan",
-            "Description":"This module is a plan module, planning the next action based on the selected components, whether click or edit",
-            "Input":self.model.candidate_str,
-            "Output":response
-        }
-        self.model.log_json["@Module"].append(log_info)
+        
