@@ -326,41 +326,41 @@ class UINode:
 
         stack = [self]
         res = {"nodes": [],"info":[]}
-        with open('./我的.csv', 'a', newline='') as f:
-            writer = csv.writer(f)
-            while stack:
-                node = stack.pop()
-                if node.is_selected() >= 1:
-                    res["nodes"].append(node)
-                    res["info"].append(node.generate_all_semantic_info())
-                else:
-                    writer.writerow([node.depth, node.node_class, node.text!="", node.content_desc!="", node.area, node.clickable,
-                                    node.long_clickable, node.editable, node.scrollable, node.selected, node.checked, node.checkable, node.enabled, node.focusable, node.focused, len(node.children), len(node.parent.children) if node.parent else 0,0])
-                for child in node.children:
-                    stack.append(child)
-            # 对res进行剪枝，规则为：若res中一节点是另一节点的祖先，则删除祖先节点
-            # print("before pruning:",len(res["nodes"]))
-            relation = []
-            for i in range(len(res["nodes"])):
-                for j in range(i+1,len(res["nodes"])):
-                    if res["nodes"][i] and res["nodes"][j] and res["nodes"][i].is_ancestor(res["nodes"][j]):
-                        print("????????????")
-                        print("son",res["nodes"][i].text)
-                        print("father",res["nodes"][j].text)
-                        relation.append((res["nodes"][j],res["nodes"][i]))
-                    elif res["nodes"][i] and res["nodes"][j] and res["nodes"][j].is_ancestor(res["nodes"][i]):
-                        print("????????????")
-                        print("son",res["nodes"][j].text)
-                        print("father",res["nodes"][i].text)
-                        relation.append((res["nodes"][i],res["nodes"][j]))
-                    elif res["nodes"][i] and res["nodes"][j]  and res["info"][i] == res["info"][j] and res["nodes"][i].bound ==  res["nodes"][j].bound:
-                        print("检测到相同",res["info"][i],res["info"][j],res["nodes"][i].bound,res["nodes"][j].bound)              
-                        res["nodes"][j] = None
-            # for node in res["nodes"]:
-            #     if node is not None:
-            #         writer.writerow([node.depth, node.node_class, node.text!="", node.content_desc!="", node.area, node.clickable,
-            #                         node.long_clickable, node.editable, node.scrollable, node.selected, node.checked, node.checkable, node.enabled, node.focusable, node.focused, len(node.children), len(node.parent.children) if node.parent else 0,1])
-            res["nodes"] = [node for node in res["nodes"] if node is not None]
+        # with open('./我的.csv', 'a', newline='') as f:
+            # writer = csv.writer(f)
+        while stack:
+            node = stack.pop()
+            if node.is_selected() >= 1:
+                res["nodes"].append(node)
+                res["info"].append(node.generate_all_semantic_info())
+            # else:
+                # writer.writerow([node.depth, node.node_class, node.text!="", node.content_desc!="", node.area, node.clickable,
+                #                 node.long_clickable, node.editable, node.scrollable, node.selected, node.checked, node.checkable, node.enabled, node.focusable, node.focused, len(node.children), len(node.parent.children) if node.parent else 0,0])
+            for child in node.children:
+                stack.append(child)
+        # 对res进行剪枝，规则为：若res中一节点是另一节点的祖先，则删除祖先节点
+        # print("before pruning:",len(res["nodes"]))
+        relation = []
+        for i in range(len(res["nodes"])):
+            for j in range(i+1,len(res["nodes"])):
+                if res["nodes"][i] and res["nodes"][j] and res["nodes"][i].is_ancestor(res["nodes"][j]):
+                    print("????????????")
+                    print("son",res["nodes"][i].text)
+                    print("father",res["nodes"][j].text)
+                    relation.append((res["nodes"][j],res["nodes"][i]))
+                elif res["nodes"][i] and res["nodes"][j] and res["nodes"][j].is_ancestor(res["nodes"][i]):
+                    print("????????????")
+                    print("son",res["nodes"][j].text)
+                    print("father",res["nodes"][i].text)
+                    relation.append((res["nodes"][i],res["nodes"][j]))
+                elif res["nodes"][i] and res["nodes"][j]  and res["info"][i] == res["info"][j] and res["nodes"][i].bound ==  res["nodes"][j].bound:
+                    print("检测到相同",res["info"][i],res["info"][j],res["nodes"][i].bound,res["nodes"][j].bound)              
+                    res["nodes"][j] = None
+        # for node in res["nodes"]:
+        #     if node is not None:
+        #         writer.writerow([node.depth, node.node_class, node.text!="", node.content_desc!="", node.area, node.clickable,
+        #                         node.long_clickable, node.editable, node.scrollable, node.selected, node.checked, node.checkable, node.enabled, node.focusable, node.focused, len(node.children), len(node.parent.children) if node.parent else 0,1])
+        res["nodes"] = [node for node in res["nodes"] if node is not None]
         return res,relation
 
     def common_ancestor(self, other1, other2):

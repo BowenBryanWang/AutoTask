@@ -1,0 +1,106 @@
+{
+    "@User_intent": "When is my next meeting?",
+    "@Page_components": [
+        "<div id=1 class='' description='CalendarCan be expanded into a service widget'> Calendar </div>\n",
+        "<div id=2 class='' description='NotepadCan be expanded into a service widget'> Notepad </div>\n",
+        "<div id=3 class='' description='ClockCan be expanded into a service widget'> Clock </div>\n",
+        "<div id=4 class='' description='YouTube'> YouTube </div>\n",
+        "<div id=5 class='' description='BrowserCan be expanded into a service widget, 1 notification'> Browser </div>\n",
+        "<div id=6 class='' description='Settings'> Settings </div>\n",
+        "<div id=7 class='' description='WeatherCan be expanded into a service widget'> Weather </div>\n",
+        "<div id=8 class='' description='Instagram'> Instagram </div>\n",
+        "<div id=9 class='' description='Play Store'> Play Store </div>\n",
+        "<div id=10 class='' description='Maps'> Maps </div>\n",
+        "<div id=11 class='' description='Drive'> Drive </div>\n",
+        "<div id=12 class='' description='Google'> Google </div>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "Output": {
+                "<div id=1 class='' description='CalendarCan be expanded into a service widget'> Calendar </div>\n": [
+                    "<div description='Calendar Widget'> </div>"
+                ],
+                "<div id=2 class='' description='NotepadCan be expanded into a service widget'> Notepad </div>\n": [
+                    "<div description='Notepad Widget'> </div>"
+                ],
+                "<div id=3 class='' description='ClockCan be expanded into a service widget'> Clock </div>\n": [
+                    "<div description='Clock Widget'> </div>"
+                ],
+                "<div id=4 class='' description='YouTube'> YouTube </div>\n": [
+                    "<div description='YouTube'> </div>"
+                ],
+                "<div id=5 class='' description='BrowserCan be expanded into a service widget, 1 notification'> Browser </div>\n": [
+                    "<div description='Browser Widget'> </div>"
+                ],
+                "<div id=6 class='' description='Settings'> Settings </div>\n": [
+                    "<div description='Settings'> </div>"
+                ],
+                "<div id=7 class='' description='WeatherCan be expanded into a service widget'> Weather </div>\n": [
+                    "<div description='Weather Widget'> </div>"
+                ],
+                "<div id=8 class='' description='Instagram'> Instagram </div>\n": [
+                    "<div description='Instagram'> </div>"
+                ],
+                "<div id=9 class='' description='Play Store'> Play Store </div>\n": [
+                    "<div description='Play Store'> </div>"
+                ],
+                "<div id=10 class='' description='Maps'> Maps </div>\n": [
+                    "<div description='Maps'> </div>"
+                ],
+                "<div id=11 class='' description='Drive'> Drive </div>\n": [
+                    "<div description='Drive'> </div>"
+                ],
+                "<div id=12 class='' description='Google'> Google </div>\n": [
+                    "<div description='Google'> </div>"
+                ]
+            }
+        },
+        {
+            "Name": "Select",
+            "Description": "This module is a selection model, selecting the top 5 most possible component to be acted on catering to user's intent",
+            "Output": "\n                <div id=1 class='' description='CalendarCan be expanded into a service widget'>: This component represents the Calendar widget. Tapping on it may open the calendar app or provide information about upcoming events and meetings, including the next meeting.\n                <div id=2 class='' description='NotepadCan be expanded into a service widget'>: Although the description is empty for this component, it represents the Notepad widget. It's worth exploring as it could potentially contain notes or reminders about upcoming meetings.\n                <div id=3 class='' description='ClockCan be expanded into a service widget'>: This component represents the Clock widget. Tapping on it may provide information about the current time and upcoming events, including the next meeting.\n                <div id=7 class='' description='WeatherCan be expanded into a service widget'>: Similar to the Clock widget, the Weather widget may provide information about the current weather conditions and upcoming events, including the next meeting.\n                <div id=6 class='' description='Settings'>: Although the description is empty for this component, it represents the Settings app. It's worth exploring as it could potentially contain settings related to calendars and meetings.\n                So the top five most possible components to the user's intent are:\n                {\n                    \"result\": [1,2,3,7,6]\n                }\n                "
+        },
+        {
+            "Name": "Plan",
+            "Description": "This module is a plan module, planning the next action based on the selected components, whether click or edit",
+            "Input": [
+                "<div id=1 class='' description='CalendarCan be expanded into a service widget'> Calendar </div>\n",
+                "<div id=2 class='' description='NotepadCan be expanded into a service widget'> Notepad </div>\n",
+                "<div id=3 class='' description='ClockCan be expanded into a service widget'> Clock </div>\n",
+                "<div id=7 class='' description='WeatherCan be expanded into a service widget'> Weather </div>\n",
+                "<div id=6 class='' description='Settings'> Settings </div>\n"
+            ],
+            "Output": {
+                "click": null
+            }
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Output": {
+                "<div id=1 class='' description='CalendarCan be expanded into a service widget'> Calendar </div>\n": 9.0,
+                "<div id=2 class='' description='NotepadCan be expanded into a service widget'> Notepad </div>\n": 3.0,
+                "<div id=3 class='' description='ClockCan be expanded into a service widget'> Clock </div>\n": 2.0,
+                "<div id=7 class='' description='WeatherCan be expanded into a service widget'> Weather </div>\n": 1.0,
+                "<div id=6 class='' description='Settings'> Settings </div>\n": 2.0
+            }
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "status": "go on",
+                "reason": "The user has opened the calendar which is the correct place to look for the next meeting, but the task is not completed as there is no information about when the next meeting is on the current UI screen."
+            }
+        }
+    ],
+    "@Page_description": "Home screen or dashboard",
+    "@Similar_task": [
+        "Make a video call to my friend Lisa on WeChat:['Open the chat with Lisa', 'Tap on the video camera icon at the top right corner', 'Wait for Lisa to answer']",
+        "Join a live event on Zhihu:['Tap the Live icon on the bottom center', 'Select a live event from the list', 'Tap the Join button', 'Confirm your payment if needed']",
+        "Post a moment on WeChat:['Discover', 'Moments', 'Tap on the camera icon at the top right corner', 'Choose a photo or a video from your album or take a new one', 'Add a caption and choose who can see your moment', 'Send']",
+        "View my drafts on Zhihu:['Tap the profile icon on the bottom right', 'Tap the gear icon on the top right', 'Tap Drafts under Account Settings', 'Select a draft from the list']"
+    ]
+}

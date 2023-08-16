@@ -1,72 +1,19 @@
-<div id=1 class='' > 我的 </div>
-<div id=2 class='' > 好物 </div>
-<div id=3 class='' > 视频 </div>
-<div id=4 class='' > 首页 </div>
-<button id=5 class='com.huawei.browser:id/section_item_layout' description='Give feedback'> 华为耳机手表二合一，便捷超乎想象！
-    <p> 华为商城 </p>
-    <p> 广告 </p>
-    <p> 华为终端有限公司 </p>
-    <p> Version 1.23.6.300 </p>
-    <p> Introduce </p>
-    <p> Privacy </p>
-    <p> Permission </p>
-    <button id=6 class='com.huawei.browser:id/feedskit_compliance_ad_delete' description='Give feedback'>  </button>
+<div id=1 class='' > Display & brightness </div>
+<div id=2 class='' > Home screen & wallpaper </div>
+<div id=3 class='' > More connections </div>
+<div id=4 class='' > Super Device </div>
+<div id=5 class='' > Mobile network </div>
+<div id=6 class='' > Bluetooth
+    <p> On </p> </div>
+<div id=7 class='' > WLAN
+    <p> CMCC-1701 </p> </div>
+<div id=8 class='' > No bank cards found </div>
+<div id=9 class='' > 弄
+    <p> HUAWEI ID, Payment and purchases, Cloud, and more </p> </div>
+<div id=10 class='android:id/search_bar' description='Search query'> Search
+    <div id=11 class='android:id/search_edit_frame' description='Search query'> Search </div>
 
-    <div id=7 class='com.huawei.browser:id/tv_permission' > Permission </div>
+    <div id=12 class='android:id/search_plate' description='Search query'> Search </div>
 
-    <div id=8 class='com.huawei.browser:id/tv_privacy' > Privacy </div>
-
-    <div id=9 class='com.huawei.browser:id/tv_detail' > Introduce </div>
- </button>
-<button id=10 class='com.huawei.browser:id/section_item_layout' description='Give feedback'> 丈夫总觉得保姆不正常，半夜偷偷去她房间一看，精彩了
-    <p> 咪咕娱乐 </p>
-    <p> 2 months ago </p>
-    <p> 10:18 </p>
-    <button id=11 class='com.huawei.browser:id/news_item_delete' description='Give feedback'>  </button>
- </button>
-<button id=12 class='' description='九派新闻 22 hours ago 江西一饭店油条68元一根？店家回应 '> 澎湃新闻
-    <p> 17 hours ago </p>
-    <p> K396次向乘客喊话的值班员被提拔 </p>
-    <p> 九派新闻 </p>
-    <p> 22 hours ago </p>
-    <p> 江西一饭店油条68元一根？店家回应 </p>
-    <p> 观察者网 </p>
-    <p> 3 hours ago </p>
-    <p> 贵州省委统战部副部长邓兆桃被查 </p>
-    <button id=13 class='com.huawei.browser:id/carousel_item_layout' > 观察者网
-    <p> 3 hours ago </p>
-    <p> 贵州省委统战部副部长邓兆桃被查 </p> </button>
-
-    <button id=14 class='com.huawei.browser:id/carousel_item_layout' > 九派新闻
-    <p> 22 hours ago </p>
-    <p> 江西一饭店油条68元一根？店家回应 </p> </button>
-
-    <button id=15 class='com.huawei.browser:id/carousel_item_layout' > 澎湃新闻
-    <p> 17 hours ago </p>
-    <p> K396次向乘客喊话的值班员被提拔 </p> </button>
- </button>
-<button id=16 class='' >   
-    <p> 多支救援队在河北涿州开展清淤排涝工作 </p> </button>
-<button id=17 class='' >   
-    <p> 到成都街头感受发展活力 </p> </button>
-<button id=18 class='' >   
-    <p> 建设基础研究高水平支撑平台 </p> </button>
-<button id=19 class='' >   
-    <p> 从总书记的文化足迹中探寻“何以中国” </p> </button>
-<button id=20 class='' >   
-    <p> “少年强则中国强，体育强则中国强” </p> </button>
-<button id=21 class='com.huawei.browser:id/hwsubtab_function_icon' description='All categories'>  </button>
-<div id=22 class='' > 时尚 </div>
-<div id=23 class='' > 房产 </div>
-<div id=24 class='' > 精选 </div>
-<div id=25 class='' > 科技 </div>
-<div id=26 class='' > 体育 </div>
-<div id=27 class='' > 娱乐 </div>
-<div id=28 class='' > 汽车 </div>
-<div id=29 class='' > 安徽 </div>
-<div id=30 class='' > 财经 </div>
-<div id=31 class='' > 小说 </div>
-<div id=32 class='' > 视频 </div>
-<div id=33 class='' description='1 tab'> 1 </div>
-<div id=34 class='' description='Drop-down menu'>  </div>
-<div id=35 class='' description='台风“卡努”还要大转弯'> 台风“卡努”还要大转弯 </div>
+    <div id=13 class='android:id/search_src_text' description='Search query'> Search </div>
+ </div>

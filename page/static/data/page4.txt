@@ -1,10 +1,23 @@
-<div id=1 class='com.whatsapp:id/group_notification_tone_setting' > Notification tone </div>
-<div id=2 class='com.whatsapp:id/reaction_notifications_setting' > Reaction Notifications </div>
-<div id=3 class='com.whatsapp:id/high_priority_notifications_setting' > Use high priority notifications </div>
-<div id=4 class='com.whatsapp:id/notification_light_setting' > Light </div>
-<div id=5 class='com.whatsapp:id/popup_notification_setting' > Popup notification </div>
-<div id=6 class='com.whatsapp:id/vibrate_setting' > Vibrate </div>
-<div id=7 class='com.whatsapp:id/notification_tone_setting' > Notification tone </div>
-<div id=8 class='com.whatsapp:id/conversation_sound_setting' > Conversation tones </div>
-<button id=9 class='com.whatsapp:id/menuitem_overflow' description='More options'>  </button>
-<p id=10 class='' description='Navigate up'>  </p>
+<div id=1 class='' > browsersdk
+    <switch id=2 class='com.android.settings:id/full_screen_switch' clickable> On </switch>
+ </div>
+<div id=3 class='' > BOSS直聘
+    <switch id=4 class='com.android.settings:id/full_screen_switch' clickable> On </switch>
+ </div>
+<div id=5 class='' > Booking.com
+    <switch id=6 class='com.android.settings:id/full_screen_switch' clickable> On </switch>
+ </div>
+<div id=7 class='' > Apply to all
+    <switch id=8 class='com.android.settings:id/app_switch' clickable> On </switch>
+ </div>
+<div id=9 class='' > Enable all day
+    <switch id=10 class='android:id/switch_widget' clickable> Off </switch>
+ </div>
+<div id=11 class='' > End
+    <p> 7:00 AM next day </p> </div>
+<div id=12 class='' > Start
+    <p> 10:00 PM </p> </div>
+<div id=13 class='' > Scheduled
+    <switch id=14 class='android:id/switch_widget' clickable> On </switch>
+ </div>
+<div id=15 class='' description='Navigate up'>  </div>

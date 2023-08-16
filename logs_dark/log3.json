@@ -1,0 +1,117 @@
+{
+    "@User_intent": "turn on system dark mode",
+    "@Page_components": [
+        "<div id=1 class='' > browsersdk </div>\n",
+        "<switch id=2 class='com.android.settings:id/full_screen_switch' clickable> On </switch>\n",
+        "<div id=3 class='' > BOSS\u76f4\u8058 </div>\n",
+        "<switch id=4 class='com.android.settings:id/full_screen_switch' clickable> On </switch>\n",
+        "<div id=5 class='' > Booking.com </div>\n",
+        "<switch id=6 class='com.android.settings:id/full_screen_switch' clickable> On </switch>\n",
+        "<div id=7 class='' > Apply to all </div>\n",
+        "<switch id=8 class='com.android.settings:id/app_switch' clickable> On </switch>\n",
+        "<div id=9 class='' > Enable all day </div>\n",
+        "<switch id=10 class='android:id/switch_widget' clickable> Off </switch>\n",
+        "<div id=11 class='' > End\n    <p> 7:00 AM next day </p> </div>\n",
+        "<div id=12 class='' > Start\n    <p> 10:00 PM </p> </div>\n",
+        "<div id=13 class='' > Scheduled </div>\n",
+        "<switch id=14 class='android:id/switch_widget' clickable> On </switch>\n",
+        "<div id=15 class='' description='Navigate up'>  </div>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "Output": {
+                "<div id=1 class='' > browsersdk </div>\n": [],
+                "<switch id=2 class='com.android.settings:id/full_screen_switch' clickable> On </switch>\n": [
+                    "<switch description='Toggle Full-Screen Mode'> </switch>"
+                ],
+                "<div id=3 class='' > BOSS\u76f4\u8058 </div>\n": [
+                    "<div description='BOSS\u76f4\u8058 Details'> </div>"
+                ],
+                "<switch id=4 class='com.android.settings:id/full_screen_switch' clickable> On </switch>\n": [
+                    "<switch description='Toggle Full-Screen Mode'> </switch>"
+                ],
+                "<div id=5 class='' > Booking.com </div>\n": [
+                    "<div description='Booking.com Details'> </div>"
+                ],
+                "<switch id=6 class='com.android.settings:id/full_screen_switch' clickable> On </switch>\n": [
+                    "<switch description='Toggle Full-Screen Mode'> </switch>"
+                ],
+                "<div id=7 class='' > Apply to all </div>\n": [
+                    "<div description='Apply to all Options'> </div>"
+                ],
+                "<switch id=8 class='com.android.settings:id/app_switch' clickable> On </switch>\n": [
+                    "<switch description='Toggle App Switch'> </switch>"
+                ],
+                "<div id=9 class='' > Enable all day </div>\n": [
+                    "<div description='Enable All Day Options'> </div>"
+                ],
+                "<switch id=10 class='android:id/switch_widget' clickable> Off </switch>\n": [
+                    "<switch description='Toggle Feature'> </switch>"
+                ],
+                "<div id=11 class='' > End\n    <p> 7:00 AM next day </p> </div>\n": [
+                    "<div description='Set End Time Options'> </div>"
+                ],
+                "<div id=12 class='' > Start\n    <p> 10:00 PM </p> </div>\n": [
+                    "<div description='Set Start Time Options'> </div>"
+                ],
+                "<div id=13 class='' > Scheduled </div>\n": [
+                    "<div description='Scheduled Options'> </div>"
+                ],
+                "<switch id=14 class='android:id/switch_widget' clickable> On </switch>\n": [
+                    "<switch description='Toggle Feature'> </switch>"
+                ],
+                "<div id=15 class='' description='Navigate up'>  </div>\n": [
+                    "<div description='Navigate Up'> </div>"
+                ]
+            }
+        },
+        {
+            "Name": "Select",
+            "Description": "This module is a selection model, selecting the top 5 most possible component to be acted on catering to user's intent",
+            "Output": "\n                <div id=7 class='' > Dark mode\n                    <p> Scheduled </p> </div>: This component represents the option to enable or disable dark mode. Tapping on it may reveal additional options, such as scheduling dark mode to activate at specific times.\n                <div id=1 class='' > Display & brightness </div>: This component likely represents the option to adjust display and brightness settings. Tapping on it may lead to a page where dark mode settings can be found.\n                <switch id=14 class='android:id/switch_widget' clickable> On\n                    /* Below are predicted after-click components */\n                    <switch description='Toggle Feature'> </switch> </switch>: This component represents a switch that is currently set to \"On\". Tapping on it may allow the user to toggle dark mode on or off.\n                <div id=13 class='' > Scheduled\n                    /* Below are predicted after-click components */\n                    <div description='Scheduled Options'> </div>\n                    <switch id=14 class='android:id/switch_widget' clickable> On\n                    /* Below are predicted after-click components */\n                    <switch description='Toggle Feature'> </switch> </switch> </div>: This component represents the option to schedule dark mode to activate at specific times. Tapping on it may reveal additional options for scheduling dark mode.\n                <div id=4 class='' description='Settings'> Settings </div>: This component represents the option to access general settings. Tapping on it may lead to a page where dark mode settings can be found.\n                So the top five most possible components to the user's intent are:\n                {\n                    \"result\": [7,1,14,13,4]\n                }"
+        },
+        {
+            "Name": "Plan",
+            "Description": "This module is a plan module, planning the next action based on the selected components, whether click or edit",
+            "Input": [
+                "<div id=7 class='' > Apply to all </div>\n",
+                "<div id=1 class='' > browsersdk </div>\n",
+                "<switch id=14 class='android:id/switch_widget' clickable> On </switch>\n",
+                "<div id=13 class='' > Scheduled </div>\n",
+                "<switch id=4 class='com.android.settings:id/full_screen_switch' clickable> On </switch>\n"
+            ],
+            "Output": {
+                "click": null,
+                "edit": "dark mode"
+            }
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Output": {
+                "<div id=7 class='' > Apply to all </div>\n": 9.0,
+                "<div id=1 class='' > browsersdk </div>\n": 1.0,
+                "<switch id=14 class='android:id/switch_widget' clickable> On </switch>\n": 8.0,
+                "<div id=13 class='' > Scheduled </div>\n": 3.0,
+                "<switch id=4 class='com.android.settings:id/full_screen_switch' clickable> On </switch>\n": 2.0
+            }
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "status": "go on",
+                "reason": "The user is in the correct settings area (Dark mode section) and has clicked on 'Apply to all', which aligns with the task of turning on the system dark mode. However, the status of the 'Apply to all' switch on the latest UI screen is still 'Off'. This implies that the task of activating dark mode has not been completed and further actions are required."
+            }
+        }
+    ],
+    "@Page_description": "Settings or Configurations",
+    "@Similar_task": [
+        "Turn on dark mode on TikTok:['Me', 'Settings and privacy', 'Content and activity', 'Dark mode', 'Choose Dark']",
+        "Change the theme color of my Weibo app to blue:['Me', 'Settings', 'General', 'Theme Color', 'Select blue']",
+        "Change the font size on Zhihu:['Tap the profile icon on the bottom right', 'Tap the gear icon on the top right', 'Tap Font Size under Display Settings', 'Choose a font size from the options']",
+        "Change the font size on WeChat:['Me', 'Settings', 'General', 'Font Size', 'Choose a font size from small to large']"
+    ]
+}

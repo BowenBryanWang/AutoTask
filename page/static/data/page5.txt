@@ -1,21 +1,23 @@
-["<button id=1 class='com.google.android.apps.docs:id/menu_navigation_drives' description='文件'> 文件 </button>
-", "<button id=2 class='com.google.android.apps.docs:id/menu_navigation_shared' description='与我共享'> 与我共享 </button>
-", "<button id=3 class='com.google.android.apps.docs:id/menu_navigation_starred' description='已加星标'> 已加星标 </button>
-", "<div id=4 class='com.google.android.apps.docs:id/extended_fab' description='创建'>  </div>
-", "<div id=5 class='' description='由Ashwin Ram在过去一个月内创建,可对“SIM: design modification”执行的其他操作'> SIM: design modification
-    <p> 由Ashwin Ram在过去一个月内创建 </p> </div>
-", "<div id=6 class='com.google.android.apps.docs:id/overflow_button' description='可对“SIM: design modification”执行的其他操作'>  </div>
-", "<div id=7 class='' description='您在过去一周内打开过,可对“Video creation workshop”执行的其他操作'> Video creation workshop
-    <p> 您在过去一周内打开过 </p> </div>
-", "<div id=8 class='com.google.android.apps.docs:id/overflow_button' description='可对“Video creation workshop”执行的其他操作'>  </div>
-", "<div id=9 class='' description='您在过去一周内打开过,可对“CV_Bowen_Wang.pdf”执行的其他操作'> CV_Bowen_Wang.pdf
-    <p> 您在过去一周内打开过 </p> </div>
-", "<div id=10 class='com.google.android.apps.docs:id/overflow_button' description='可对“CV_Bowen_Wang.pdf”执行的其他操作'>  </div>
-", "<div id=11 class='' description='通知'> 通知 </div>
-", "<div id=12 class='com.google.android.apps.docs:id/open_search_bar' description='Search Bar,更多导航选项,目前的登录者是saltyp0rridge20@gmail.com
-帐号和设置。'> 在云端硬盘中搜索
-    <p> 在云端硬盘中搜索 </p> </div>
-", "<button id=13 class='com.google.android.apps.docs:id/selected_account_disc' description='目前的登录者是saltyp0rridge20@gmail.com
-帐号和设置。'>  </button>
-", "<div id=14 class='' description='更多导航选项'>  </div>
-"]
+<div id=1 class='' > browsersdk
+    <switch id=2 class='com.android.settings:id/full_screen_switch' clickable> Off </switch>
+ </div>
+<div id=3 class='' > BOSS直聘
+    <switch id=4 class='com.android.settings:id/full_screen_switch' clickable> Off </switch>
+ </div>
+<div id=5 class='' > Booking.com
+    <switch id=6 class='com.android.settings:id/full_screen_switch' clickable> Off </switch>
+ </div>
+<div id=7 class='' > Apply to all
+    <switch id=8 class='com.android.settings:id/app_switch' clickable> Off </switch>
+ </div>
+<div id=9 class='' > Enable all day
+    <switch id=10 class='android:id/switch_widget' clickable> Off </switch>
+ </div>
+<div id=11 class='' > End
+    <p> 7:00 AM next day </p> </div>
+<div id=12 class='' > Start
+    <p> 10:00 PM </p> </div>
+<div id=13 class='' > Scheduled
+    <switch id=14 class='android:id/switch_widget' clickable> On </switch>
+ </div>
+<div id=15 class='' description='Navigate up'>  </div>

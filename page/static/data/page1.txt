@@ -1,12 +1,12 @@
-<div id=1 class='' description='Clock'> Clock </div>
-<div id=2 class='' description='YouTube'> YouTube </div>
-<div id=3 class='' description='BrowserCan be expanded into a service widget'> Browser </div>
-<div id=4 class='' description='Settings'> Settings </div>
-<div id=5 class='' description='Weather'> Weather </div>
-<div id=6 class='' description='Instagram'> Instagram </div>
-<div id=7 class='' description='Play Store'> Play Store </div>
-<div id=8 class='' description='Maps'> Maps </div>
-<div id=9 class='' description='Calendar'> Calendar </div>
-<div id=10 class='' description='Drive'> Drive </div>
-<div id=11 class='' description='Gmail'> Gmail </div>
+<div id=1 class='' description='Calendar'> Calendar </div>
+<div id=2 class='' description='Notepad'> Notepad </div>
+<div id=3 class='' description='Clock'> Clock </div>
+<div id=4 class='' description='YouTube'> YouTube </div>
+<div id=5 class='' description='Browser, 1 notification'> Browser </div>
+<div id=6 class='' description='Settings'> Settings </div>
+<div id=7 class='' description='Weather'> Weather </div>
+<div id=8 class='' description='Instagram'> Instagram </div>
+<div id=9 class='' description='Play Store'> Play Store </div>
+<div id=10 class='' description='Maps'> Maps </div>
+<div id=11 class='' description='Drive'> Drive </div>
 <div id=12 class='' description='Google'> Google </div>

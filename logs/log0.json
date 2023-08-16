@@ -1,0 +1,140 @@
+{
+    "@User_intent": "change notification settings in the youtube app",
+    "@Page_components": [
+        "<div id=1 class='' description='Calendar'> Calendar </div>\n",
+        "<div id=2 class='' description='Notepad'> Notepad </div>\n",
+        "<div id=3 class='' description='Clock'> Clock </div>\n",
+        "<div id=4 class='' description='YouTube'> YouTube </div>\n",
+        "<div id=5 class='' description='Browser, 1 notification'> Browser </div>\n",
+        "<div id=6 class='' description='Settings'> Settings </div>\n",
+        "<div id=7 class='' description='Weather'> Weather </div>\n",
+        "<div id=8 class='' description='Instagram'> Instagram </div>\n",
+        "<div id=9 class='' description='Play Store'> Play Store </div>\n",
+        "<div id=10 class='' description='Maps'> Maps </div>\n",
+        "<div id=11 class='' description='Drive'> Drive </div>\n",
+        "<div id=12 class='' description='Google'> Google </div>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "Output": {
+                "<div id=1 class='' description='Calendar'> Calendar </div>\n": [
+                    "<p description='Calendar'> </p>"
+                ],
+                "<div id=2 class='' description='Notepad'> Notepad </div>\n": [
+                    "<p description='Notepad'> </p>"
+                ],
+                "<div id=3 class='' description='Clock'> Clock </div>\n": [
+                    "<p description='Clock'> </p>"
+                ],
+                "<div id=4 class='' description='YouTube'> YouTube </div>\n": [
+                    "<p description='YouTube'> </p>"
+                ],
+                "<div id=5 class='' description='Browser, 1 notification'> Browser </div>\n": [
+                    "<p description='Browser'> </p>"
+                ],
+                "<div id=6 class='' description='Settings'> Settings </div>\n": [
+                    "<p description='Settings'> </p>"
+                ],
+                "<div id=7 class='' description='Weather'> Weather </div>\n": [
+                    "<p description='Weather'> </p>"
+                ],
+                "<div id=8 class='' description='Instagram'> Instagram </div>\n": [
+                    "<p description='Instagram'> </p>"
+                ],
+                "<div id=9 class='' description='Play Store'> Play Store </div>\n": [
+                    "<p description='Play Store'> </p>"
+                ],
+                "<div id=10 class='' description='Maps'> Maps </div>\n": [
+                    "<p description='Maps'> </p>"
+                ],
+                "<div id=11 class='' description='Drive'> Drive </div>\n": [
+                    "<p description='Drive'> </p>"
+                ],
+                "<div id=12 class='' description='Google'> Google </div>\n": [
+                    "<p description='Google'> </p>"
+                ]
+            }
+        },
+        {
+            "Name": "Select",
+            "Description": "This module is a selection model, selecting the 5 possible component to be acted on catering to user's intent",
+            "Note":"This individual module only select 5 highly related components,without ranking them,and without analyzing the correctness of the components aligning with user's content ",
+            "Output": {
+                "<div id=6 class='' description='Settings'> Settings </div>\n": "This component represents the 'Settings' option, which is commonly used to access various app settings, including notification settings. Tapping on this component is likely to lead to the desired functionality.",
+                "<div id=4 class='' description='YouTube'> YouTube </div>\n": "Although the description is empty for this component, it represents the YouTube app. It is worth exploring as it may contain notification settings within the app's navigation or settings menu.",
+                "<div id=5 class='' description='Browser, 1 notification'> Browser </div>\n": "This component represents a browser app with a notification count. Tapping on this component may reveal notification settings specific to the browser app, including options to enable or disable notifications.",
+                "<div id=1 class='' description='Calendar'> Calendar </div>\n": "Although the description is empty for this component, it represents a calendar app. It is worth exploring as it may contain notification settings within the app's navigation or settings menu.",
+                "<div id=2 class='' description='Notepad'> Notepad </div>\n": "Although the description is empty for this component, it represents a notepad app. It is worth exploring as it may contain notification settings within the app's navigation or settings menu."
+            }
+        },
+        {
+            "Name": "Plan",
+            "Description": "This module is a plan module, planning the next action based on the selected components, whether click or edit",
+            "Output": {
+                "candidate1": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To access the settings page."
+                },
+                "candidate2": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "Switching to the YouTube app is not relevant to changing notification settings."
+                },
+                "candidate3": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "Switching to the Browser app is not relevant to changing notification settings."
+                },
+                "candidate4": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "Switching to the Calendar app is not relevant to changing notification settings."
+                },
+                "candidate5": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "Switching to the Notepad app is not relevant to changing notification settings."
+                }
+            }
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Output": {
+                "<div id=6 class='' description='Settings'> Settings </div>\n": 9.0,
+                "<div id=4 class='' description='YouTube'> YouTube </div>\n": 4.0,
+                "<div id=5 class='' description='Browser, 1 notification'> Browser </div>\n": 2.0,
+                "<div id=1 class='' description='Calendar'> Calendar </div>\n": 1.0,
+                "<div id=2 class='' description='Notepad'> Notepad </div>\n": 1.0
+            },
+            "LLM_scorer_reason": [
+                "Reasoning: This option is labeled as 'Settings' and is highly likely to provide access to various app settings, including notification settings. Since the task is to change notification settings in the YouTube app, it is reasonable to expect that the option to access notification settings may be found within the 'Settings' menu. Therefore, there is a high likelihood that this option will assist you in accomplishing your task.",
+                "Reasoning: This option is labeled as 'YouTube' and is related to the YouTube app. However, it is unlikely to directly provide access to notification settings. The description 'YouTube' suggests that it is specific to the main YouTube interface, rather than the app settings. Therefore, the likelihood of this option helping you change notification settings is low.",
+                "Reasoning: This option is labeled as 'Browser' and is unlikely to be directly related to changing notification settings in the YouTube app. The description 'Browser, 1 notification' suggests that it is specific to a browser app and may be related to browser notifications, rather than app-specific notification settings. Therefore, the likelihood of this option assisting you in changing notification settings in the YouTube app is low.",
+                "Reasoning: This option is labeled as 'Calendar' and is unlikely to be directly related to changing notification settings in the YouTube app. The description 'Calendar' suggests that it is specific to calendar-related functionality, rather than app settings. Therefore, the likelihood of this option helping you change notification settings in the YouTube app is low.",
+                "Reasoning: This option is labeled as 'Notepad' and is unlikely to be directly related to changing notification settings in the YouTube app. The description 'Notepad' suggests that it is specific to note-taking functionality, rather than app settings. Therefore, the likelihood of this option assisting you in changing notification settings in the YouTube app is low."
+            ]
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "status": "wrong",
+                "reason": "The user has navigated to the general settings of the device, not the Youtube app's settings. The current UI screen does not contain options for adjusting notification settings for the Youtube app, which suggests that the user has gone into the wrong branch."
+            }
+        }
+    ],
+    "@Page_description": "Home screen or dashboard",
+    "@Previous_Step": " -> Page:Home screen or dashboard",
+    "@Action": "Action: Click on <div id=6 class='' description='Settings'> Settings </div>\n",
+    "@Similar_task": [
+        "Turn off notifications from TikTok:['Me', 'Settings and privacy', 'Notifications', 'Toggle off Allow notifications']",
+        "Turn on push notifications for comments and likes on Weibo:['Me', 'Settings', 'Notifications', 'Toggle on Comments and Likes']",
+        "View my notifications or messages on Zhihu:['Tap the profile icon on the bottom right', 'Tap the bell icon or the message icon on the top left', 'Select a notification or message from the list']",
+        "Change the video quality to high definition on TikTok:['Me', 'Settings and privacy', 'Data Saver', 'Toggle off Data Saver']"
+    ],
+    "@Successive_Page": "<div id=1 class='' > Display & brightness </div>\n<div id=2 class='' > Home screen & wallpaper </div>\n<div id=3 class='' > More connections </div>\n<div id=4 class='' > Super Device </div>\n<div id=5 class='' > Mobile network </div>\n<div id=6 class='' > Bluetooth\n    <p> On </p> </div>\n<div id=7 class='' > WLAN\n    <p> CMCC-1701 </p> </div>\n<div id=8 class='' > No bank cards found </div>\n<div id=9 class='' > \u5f04\n    <p> HUAWEI ID, Payment and purchases, Cloud, and more </p> </div>\n<div id=10 class='android:id/search_bar' description='Search query'> Search\n    <div id=11 class='android:id/search_edit_frame' description='Search query'> Search </div>\n\n    <div id=12 class='android:id/search_plate' description='Search query'> Search </div>\n\n    <div id=13 class='android:id/search_src_text' description='Search query'> Search </div>\n </div>\n"
+}
