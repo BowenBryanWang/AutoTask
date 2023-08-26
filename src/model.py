@@ -4,7 +4,7 @@ import time
 from typing import Optional
 
 import tqdm
-from .database import Database
+
 from .knowledge import PageJump_KB, Task_KB
 from src.decide import Decide
 from src.evaluate import Evaluate
