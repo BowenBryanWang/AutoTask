@@ -72,13 +72,13 @@ class Evaluate():
             weighted_scores = judge_scores * weights[self.judges.index(judge)]
             self.score += weighted_scores
         print("judge_scores",judge_scores)
-        self.node_selected = self.model.candidate_str[np.argmax(self.score)]
-        self.node_selected_action = self.model.candidate_action[np.argmax(self.score)]
-        self.node_selected_text = self.model.candidate_text[np.argmax(self.score)]
-        self.model.node_selected_id = int(self.node_selected.split("id=")[1].split(" ")[0])
-        print("node_selected",self.node_selected)
+        self.model.node_selected = self.model.candidate_str[np.argmax(self.score)]
+        self.model.node_selected_action = self.model.candidate_action[np.argmax(self.score)]
+        self.model.node_selected_text = self.model.candidate_text[np.argmax(self.score)]
+        self.model.node_selected_id = int(self.model.node_selected.split("id=")[1].split(" ")[0])
+        print("node_selected",self.model.node_selected)
         print("node_selected_id",self.model.node_selected_id)
-        current_action= process_action_info(self.node_selected_action, self.node_selected_text,self.node_selected)
+        current_action= process_action_info(self.model.node_selected_action, self.model.node_selected_text,self.model.node_selected)
         self.model.log_json["@Previous_Step"] = self.model.current_path_str
         self.model.current_path.append(current_action)
         self.model.log_json["@Action"] = current_action
@@ -98,7 +98,6 @@ def process_action_info(action, params,node):
         return "Action: Click on {}".format(node) 
     elif action == "edit":
         return "Action: Edit {} with {}".format(node, params)
-    pass
 
 class Judge():
     """
@@ -138,46 +137,46 @@ class LLM_Judge(Judge):
             {
                 "role": "system",
                 "content": """You are a mobile phone user interface assistant. Your task is to help the user navigate through an app by analyzing the available options and predicting which ones will assist them in accomplishing their goal. For each option, provide a confidence rating from 0-10, where 0 means 'unlikely to help' and 10 means 'highly likely to help'.
-Use the following steps to respond to user inputs. Fully restate each step before proceeding. i.e. "Step 1: Reason..."
+Use the following steps to respond to user inputs.
 Step 1:Reason step-by-step about how each option contributes to the user's goal.
-Step 2:Output a JSON object structured like: {"score": []}.
+Step 2:Output a JSON object structured like: {"score": [],"reason":[](refers to each candidate, give your scoring reason)}.
 Hint:
 1, Some of the components may be warpped by its parent node (such as <div><node/></div>), thus it inherits attibutes from parent node. So when analyzing it you should consider its relationship with its parent node's info.
                 """
             },
-            {
-                "role": "user",
-                "content": """
-Task: "Turn on Dark mode". 
-Current path: "HomePage".
-Options:
-'''HTML
-    <button id=5 class='com.whatsapp:id/menuitem_overflow' description='More options'> </button>
-    <button id=10 class='com.whatsapp:id/contact_photo' description='Wang Bowen'> </button>
-    <button id=2 class='com.whatsapp:id/home_tab_layout' description='Calls'> </button>
-    <button id=3 class='com.whatsapp:id/home_tab_layout' description='Status'> </button>
-    <button id=4 class='com.whatsapp:id/home_tab_layout' description='Community'> </button>
-'''
-                """
-            },
-            {
-                "role": "assistant",
-                "content": 
-"""
-Step 1: 
-1,Score: 8/10
-Reasoning: This option is labeled as 'More options' and is likely to provide additional settings and customization options. Since Dark Mode is a common feature in most apps, it is reasonable to expect that the option to enable Dark Mode may be found within the 'More options' menu. Therefore, there is a high likelihood that this option will assist you in accomplishing your task.
-2: Score: 2/10
-Reasoning: This option appears to be related to a contact photo and is unlikely to be directly associated with enabling Dark Mode. The description 'Wang Bowen' suggests that it is specific to a particular contact, rather than a system-wide setting. Therefore, the likelihood of this option assisting you in turning on Dark Mode is low.
-3: Score: 3/10
-Reasoning: This option represents the 'Calls' tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description 'Calls' suggests that it is specific to the call-related functionality within WhatsApp. Therefore, the likelihood of this option helping you turn on Dark Mode is low.
-4: Score: 1/10
-Reasoning: This option represents the 'Status' tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description 'Status' indicates that it is specific to the status-related functionality within WhatsApp. Therefore, the likelihood of this option assisting you in turning on Dark Mode is low.
-5: Score: 4/10
-Reasoning: This option represents the 'Community' tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description 'Community' suggests that it is specific to community-related features, which are unlikely to include Dark Mode settings. Therefore, the likelihood of this option helping you turn on Dark Mode is low.
-Step 2:  {"score": [8, 2, 3, 1, 4],"reason":["Reasoning: This option is labeled as 'More options' and is likely to provide additional settings and customization options. Since Dark Mode is a common feature in most apps, it is reasonable to expect that the option to enable Dark Mode may be found within the 'More options' menu. Therefore, there is a high likelihood that this option will assist you in accomplishing your task.","Reasoning: This option appears to be related to a contact photo and is unlikely to be directly associated with enabling Dark Mode. The description 'Wang Bowen' suggests that it is specific to a particular contact, rather than a system-wide setting. Therefore, the likelihood of this option assisting you in turning on Dark Mode is low.","Reasoning: This option represents the 'Calls' tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description 'Calls' suggests that it is specific to the call-related functionality within WhatsApp. Therefore, the likelihood of this option helping you turn on Dark Mode is low.","Reasoning: This option represents the 'Status' tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description 'Status' indicates that it is specific to the status-related functionality within WhatsApp. Therefore, the likelihood of this option assisting you in turning on Dark Mode is low.","Reasoning: This option represents the 'Community' tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description 'Community' suggests that it is specific to community-related features, which are unlikely to include Dark Mode settings. Therefore, the likelihood of this option helping you turn on Dark Mode is low."]}
-"""
-            },
+#             {
+#                 "role": "user",
+#                 "content": """
+# Task: "Turn on Dark mode". 
+# Current path: "HomePage".
+# Options:
+# '''HTML
+#     <button id=5 class='com.whatsapp:id/menuitem_overflow' description='More options'> </button>
+#     <button id=10 class='com.whatsapp:id/contact_photo' description='Wang Bowen'> </button>
+#     <button id=2 class='com.whatsapp:id/home_tab_layout' description='Calls'> </button>
+#     <button id=3 class='com.whatsapp:id/home_tab_layout' description='Status'> </button>
+#     <button id=4 class='com.whatsapp:id/home_tab_layout' description='Community'> </button>
+# '''
+#                 """
+#             },
+#             {
+#                 "role": "assistant",
+#                 "content": 
+# """
+# Step 1: 
+# 1,Score: 8/10
+# Reasoning: This option is labeled as 'More options' and is likely to provide additional settings and customization options. Since Dark Mode is a common feature in most apps, it is reasonable to expect that the option to enable Dark Mode may be found within the 'More options' menu. Therefore, there is a high likelihood that this option will assist you in accomplishing your task.
+# 2: Score: 2/10
+# Reasoning: This option appears to be related to a contact photo and is unlikely to be directly associated with enabling Dark Mode. The description 'Wang Bowen' suggests that it is specific to a particular contact, rather than a system-wide setting. Therefore, the likelihood of this option assisting you in turning on Dark Mode is low.
+# 3: Score: 3/10
+# Reasoning: This option represents the 'Calls' tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description 'Calls' suggests that it is specific to the call-related functionality within WhatsApp. Therefore, the likelihood of this option helping you turn on Dark Mode is low.
+# 4: Score: 1/10
+# Reasoning: This option represents the 'Status' tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description 'Status' indicates that it is specific to the status-related functionality within WhatsApp. Therefore, the likelihood of this option assisting you in turning on Dark Mode is low.
+# 5: Score: 4/10
+# Reasoning: This option represents the 'Community' tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description 'Community' suggests that it is specific to community-related features, which are unlikely to include Dark Mode settings. Therefore, the likelihood of this option helping you turn on Dark Mode is low.
+# Step 2:  {"score": [8, 2, 3, 1, 4],"reason":["Reasoning: This option is labeled as 'More options' and is likely to provide additional settings and customization options. Since Dark Mode is a common feature in most apps, it is reasonable to expect that the option to enable Dark Mode may be found within the 'More options' menu. Therefore, there is a high likelihood that this option will assist you in accomplishing your task.","Reasoning: This option appears to be related to a contact photo and is unlikely to be directly associated with enabling Dark Mode. The description 'Wang Bowen' suggests that it is specific to a particular contact, rather than a system-wide setting. Therefore, the likelihood of this option assisting you in turning on Dark Mode is low.","Reasoning: This option represents the 'Calls' tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description 'Calls' suggests that it is specific to the call-related functionality within WhatsApp. Therefore, the likelihood of this option helping you turn on Dark Mode is low.","Reasoning: This option represents the 'Status' tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description 'Status' indicates that it is specific to the status-related functionality within WhatsApp. Therefore, the likelihood of this option assisting you in turning on Dark Mode is low.","Reasoning: This option represents the 'Community' tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description 'Community' suggests that it is specific to community-related features, which are unlikely to include Dark Mode settings. Therefore, the likelihood of this option helping you turn on Dark Mode is low."]}
+# """
+#             },
             {
                 "role": "user",
                 "content": """

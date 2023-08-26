@@ -32,7 +32,7 @@ def demo_route() -> Union[str, Response]:
         Union[str, Response]: A JSON object or a Response object.
     """
     global TASK, STATUS, INDEX, COMPUTATIONAL_GRAPH,GRAPH_ACTION
-    print("demo")
+    # return {'node_id': 1, 'trail': '[0,0]', 'action_type': 'text', 'text': "Lowe's", 'ori_absolute_id': 'android.widget.FrameLayout|0;android.widget.LinearLayout|0;android.widget.FrameLayout|0;android.widget.FrameLayout|0;android.widget.FrameLayout|0;android.view.ViewGroup|0;android.widget.FrameLayout|0;android.widget.FrameLayout|0;android.view.ViewGroup|0;android.widget.ScrollView|0;android.widget.LinearLayout|1;android.widget.LinearLayout|0;android.widget.EditText'}
     screen = Screen(INDEX)
     screen.update(request=request.form)
     if STATUS == "start":
@@ -65,8 +65,8 @@ def demo_route() -> Union[str, Response]:
         if work_status == "Wrong":
             STATUS = "backtracking"
             return result
-        if work_status == "Excute":
-            STATUS="start"
+        if work_status == "Execute":
+            STATUS = "start"
             INDEX += 1
             GRAPH_ACTION.append(result)
             return result
@@ -90,12 +90,13 @@ def demo_route() -> Union[str, Response]:
 def index() -> Union[str, Response]:
     return render_template("index.html", elements=json.dumps({"result": "", "image_id": 1, "semantic_info": "", "chart_data": "", "line_data": ""}))
 
-# Function to listen for keyboard input
 def keyboard_listener():
     global STATUS
-    input("Press Enter to start the task execution...")
-    STATUS = "start"
-    print("Task execution started!")
+    while True:  # 添加无限循环
+        input("Press Enter to start the task execution...")
+        STATUS = "start"
+        print("Task execution started!")
+
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Flask app with argparse integration")

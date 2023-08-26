@@ -1,12 +1,10 @@
-<div id=1 class='' description='Calendar'> Calendar </div>
-<div id=2 class='' description='Notepad'> Notepad </div>
-<div id=3 class='' description='Clock'> Clock </div>
-<div id=4 class='' description='YouTube'> YouTube </div>
-<div id=5 class='' description='Browser, 1 notification'> Browser </div>
-<div id=6 class='' description='Settings'> Settings </div>
-<div id=7 class='' description='Weather'> Weather </div>
-<div id=8 class='' description='Instagram'> Instagram </div>
-<div id=9 class='' description='Play Store'> Play Store </div>
-<div id=10 class='' description='Maps'> Maps </div>
-<div id=11 class='' description='Drive'> Drive </div>
-<div id=12 class='' description='Google'> Google </div>
+<div id=1 class='' > Auto‑connect
+    <switch id=2 class='android:id/switch_widget' clickable> On </switch>
+ </div>
+<div id=3 class='' > Network usage
+    <p> Detect automatically </p> </div>
+<div id=4 class='com.android.settings:id/button4' > Share </div>
+<div id=5 class='com.android.settings:id/button3' > Disconnect </div>
+<div id=6 class='com.android.settings:id/button1' > Forget </div>
+<div id=7 class='' description='Modify'>  </div>
+<div id=8 class='' description='Navigate up'>  </div>

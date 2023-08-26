@@ -1,15 +1,87 @@
-<div id=1 class='' > Colour mode & temperature </div>
-<div id=2 class='' > Sleep
-    <p> After 1 minute </p> </div>
-<div id=3 class='' > Display size </div>
-<div id=4 class='' > Text size and weight </div>
-<div id=5 class='' > Text style
-    <p> Default </p> </div>
-<div id=6 class='' > Eye Comfort </div>
-<div id=7 class='' > Dark mode
-    <p> Scheduled </p> </div>
-<div id=8 class='' > Automatic
-    <switch id=9 class='android:id/switch_widget' clickable> On </switch>
+<div id=1 class='' description='淘宝, 1 notification'> 淘宝 </div>
+<div id=2 class='' description='抖音, 134 notifications'> 抖音 </div>
+<div id=3 class='' description='Folder 2 Large folder 3 apps,,中国银行,App is in the large folder,中国移动安徽, 11 notifications,App is in the large folder,U校园,App is in the large folder,More apps'> Folder 2
+    <div id=4 class='' description='U校园,App is in the large folder'>  </div>
+
+    <div id=5 class='' description='中国移动安徽, 11 notifications,App is in the large folder'>  </div>
+
+    <div id=6 class='' description='中国银行,App is in the large folder'>  </div>
  </div>
-<div id=10 class='com.android.settings:id/seekbar' description='Brightness'>  </div>
-<div id=11 class='' description='Navigate up'>  </div>
+<div id=7 class='' description='智能投屏'> 智能投屏 </div>
+<div id=8 class='' description='ToDesk'> ToDesk </div>
+<div id=9 class='' description='yisdk'> yisdk </div>
+<div id=10 class='' description='百度文库'> 百度文库 </div>
+<div id=11 class='' description='Fake Location'> Fake Location </div>
+<div id=12 class='' description='多搜'> 多搜 </div>
+<div id=13 class='' description='HUAWEI Assistant'> HUAWEI Assistant </div>
+<div id=14 class='' description='Folder: Top Apps'> Top Apps </div>
+<div id=15 class='' description='EduCenter'> EduCenter </div>
+<div id=16 class='' description='百词斩'> 百词斩 </div>
+<div id=17 class='' description='BOSS直聘'> BOSS直聘 </div>
+<div id=18 class='' description='Baidu, 79 notifications'> Baidu </div>
+<div id=19 class='' description='China Southern Airlines'> China Southern Airlines </div>
+<div id=20 class='' description='AirChina'> AirChina </div>
+<div id=21 class='' description='China Eastern Airlines (CEA)'> China Eastern Airlines (CEA) </div>
+<div id=22 class='' description='Cloud, 2 notifications'> Cloud </div>
+<div id=23 class='' description='国家反诈中心'> 国家反诈中心 </div>
+<div id=24 class='' description='网易公开课, 3062 notifications'> 网易公开课 </div>
+<div id=25 class='' description='虚贝租号'> 虚贝租号 </div>
+<div id=26 class='' description='Feishu, 4 notifications'> Feishu </div>
+<div id=27 class='' description='Disney Resort'> Disney Resort </div>
+<div id=28 class='' description='SSR'> SSR </div>
+<div id=29 class='' description='XuetangX'> XuetangX </div>
+<div id=30 class='' description='browsersdk, 6 notifications'> browsersdk </div>
+<div id=31 class='' description='招商银行, 115 notifications'> 招商银行 </div>
+<div id=32 class='' description='THUInfo'> THUInfo </div>
+<div id=33 class='' description='中国大学MOOC'> 中国大学MOOC </div>
+<div id=34 class='' description='Amap, 1 notification'> Amap </div>
+<div id=35 class='' description='AppGallery, 60 notifications'> AppGallery </div>
+<div id=36 class='' description='Edge'> Edge </div>
+<div id=37 class='' description='Calendar'> Calendar </div>
+<div id=38 class='' description='Notepad'> Notepad </div>
+<div id=39 class='' description='Clock'> Clock </div>
+<div id=40 class='' description='YouTube'> YouTube </div>
+<div id=41 class='' description='Browser, 1 notification'> Browser </div>
+<div id=42 class='' description='Settings'> Settings </div>
+<div id=43 class='' description='Weather'> Weather </div>
+<div id=44 class='' description='Instagram'> Instagram </div>
+<div id=45 class='' description='Play Store'> Play Store </div>
+<div id=46 class='' description='Drive'> Drive </div>
+<div id=47 class='' description='Google'> Google </div>
+<div id=48 class='' description='Gallery'> Gallery </div>
+<div id=49 class='' description='MeeTimeCan be expanded into a service widget, 110 notifications'> MeeTime </div>
+<div id=50 class='' description='VMALL'> VMALL </div>
+<div id=51 class='' description='Wallet'> Wallet </div>
+<div id=52 class='' description='Themes'> Themes </div>
+<div id=53 class='' description='Books'> Books </div>
+<div id=54 class='' description='MusicCan be expanded into a service widget, 1 notification'> Music </div>
+<div id=55 class='' description='Weather,, Thu, Aug 17  七月初二, , Cloudy, current temperature 33℃, ,Thu, Aug 17  七月初二,, , , Cloudy, current temperature 33℃, ,Cloudy,33,3:49'> Thu, Aug 17  七月初二
+    <p> 33 </p>
+    <p> ℃ </p>
+    <p> 3:49 </p>
+    <button id=56 class='' description=', Thu, Aug 17  七月初二, , Cloudy, current temperature 33℃, ,Thu, Aug 17  七月初二,, , , Cloudy, current temperature 33℃, ,Cloudy,33,3:49'> Thu, Aug 17  七月初二
+    <p> 33 </p>
+    <p> ℃ </p>
+    <p> 3:49 </p> </button>
+
+    <button id=57 class='com.huawei.android.totemweather:id/widget_home' description=', Thu, Aug 17  七月初二, , Cloudy, current temperature 33℃, ,Thu, Aug 17  七月初二,, , , Cloudy, current temperature 33℃, ,Cloudy,33,3:49'> Thu, Aug 17  七月初二
+    <p> 33 </p>
+    <p> ℃ </p>
+    <p> 3:49 </p> </button>
+
+    <div id=58 class='com.huawei.android.totemweather:id/time_display' description='3:49'> 3:49 </div>
+
+    <div id=59 class='com.huawei.android.totemweather:id/widget_app_temperature_icon' description=', , , Cloudy, current temperature 33℃, ,Cloudy,33'> 33
+    <p> ℃ </p> </div>
+
+    <div id=60 class='com.huawei.android.totemweather:id/widget_city_date' description='Thu, Aug 17  七月初二'> Thu, Aug 17  七月初二 </div>
+ </div>
+<button id=61 class='com.huawei.android.launcher:id/clear_all_recents_image_button' description='Close all recent apps'>  </button>
+<button id=62 class='com.huawei.android.launcher:id/task_view' description='Amap,Amap,Amap,Touch to open in floating window'> Amap
+    <button id=63 class='com.huawei.android.launcher:id/splitscreen_task' description='Touch to open in floating window'>  </button>
+
+    <button id=64 class='com.huawei.android.launcher:id/icon' description='Amap'>  </button>
+ </button>
+<button id=65 class='com.huawei.android.launcher:id/task_view' description='AppGallery,Touch to open in floating window'> 
+    <button id=66 class='com.huawei.android.launcher:id/splitscreen_task' description='Touch to open in floating window'>  </button>
+ </button>

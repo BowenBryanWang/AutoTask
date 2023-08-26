@@ -23,66 +23,76 @@ Remember DO not select any components without id. Only select original component
 You can refer to some completed examples similar to user's intent. But don't follow the examples exactly, though; they serve only as hints.
 Hint:
 1, Some of the components may be warpped by its parent node (such as <div><node/></div>), thus it inherits attibutes from parent node. So when selecting candidates you should consider its relationship with its parent node's info.
-Output a JSON object structured like {"result":[]-the number of selected candidate,"reason":[]-reason for each candidate} at the end of your response. You must select five!
+Output only one JSON object structured like {"result":[]-the id of selected candidate,"reason":[]-reason for each candidate} at the end of your response. You must select five!
+Sample output:{
+    "result": [5,10,2,3,4],
+    "reason":[
+        "...",
+        "...",
+        "...",
+        "...",
+        "..."
+    ]
+}
                 """
             },
-            {
-                "role": "user",
-                "content": """
-                    Intention:'send a message \"Hello\" to Bowen'
-                    Current path: -> Main interface of the WhatsApp application
-                    Components:
-                    '''HTML
-                    <p id=1 class='com.whatsapp:id/fab' description='New chat'></p>
-                    <button id=2 class='com.whatsapp:id/home_tab_layout' description='Calls'> Calls
-                        /* Below are predicted after-click components */
-                        <button description='Bowen'> </button>
-                    </button>
-                    <button id=3 class='com.whatsapp:id/home_tab_layout' description='Status'>Status
-                        /* Below are predicted after-click components */
-                        <p description='My Status'> </p>
-                        <button description='Add Status'> </button>
-                    </button>
-                    <button id=4 class='com.whatsapp:id/home_tab_layout' description='Community'>
-                        /* Below are predicted after-click components */
-                        <button description='Members'> </button>
-                        <button description='Add new Member'> </button>
-                        <p description='Connect'> </p>
-                    </button>
-                    <button id=5 class='com.whatsapp:id/menuitem_overflow' description='More options'>
-                        /* Below are predicted after-click components */
-                        <button description='Settings'> </button>
-                        <button description='WhatsApp Web'> </button>
-                    </button>
-                    <p id=6 class='com.whatsapp:id/menuitem_search' description='Search'></p>
-                    <p id=7 class='com.whatsapp:id/menuitem_camera' description='Camera'></p>
-                    <p id=8 class='' description='end-to-end encrypted'></p>
-                    <button id=9 class='com.whatsapp:id/contact_photo' description='Yellow'></button>
-                    <button id=10 class='com.whatsapp:id/contact_photo' description='Wang Bowen'></button>
-                    '''
-                """
-            },
-            {
-                "role": "assistant",
-                "content": """
-                <button id=5 class='com.whatsapp:id/menuitem_overflow' description='More options'>: This component represents the overflow menu, which often contains additional settings and options. It's a common place to find settings related to appearance and themes, including Dark mode.
-                <button id=10 class='com.whatsapp:id/contact_photo' description='Wang Bowen'>: This component likely represents a contact or profile photo. Tapping on a contact or profile photo often reveals additional options and settings, which may include Dark mode or appearance-related settings.
-                <button id=2 class='com.whatsapp:id/home_tab_layout' description='Calls'>: While this component represents the "Calls" tab, it is worth exploring as some apps provide accessibility options, including Dark mode, within the tab navigation.
-                <button id=3 class='com.whatsapp:id/home_tab_layout' description='Status'>: Similar to the "Calls" tab, the "Status" tab might contain accessibility or appearance-related options, including Dark mode.
-                <button id=4 class='com.whatsapp:id/home_tab_layout' description='Community'>: Although the description is empty for this component, it is worth exploring as it could potentially lead to settings related to appearance or themes, including Dark mode.
-                So the top five most possible components to the user's intent are:
-                {
-                    "result": [5,10,2,3,4],
-                    "reason":[
-                    "This component represents the overflow menu, which often contains additional settings and options. It's a common place to find settings related to appearance and themes, including Dark mode.",
-                    "This component likely represents a contact or profile photo. Tapping on a contact or profile photo often reveals additional options and settings, which may include Dark mode or appearance-related settings.",
-                    "While this component represents the 'Calls' tab, it is worth exploring as some apps provide accessibility options, including Dark mode, within the tab navigation.",
-                    "Similar to the 'Calls' tab, the 'Status' tab might contain accessibility or appearance-related options, including Dark mode.",
-                    "Although the description is empty for this component, it is worth exploring as it could potentially lead to settings related to appearance or themes, including Dark mode."
-                    ]
-                }
-                """
-            },
+            # {
+            #     "role": "user",
+            #     "content": """
+            #         Intention:'send a message \"Hello\" to Bowen'
+            #         Current path: -> Main interface of the WhatsApp application
+            #         Components:
+            #         '''HTML
+            #         <p id=1 class='com.whatsapp:id/fab' description='New chat'></p>
+            #         <button id=2 class='com.whatsapp:id/home_tab_layout' description='Calls'> Calls
+            #             /* Below are predicted after-click components */
+            #             <button description='Bowen'> </button>
+            #         </button>
+            #         <button id=3 class='com.whatsapp:id/home_tab_layout' description='Status'>Status
+            #             /* Below are predicted after-click components */
+            #             <p description='My Status'> </p>
+            #             <button description='Add Status'> </button>
+            #         </button>
+            #         <button id=4 class='com.whatsapp:id/home_tab_layout' description='Community'>
+            #             /* Below are predicted after-click components */
+            #             <button description='Members'> </button>
+            #             <button description='Add new Member'> </button>
+            #             <p description='Connect'> </p>
+            #         </button>
+            #         <button id=5 class='com.whatsapp:id/menuitem_overflow' description='More options'>
+            #             /* Below are predicted after-click components */
+            #             <button description='Settings'> </button>
+            #             <button description='WhatsApp Web'> </button>
+            #         </button>
+            #         <p id=6 class='com.whatsapp:id/menuitem_search' description='Search'></p>
+            #         <p id=7 class='com.whatsapp:id/menuitem_camera' description='Camera'></p>
+            #         <p id=8 class='' description='end-to-end encrypted'></p>
+            #         <button id=9 class='com.whatsapp:id/contact_photo' description='Yellow'></button>
+            #         <button id=10 class='com.whatsapp:id/contact_photo' description='Wang Bowen'></button>
+            #         '''
+            #     """
+            # },
+            # {
+            #     "role": "assistant",
+            #     "content": """
+            #     <button id=5 class='com.whatsapp:id/menuitem_overflow' description='More options'>: This component represents the overflow menu, which often contains additional settings and options. It's a common place to find settings related to appearance and themes, including Dark mode.
+            #     <button id=10 class='com.whatsapp:id/contact_photo' description='Wang Bowen'>: This component likely represents a contact or profile photo. Tapping on a contact or profile photo often reveals additional options and settings, which may include Dark mode or appearance-related settings.
+            #     <button id=2 class='com.whatsapp:id/home_tab_layout' description='Calls'>: While this component represents the "Calls" tab, it is worth exploring as some apps provide accessibility options, including Dark mode, within the tab navigation.
+            #     <button id=3 class='com.whatsapp:id/home_tab_layout' description='Status'>: Similar to the "Calls" tab, the "Status" tab might contain accessibility or appearance-related options, including Dark mode.
+            #     <button id=4 class='com.whatsapp:id/home_tab_layout' description='Community'>: Although the description is empty for this component, it is worth exploring as it could potentially lead to settings related to appearance or themes, including Dark mode.
+            #     So the top five most possible components to the user's intent are:
+            #     {
+            #         "result": [5,10,2,3,4],
+            #         "reason":[
+            #         "This component represents the overflow menu, which often contains additional settings and options. It's a common place to find settings related to appearance and themes, including Dark mode.",
+            #         "This component likely represents a contact or profile photo. Tapping on a contact or profile photo often reveals additional options and settings, which may include Dark mode or appearance-related settings.",
+            #         "While this component represents the 'Calls' tab, it is worth exploring as some apps provide accessibility options, including Dark mode, within the tab navigation.",
+            #         "Similar to the 'Calls' tab, the 'Status' tab might contain accessibility or appearance-related options, including Dark mode.",
+            #         "Although the description is empty for this component, it is worth exploring as it could potentially lead to settings related to appearance or themes, including Dark mode."
+            #         ]
+            #     }
+            #     """
+            # },
             {
                 "role": "user",
                 "content": """
@@ -94,6 +104,7 @@ Output a JSON object structured like {"result":[]-the number of selected candida
                     '''
                     Examples from Library:
                     {}
+                    You must select 5 components!
                 """.format(self.model.task, self.model.current_path_str, self.model.extended_info,[j+":"+"=>".join(k) for j,k in zip(self.model.similar_tasks,self.model.similar_traces)])
             },
         ]
@@ -106,7 +117,7 @@ Output a JSON object structured like {"result":[]-the number of selected candida
             response = openai.ChatCompletion.create(
                 model="gpt-4",
                 messages=self.prompt_select,
-                temperature=1,
+                temperature=0,
             )
             response_text = response["choices"][0]["message"]["content"]
         print(response_text)
@@ -193,7 +204,7 @@ Think step-by-step about the process of updating the [Select Module] and output 
 For each of the top five components, analyze the possible action to be taken and, if it involves an editing action, provide the corresponding text parameter as well. 
 Reason step by step to provide the actions and text parameters for each component based on the user's intent and the context of the current screen.
 Output a JSON object structured like 
-{"candidate1":{"action": the action to be taken, "text": the text parameter for the action if any (Optional),"reason": the reason},
+{"candidate1":{"action": the action to be taken,either "click" or "edit", "text": the text parameter for the action if any (Optional),"reason": the reason},
 "candidate2":same as above,
 "candidate3":same as above,
 "candidate4":same as above,
@@ -201,43 +212,43 @@ Output a JSON object structured like
 } 
 including each candidate although which may be irrelevant"""
             },
-            {
-                "role": "user",
-                "content": """
-                Task: send a message "Hello" to Bowen
-Current Page : Whatsapp homepage:
-Candidates:
-["<button id=8 class='com.whatsapp:id/contact_photo' description='Wang Bowen'> </button>", "<p id=5 class='com.whatsapp:id/menuitem_search' description='Search'> </p>", "<button id=1 class='com.whatsapp:id/home_tab_layout' description='Calls'> </button>", "<button id=2 class='com.whatsapp:id/home_tab_layout' description='Status'> </button>", "<button id=3 class='com.whatsapp:id/home_tab_layout' description='Community'> </button>"]"""
-            },
-            {
-                "role": "assistant",
-                "content": """{
-  "candidate1": {
-    "action": "click",
-    "text": null,
-    "reason": "To open Bowen's chat window to send a message."
-  },
-  "candidate2": {
-    "action": "edit",
-    "text": "Bowen",
-    "reason": "To filter contacts and find Bowen's chat to send a message."
-  },
-  "candidate3": {
-    "action": "click",
-    "text": null,
-    "reason": "Switching to the 'Calls' tab is not relevant to sending a message."
-  },
-  "candidate4": {
-    "action": "click",
-    "text": null,
-    "reason": "Switching to the 'Status' tab is not relevant to sending a message."
-  },
-  "candidate5": {
-    "action": "click",
-    "text": null,
-    "reason": "Switching to the 'Community' tab is not relevant to sending a message."
-  }
-}"""},
+#             {
+#                 "role": "user",
+#                 "content": """
+#                 Task: send a message "Hello" to Bowen
+# Current Page : Whatsapp homepage:
+# Candidates:
+# ["<button id=8 class='com.whatsapp:id/contact_photo' description='Wang Bowen'> </button>", "<p id=5 class='com.whatsapp:id/menuitem_search' description='Search'> </p>", "<button id=1 class='com.whatsapp:id/home_tab_layout' description='Calls'> </button>", "<button id=2 class='com.whatsapp:id/home_tab_layout' description='Status'> </button>", "<button id=3 class='com.whatsapp:id/home_tab_layout' description='Community'> </button>"]"""
+#             },
+#             {
+#                 "role": "assistant",
+#                 "content": """{
+#   "candidate1": {
+#     "action": "click",
+#     "text": null,
+#     "reason": "To open Bowen's chat window to send a message."
+#   },
+#   "candidate2": {
+#     "action": "edit",
+#     "text": "Bowen",
+#     "reason": "To filter contacts and find Bowen's chat to send a message."
+#   },
+#   "candidate3": {
+#     "action": "click",
+#     "text": null,
+#     "reason": "Switching to the 'Calls' tab is not relevant to sending a message."
+#   },
+#   "candidate4": {
+#     "action": "click",
+#     "text": null,
+#     "reason": "Switching to the 'Status' tab is not relevant to sending a message."
+#   },
+#   "candidate5": {
+#     "action": "click",
+#     "text": null,
+#     "reason": "Switching to the 'Community' tab is not relevant to sending a message."
+#   }
+# }"""},
             {
                 "role": "user",
                 "content": """
@@ -271,8 +282,10 @@ Candidates:{}""".format(self.model.task, self.model.page_description, self.model
         self.model.candidate_text = [None]*5
         # self.model.candidate_reason = [None]*5
         for i in range(1, 6):
-            self.model.candidate_action[i -
-                                        1] = response["candidate{}".format(i)]["action"]
-            self.model.candidate_text[i -
-                                      1] = response["candidate{}".format(i)]["text"]
+            candidate = response.get("candidate{}".format(i))
+            if candidate:
+                self.model.candidate_action[i - 1] = candidate.get("action") if candidate.get(
+                    "action") else ""
+                self.model.candidate_text[i - 1] = candidate.get("text") if candidate.get(
+                    "text") else ""
         

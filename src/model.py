@@ -98,9 +98,7 @@ class Model:
         """
         if self.prev_model is not None:
             status = self.prev_model.decide_module.decide(self.screen)
-            if status == "completed":
-                return "completed"
-            elif status == "Wrong":
+            if status == "Wrong":
                 # self.prev_model.feedback_module.feedback()
                 print("wrong: feedback started")
                 return  {"node_id": 1, "trail": "[0,0]", "action_type": "back"},"wrong"
@@ -131,10 +129,15 @@ class Model:
                 node = nodes[self.node_selected_id - 1]
                 print(self.node_selected_id - 1)
                 print(node.generate_all_semantic_info())
-                center = {"x": (node.bound[0] + node.bound[2]) // 2, "y": (node.bound[1] + node.bound[3]) // 2}
-                perform = {"node_id": 1, "trail": "[" + str(center["x"]) + "," + str(center["y"]) + "]", "action_type": "click"}
-                print(perform)
-                return perform,"Execute"
+                if self.node_selected_action == "click":
+                    center = {"x": (node.bound[0] + node.bound[2]) // 2, "y": (node.bound[1] + node.bound[3]) // 2}
+                    perform = {"node_id": 1, "trail": "[" + str(center["x"]) + "," + str(center["y"]) + "]", "action_type": "click"}
+                    print(perform)
+                    return perform,"Execute"
+                elif self.node_selected_action == "edit":
+                    perform = {"node_id": 1, "trail": "[0,0]", "action_type": "text", "text": self.node_selected_text,"ori_absolute_id":node.absolute_id}
+                    print(perform)
+                    return perform,"Execute"
             else:
                 raise Exception("Invalid node_selected_id")
         else:

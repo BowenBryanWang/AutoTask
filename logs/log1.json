@@ -1,0 +1,135 @@
+{
+    "@User_intent": "What's the news today?",
+    "@Page_components": [
+        "<div id=1 class='' description='Bottom toolbar,Go back,Go forward,Browser menu,Switch or close tabs,Share'> 1 </div>\n",
+        "<div id=2 class='com.microsoft.emmx:id/edge_bottom_bar_share_button' description='Share'>  </div>\n",
+        "<div id=3 class='com.microsoft.emmx:id/tab_center_button' description='Switch or close tabs'> 1 </div>\n",
+        "<button id=4 class='com.microsoft.emmx:id/overflow_button_bottom' description='Browser menu'>  </button>\n",
+        "<div id=5 class='com.microsoft.emmx:id/edge_overflow_button' description='Browser menu'>  </div>\n",
+        "<div id=6 class='com.microsoft.emmx:id/forward_button' description='Go forward'>  </div>\n",
+        "<div id=7 class='com.microsoft.emmx:id/back_button' description='Go back'>  </div>\n",
+        "<div id=8 class='com.microsoft.emmx:id/edge_toolbar_change_ntp_button' description='New tab page layout settings'>  </div>\n",
+        "<button id=9 class='com.microsoft.emmx:id/edge_account_image_view' description='Account menu'>  </button>\n",
+        "<div id=10 class='' > News and more </div>\n",
+        "<div id=11 class='com.microsoft.emmx:id/voice_search_button' description='Start voice search'>  </div>\n",
+        "<div id=12 class='com.microsoft.emmx:id/camera_search_button' description='Start camera search'>  </div>\n",
+        "<div id=13 class='com.microsoft.emmx:id/search_box_text' > Search or type web address </div>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "Output": {
+                "<div id=1 class='' description='Bottom toolbar,Go back,Go forward,Browser menu,Switch or close tabs,Share'> 1 </div>\n": [],
+                "<div id=2 class='com.microsoft.emmx:id/edge_bottom_bar_share_button' description='Share'>  </div>\n": [
+                    "<button description='Share'> </button>"
+                ],
+                "<div id=3 class='com.microsoft.emmx:id/tab_center_button' description='Switch or close tabs'> 1 </div>\n": [
+                    "<p description='Switch tabs'> </p>",
+                    "<p description='Close tabs'> </p>"
+                ],
+                "<button id=4 class='com.microsoft.emmx:id/overflow_button_bottom' description='Browser menu'>  </button>\n": [
+                    "<button description='Browser menu'> </button>"
+                ],
+                "<div id=5 class='com.microsoft.emmx:id/edge_overflow_button' description='Browser menu'>  </div>\n": [
+                    "<button description='Browser menu'> </button>"
+                ],
+                "<div id=6 class='com.microsoft.emmx:id/forward_button' description='Go forward'>  </div>\n": [],
+                "<div id=7 class='com.microsoft.emmx:id/back_button' description='Go back'>  </div>\n": [],
+                "<div id=8 class='com.microsoft.emmx:id/edge_toolbar_change_ntp_button' description='New tab page layout settings'>  </div>\n": [
+                    "<button description='Layout settings'> </button>"
+                ],
+                "<button id=9 class='com.microsoft.emmx:id/edge_account_image_view' description='Account menu'>  </button>\n": [
+                    "<button description='Account menu'> </button>"
+                ],
+                "<div id=10 class='' > News and more </div>\n": [],
+                "<div id=11 class='com.microsoft.emmx:id/voice_search_button' description='Start voice search'>  </div>\n": [
+                    "<button description='Start voice search'> </button>"
+                ],
+                "<div id=12 class='com.microsoft.emmx:id/camera_search_button' description='Start camera search'>  </div>\n": [
+                    "<button description='Start camera search'> </button>"
+                ],
+                "<div id=13 class='com.microsoft.emmx:id/search_box_text' > Search or type web address </div>\n": []
+            }
+        },
+        {
+            "Name": "Select",
+            "Description": "This module is a selection model, selecting the 5 possible component without relativity ranking to be acted on catering to user's intent",
+            "Note": "This individual module only select 5 highly related components,without ranking them,and without analyzing the correctness of the components aligning with user's content ",
+            "Output": {
+                "<button id=4 class='com.microsoft.emmx:id/overflow_button_bottom' description='Browser menu'>  </button>\n": "This component represents the browser menu, which is likely to contain options for accessing news and other features. Tapping on this button will open the browser menu, where the user can navigate to news-related options.",
+                "<div id=10 class='' > News and more </div>\n": "This component likely represents a section or button related to news. Tapping on this component may lead to a page or section where the user can access news articles or related content.",
+                "<div id=1 class='' description='Bottom toolbar,Go back,Go forward,Browser menu,Switch or close tabs,Share'> 1 </div>\n": "This component represents the bottom toolbar of the web browser, which often contains various navigation and menu options. It is worth exploring as it may contain a direct option for accessing news.",
+                "<div id=2 class='com.microsoft.emmx:id/edge_bottom_bar_share_button' description='Share'>  </div>\n": "Although this component is labeled as 'Share,' it is worth exploring as it may provide options for sharing news articles or content.",
+                "<div id=3 class='com.microsoft.emmx:id/tab_center_button' description='Switch or close tabs'> 1 </div>\n": "This component represents the tab navigation or management options. It is worth exploring as it may contain options for accessing news-related tabs or managing tabs related to news articles."
+            }
+        },
+        {
+            "Name": "Plan",
+            "Description": "This module is a plan module, planning the next action based on the selected components, whether click or edit",
+            "Output": {
+                "candidate1": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To access the browser menu and potentially find a news-related option."
+                },
+                "candidate2": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To access the 'News and more' section and potentially find news articles."
+                },
+                "candidate3": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "Switching or closing tabs is not relevant to finding news articles."
+                },
+                "candidate4": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "Sharing is not relevant to finding news articles."
+                },
+                "candidate5": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "Switching or closing tabs is not relevant to finding news articles."
+                }
+            }
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Output": {
+                "<button id=4 class='com.microsoft.emmx:id/overflow_button_bottom' description='Browser menu'>  </button>\n": 8.0,
+                "<div id=10 class='' > News and more </div>\n": 5.0,
+                "<div id=1 class='' description='Bottom toolbar,Go back,Go forward,Browser menu,Switch or close tabs,Share'> 1 </div>\n": 3.0,
+                "<div id=2 class='com.microsoft.emmx:id/edge_bottom_bar_share_button' description='Share'>  </div>\n": 6.0,
+                "<div id=3 class='com.microsoft.emmx:id/tab_center_button' description='Switch or close tabs'> 1 </div>\n": 2.0
+            },
+            "LLM_scorer_reason": [
+                "Reasoning: This option is labeled as 'Browser menu' and is likely to provide various options and features related to the web browser. It is possible that there may be a 'News' or 'News and more' option within the browser menu, which could provide access to the news articles or a news feed. Therefore, there is a high likelihood that this option will assist you in accomplishing your task.",
+                "Reasoning: This option does not have a specific description or label, but it mentions 'News and more'. Although it is not clear what exactly it refers to, there is a possibility that it could be related to news articles or a news feed. Therefore, there is a moderate likelihood that this option will assist you in finding the news.",
+                "Reasoning: This option represents the bottom toolbar of the web browser interface and has multiple functionalities mentioned such as 'Go back', 'Go forward', 'Browser menu', 'Switch or close tabs', and 'Share'. While there is a chance that the 'Go back' and 'Go forward' options may navigate to previous or next news pages, the other functionalities are unlikely to directly assist you in finding the news. Therefore, the likelihood of this option helping you find the news is relatively low.",
+                "Reasoning: This option represents the share button within the web browser interface. While it may not directly provide access to news articles, it is possible that it could offer the option to share news articles with others. Therefore, there is a moderate likelihood that this option will assist you in sharing news.",
+                "Reasoning: This option represents the tab switcher or tab close button within the web browser interface. Although it may be useful for managing open tabs, it is unlikely to directly assist you in finding the news. Therefore, the likelihood of this option helping you find the news is relatively low."
+            ]
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "status": "go on",
+                "reason": "The user has navigated to the browser menu of the Microsoft Edge interface. The task can potentially be accomplished using the features available on this page, such as the search function or 'News and more' option. However, these steps have not yet been taken."
+            }
+        }
+    ],
+    "@Page_description": "Interface of a web browser application",
+    "@Previous_Step": " -> Page:Web browser interface, possibly for Microsoft Edge -> Action: Click on <button id=4 class='com.microsoft.emmx:id/overflow_button_bottom' description='Browser menu'>  </button>\n -> Page:Interface of a web browser application",
+    "@Action": "Action: Click on <button id=4 class='com.microsoft.emmx:id/overflow_button_bottom' description='Browser menu'>  </button>\n",
+    "@Similar_task": [
+        "View trending topics on Weibo:['Discover', 'Hot Search', 'Tap on a topic you are interested in']",
+        "Follow a topic on Zhihu:['Tap the magnifying glass icon', 'Enter the topic name in the search bar', 'Tap the topic from the results', 'Tap the Follow button']",
+        "Post a new status with a picture on Weibo:['Home', '+', 'Photo', 'Select a picture', 'Next', 'Write your status', 'Send']",
+        "Answer a question on Zhihu:['Tap the question you want to answer', 'Tap the Answer button on the bottom center', 'Enter your answer in the text box', 'Add images or links if needed', 'Tap Publish']"
+    ],
+    "@Successive_Page": "<div id=1 class='' description='Bottom toolbar,Go back,Go forward,Browser menu,Switch or close tabs,Share'> 1\n    <div id=2 class='com.microsoft.emmx:id/edge_bottom_bar_share_button' description='Share'>  </div>\n\n    <div id=3 class='com.microsoft.emmx:id/tab_center_button' description='Switch or close tabs'> 1 </div>\n\n    <button id=4 class='com.microsoft.emmx:id/overflow_button_bottom' description='Browser menu'>  </button>\n\n    <div id=5 class='com.microsoft.emmx:id/edge_overflow_button' description='Browser menu'>  </div>\n\n    <div id=6 class='com.microsoft.emmx:id/forward_button' description='Go forward'>  </div>\n\n    <div id=7 class='com.microsoft.emmx:id/back_button' description='Go back'>  </div>\n </div>\n<div id=8 class='com.microsoft.emmx:id/edge_toolbar_change_ntp_button' description='New tab page layout settings'>  </div>\n<button id=9 class='com.microsoft.emmx:id/edge_account_image_view' description='Account menu'>  </button>\n<div id=10 class='' description='Destination items,Favorites, item 1 of 5,History, item 2 of 5,Collections, item 3 of 5,Downloads, item 4 of 5,Settings, item 5 of 5,Action items,Home, item 1 of 8,New InPrivate Tab, item 2 of 8,Send to devices, item 3 of 8,Add to favorites, item 4 of 8,View desktop site, item 5 of 8,Find on page, item 6 of 8,Read aloud, item 7 of 8,Font size, item 8 of 8'> Favorites\n    <p> History </p>\n    <p> Collections </p>\n    <p> Downloads </p>\n    <p> Settings </p>\n    <p> Home </p>\n    <p> New InPrivate Tab </p>\n    <p> Send to devices </p>\n    <p> Add to favorites </p>\n    <p> View desktop site </p>\n    <p> Find on page </p>\n    <p> Read aloud </p>\n    <p> Font size </p>\n    <div id=11 class='com.microsoft.emmx:id/action_item' description='Font size, item 8 of 8'> Font size </div>\n\n    <div id=12 class='com.microsoft.emmx:id/action_item' description='Read aloud, item 7 of 8'> Read aloud </div>\n\n    <div id=13 class='com.microsoft.emmx:id/action_item' description='Find on page, item 6 of 8'> Find on page </div>\n\n    <div id=14 class='com.microsoft.emmx:id/action_item' description='View desktop site, item 5 of 8'> View desktop site </div>\n\n    <div id=15 class='com.microsoft.emmx:id/action_item' description='Add to favorites, item 4 of 8'> Add to favorites </div>\n\n    <div id=16 class='com.microsoft.emmx:id/action_item' description='Send to devices, item 3 of 8'> Send to devices </div>\n\n    <div id=17 class='com.microsoft.emmx:id/action_item' description='New InPrivate Tab, item 2 of 8'> New InPrivate Tab </div>\n\n    <div id=18 class='com.microsoft.emmx:id/action_item' description='Home, item 1 of 8'> Home </div>\n\n    <div id=19 class='com.microsoft.emmx:id/destination_item' description='Settings, item 5 of 5'> Settings </div>\n\n    <div id=20 class='com.microsoft.emmx:id/destination_item' description='Downloads, item 4 of 5'> Downloads </div>\n\n    <div id=21 class='com.microsoft.emmx:id/destination_item' description='Collections, item 3 of 5'> Collections </div>\n\n    <div id=22 class='com.microsoft.emmx:id/destination_item' description='History, item 2 of 5'> History </div>\n\n    <div id=23 class='com.microsoft.emmx:id/destination_item' description='Favorites, item 1 of 5'> Favorites </div>\n </div>\n<div id=24 class='' > News and more </div>\n<div id=25 class='com.microsoft.emmx:id/voice_search_button' description='Start voice search'>  </div>\n<div id=26 class='com.microsoft.emmx:id/camera_search_button' description='Start camera search'>  </div>\n<div id=27 class='com.microsoft.emmx:id/search_box_text' > Search or type web address </div>\n<button id=28 class='com.microsoft.emmx:id/overflow_view_mask' >  </button>\n"
+}
