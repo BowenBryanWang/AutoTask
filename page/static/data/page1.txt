@@ -1,10 +1,14 @@
-<div id=1 class='' > Auto‑connect
-    <switch id=2 class='android:id/switch_widget' clickable> On </switch>
- </div>
-<div id=3 class='' > Network usage
-    <p> Detect automatically </p> </div>
-<div id=4 class='com.android.settings:id/button4' > Share </div>
-<div id=5 class='com.android.settings:id/button3' > Disconnect </div>
-<div id=6 class='com.android.settings:id/button1' > Forget </div>
-<div id=7 class='' description='Modify'>  </div>
-<div id=8 class='' description='Navigate up'>  </div>
+<button id=1 class='com.google.android.apps.nexuslauncher:id/search_container_hotseat' description='Search,Google app,Voice search,Google Lens'> 
+    <div id=2 class='com.google.android.apps.nexuslauncher:id/lens_icon' description='Google Lens'>  </div>
+
+    <button id=3 class='com.google.android.apps.nexuslauncher:id/mic_icon' description='Voice search'>  </button>
+
+    <button id=4 class='com.google.android.apps.nexuslauncher:id/g_icon' description='Google app'>  </button>
+ </button>
+<div id=5 class='' description='Camera'> Camera </div>
+<div id=6 class='' description='Chrome'> Chrome </div>
+<div id=7 class='' description='Play Store'> Play Store </div>
+<div id=8 class='' description='Messages'> Messages </div>
+<div id=9 class='' description='Phone'> Phone </div>
+<div id=10 class='' description='Settings'> Settings </div>
+<div id=11 class='' description='Instagram'> Instagram </div>
