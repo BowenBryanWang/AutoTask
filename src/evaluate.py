@@ -1,3 +1,4 @@
+import requests
 import spacy
 from sklearn.metrics.pairwise import cosine_similarity
 from loguru import logger
@@ -64,40 +65,48 @@ class Evaluate():
         self.judges = [LLM_Judge(self)]
         judge_scores = []
         weights = self.allocator.allocate()
-        self.score = np.zeros(len(self.model.candidate), dtype=np.float64)  # 初始化一个长度为5的全零数组作为总得分
+        self.score = np.zeros(len(self.model.candidate),
+                              dtype=np.float64)  # 初始化一个长度为5的全零数组作为总得分
 
         for judge in self.judges:
             judge_scores = np.array(judge.score(), dtype=np.float64)
-            print("judge_scores",judge_scores)
+            print("judge_scores", judge_scores)
             weighted_scores = judge_scores * weights[self.judges.index(judge)]
             self.score += weighted_scores
-        print("judge_scores",judge_scores)
-        self.model.node_selected = self.model.candidate_str[np.argmax(self.score)]
-        self.model.node_selected_action = self.model.candidate_action[np.argmax(self.score)]
-        self.model.node_selected_text = self.model.candidate_text[np.argmax(self.score)]
-        self.model.node_selected_id = int(self.model.node_selected.split("id=")[1].split(" ")[0])
-        print("node_selected",self.model.node_selected)
-        print("node_selected_id",self.model.node_selected_id)
-        current_action= process_action_info(self.model.node_selected_action, self.model.node_selected_text,self.model.node_selected)
+        print("judge_scores", judge_scores)
+        self.model.node_selected = self.model.candidate_str[np.argmax(
+            self.score)]
+        self.model.node_selected_action = self.model.candidate_action[np.argmax(
+            self.score)]
+        self.model.node_selected_text = self.model.candidate_text[np.argmax(
+            self.score)]
+        self.model.node_selected_id = int(
+            self.model.node_selected.split("id=")[1].split(" ")[0])
+        print("node_selected", self.model.node_selected)
+        print("node_selected_id", self.model.node_selected_id)
+        current_action = process_action_info(
+            self.model.node_selected_action, self.model.node_selected_text, self.model.node_selected)
         self.model.log_json["@Previous_Step"] = self.model.current_path_str
         self.model.current_path.append(current_action)
         self.model.log_json["@Action"] = current_action
         self.model.current_path_str = "->".join(self.model.current_path)
         log_info = {
-            "Name":"Evaluate",
-            "Description":"This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
-            "Output":{key:item for key,item in zip(self.model.candidate_str,self.score.tolist())},
-            "LLM_scorer_reason":self.judges[0].reason,
-            
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Output": {key: item for key, item in zip(self.model.candidate_str, self.score.tolist())},
+            "LLM_scorer_reason": self.judges[0].reason,
+
         }
         self.model.log_json["@Module"].append(log_info)
         return self.score.tolist()
 
-def process_action_info(action, params,node):
+
+def process_action_info(action, params, node):
     if action == "click":
-        return "Action: Click on {}".format(node) 
+        return "Action: Click on {}".format(node)
     elif action == "edit":
         return "Action: Edit {} with {}".format(node, params)
+
 
 class Judge():
     """
@@ -131,7 +140,7 @@ class LLM_Judge(Judge):
         self.result = []
         self.modified_result = None
         self.insert_prompt = None
-        
+
     def score(self):
         self.prompt = [
             {
@@ -144,39 +153,39 @@ Hint:
 1, Some of the components may be warpped by its parent node (such as <div><node/></div>), thus it inherits attibutes from parent node. So when analyzing it you should consider its relationship with its parent node's info.
                 """
             },
-#             {
-#                 "role": "user",
-#                 "content": """
-# Task: "Turn on Dark mode". 
-# Current path: "HomePage".
-# Options:
-# '''HTML
-#     <button id=5 class='com.whatsapp:id/menuitem_overflow' description='More options'> </button>
-#     <button id=10 class='com.whatsapp:id/contact_photo' description='Wang Bowen'> </button>
-#     <button id=2 class='com.whatsapp:id/home_tab_layout' description='Calls'> </button>
-#     <button id=3 class='com.whatsapp:id/home_tab_layout' description='Status'> </button>
-#     <button id=4 class='com.whatsapp:id/home_tab_layout' description='Community'> </button>
-# '''
-#                 """
-#             },
-#             {
-#                 "role": "assistant",
-#                 "content": 
-# """
-# Step 1: 
-# 1,Score: 8/10
-# Reasoning: This option is labeled as 'More options' and is likely to provide additional settings and customization options. Since Dark Mode is a common feature in most apps, it is reasonable to expect that the option to enable Dark Mode may be found within the 'More options' menu. Therefore, there is a high likelihood that this option will assist you in accomplishing your task.
-# 2: Score: 2/10
-# Reasoning: This option appears to be related to a contact photo and is unlikely to be directly associated with enabling Dark Mode. The description 'Wang Bowen' suggests that it is specific to a particular contact, rather than a system-wide setting. Therefore, the likelihood of this option assisting you in turning on Dark Mode is low.
-# 3: Score: 3/10
-# Reasoning: This option represents the 'Calls' tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description 'Calls' suggests that it is specific to the call-related functionality within WhatsApp. Therefore, the likelihood of this option helping you turn on Dark Mode is low.
-# 4: Score: 1/10
-# Reasoning: This option represents the 'Status' tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description 'Status' indicates that it is specific to the status-related functionality within WhatsApp. Therefore, the likelihood of this option assisting you in turning on Dark Mode is low.
-# 5: Score: 4/10
-# Reasoning: This option represents the 'Community' tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description 'Community' suggests that it is specific to community-related features, which are unlikely to include Dark Mode settings. Therefore, the likelihood of this option helping you turn on Dark Mode is low.
-# Step 2:  {"score": [8, 2, 3, 1, 4],"reason":["Reasoning: This option is labeled as 'More options' and is likely to provide additional settings and customization options. Since Dark Mode is a common feature in most apps, it is reasonable to expect that the option to enable Dark Mode may be found within the 'More options' menu. Therefore, there is a high likelihood that this option will assist you in accomplishing your task.","Reasoning: This option appears to be related to a contact photo and is unlikely to be directly associated with enabling Dark Mode. The description 'Wang Bowen' suggests that it is specific to a particular contact, rather than a system-wide setting. Therefore, the likelihood of this option assisting you in turning on Dark Mode is low.","Reasoning: This option represents the 'Calls' tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description 'Calls' suggests that it is specific to the call-related functionality within WhatsApp. Therefore, the likelihood of this option helping you turn on Dark Mode is low.","Reasoning: This option represents the 'Status' tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description 'Status' indicates that it is specific to the status-related functionality within WhatsApp. Therefore, the likelihood of this option assisting you in turning on Dark Mode is low.","Reasoning: This option represents the 'Community' tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description 'Community' suggests that it is specific to community-related features, which are unlikely to include Dark Mode settings. Therefore, the likelihood of this option helping you turn on Dark Mode is low."]}
-# """
-#             },
+            #             {
+            #                 "role": "user",
+            #                 "content": """
+            # Task: "Turn on Dark mode".
+            # Current path: "HomePage".
+            # Options:
+            # '''HTML
+            #     <button id=5 class='com.whatsapp:id/menuitem_overflow' description='More options'> </button>
+            #     <button id=10 class='com.whatsapp:id/contact_photo' description='Wang Bowen'> </button>
+            #     <button id=2 class='com.whatsapp:id/home_tab_layout' description='Calls'> </button>
+            #     <button id=3 class='com.whatsapp:id/home_tab_layout' description='Status'> </button>
+            #     <button id=4 class='com.whatsapp:id/home_tab_layout' description='Community'> </button>
+            # '''
+            #                 """
+            #             },
+            #             {
+            #                 "role": "assistant",
+            #                 "content":
+            # """
+            # Step 1:
+            # 1,Score: 8/10
+            # Reasoning: This option is labeled as 'More options' and is likely to provide additional settings and customization options. Since Dark Mode is a common feature in most apps, it is reasonable to expect that the option to enable Dark Mode may be found within the 'More options' menu. Therefore, there is a high likelihood that this option will assist you in accomplishing your task.
+            # 2: Score: 2/10
+            # Reasoning: This option appears to be related to a contact photo and is unlikely to be directly associated with enabling Dark Mode. The description 'Wang Bowen' suggests that it is specific to a particular contact, rather than a system-wide setting. Therefore, the likelihood of this option assisting you in turning on Dark Mode is low.
+            # 3: Score: 3/10
+            # Reasoning: This option represents the 'Calls' tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description 'Calls' suggests that it is specific to the call-related functionality within WhatsApp. Therefore, the likelihood of this option helping you turn on Dark Mode is low.
+            # 4: Score: 1/10
+            # Reasoning: This option represents the 'Status' tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description 'Status' indicates that it is specific to the status-related functionality within WhatsApp. Therefore, the likelihood of this option assisting you in turning on Dark Mode is low.
+            # 5: Score: 4/10
+            # Reasoning: This option represents the 'Community' tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description 'Community' suggests that it is specific to community-related features, which are unlikely to include Dark Mode settings. Therefore, the likelihood of this option helping you turn on Dark Mode is low.
+            # Step 2:  {"score": [8, 2, 3, 1, 4],"reason":["Reasoning: This option is labeled as 'More options' and is likely to provide additional settings and customization options. Since Dark Mode is a common feature in most apps, it is reasonable to expect that the option to enable Dark Mode may be found within the 'More options' menu. Therefore, there is a high likelihood that this option will assist you in accomplishing your task.","Reasoning: This option appears to be related to a contact photo and is unlikely to be directly associated with enabling Dark Mode. The description 'Wang Bowen' suggests that it is specific to a particular contact, rather than a system-wide setting. Therefore, the likelihood of this option assisting you in turning on Dark Mode is low.","Reasoning: This option represents the 'Calls' tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description 'Calls' suggests that it is specific to the call-related functionality within WhatsApp. Therefore, the likelihood of this option helping you turn on Dark Mode is low.","Reasoning: This option represents the 'Status' tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description 'Status' indicates that it is specific to the status-related functionality within WhatsApp. Therefore, the likelihood of this option assisting you in turning on Dark Mode is low.","Reasoning: This option represents the 'Community' tab in the home page, and it is unlikely to be directly related to enabling Dark Mode. The description 'Community' suggests that it is specific to community-related features, which are unlikely to include Dark Mode settings. Therefore, the likelihood of this option helping you turn on Dark Mode is low."]}
+            # """
+            #             },
             {
                 "role": "user",
                 "content": """
@@ -195,14 +204,15 @@ Options:
             raise Exception("Please call Select function first!")
         print(self.prompt)
         if self.modified_result:
-            response = self.modified_result
+            result = self.modified_result
         else:
-            response = openai.ChatCompletion.create(
-                model = "gpt-4",
-                messages = self.prompt,
-                temperature=1,
-            )
-        result = response.choices[0]["message"]["content"]
+            response = requests.post("http://166.111.139.119:12321/query", headers={
+                'content-type': 'application/json',
+            }, data=json.dumps({
+                'msg': self.prompt,
+                'temp': 1,
+            }))
+            result = json.loads(response.text)['response']
         self.resp = result
         print(result)
         result = json.loads(result[result.find("{"):result.find("}")+1])
@@ -240,16 +250,17 @@ Think step-by-step about the process of updating the [Evaluate Module] and outpu
                 Original Output of [Evaluate Module]:{}
                 """.format(self.resp)
         })
-        response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=self.update_prompt,
-            temperature=1,
-        )
-        response_text = response["choices"][0]["message"]["content"]
+        response = requests.post("http://166.111.139.119:12321/query", headers={
+            'content-type': 'application/json',
+        }, data=json.dumps({
+            'msg': self.update_prompt,
+            'temp': 1,
+        }))
+        response_text = json.loads(response.text)['response']
         print(response_text)
         resp = json.loads(
             response_text[response_text.find("{"):response_text.find("}")+1])
-        
+
         strategy = resp["strategy"]
         prompt = resp["prompt"]
         output = resp["output"]
@@ -260,8 +271,6 @@ Think step-by-step about the process of updating the [Evaluate Module] and outpu
             }
         else:
             self.modified_result = output
-
-
 
 
 class IG_Judge(Judge):
@@ -290,8 +299,6 @@ class IG_Judge(Judge):
             raise Exception("Please call Predict function first!")
         information_gains = []
 
-        
-
         # # 创建进程池
         # with ProcessPoolExecutor() as executor:
         #     # 并行计算信息增益
@@ -303,7 +310,7 @@ class IG_Judge(Judge):
         # information_gains = [future.result() for future in futures]
         for i in range(len(self.evaluate.model.candidate)):
             information_gains.append(self.calculate_information_gain(i, self.evaluate.model.screen.semantic_info_list[self.evaluate.model.candidate[i]-1], initial_entropy,
-                                       initial_probs, self.evaluate.model.predict_module))
+                                                                     initial_probs, self.evaluate.model.predict_module))
 
         # 归一化
         normalized_score = (information_gains - np.min(information_gains)) / \
@@ -311,10 +318,11 @@ class IG_Judge(Judge):
 
         return normalized_score
 
-    def calculate_information_gain(self,i, candidate, initial_entropy, initial_probs, predict_module):
-            conditional_entropy, _ = self.calculate_entropy(
-                predict_module.comp_json[candidate])
-            return (initial_entropy - conditional_entropy) * initial_probs[i]
+    def calculate_information_gain(self, i, candidate, initial_entropy, initial_probs, predict_module):
+        conditional_entropy, _ = self.calculate_entropy(
+            predict_module.comp_json[candidate])
+        return (initial_entropy - conditional_entropy) * initial_probs[i]
+
     def calculate_entropy(self, candidates):
         """
         计算熵

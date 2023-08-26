@@ -1,6 +1,7 @@
 import json
 import openai
 from loguru import logger
+import requests
 
 
 class Decide:
@@ -91,14 +92,15 @@ Completed Examples from Library:
 {}
             """.format(self.model.task, self.model.current_path_str, new_screen.semantic_info, [j+":"+"=>".join(k) for j, k in zip(self.model.similar_tasks, self.model.similar_traces)])
         }]
-        response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=self.prompt,
-            temperature=1,
-        )
+        response = requests.post("http://166.111.139.119:12321/query", headers={
+            'content-type': 'application/json',
+        }, data=json.dumps({
+            'msg': self.prompt,
+            'temp': 1,
+        }))
         self.model.log_json["@Similar_task"] = [j+":"+"=>".join(k) for j, k in zip(self.model.similar_tasks, self.model.similar_traces)]
         # 提取回答当中的json部分
-        answer = response["choices"][0]["message"]["content"]
+        answer = json.loads(response.text)['response']
         answer = json.loads(answer[answer.find("{"):answer.find("}")+1])
 
         log_info = {

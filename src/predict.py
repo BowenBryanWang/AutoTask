@@ -246,7 +246,7 @@ Think step-by-step about the process of updating the [Predict Module] and output
                 """.format(self.comp_json)
         })
         response = openai.ChatCompletion.create(
-            model="gpt-4",
+            model="gpt-3.5-turbo",
             messages=self.update_prompt,
             temperature=1,
         )

@@ -2,6 +2,7 @@ import json
 import re
 import openai
 from loguru import logger
+import requests
 
 
 class Feedback:
@@ -109,11 +110,12 @@ Ensure your feedback is practical and specific."""
                 Modules: {}
                 """.format(self.info["@Module"])
         })
-        response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=self.prompt,
-            temperature=1,
-        )
+        response = requests.post("http://166.111.139.119:12321/query", headers={
+            'content-type': 'application/json',
+        }, data=json.dumps({
+            'msg': self.prompt,
+            'temp': 1,
+        }))
         match = re.search(r'{.*?}', response.choices[0].message.content)
         if match:
             json_str = match.group(0)
@@ -204,7 +206,7 @@ Ensure your feedback is practical and specific."""
 #     },
 # ]
 # response = openai.ChatCompletion.create(
-#     model="gpt-4",
+#     model="gpt-3.5-turbo",
 #     messages=prompt,
 #     temperature=1,
 # )

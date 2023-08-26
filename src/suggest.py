@@ -115,7 +115,7 @@ Sample output:{
             if self.insert_prompt:
                 self.prompt_select.append(self.insert_prompt)
             response = openai.ChatCompletion.create(
-                model="gpt-4",
+                model="gpt-3.5-turbo",
                 messages=self.prompt_select,
                 temperature=0,
             )
@@ -168,7 +168,7 @@ Think step-by-step about the process of updating the [Select Module] and output 
                 """.format(self.resp)
         })
         response = openai.ChatCompletion.create(
-            model="gpt-4",
+            model="gpt-3.5-turbo",
             messages=self.update_prompt,
             temperature=1,
         )

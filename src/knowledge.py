@@ -9,7 +9,7 @@ from langchain.vectorstores import FAISS
 from langchain.document_loaders import TextLoader
 from langchain.document_loaders.csv_loader import CSVLoader
 
-
+OPENAI_KEY = os.environ.get("OPENAI_KEY")
 class KnowledgeBase:
     def __init__(self, database):
         self.database = database
@@ -33,7 +33,7 @@ class PageJump_KB(KnowledgeBase):
             self.origin_data[i].page_content = self.data[i].page_content.split("Origin:")[1].split("Edge:")[0]
 
         self.embeddings = OpenAIEmbeddings(
-            client="GUI_LLM", openai_api_key="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")
+            client="GUI_LLM", openai_api_key=OPENAI_KEY)
 
         self.db = FAISS.from_documents(self.edge_data, self.embeddings)
         self.retriever = self.db.as_retriever(search_type="similarity_score_threshold", search_kwargs={"score_threshold": .9})
@@ -68,7 +68,7 @@ class Task_KB(KnowledgeBase):
             self.task_json = json.load(f)
         self.tasks = self.task_json.keys()
         self.embeddings = OpenAIEmbeddings(
-            client="GUI_LLM", openai_api_key="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")
+            client="GUI_LLM", openai_api_key=OPENAI_KEY)
         self.db = FAISS.from_texts(self.tasks, self.embeddings)
 
     def update_datas(self, new_task):
