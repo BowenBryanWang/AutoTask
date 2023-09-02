@@ -1,0 +1,17 @@
+<div id=1 class='' >  </div>
+<div id=2 class='' description='Miscellaneous'> Miscellaneous
+    <switch id=3 class='com.android.settings:id/switchWidget' clickable> On </switch>
+ </div>
+<div id=4 class='' description='Mail'> Mail
+    <p> About 1 notification per day </p>
+    <switch id=5 class='com.android.settings:id/switchWidget' clickable> On </switch>
+ </div>
+<button id=6 class='' > All Gmail notifications
+    <div id=7 class='com.android.settings:id/main_switch_bar' > All Gmail notifications </div>
+
+    <switch id=8 class='android:id/switch_widget' clickable> On </switch>
+ </button>
+<button id=9 class='' > Gmail
+    <div id=10 class='com.android.settings:id/entity_header_content' > Gmail </div>
+ </button>
+<div id=11 class='' description='Navigate up'>  </div>

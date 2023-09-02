@@ -1,16 +1,13 @@
 import copy
 import random
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.vectorstores import FAISS
-import csv
 import os
+import re
 import openai
-from loguru import logger
 import json
-from langchain.document_loaders.csv_loader import CSVLoader
 import tqdm
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+openai.api_key = os.getenv('OPENAI_KEY', default="sk-dXUeoKXznBmiycgc06831a96F6Be42149e9aD25eDfA15e8c")
+openai.api_base = "https://api.ai-yyds.com/v1"
 
 
 def add_value_to_html_tag(key: str, value: str) -> str:
@@ -69,7 +66,7 @@ class Predict():
         Predicts the possible UI components that appear when a specific UI element is clicked.
         """
         self.current_comp = self.model.screen.semantic_info_list
-        if len(self.model.screen.semantic_info_list) > 20:
+        if len(self.model.screen.semantic_info_list) > 25:
             self.model.extended_info = self.model.screen.semantic_info_list
             self.model.page_description = "Too many components"
             self.model.log_json["@Page_description"] = self.model.page_description
@@ -110,7 +107,8 @@ class Predict():
                         res = res[0].split("\\n")
                         print(len(res))
                         if len(res) >= 4:
-                            res = random.sample(res, 4)
+                            res = random.sample(res, 5)
+                        res = [re.sub(r'id=\d+', '', s) for s in res]
                         self.next_comp[i] = res
                         self.comp_json[self.model.screen.semantic_info_list[i]] = res
                         predict_node[i] += "/* Don't predict this, output [] */"
@@ -129,7 +127,7 @@ i.e. (<div> Voice Search</div>:" a voice input page for searching").
 3. Output the predictions in a JSON formated like:
 {
   "Page": "..."(One-sentence description of the current page),
-  "id=x": "..."(Predicted description for the successive UI page with id=x),
+  "id_x": "..."(Predicted description for the successive UI page with id=x),
   ......(x is the id of the current UI component,you should iterate over all the UI components)
 }
         """
@@ -147,9 +145,9 @@ i.e. (<div> Voice Search</div>:" a voice input page for searching").
                         "content": """
 {
     "Page": "Main interface of the WhatsApp application",
-    "id=1": "Display a new page where you can view the status updates of contacts",
-    "id=2": "Mean to add a new status update",
-    "id=3": "Lead to a page with group chats or a community forum.",
+    "id_1": "Display a new page where you can view the status updates of contacts",
+    "id_2": "Mean to add a new status update",
+    "id_3": "Lead to a page with group chats or a community forum.",
 }
                             """
                     },
@@ -164,7 +162,7 @@ i.e. (<div> Voice Search</div>:" a voice input page for searching").
                     self.prompt.append(self.insert_prompt)
                 print(self.prompt[-1])
                 response = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo",
+                    model="gpt-4",
                     messages=self.prompt,
                     temperature=0,
                 )
@@ -179,8 +177,8 @@ i.e. (<div> Voice Search</div>:" a voice input page for searching").
                 self.model.current_path.append("Page:"+self.model.page_description)
                 self.model.current_path_str = " -> ".join(self.model.current_path)
                 for key in response_text.keys():
-                    if "id=" in key:
-                        index = int(key.split("=")[1])-1
+                    if "id_" in key:
+                        index = int(key.split("_")[1])-1
                         if response_text[key] != []:
                             self.next_comp[index] = response_text[key]
                             self.comp_json[self.model.screen.semantic_info_list[index]

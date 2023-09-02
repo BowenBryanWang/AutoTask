@@ -1,9 +1,8 @@
 import os
 import openai
-from loguru import logger
 import json
-import openai
-openai.api_key = os.getenv("OPENAI_API_KEY")
+openai.api_key = os.getenv('OPENAI_KEY', default="sk-dXUeoKXznBmiycgc06831a96F6Be42149e9aD25eDfA15e8c")
+openai.api_base = "https://api.ai-yyds.com/v1"
 
 
 class Suggest:
@@ -36,63 +35,41 @@ Sample output:{
 }
                 """
             },
-            # {
-            #     "role": "user",
-            #     "content": """
-            #         Intention:'send a message \"Hello\" to Bowen'
-            #         Current path: -> Main interface of the WhatsApp application
-            #         Components:
-            #         '''HTML
-            #         <p id=1 class='com.whatsapp:id/fab' description='New chat'></p>
-            #         <button id=2 class='com.whatsapp:id/home_tab_layout' description='Calls'> Calls
-            #             /* Below are predicted after-click components */
-            #             <button description='Bowen'> </button>
-            #         </button>
-            #         <button id=3 class='com.whatsapp:id/home_tab_layout' description='Status'>Status
-            #             /* Below are predicted after-click components */
-            #             <p description='My Status'> </p>
-            #             <button description='Add Status'> </button>
-            #         </button>
-            #         <button id=4 class='com.whatsapp:id/home_tab_layout' description='Community'>
-            #             /* Below are predicted after-click components */
-            #             <button description='Members'> </button>
-            #             <button description='Add new Member'> </button>
-            #             <p description='Connect'> </p>
-            #         </button>
-            #         <button id=5 class='com.whatsapp:id/menuitem_overflow' description='More options'>
-            #             /* Below are predicted after-click components */
-            #             <button description='Settings'> </button>
-            #             <button description='WhatsApp Web'> </button>
-            #         </button>
-            #         <p id=6 class='com.whatsapp:id/menuitem_search' description='Search'></p>
-            #         <p id=7 class='com.whatsapp:id/menuitem_camera' description='Camera'></p>
-            #         <p id=8 class='' description='end-to-end encrypted'></p>
-            #         <button id=9 class='com.whatsapp:id/contact_photo' description='Yellow'></button>
-            #         <button id=10 class='com.whatsapp:id/contact_photo' description='Wang Bowen'></button>
-            #         '''
-            #     """
-            # },
-            # {
-            #     "role": "assistant",
-            #     "content": """
-            #     <button id=5 class='com.whatsapp:id/menuitem_overflow' description='More options'>: This component represents the overflow menu, which often contains additional settings and options. It's a common place to find settings related to appearance and themes, including Dark mode.
-            #     <button id=10 class='com.whatsapp:id/contact_photo' description='Wang Bowen'>: This component likely represents a contact or profile photo. Tapping on a contact or profile photo often reveals additional options and settings, which may include Dark mode or appearance-related settings.
-            #     <button id=2 class='com.whatsapp:id/home_tab_layout' description='Calls'>: While this component represents the "Calls" tab, it is worth exploring as some apps provide accessibility options, including Dark mode, within the tab navigation.
-            #     <button id=3 class='com.whatsapp:id/home_tab_layout' description='Status'>: Similar to the "Calls" tab, the "Status" tab might contain accessibility or appearance-related options, including Dark mode.
-            #     <button id=4 class='com.whatsapp:id/home_tab_layout' description='Community'>: Although the description is empty for this component, it is worth exploring as it could potentially lead to settings related to appearance or themes, including Dark mode.
-            #     So the top five most possible components to the user's intent are:
-            #     {
-            #         "result": [5,10,2,3,4],
-            #         "reason":[
-            #         "This component represents the overflow menu, which often contains additional settings and options. It's a common place to find settings related to appearance and themes, including Dark mode.",
-            #         "This component likely represents a contact or profile photo. Tapping on a contact or profile photo often reveals additional options and settings, which may include Dark mode or appearance-related settings.",
-            #         "While this component represents the 'Calls' tab, it is worth exploring as some apps provide accessibility options, including Dark mode, within the tab navigation.",
-            #         "Similar to the 'Calls' tab, the 'Status' tab might contain accessibility or appearance-related options, including Dark mode.",
-            #         "Although the description is empty for this component, it is worth exploring as it could potentially lead to settings related to appearance or themes, including Dark mode."
-            #         ]
-            #     }
-            #     """
-            # },
+            {
+                "role": "user",
+                "content": """
+                    Intention:'send a message \"Hello\" to Bowen'
+                    Current path: -> Main interface of the WhatsApp application
+                    Components:
+                    '''HTML
+                    <p id=1 class='com.whatsapp:id/fab' description='New chat'></p>
+                    <button id=2 class='com.whatsapp:id/home_tab_layout' description='Calls'> Calls</button>
+                    <button id=3 class='com.whatsapp:id/home_tab_layout' description='Status'>Status</button>
+                    <button id=4 class='com.whatsapp:id/home_tab_layout' description='Community'></button>
+                    <button id=5 class='com.whatsapp:id/menuitem_overflow' description='More options'></button>
+                    <p id=6 class='com.whatsapp:id/menuitem_search' description='Search'></p>
+                    <p id=7 class='com.whatsapp:id/menuitem_camera' description='Camera'></p>
+                    <p id=8 class='' description='end-to-end encrypted'></p>
+                    <button id=9 class='com.whatsapp:id/contact_photo' description='Yellow'></button>
+                    <button id=10 class='com.whatsapp:id/contact_photo' description='Wang Bowen'></button>
+                    '''
+                """
+            },
+            {
+                "role": "assistant",
+                "content": """
+                {
+                    "result": [5,10,2,3,4],
+                    "reason":[
+                    "This component represents the overflow menu, which often contains additional settings and options. It's a common place to find settings related to appearance and themes, including Dark mode.",
+                    "This component likely represents a contact or profile photo. Tapping on a contact or profile photo often reveals additional options and settings, which may include Dark mode or appearance-related settings.",
+                    "While this component represents the 'Calls' tab, it is worth exploring as some apps provide accessibility options, including Dark mode, within the tab navigation.",
+                    "Similar to the 'Calls' tab, the 'Status' tab might contain accessibility or appearance-related options, including Dark mode.",
+                    "Although the description is empty for this component, it is worth exploring as it could potentially lead to settings related to appearance or themes, including Dark mode."
+                    ]
+                }
+                """
+            },
             {
                 "role": "user",
                 "content": """
@@ -115,9 +92,9 @@ Sample output:{
             if self.insert_prompt:
                 self.prompt_select.append(self.insert_prompt)
             response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
+                model="gpt-4",
                 messages=self.prompt_select,
-                temperature=0,
+                temperature=1,
             )
             response_text = response["choices"][0]["message"]["content"]
         print(response_text)
@@ -126,12 +103,17 @@ Sample output:{
             response_text[response_text.find("{"):response_text.find("}")+1])
         self.model.candidate = candidate["result"]
         self.model.candidate_reason = candidate["reason"]
-        self.model.candidate_str = [
-            self.model.screen.semantic_info_list[i-1] for i in self.model.candidate]
+        self.model.candidate_str = [self.model.screen.semantic_info_list[i-1] if self.model.screen.semantic_info_list[i-1] else "<None exist>" for i in self.model.candidate]
+        try:
+            self.model.candidate_str.remove("<None exist>")
+        except:
+            pass
         print(self.model.candidate_str)
         result_json={}
         for i in range(len(self.model.candidate)):
-            result_json[self.model.candidate_str[i]]=self.model.candidate_reason[i]
+            key = self.model.candidate_str[i]
+            value = self.model.candidate_reason[i] if self.model.candidate_reason[i] else ""
+            result_json[key] = value
         log_info = {
             "Name":"Select",
             "Description":"This module is a selection model, selecting the 5 possible component without relativity ranking to be acted on catering to user's intent",
@@ -212,43 +194,43 @@ Output a JSON object structured like
 } 
 including each candidate although which may be irrelevant"""
             },
-#             {
-#                 "role": "user",
-#                 "content": """
-#                 Task: send a message "Hello" to Bowen
-# Current Page : Whatsapp homepage:
-# Candidates:
-# ["<button id=8 class='com.whatsapp:id/contact_photo' description='Wang Bowen'> </button>", "<p id=5 class='com.whatsapp:id/menuitem_search' description='Search'> </p>", "<button id=1 class='com.whatsapp:id/home_tab_layout' description='Calls'> </button>", "<button id=2 class='com.whatsapp:id/home_tab_layout' description='Status'> </button>", "<button id=3 class='com.whatsapp:id/home_tab_layout' description='Community'> </button>"]"""
-#             },
-#             {
-#                 "role": "assistant",
-#                 "content": """{
-#   "candidate1": {
-#     "action": "click",
-#     "text": null,
-#     "reason": "To open Bowen's chat window to send a message."
-#   },
-#   "candidate2": {
-#     "action": "edit",
-#     "text": "Bowen",
-#     "reason": "To filter contacts and find Bowen's chat to send a message."
-#   },
-#   "candidate3": {
-#     "action": "click",
-#     "text": null,
-#     "reason": "Switching to the 'Calls' tab is not relevant to sending a message."
-#   },
-#   "candidate4": {
-#     "action": "click",
-#     "text": null,
-#     "reason": "Switching to the 'Status' tab is not relevant to sending a message."
-#   },
-#   "candidate5": {
-#     "action": "click",
-#     "text": null,
-#     "reason": "Switching to the 'Community' tab is not relevant to sending a message."
-#   }
-# }"""},
+            {
+                "role": "user",
+                "content": """
+                Task: send a message "Hello" to Bowen
+Current Page : Whatsapp homepage:
+Candidates:
+["<button id=8 class='com.whatsapp:id/contact_photo' description='Wang Bowen'> </button>", "<p id=5 class='com.whatsapp:id/menuitem_search' description='Search'> </p>", "<button id=1 class='com.whatsapp:id/home_tab_layout' description='Calls'> </button>", "<button id=2 class='com.whatsapp:id/home_tab_layout' description='Status'> </button>", "<button id=3 class='com.whatsapp:id/home_tab_layout' description='Community'> </button>"]"""
+            },
+            {
+                "role": "assistant",
+                "content": """{
+  "candidate1": {
+    "action": "click",
+    "text": null,
+    "reason": "To open Bowen's chat window to send a message."
+  },
+  "candidate2": {
+    "action": "edit",
+    "text": "Bowen",
+    "reason": "To filter contacts and find Bowen's chat to send a message."
+  },
+  "candidate3": {
+    "action": "click",
+    "text": null,
+    "reason": "Switching to the 'Calls' tab is not relevant to sending a message."
+  },
+  "candidate4": {
+    "action": "click",
+    "text": null,
+    "reason": "Switching to the 'Status' tab is not relevant to sending a message."
+  },
+  "candidate5": {
+    "action": "click",
+    "text": null,
+    "reason": "Switching to the 'Community' tab is not relevant to sending a message."
+  }
+}"""},
             {
                 "role": "user",
                 "content": """
@@ -278,14 +260,14 @@ Candidates:{}""".format(self.model.task, self.model.page_description, self.model
             "Output": response
         }
         self.model.log_json["@Module"].append(log_info)
-        self.model.candidate_action = [None]*5
-        self.model.candidate_text = [None]*5
+        self.model.candidate_action = [None]*len(self.model.candidate)
+        self.model.candidate_text = [None]*len(self.model.candidate)
         # self.model.candidate_reason = [None]*5
-        for i in range(1, 6):
-            candidate = response.get("candidate{}".format(i))
+        for i in range(len(self.model.candidate)):
+            candidate = response.get("candidate{}".format(i+1))
             if candidate:
-                self.model.candidate_action[i - 1] = candidate.get("action") if candidate.get(
+                self.model.candidate_action[i] = candidate.get("action") if candidate.get(
                     "action") else ""
-                self.model.candidate_text[i - 1] = candidate.get("text") if candidate.get(
+                self.model.candidate_text[i] = candidate.get("text") if candidate.get(
                     "text") else ""
         

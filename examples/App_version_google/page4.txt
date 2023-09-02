@@ -1,0 +1,8 @@
+<div id=1 class='' > Third Party Notices </div>
+<div id=2 class='' > Legal notices </div>
+<div id=3 class='' > Privacy policy </div>
+<div id=4 class='' > Terms of service </div>
+<div id=5 class='' > Version
+    <p> ‎14.3.13.29.arm64 </p> </div>
+<div id=6 class='com.google.android.googlequicksearchbox:id/googleapp_settings_search' description='Search'>  </div>
+<div id=7 class='' description='Navigate up'>  </div>

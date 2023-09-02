@@ -1,0 +1,105 @@
+{
+    "@User_intent": "send a google drive attachment in the gmail app",
+    "@Page_components": [
+        "<div id=1 class='com.google.android.gm:id/composearea_tap_trap_bottom' >  </div>\n",
+        "<div id=2 class='com.google.android.gm:id/subject' > Subject </div>\n",
+        "<button id=3 class='com.google.android.gm:id/add_cc_bcc' description='Add Cc/Bcc'>  </button>\n",
+        "<div id=4 class='' >  </div>\n",
+        "<div id=5 class='com.google.android.gm:id/peoplekit_autocomplete_to_prefix' > To </div>\n",
+        "<div id=6 class='com.google.android.gm:id/from_label' description='From'> From </div>\n",
+        "<button id=7 class='' description='More options'>  </button>\n",
+        "<div id=8 class='com.google.android.gm:id/send' description='Send'>  </div>\n",
+        "<div id=9 class='com.google.android.gm:id/add_attachment' description='Attach file'>  </div>\n",
+        "<div id=10 class='' description='Navigate up'>  </div>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "Output": {
+                "<div id=1 class='com.google.android.gm:id/composearea_tap_trap_bottom' >  </div>\n": "A clickable area, possibly to expand the compose area",
+                "<div id=2 class='com.google.android.gm:id/subject' > Subject </div>\n": "Input field for the email subject",
+                "<button id=3 class='com.google.android.gm:id/add_cc_bcc' description='Add Cc/Bcc'>  </button>\n": "Button to add Cc/Bcc recipients",
+                "<div id=4 class='' >  </div>\n": "Unknown UI component, possibly a text input field for the email body",
+                "<div id=5 class='com.google.android.gm:id/peoplekit_autocomplete_to_prefix' > To </div>\n": "Field to input the email recipient(s)",
+                "<div id=6 class='com.google.android.gm:id/from_label' description='From'> From </div>\n": "Display of the sender's email address",
+                "<button id=7 class='' description='More options'>  </button>\n": "Button for more options, possibly formatting or email settings",
+                "<div id=8 class='com.google.android.gm:id/send' description='Send'>  </div>\n": "Button to send the composed email",
+                "<div id=9 class='com.google.android.gm:id/add_attachment' description='Attach file'>  </div>\n": "Button to attach files to the email",
+                "<div id=10 class='' description='Navigate up'>  </div>\n": "Button to navigate back to the previous page or close the compose interface"
+            }
+        },
+        {
+            "Name": "Select",
+            "Description": "This module is a selection model, selecting the 5 possible component without relativity ranking to be acted on catering to user's intent",
+            "Note": "This individual module only select 5 highly related components,without ranking them,and without analyzing the correctness of the components aligning with user's content ",
+            "Output": {
+                "<div id=1 class='com.google.android.gm:id/composearea_tap_trap_bottom' >  </div>\n": "This component represents a clickable area that could expand the compose area. User might need this to select the attachment option.",
+                "<div id=5 class='com.google.android.gm:id/peoplekit_autocomplete_to_prefix' > To </div>\n": "This component is for the recipient's field. User would have to add a recipient before sending the email.",
+                "<button id=7 class='' description='More options'>  </button>\n": "This component is for accessing more options, potentially where the option to add an attachment from Google Drive could be found.",
+                "<div id=9 class='com.google.android.gm:id/add_attachment' description='Attach file'>  </div>\n": "This button is to attach files to the email. As the user wants to send a Google Drive attachment, this would likely be necessary.",
+                "<div id=8 class='com.google.android.gm:id/send' description='Send'>  </div>\n": "This is the send button. Once the user has selected the Google Drive file, written the email, and added a recipient, they would have to press this button to send the email."
+            }
+        },
+        {
+            "Name": "Plan",
+            "Description": "This module is a plan module, planning the next action based on the selected components, whether click or edit",
+            "Output": {
+                "candidate1": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To activate the email composition area."
+                },
+                "candidate2": {
+                    "action": "edit",
+                    "text": "Bowen",
+                    "reason": "To enter the recipient's email address."
+                },
+                "candidate3": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To access more options, but it is not directly related to attaching a file."
+                },
+                "candidate4": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To attach a file from Google Drive."
+                },
+                "candidate5": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To send the email."
+                }
+            }
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Output": {
+                "<div id=1 class='com.google.android.gm:id/composearea_tap_trap_bottom' >  </div>\n": 1,
+                "<div id=5 class='com.google.android.gm:id/peoplekit_autocomplete_to_prefix' > To </div>\n": 2,
+                "<button id=7 class='' description='More options'>  </button>\n": 3,
+                "<div id=9 class='com.google.android.gm:id/add_attachment' description='Attach file'>  </div>\n": 5,
+                "<div id=8 class='com.google.android.gm:id/send' description='Send'>  </div>\n": 2
+            }
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "status": "go on",
+                "reason": "The user has navigated to the 'Attach file' option which is a step towards accomplishing the task of sending a Google Drive attachment. However, the task will be completed once the user selects 'Insert from Drive' and chooses a file attachment, which has not yet been done. Hence, further actions are needed."
+            }
+        }
+    ],
+    "@Page_description": "Email composition interface in Gmail application",
+    "@Previous_Step": " -> Page:Main interface of the Gmail application -> Action: Click on <div id=2 class='com.google.android.gm:id/compose_button' description='Compose'> Compose </div>\n -> Page:Email composition interface in Gmail application",
+    "@Action": "Action: Click on <div id=9 class='com.google.android.gm:id/add_attachment' description='Attach file'>  </div>\n",
+    "@Similar_task": [
+        "Share a TikTok video to WhatsApp:['Tap the video you want to share', 'Tap the arrow icon', 'Tap the WhatsApp icon', 'Choose a contact or group', 'Tap Send']",
+        "Save a TikTok video to my phone:['Tap the video you want to save', 'Tap the arrow icon', 'Tap Save video']",
+        "Scan a QR code to add a new contact on WeChat:['Contacts', '+', 'Scan QR Code', 'Align the QR code within the frame', 'Confirm to add']",
+        "Backup my WeChat chat history to my computer:['Me', 'Settings', 'Chat', 'Chat Backup', 'Back Up', 'Scan the QR code on your computer\ufffd\ufffds WeChat app']"
+    ],
+    "@Successive_Page": "<div id=1 class='' > Insert from Drive </div>\n<div id=2 class='' > Attach file </div>\n"
+}

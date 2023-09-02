@@ -2,7 +2,10 @@ import json
 import openai
 from loguru import logger
 import requests
+import os
 
+openai.api_key = os.getenv('OPENAI_KEY', default="sk-dXUeoKXznBmiycgc06831a96F6Be42149e9aD25eDfA15e8c")
+openai.api_base = "https://api.ai-yyds.com/v1"
 
 class Decide:
     def __init__(self, model) -> None:
@@ -21,6 +24,8 @@ class Decide:
         Returns:
             str: The status of the decision made by the model.
         """
+        with open("./src/KB/pagejump.csv", "a") as f:
+            f.write("{},{},{}\n".format(self.model.screen.semantic_info_str.replace('\n', '').replace(",",";;"),self.model.current_path[-1].replace('\n', '').replace(",",";;"), new_screen.semantic_info_str.replace('\n', '').replace(",",";;")))
         print("___________________________decide___________________________")
         self.prompt = [{
             "role": "system",
@@ -92,15 +97,14 @@ Completed Examples from Library:
 {}
             """.format(self.model.task, self.model.current_path_str, new_screen.semantic_info, [j+":"+"=>".join(k) for j, k in zip(self.model.similar_tasks, self.model.similar_traces)])
         }]
-        response = requests.post("http://166.111.139.119:12321/query", headers={
-            'content-type': 'application/json',
-        }, data=json.dumps({
-            'msg': self.prompt,
-            'temp': 1,
-        }))
+        response = openai.ChatCompletion.create(
+            model = "gpt-4",
+            messages = self.prompt,
+            temperature=1,
+        )
         self.model.log_json["@Similar_task"] = [j+":"+"=>".join(k) for j, k in zip(self.model.similar_tasks, self.model.similar_traces)]
         # 提取回答当中的json部分
-        answer = json.loads(response.text)['response']
+        answer = response.choices[0]["message"]["content"]
         answer = json.loads(answer[answer.find("{"):answer.find("}")+1])
 
         log_info = {
@@ -114,4 +118,12 @@ Completed Examples from Library:
             print("· log{} generated".format(self.model.index))
             print(self.model.log_json)
             json.dump(self.model.log_json, f, indent=4)
+        if answer["status"] == "wrong":
+            with open("./src/KB/errors.csv", "w") as f:
+                f.write("{},{},{},{}".format(str(self.model.task), self.model.current_path_str.replace("\n","").replace(",","::"), new_screen.semantic_info_str.replace("\n","").replace(",","::"),answer["reason"].replace("\n","").replace(","," ")))
+        if answer["status"] == "completed":
+            # task.json
+            with open("./src/KB/task.json", "r") as f:
+                task_json = json.load(f)
+                task_json[self.model.task] = self.model.current_path_str
         return answer["status"]

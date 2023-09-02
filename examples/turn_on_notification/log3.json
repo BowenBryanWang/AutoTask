@@ -1,0 +1,105 @@
+{
+    "@User_intent": "turn on notifications settings in the gmail app",
+    "@Page_components": [
+        "<div id=1 class='' description='Navigate up'>  </div>\n",
+        "<div id=2 class='' >  </div>\n",
+        "<div id=3 class='' > Screen time\n    <p> 25 minutes today </p> </div>\n",
+        "<div id=4 class='' > Mobile data & Wi\u2011Fi\n    <p> 2.63 MB used since Aug 5 </p> </div>\n",
+        "<div id=5 class='' > Storage & cache\n    <p> 31.83 MB used in internal storage </p> </div>\n",
+        "<div id=6 class='' > Permissions\n    <p> \u00a0 </p> </div>\n",
+        "<div id=7 class='' > Notifications\n    <p> About 1 notification per day </p> </div>\n",
+        "<div id=8 class='' > Force stop </div>\n",
+        "<div id=9 class='' > Disable </div>\n",
+        "<div id=10 class='' > Open </div>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "Output": {
+                "<div id=1 class='' description='Navigate up'>  </div>\n": "Navigate back to the previous page",
+                "<div id=2 class='' >  </div>\n": "Unknown component without any description",
+                "<div id=3 class='' > Screen time\n    <p> 25 minutes today </p> </div>\n": "Display the screen time information, showing that 25 minutes have been used today",
+                "<div id=4 class='' > Mobile data & Wi\u2011Fi\n    <p> 2.63 MB used since Aug 5 </p> </div>\n": "Display the mobile data and Wi-Fi usage information, showing that 2.63 MB have been used since August 5",
+                "<div id=5 class='' > Storage & cache\n    <p> 31.83 MB used in internal storage </p> </div>\n": "Display the storage and cache information, showing that 31.83 MB have been used in internal storage",
+                "<div id=6 class='' > Permissions\n    <p> \u00a0 </p> </div>\n": "Display the permissions information",
+                "<div id=7 class='' > Notifications\n    <p> About 1 notification per day </p> </div>\n": "Display the notifications information, showing that there is about 1 notification per day",
+                "<div id=8 class='' > Force stop </div>\n": "Force stop the application",
+                "<div id=9 class='' > Disable </div>\n": "Disable the application",
+                "<div id=10 class='' > Open </div>\n": "Open the application"
+            }
+        },
+        {
+            "Name": "Select",
+            "Description": "This module is a selection model, selecting the 5 possible component without relativity ranking to be acted on catering to user's intent",
+            "Note": "This individual module only select 5 highly related components,without ranking them,and without analyzing the correctness of the components aligning with user's content ",
+            "Output": {
+                "<div id=1 class='' description='Navigate up'>  </div>\n": "The 'Navigate up' component could lead the user back to a previous page where notifications settings might be found.",
+                "<div id=6 class='' > Permissions\n    <p> \u00a0 </p> </div>\n": "The 'Permissions' component could include notification permissions which need to be enabled for receiving notifications.",
+                "<div id=7 class='' > Notifications\n    <p> About 1 notification per day </p> </div>\n": "The 'Notifications' component is directly related to the user's intention, it could lead to the notifications settings of Gmail.",
+                "<div id=9 class='' > Disable </div>\n": "Though not directly related, the 'Disable' component could potentially contain options or settings the user needs to disable before they can access notification settings.",
+                "<div id=10 class='' > Open </div>\n": "The 'Open' component could potentially open more settings or options related to notifications."
+            }
+        },
+        {
+            "Name": "Plan",
+            "Description": "This module is a plan module, planning the next action based on the selected components, whether click or edit",
+            "Output": {
+                "candidate1": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To navigate back to the previous page."
+                },
+                "candidate2": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To access the permissions settings."
+                },
+                "candidate3": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To access the notifications settings."
+                },
+                "candidate4": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To disable notifications."
+                },
+                "candidate5": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To open the notifications settings."
+                }
+            }
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Output": {
+                "<div id=1 class='' description='Navigate up'>  </div>\n": 8,
+                "<div id=6 class='' > Permissions\n    <p> \u00a0 </p> </div>\n": 10,
+                "<div id=7 class='' > Notifications\n    <p> About 1 notification per day </p> </div>\n": 18,
+                "<div id=9 class='' > Disable </div>\n": 7,
+                "<div id=10 class='' > Open </div>\n": 10
+            }
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "status": "completed",
+                "reason": "The user has been able to navigate to the notifications settings page for the Gmail app and successfully turned on the notifications according to the Last Page UI elements. This signifies that the task has been completed."
+            }
+        }
+    ],
+    "@Page_description": "Settings page of the device",
+    "@Previous_Step": " -> Page:Account settings page -> Action: Click on <div id=3 class='' > General settings </div>\n -> Page:Settings page of an email application -> Action: Click on <div id=11 class='' > Manage notifications </div>\n -> Page:Settings page of an email application -> Action: Click on <div id=11 class='' > Manage notifications </div>\n -> Page:Settings page of the device",
+    "@Action": "Action: Click on <div id=7 class='' > Notifications\n    <p> About 1 notification per day </p> </div>\n",
+    "@Similar_task": [
+        "Turn on push notifications for comments and likes on Weibo:['Me', 'Settings', 'Notifications', 'Toggle on Comments and Likes']",
+        "Turn off notifications from TikTok:['Me', 'Settings and privacy', 'Notifications', 'Toggle off Allow notifications']",
+        "View my notifications or messages on Zhihu:['Tap the profile icon on the bottom right', 'Tap the bell icon or the message icon on the top left', 'Select a notification or message from the list']",
+        "Turn off WeChat notifications for chat group 2:['Select the group 2', 'Toggle on Mute Notifications']"
+    ],
+    "@Successive_Page": "<div id=1 class='' description='Miscellaneous'> Miscellaneous\n    <switch id=2 class='com.android.settings:id/switchWidget' clickable> On </switch>\n </div>\n<div id=3 class='' description='Mail'> Mail\n    <p> About 1 notification per day </p>\n    <switch id=4 class='com.android.settings:id/switchWidget' clickable> On </switch>\n </div>\n<button id=5 class='' > All Gmail notifications\n    <div id=6 class='com.android.settings:id/main_switch_bar' > All Gmail notifications </div>\n\n    <switch id=7 class='android:id/switch_widget' clickable> On </switch>\n </button>\n<button id=8 class='' > Gmail\n    <div id=9 class='com.android.settings:id/entity_header_content' > Gmail </div>\n </button>\n<div id=10 class='' description='Navigate up'>  </div>\n"
+}

@@ -1,0 +1,115 @@
+{
+    "@User_intent": "check Google app version",
+    "@Page_components": [
+        "<div id=1 class='com.google.android.googlequicksearchbox:id/og_tos_button' > Terms of Service </div>\n",
+        "<div id=2 class='com.google.android.googlequicksearchbox:id/og_privacy_policy_button' > Privacy Policy </div>\n",
+        "<div id=3 class='com.google.android.googlequicksearchbox:id/og_card' > Help & feedback </div>\n",
+        "<div id=4 class='com.google.android.googlequicksearchbox:id/og_card' > Settings </div>\n",
+        "<div id=5 class='com.google.android.googlequicksearchbox:id/og_card' > Your data in Search </div>\n",
+        "<div id=6 class='com.google.android.googlequicksearchbox:id/og_card' > Reminders </div>\n",
+        "<div id=7 class='com.google.android.googlequicksearchbox:id/og_card' > Results about you\n    <p> Beta </p> </div>\n",
+        "<div id=8 class='com.google.android.googlequicksearchbox:id/og_card' description='Delete last 15 minutes of Search history from your Google account'> Delete last 15 minutes </div>\n",
+        "<div id=9 class='com.google.android.googlequicksearchbox:id/og_card' > Search history\n    <p> Saving </p> </div>\n",
+        "<div id=10 class='com.google.android.googlequicksearchbox:id/og_card' > New Chrome incognito tab </div>\n",
+        "<div id=11 class='com.google.android.googlequicksearchbox:id/my_account_chip' > Manage your Google Account </div>\n",
+        "<div id=12 class='com.google.android.googlequicksearchbox:id/selected_account_view' description='Change profile picture.,Signed in as Bowen Wang\nsaltyp0rridge20@gmail.com,Expand account list.'> Bowen Wang\n    <p> saltyp0rridge20@gmail.com </p> </div>\n",
+        "<button id=13 class='com.google.android.googlequicksearchbox:id/account_avatar' description='Change profile picture.'>  </button>\n",
+        "<button id=14 class='com.google.android.googlequicksearchbox:id/og_header_close_button' description='Close'>  </button>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "Output": {
+                "<div id=1 class='com.google.android.googlequicksearchbox:id/og_tos_button' > Terms of Service </div>\n": "Terms of Service",
+                "<div id=2 class='com.google.android.googlequicksearchbox:id/og_privacy_policy_button' > Privacy Policy </div>\n": "Privacy Policy",
+                "<div id=3 class='com.google.android.googlequicksearchbox:id/og_card' > Help & feedback </div>\n": "Help & feedback",
+                "<div id=4 class='com.google.android.googlequicksearchbox:id/og_card' > Settings </div>\n": [
+                    " <div id=1 class='' > About </div><div id=2 class='' > Language & region </div><div id=3 class='' > Voice </div><div id=4 class='' > Google Assistant </div><div id=5 class='' > Personalization </div><div id=6 class='' > Personal results </div><div id=7 class='' > SafeSearch </div><div id=8 class='' > Notifications </div><div id=9 class='' > General </div><div id=10 class='com.google.android.googlequicksearchbox:id/googleapp_settings_search' description='Search'>  </div><div id=11 class='' description='Close Settings'>  </div>"
+                ],
+                "<div id=5 class='com.google.android.googlequicksearchbox:id/og_card' > Your data in Search </div>\n": "Your data in Search",
+                "<div id=6 class='com.google.android.googlequicksearchbox:id/og_card' > Reminders </div>\n": "Reminders",
+                "<div id=7 class='com.google.android.googlequicksearchbox:id/og_card' > Results about you\n    <p> Beta </p> </div>\n": "Results about you (Beta)",
+                "<div id=8 class='com.google.android.googlequicksearchbox:id/og_card' description='Delete last 15 minutes of Search history from your Google account'> Delete last 15 minutes </div>\n": "Delete last 15 minutes of Search history from your Google account",
+                "<div id=9 class='com.google.android.googlequicksearchbox:id/og_card' > Search history\n    <p> Saving </p> </div>\n": "Search history (Saving)",
+                "<div id=10 class='com.google.android.googlequicksearchbox:id/og_card' > New Chrome incognito tab </div>\n": "New Chrome incognito tab",
+                "<div id=11 class='com.google.android.googlequicksearchbox:id/my_account_chip' > Manage your Google Account </div>\n": "Manage your Google Account",
+                "<div id=12 class='com.google.android.googlequicksearchbox:id/selected_account_view' description='Change profile picture.,Signed in as Bowen Wang\nsaltyp0rridge20@gmail.com,Expand account list.'> Bowen Wang\n    <p> saltyp0rridge20@gmail.com </p> </div>\n": "Change profile picture. Signed in as Bowen Wang saltyp0rridge20@gmail.com Expand account list.",
+                "<button id=13 class='com.google.android.googlequicksearchbox:id/account_avatar' description='Change profile picture.'>  </button>\n": "Change profile picture",
+                "<button id=14 class='com.google.android.googlequicksearchbox:id/og_header_close_button' description='Close'>  </button>\n": "Close"
+            }
+        },
+        {
+            "Name": "Select",
+            "Description": "This module is a selection model, selecting the 5 possible component without relativity ranking to be acted on catering to user's intent",
+            "Note": "This individual module only select 5 highly related components,without ranking them,and without analyzing the correctness of the components aligning with user's content ",
+            "Output": {
+                "<div id=4 class='com.google.android.googlequicksearchbox:id/og_card' > Settings </div>\n": "This component represents the 'About' section in the 'Settings' which should contain the app version information.",
+                "<div id=1 class='com.google.android.googlequicksearchbox:id/og_tos_button' > Terms of Service </div>\n": "To navigate to 'Settings', we might need this component which talks about 'Terms of Service' to navigate through app",
+                "<div id=2 class='com.google.android.googlequicksearchbox:id/og_privacy_policy_button' > Privacy Policy </div>\n": "This secondary component 'Privacy Policy' may also guide us to a larger settings or infomational menu which may contain the 'About' section to check the app version.",
+                "<div id=3 class='com.google.android.googlequicksearchbox:id/og_card' > Help & feedback </div>\n": "This component 'Help & Feedback' might also lead us to a menu or page with more options or detailed information about the app, including its version.",
+                "<div id=5 class='com.google.android.googlequicksearchbox:id/og_card' > Your data in Search </div>\n": "Lastly, the 'Your data in Search' might have deeper options where we might find 'About' us section with versioning information."
+            }
+        },
+        {
+            "Name": "Plan",
+            "Description": "This module is a plan module, planning the next action based on the selected components, whether click or edit",
+            "Output": {
+                "candidate1": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To access the settings page and check the Google app version."
+                },
+                "candidate2": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "Clicking on 'Terms of Service' is not relevant to checking the Google app version."
+                },
+                "candidate3": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "Clicking on 'Privacy Policy' is not relevant to checking the Google app version."
+                },
+                "candidate4": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "Clicking on 'Help & feedback' is not relevant to checking the Google app version."
+                },
+                "candidate5": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "Clicking on 'Your data in Search' is not relevant to checking the Google app version."
+                }
+            }
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Output": {
+                "<div id=4 class='com.google.android.googlequicksearchbox:id/og_card' > Settings </div>\n": 40,
+                "<div id=1 class='com.google.android.googlequicksearchbox:id/og_tos_button' > Terms of Service </div>\n": 1,
+                "<div id=2 class='com.google.android.googlequicksearchbox:id/og_privacy_policy_button' > Privacy Policy </div>\n": 1,
+                "<div id=3 class='com.google.android.googlequicksearchbox:id/og_card' > Help & feedback </div>\n": 2,
+                "<div id=5 class='com.google.android.googlequicksearchbox:id/og_card' > Your data in Search </div>\n": 1
+            }
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "status": "go on",
+                "reason": "The user has successfully navigated to the Settings page which is coherent with the assigned task of checking the Google app version. However, the task is not completed yet as the user hasn't clicked on the 'About' option where the app version information is usually located. Therefore, further steps are needed to complete the task."
+            }
+        }
+    ],
+    "@Page_description": "Google Quick Search Box settings page",
+    "@Previous_Step": " -> Page:Google app interface -> Action: Click on <button id=10 class='com.google.android.googlequicksearchbox:id/googleapp_selected_account_disc' description='Signed in as Bowen Wang saltyp0rridge20@gmail.com\nAccount and settings.'>  </button>\n -> Page:Google Quick Search Box settings page",
+    "@Action": "Action: Click on <div id=4 class='com.google.android.googlequicksearchbox:id/og_card' > Settings </div>\n",
+    "@Similar_task": [
+        "Change the language on my WeChat app into English:['Me', 'Settings', 'General', 'Language', 'English']",
+        "Search for nearby people on WeChat:['Discover', 'People Nearby', 'Start Search', 'Tap on the name of the person you want to chat with', 'Send a greeting message']",
+        "Check my WeChat balance and transaction history:['Me', 'Pay', 'Wallet', 'Tap on your balance', 'Transaction Records']",
+        "Check my credit score on Alipay:['Home', 'My', 'Credit Score']"
+    ],
+    "@Successive_Page": "<div id=1 class='' > About </div>\n<div id=2 class='' > Privacy & Security </div>\n<div id=3 class='' > Language & region </div>\n<div id=4 class='' > Voice </div>\n<div id=5 class='' > Google Assistant </div>\n<div id=6 class='' > Personalization </div>\n<div id=7 class='' > Personal results </div>\n<div id=8 class='' > SafeSearch </div>\n<div id=9 class='' > Notifications </div>\n<div id=10 class='' > General </div>\n<div id=11 class='com.google.android.googlequicksearchbox:id/googleapp_settings_search' description='Search'>  </div>\n<div id=12 class='' description='Close Settings'>  </div>\n"
+}

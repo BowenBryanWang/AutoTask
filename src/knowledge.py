@@ -1,15 +1,12 @@
 import copy
-import csv
 import json
 import os
 from langchain import FAISS
 from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import FAISS
-from langchain.document_loaders import TextLoader
 from langchain.document_loaders.csv_loader import CSVLoader
 
-OPENAI_KEY = os.environ.get("OPENAI_KEY")
+OPENAI_KEY = os.getenv('OPENAI_KEY', default="sk-dXUeoKXznBmiycgc06831a96F6Be42149e9aD25eDfA15e8c")
 class KnowledgeBase:
     def __init__(self, database):
         self.database = database
@@ -18,7 +15,7 @@ class KnowledgeBase:
 class PageJump_KB(KnowledgeBase):
     def __init__(self, database):
         super().__init__(database)
-        loader = CSVLoader(file_path='src/pagejump.csv', csv_args={
+        loader = CSVLoader(file_path='src/KB/pagejump.csv', csv_args={
             'delimiter': ',',
             'quotechar': '"',
             'fieldnames': ['Origin', 'Edge', 'Destination']
@@ -33,7 +30,7 @@ class PageJump_KB(KnowledgeBase):
             self.origin_data[i].page_content = self.data[i].page_content.split("Origin:")[1].split("Edge:")[0]
 
         self.embeddings = OpenAIEmbeddings(
-            client="GUI_LLM", openai_api_key=OPENAI_KEY)
+            client="GUI_LLM", openai_api_key=OPENAI_KEY,openai_api_base="https://api.ai-yyds.com/v1")
 
         self.db = FAISS.from_documents(self.edge_data, self.embeddings)
         self.retriever = self.db.as_retriever(search_type="similarity_score_threshold", search_kwargs={"score_threshold": .9})
@@ -64,11 +61,11 @@ class Task_KB(KnowledgeBase):
         self.tasks = []
         self.similar_tasks = []
         self.similar_traces = []
-        with open(os.path.join(os.path.dirname(__file__), 'task.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), 'KB/task.json'), 'r') as f:
             self.task_json = json.load(f)
         self.tasks = self.task_json.keys()
         self.embeddings = OpenAIEmbeddings(
-            client="GUI_LLM", openai_api_key=OPENAI_KEY)
+            client="GUI_LLM", openai_api_key=OPENAI_KEY,openai_api_base="https://api.ai-yyds.com/v1")
         self.db = FAISS.from_texts(self.tasks, self.embeddings)
 
     def update_datas(self, new_task):
@@ -83,6 +80,52 @@ class Task_KB(KnowledgeBase):
             self.similar_traces.append(self.task_json[docs[i][0].page_content])
             print("内容", docs[i][0].page_content)
             print("分数", docs[i][1])
+        return self.similar_tasks, self.similar_traces
+    
+    
+class Error_KB(KnowledgeBase):
+    def __init__(self):
+        self.tasks = []
+        self.traces = []
+        self.new_screens = []
+        self.reasons = []
+        with open(os.path.join(os.path.dirname(__file__), 'KB/errors.csv'), 'r') as f:
+            #第一列存为task，第二列存为trace
+            for line in f.readlines():
+                if line.startswith("Task"):
+                    continue
+                self.tasks.append(line.split(",")[0])
+                self.traces.append(line.split(",")[1])
+                self.new_screens.append(line.split(",")[2])
+                self.reasons.append(line.split(",")[3])
+            
+        self.embeddings = OpenAIEmbeddings(
+            client="GUI_LLM", openai_api_key=OPENAI_KEY,openai_api_base="https://api.ai-yyds.com/v1")
+        self.db = FAISS.from_texts([j+"<EnS>"+k for j,k in zip(self.tasks,self.traces)], self.embeddings)
+
+    def update_datas(self, new_task,new_trace,new_screen,new_reason):
+        self.tasks += new_task
+        self.traces += new_trace
+        self.new_screens += new_screen
+        self.reasons += new_reason
+        self.db.add_documents(new_task+"<EnS>"+new_trace)
+
+    def find_experiences(self, query):
+        docs = self.db.similarity_search_with_score(query)
+        print(docs)
+        self.experiences = []
+        for i in range(len(docs)):
+            # self.similar_tasks.append(docs[i][0].page_content)
+            # self.similar_traces.append(self.task_json[docs[i][0].page_content])
+            # print("内容", docs[i][0].page_content)
+            # print("分数", docs[i][1])
+            # 综合二者找到对应的下标,根据分割得到的task和trace
+            task,trace = docs[i][0].page_content.split("<EnS>")
+            # 综合二者找到对应的下标
+            index = self.tasks.index(task)
+            self.experiences.append({"task":task,"trace":trace,"new_screen":self.new_screens[index],"reason":self.reasons[index]})
+        return self.experiences
+            
         return self.similar_tasks, self.similar_traces
 
 

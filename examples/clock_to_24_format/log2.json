@@ -1,0 +1,107 @@
+{
+    "@User_intent": "turn on the 24-hour format for clock",
+    "@Page_components": [
+        "<div id=1 class='' > Snooze length\n    <p> 10 minutes </p> </div>\n",
+        "<div id=2 class='' > Silence after\n    <p> 10 minutes </p> </div>\n",
+        "<div id=3 class='' > Change date & time </div>\n",
+        "<div id=4 class='' > Home time zone\n    <p> (GMT+8:00) Beijing </p> </div>\n",
+        "<div id=5 class='' > Automatic home clock\n    <p> While traveling in an area where the time is different, add a clock for home </p> </div>\n",
+        "<switch id=6 class='com.google.android.deskclock:id/switchWidget' clickable> On </switch>\n",
+        "<div id=7 class='' > Display time with seconds </div>\n",
+        "<switch id=8 class='com.google.android.deskclock:id/switchWidget' clickable> Off </switch>\n",
+        "<button id=9 class='' > Style\n    <p> Digital </p> </button>\n",
+        "<button id=10 class='com.google.android.deskclock:id/overflow_action_button' description='More options'>  </button>\n",
+        "<div id=11 class='' description='Navigate up'>  </div>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "Output": {
+                "<div id=1 class='' > Snooze length\n    <p> 10 minutes </p> </div>\n": "Adjust the snooze length for alarms",
+                "<div id=2 class='' > Silence after\n    <p> 10 minutes </p> </div>\n": "Set the duration of silence after an alarm goes off",
+                "<div id=3 class='' > Change date & time </div>\n": "Access the option to change the date and time settings",
+                "<div id=4 class='' > Home time zone\n    <p> (GMT+8:00) Beijing </p> </div>\n": "View and modify the home time zone",
+                "<div id=5 class='' > Automatic home clock\n    <p> While traveling in an area where the time is different, add a clock for home </p> </div>\n": "Enable or disable the automatic addition of a home clock when traveling to a different time zone",
+                "<switch id=6 class='com.google.android.deskclock:id/switchWidget' clickable> On </switch>\n": "Toggle the switch to turn on or off the display of time with seconds",
+                "<div id=7 class='' > Display time with seconds </div>\n": "Toggle the switch to turn on or off the display of time with seconds",
+                "<switch id=8 class='com.google.android.deskclock:id/switchWidget' clickable> Off </switch>\n": "Toggle the switch to turn on or off the display of time with seconds",
+                "<button id=9 class='' > Style\n    <p> Digital </p> </button>\n": "Change the style of the clock to digital",
+                "<button id=10 class='com.google.android.deskclock:id/overflow_action_button' description='More options'>  </button>\n": "Access more options for the clock app",
+                "<div id=11 class='' description='Navigate up'>  </div>\n": "Navigate back to the previous page"
+            }
+        },
+        {
+            "Name": "Select",
+            "Description": "This module is a selection model, selecting the 5 possible component without relativity ranking to be acted on catering to user's intent",
+            "Note": "This individual module only select 5 highly related components,without ranking them,and without analyzing the correctness of the components aligning with user's content ",
+            "Output": {
+                "<switch id=6 class='com.google.android.deskclock:id/switchWidget' clickable> On </switch>\n": "This switch component represents the 'Display time with seconds' setting. Toggling the switch would turn on or off the display of time with seconds. This is directly related to the user's intent of changing the clock format.",
+                "<switch id=8 class='com.google.android.deskclock:id/switchWidget' clickable> Off </switch>\n": "This switch component represents the 'Automatic home clock' setting. Toggling the switch would enable or disable the automatic addition of a home clock when traveling to a different time zone. While not directly related to the user's intent, it is a potential setting that the user may want to explore.",
+                "<div id=5 class='' > Automatic home clock\n    <p> While traveling in an area where the time is different, add a clock for home </p> </div>\n": "This div component likely contains additional clock settings. It is worth exploring as it may contain options related to the clock format, such as 24-hour format.",
+                "<div id=4 class='' > Home time zone\n    <p> (GMT+8:00) Beijing </p> </div>\n": "This div component likely contains additional clock settings. It is worth exploring as it may contain options related to time and date settings in general.",
+                "<div id=3 class='' > Change date & time </div>\n": "This div component likely contains additional clock settings. It is worth exploring as it may contain options related to changing the home time zone, which could potentially affect the clock format."
+            }
+        },
+        {
+            "Name": "Plan",
+            "Description": "This module is a plan module, planning the next action based on the selected components, whether click or edit",
+            "Output": {
+                "candidate1": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To toggle the 24-hour format switch to turn it on."
+                },
+                "candidate2": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To toggle the 24-hour format switch to turn it off."
+                },
+                "candidate3": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "The 'Automatic home clock' option is not relevant to turning on the 24-hour format."
+                },
+                "candidate4": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "The 'Home time zone' option is not relevant to turning on the 24-hour format."
+                },
+                "candidate5": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "The 'Change date & time' option is not relevant to turning on the 24-hour format."
+                }
+            }
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Output": {
+                "<switch id=6 class='com.google.android.deskclock:id/switchWidget' clickable> On </switch>\n": 15,
+                "<switch id=8 class='com.google.android.deskclock:id/switchWidget' clickable> Off </switch>\n": 15,
+                "<div id=5 class='' > Automatic home clock\n    <p> While traveling in an area where the time is different, add a clock for home </p> </div>\n": 11,
+                "<div id=4 class='' > Home time zone\n    <p> (GMT+8:00) Beijing </p> </div>\n": 11,
+                "<div id=3 class='' > Change date & time </div>\n": 32
+            }
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "status": "go on",
+                "reason": "The user has navigated correctly to the 'Change date & time' section where the 'Use 24-hour format' setting is located. However, the task has not been completed since the user still needs to toggle the switch for 'Use 24-hour format' from 'Off' to 'On'."
+            }
+        }
+    ],
+    "@Page_description": "Settings page for the clock app",
+    "@Previous_Step": " -> Page:Main interface of the Google Clock app -> Action: Click on <button id=6 class='com.google.android.deskclock:id/overflow_action_button' description='More options'>  </button>\n -> Page:Help and settings page -> Action: Click on <div id=4 class='' > Settings </div>\n -> Page:Settings page for the clock app",
+    "@Action": "Action: Click on <div id=3 class='' > Change date & time </div>\n",
+    "@Similar_task": [
+        "Turn on dark mode on TikTok:['Me', 'Settings and privacy', 'Content and activity', 'Dark mode', 'Choose Dark']",
+        "Change the language on my WeChat app into English:['Me', 'Settings', 'General', 'Language', 'English']",
+        "Turn on push notifications for comments and likes on Weibo:['Me', 'Settings', 'Notifications', 'Toggle on Comments and Likes']",
+        "Change the font size on WeChat:['Me', 'Settings', 'General', 'Font Size', 'Choose a font size from small to large']"
+    ],
+    "@Successive_Page": "<div id=1 class='' > Use 24-hour format\n    <p> 1:00 PM </p>\n    <switch id=2 class='android:id/switch_widget' clickable> Off </switch>\n </div>\n<div id=3 class='' > Use locale default\n    <switch id=4 class='android:id/switch_widget' clickable> On </switch>\n </div>\n<div id=5 class='' > Time zone\n    <p> GMT+08:00 China Standard Time </p> </div>\n<div id=6 class='' > Use location\n    <p> Location may be used to set time zone </p>\n    <switch id=7 class='android:id/switch_widget' clickable> Off </switch>\n </div>\n<div id=8 class='' > Time\n    <p> 9:17 PM </p> </div>\n<div id=9 class='' > Date\n    <p> August 30, 2023 </p> </div>\n<div id=10 class='' description='Navigate up'>  </div>\n"
+}

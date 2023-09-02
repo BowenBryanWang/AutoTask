@@ -1,23 +1,10 @@
-<div id=1 class='' > browsersdk
-    <switch id=2 class='com.android.settings:id/full_screen_switch' clickable> On </switch>
+<button id=1 class='' description='Meet'>  </button>
+<div id=2 class='com.google.android.gm:id/compose_button' description='Compose'> Compose </div>
+<div id=3 class='com.google.android.gm:id/open_search' description='Open navigation drawer,Signed in as Bowen Wang saltyp0rridge20@gmail.com
+Account and settings.'> Search in mail
+    <p> Search in mail </p>
+    <button id=4 class='com.google.android.gm:id/selected_account_disc_gmail' description='Signed in as Bowen Wang saltyp0rridge20@gmail.com
+Account and settings.'>  </button>
+
+    <div id=5 class='' description='Open navigation drawer'>  </div>
  </div>
-<div id=3 class='' > BOSS直聘
-    <switch id=4 class='com.android.settings:id/full_screen_switch' clickable> On </switch>
- </div>
-<div id=5 class='' > Booking.com
-    <switch id=6 class='com.android.settings:id/full_screen_switch' clickable> On </switch>
- </div>
-<div id=7 class='' > Apply to all
-    <switch id=8 class='com.android.settings:id/app_switch' clickable> On </switch>
- </div>
-<div id=9 class='' > Enable all day
-    <switch id=10 class='android:id/switch_widget' clickable> Off </switch>
- </div>
-<div id=11 class='' > End
-    <p> 7:00 AM next day </p> </div>
-<div id=12 class='' > Start
-    <p> 10:00 PM </p> </div>
-<div id=13 class='' > Scheduled
-    <switch id=14 class='android:id/switch_widget' clickable> On </switch>
- </div>
-<div id=15 class='' description='Navigate up'>  </div>

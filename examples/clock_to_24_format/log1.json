@@ -1,0 +1,95 @@
+{
+    "@User_intent": "turn on the 24-hour format for clock",
+    "@Page_components": [
+        "<div id=1 class='' > Help </div>\n",
+        "<div id=2 class='' > Send feedback </div>\n",
+        "<div id=3 class='' > Privacy policy </div>\n",
+        "<div id=4 class='' > Settings </div>\n",
+        "<div id=5 class='' > Screen saver </div>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "Output": {
+                "<div id=1 class='' > Help </div>\n": "Help section",
+                "<div id=2 class='' > Send feedback </div>\n": "Send feedback section",
+                "<div id=3 class='' > Privacy policy </div>\n": "Privacy policy section",
+                "<div id=4 class='' > Settings </div>\n": "Settings section",
+                "<div id=5 class='' > Screen saver </div>\n": "Screen saver section"
+            }
+        },
+        {
+            "Name": "Select",
+            "Description": "This module is a selection model, selecting the 5 possible component without relativity ranking to be acted on catering to user's intent",
+            "Note": "This individual module only select 5 highly related components,without ranking them,and without analyzing the correctness of the components aligning with user's content ",
+            "Output": {
+                "<div id=1 class='' > Help </div>\n": "This component likely represents the 'Help' section, which often contains general information and frequently asked questions. It's worth exploring as it could potentially contain options to change the clock format.",
+                "<div id=2 class='' > Send feedback </div>\n": "This component likely represents the 'Send Feedback' section, which allows users to provide feedback and report issues. While it may not directly provide an option to change the clock format, it could potentially lead to settings related to appearance and customization.",
+                "<div id=3 class='' > Privacy policy </div>\n": "This component likely represents the 'Privacy Policy' section, which contains information about data privacy and security. While it may not directly provide an option to change the clock format, it's worth checking as some apps include appearance-related settings under privacy settings.",
+                "<div id=4 class='' > Settings </div>\n": "This component likely represents the 'Settings' section, which is a common place to find various app settings and customization options. It's very likely that the clock format option can be found within this section.",
+                "<div id=5 class='' > Screen saver </div>\n": "This component likely represents the 'Screen Saver' section, which is often where users can customize screen saver settings. While it may not directly provide an option to change the clock format, it's worth exploring as apps sometimes include appearance-related settings within screen saver settings."
+            }
+        },
+        {
+            "Name": "Plan",
+            "Description": "This module is a plan module, planning the next action based on the selected components, whether click or edit",
+            "Output": {
+                "candidate1": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "Clicking on 'Help' is not relevant to turning on the 24-hour format for the clock."
+                },
+                "candidate2": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "Clicking on 'Send feedback' is not relevant to turning on the 24-hour format for the clock."
+                },
+                "candidate3": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "Clicking on 'Privacy policy' is not relevant to turning on the 24-hour format for the clock."
+                },
+                "candidate4": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "Clicking on 'Settings' to access the clock settings."
+                },
+                "candidate5": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "Clicking on 'Screen saver' is not relevant to turning on the 24-hour format for the clock."
+                }
+            }
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Output": {
+                "<div id=1 class='' > Help </div>\n": 6,
+                "<div id=2 class='' > Send feedback </div>\n": 3,
+                "<div id=3 class='' > Privacy policy </div>\n": 3,
+                "<div id=4 class='' > Settings </div>\n": 40,
+                "<div id=5 class='' > Screen saver </div>\n": 4
+            }
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "status": "go on",
+                "reason": "The user is currently on the 'Settings' menu where expected setting for time format potentially could be found. However, an explicit option for '24-hour format' is not visible based on the provided UI screen. The user needs to perform further action like exploring 'Change date & time' option."
+            }
+        }
+    ],
+    "@Page_description": "Help and settings page",
+    "@Previous_Step": " -> Page:Main interface of the Google Clock app -> Action: Click on <button id=6 class='com.google.android.deskclock:id/overflow_action_button' description='More options'>  </button>\n -> Page:Help and settings page",
+    "@Action": "Action: Click on <div id=4 class='' > Settings </div>\n",
+    "@Similar_task": [
+        "Turn on dark mode on TikTok:['Me', 'Settings and privacy', 'Content and activity', 'Dark mode', 'Choose Dark']",
+        "Change the language on my WeChat app into English:['Me', 'Settings', 'General', 'Language', 'English']",
+        "Turn on push notifications for comments and likes on Weibo:['Me', 'Settings', 'Notifications', 'Toggle on Comments and Likes']",
+        "Change the font size on WeChat:['Me', 'Settings', 'General', 'Font Size', 'Choose a font size from small to large']"
+    ],
+    "@Successive_Page": "<div id=1 class='' > Snooze length\n    <p> 10 minutes </p> </div>\n<div id=2 class='' > Silence after\n    <p> 10 minutes </p> </div>\n<div id=3 class='' > Change date & time </div>\n<div id=4 class='' > Home time zone\n    <p> (GMT+8:00) Beijing </p> </div>\n<div id=5 class='' > Automatic home clock\n    <p> While traveling in an area where the time is different, add a clock for home </p>\n    <switch id=6 class='com.google.android.deskclock:id/switchWidget' clickable> On </switch>\n </div>\n<div id=7 class='' > Display time with seconds\n    <switch id=8 class='com.google.android.deskclock:id/switchWidget' clickable> Off </switch>\n </div>\n<button id=9 class='' > Style\n    <p> Digital </p> </button>\n<button id=10 class='com.google.android.deskclock:id/overflow_action_button' description='More options'>  </button>\n<div id=11 class='' description='Navigate up'>  </div>\n"
+}

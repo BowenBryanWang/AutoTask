@@ -1,0 +1,109 @@
+{
+    "@User_intent": "check Google app version",
+    "@Page_components": [
+        "<div id=1 class='' > About </div>\n",
+        "<div id=2 class='' > Privacy & Security </div>\n",
+        "<div id=3 class='' > Language & region </div>\n",
+        "<div id=4 class='' > Voice </div>\n",
+        "<div id=5 class='' > Google Assistant </div>\n",
+        "<div id=6 class='' > Personalization </div>\n",
+        "<div id=7 class='' > Personal results </div>\n",
+        "<div id=8 class='' > SafeSearch </div>\n",
+        "<div id=9 class='' > Notifications </div>\n",
+        "<div id=10 class='' > General </div>\n",
+        "<div id=11 class='com.google.android.googlequicksearchbox:id/googleapp_settings_search' description='Search'>  </div>\n",
+        "<div id=12 class='' description='Close Settings'>  </div>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "Output": {
+                "<div id=1 class='' > About </div>\n": "About section in the settings page",
+                "<div id=2 class='' > Privacy & Security </div>\n": "Privacy & Security section in the settings page",
+                "<div id=3 class='' > Language & region </div>\n": "Language & region section in the settings page",
+                "<div id=4 class='' > Voice </div>\n": "Voice section in the settings page",
+                "<div id=5 class='' > Google Assistant </div>\n": "Google Assistant section in the settings page",
+                "<div id=6 class='' > Personalization </div>\n": "Personalization section in the settings page",
+                "<div id=7 class='' > Personal results </div>\n": "Personal results section in the settings page",
+                "<div id=8 class='' > SafeSearch </div>\n": "SafeSearch section in the settings page",
+                "<div id=9 class='' > Notifications </div>\n": "Notifications section in the settings page",
+                "<div id=10 class='' > General </div>\n": "General section in the settings page",
+                "<div id=11 class='com.google.android.googlequicksearchbox:id/googleapp_settings_search' description='Search'>  </div>\n": "Search bar in the settings page",
+                "<div id=12 class='' description='Close Settings'>  </div>\n": "Close button in the settings page"
+            }
+        },
+        {
+            "Name": "Select",
+            "Description": "This module is a selection model, selecting the 5 possible component without relativity ranking to be acted on catering to user's intent",
+            "Note": "This individual module only select 5 highly related components,without ranking them,and without analyzing the correctness of the components aligning with user's content ",
+            "Output": {
+                "<div id=1 class='' > About </div>\n": "This component navigates to 'About' section in the settings page where typically information about the app, including its version, is found.",
+                "<div id=10 class='' > General </div>\n": "The 'General' section in the settings may contain general information about the app, which could potentially include the version number.",
+                "<div id=11 class='com.google.android.googlequicksearchbox:id/googleapp_settings_search' description='Search'>  </div>\n": "This 'Search' feature could potentially allow the user to easily find the information about the app version by entering relevant keywords such as 'version' or 'about'.",
+                "<div id=9 class='' > Notifications </div>\n": "Although the 'Notifications' section might not likely contain the version information, it is a general section worth exploring.",
+                "<div id=4 class='' > Voice </div>\n": "'Voice' is a less likely candidate, but the version information might be located here, too."
+            }
+        },
+        {
+            "Name": "Plan",
+            "Description": "This module is a plan module, planning the next action based on the selected components, whether click or edit",
+            "Output": {
+                "candidate1": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To access the 'About' section where the app version can be found."
+                },
+                "candidate2": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "Switching to the 'General' section is not relevant to checking the app version."
+                },
+                "candidate3": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "Switching to the 'Search' section is not relevant to checking the app version."
+                },
+                "candidate4": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "Switching to the 'Notifications' section is not relevant to checking the app version."
+                },
+                "candidate5": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "Switching to the 'Voice' section is not relevant to checking the app version."
+                }
+            }
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Output": {
+                "<div id=1 class='' > About </div>\n": 40,
+                "<div id=10 class='' > General </div>\n": 14,
+                "<div id=11 class='com.google.android.googlequicksearchbox:id/googleapp_settings_search' description='Search'>  </div>\n": 15,
+                "<div id=9 class='' > Notifications </div>\n": 4,
+                "<div id=4 class='' > Voice </div>\n": 4
+            }
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "status": "completed",
+                "reason": "The user navigated to the 'About' section within the settings of the Google app, and was able to find the app version successfully. Therefore, the task of checking the Google app version has been completed."
+            }
+        }
+    ],
+    "@Page_description": "Settings page of a Google app",
+    "@Previous_Step": " -> Page:Google app interface -> Action: Click on <button id=10 class='com.google.android.googlequicksearchbox:id/googleapp_selected_account_disc' description='Signed in as Bowen Wang saltyp0rridge20@gmail.com\nAccount and settings.'>  </button>\n -> Page:Google Quick Search Box settings page -> Action: Click on <div id=4 class='com.google.android.googlequicksearchbox:id/og_card' > Settings </div>\n -> Page:Settings page of a Google app",
+    "@Action": "Action: Click on <div id=1 class='' > About </div>\n",
+    "@Similar_task": [
+        "Change the language on my WeChat app into English:['Me', 'Settings', 'General', 'Language', 'English']",
+        "Search for nearby people on WeChat:['Discover', 'People Nearby', 'Start Search', 'Tap on the name of the person you want to chat with', 'Send a greeting message']",
+        "Check my WeChat balance and transaction history:['Me', 'Pay', 'Wallet', 'Tap on your balance', 'Transaction Records']",
+        "Check my credit score on Alipay:['Home', 'My', 'Credit Score']"
+    ],
+    "@Successive_Page": "<div id=1 class='' > Third Party Notices </div>\n<div id=2 class='' > Legal notices </div>\n<div id=3 class='' > Privacy policy </div>\n<div id=4 class='' > Terms of service </div>\n<div id=5 class='' > Version\n    <p> \u200e14.3.13.29.arm64 </p> </div>\n<div id=6 class='com.google.android.googlequicksearchbox:id/googleapp_settings_search' description='Search'>  </div>\n<div id=7 class='' description='Navigate up'>  </div>\n"
+}

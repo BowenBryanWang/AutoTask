@@ -1,42 +1,26 @@
 {
-    "@User_intent": "Look up the best rated coffee maker on Lowe's",
+    "@User_intent": "all mails in gmail",
     "@Page_components": [
-        "<div id=1 class='' description='Bottom toolbar,Go back,Go forward,Browser menu,Switch or close tabs,Share'> 1 </div>\n",
-        "<div id=2 class='com.microsoft.emmx:id/edge_bottom_bar_share_button' description='Share'>  </div>\n",
-        "<div id=3 class='com.microsoft.emmx:id/tab_center_button' description='Switch or close tabs'> 1 </div>\n",
-        "<button id=4 class='com.microsoft.emmx:id/overflow_button_bottom' description='Browser menu'>  </button>\n",
-        "<div id=5 class='com.microsoft.emmx:id/edge_overflow_button' description='Browser menu'>  </div>\n",
-        "<div id=6 class='com.microsoft.emmx:id/forward_button' description='Go forward'>  </div>\n",
-        "<div id=7 class='com.microsoft.emmx:id/back_button' description='Go back'>  </div>\n",
-        "<div id=8 class='com.microsoft.emmx:id/edge_toolbar_change_ntp_button' description='New tab page layout settings'>  </div>\n",
-        "<button id=9 class='com.microsoft.emmx:id/edge_account_image_view' description='Account menu'>  </button>\n",
-        "<div id=10 class='' > News and more </div>\n",
-        "<div id=11 class='com.microsoft.emmx:id/top_sites_container' > Add a site </div>\n",
-        "<div id=12 class='com.microsoft.emmx:id/edge_top_sites_title' > Add a site </div>\n",
-        "<div id=13 class='com.microsoft.emmx:id/voice_search_button' description='Start voice search'>  </div>\n",
-        "<div id=14 class='com.microsoft.emmx:id/camera_search_button' description='Start camera search'>  </div>\n",
-        "<div id=15 class='com.microsoft.emmx:id/search_box_text' > Search or type web address </div>\n"
+        "<button id=1 class='' description='Meet'>  </button>\n",
+        "<div id=2 class='com.google.android.gm:id/compose_button' description='Compose'> Compose </div>\n",
+        "<div id=3 class='com.google.android.gm:id/open_search' description='Open navigation drawer,Signed in as Bowen Wang saltyp0rridge20@gmail.com\nAccount and settings.'> Search in mail\n    <p> Search in mail </p> </div>\n",
+        "<button id=4 class='com.google.android.gm:id/selected_account_disc_gmail' description='Signed in as Bowen Wang saltyp0rridge20@gmail.com\nAccount and settings.'>  </button>\n",
+        "<div id=5 class='' description='Open navigation drawer'>  </div>\n"
     ],
     "@Module": [
         {
             "Name": "Predict",
             "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
             "Output": {
-                "<div id=1 class='' description='Bottom toolbar,Go back,Go forward,Browser menu,Switch or close tabs,Share'> 1 </div>\n": "Bottom toolbar with options to go back, go forward, access browser menu, switch or close tabs, and share.",
-                "<div id=2 class='com.microsoft.emmx:id/edge_bottom_bar_share_button' description='Share'>  </div>\n": "Share button.",
-                "<div id=3 class='com.microsoft.emmx:id/tab_center_button' description='Switch or close tabs'> 1 </div>\n": "Button to switch or close tabs.",
-                "<button id=4 class='com.microsoft.emmx:id/overflow_button_bottom' description='Browser menu'>  </button>\n": "Button to access browser menu.",
-                "<div id=5 class='com.microsoft.emmx:id/edge_overflow_button' description='Browser menu'>  </div>\n": "Button to access browser menu.",
-                "<div id=6 class='com.microsoft.emmx:id/forward_button' description='Go forward'>  </div>\n": "Button to go forward.",
-                "<div id=7 class='com.microsoft.emmx:id/back_button' description='Go back'>  </div>\n": "Button to go back.",
-                "<div id=8 class='com.microsoft.emmx:id/edge_toolbar_change_ntp_button' description='New tab page layout settings'>  </div>\n": "Button to change new tab page layout settings.",
-                "<button id=9 class='com.microsoft.emmx:id/edge_account_image_view' description='Account menu'>  </button>\n": "Button to access account menu.",
-                "<div id=10 class='' > News and more </div>\n": "News and more section.",
-                "<div id=11 class='com.microsoft.emmx:id/top_sites_container' > Add a site </div>\n": "Option to add a site.",
-                "<div id=12 class='com.microsoft.emmx:id/edge_top_sites_title' > Add a site </div>\n": "Option to add a site.",
-                "<div id=13 class='com.microsoft.emmx:id/voice_search_button' description='Start voice search'>  </div>\n": "Button to start voice search.",
-                "<div id=14 class='com.microsoft.emmx:id/camera_search_button' description='Start camera search'>  </div>\n": "Button to start camera search.",
-                "<div id=15 class='com.microsoft.emmx:id/search_box_text' > Search or type web address </div>\n": "Search box to search or type web address."
+                "<button id=1 class='' description='Meet'>  </button>\n": "Open a page for Google Meet",
+                "<div id=2 class='com.google.android.gm:id/compose_button' description='Compose'> Compose </div>\n": [
+                    " <div  class='com.google.android.gm:id/composearea_tap_trap_bottom' >  </div><div  class='' > Compose email </div><div  class='com.google.android.gm:id/subject' > Subject </div><button  class='com.google.android.gm:id/add_cc_bcc' description='Add Cc/Bcc'>  </button><div  class='' >  </div><div  class='com.google.android.gm:id/peoplekit_autocomplete_to_prefix' > To </div><div  class='com.google.android.gm:id/from_label' description='From'> From </div><button  class='' description='More options'>  </button><div  class='com.google.android.gm:id/send' description='Send'>  </div><div  class='com.google.android.gm:id/add_attachment' description='Attach file'>  </div><div  class='' description='Navigate up'>  </div>"
+                ],
+                "<div id=3 class='com.google.android.gm:id/open_search' description='Open navigation drawer,Signed in as Bowen Wang saltyp0rridge20@gmail.com\nAccount and settings.'> Search in mail\n    <p> Search in mail </p> </div>\n": [
+                    " <div  class='com.google.android.gm:id/hub_drawer_label_container' > Help & feedback </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > Settings </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > Contacts </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > Calendar </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > Notes </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > Trash    <p> 3 </p> </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > Spam    <p> 23 </p> </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > All mail    <p> 53 </p> </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > Drafts </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > Outbox </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > Scheduled </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > Sent </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > Important </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > Snoozed </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > Starred </div><button  class='' description='Meet'>  </button><div  class='com.google.android.gm:id/compose_button' description='Compose'> Compose </div><div  class='com.google.android.gm:id/open_search' description='Open navigation drawer;;Signed in as Bowen Wang saltyp0rridge20@gmail.comAccount and settings.'> Search in mail    <p> Search in mail </p>    <button  class='com.google.android.gm:id/selected_account_disc_gmail' description='Signed in as Bowen Wang saltyp0rridge20@gmail.comAccount and settings.'>  </button>    <div  class='' description='Open navigation drawer'>  </div> </div>"
+                ],
+                "<button id=4 class='com.google.android.gm:id/selected_account_disc_gmail' description='Signed in as Bowen Wang saltyp0rridge20@gmail.com\nAccount and settings.'>  </button>\n": "Open a page with account and settings information",
+                "<div id=5 class='' description='Open navigation drawer'>  </div>\n": "Open the navigation drawer"
             }
         },
         {
@@ -44,11 +28,11 @@
             "Description": "This module is a selection model, selecting the 5 possible component without relativity ranking to be acted on catering to user's intent",
             "Note": "This individual module only select 5 highly related components,without ranking them,and without analyzing the correctness of the components aligning with user's content ",
             "Output": {
-                "<div id=15 class='com.microsoft.emmx:id/search_box_text' > Search or type web address </div>\n": "The search box is needed to input the search query for the best rated coffee maker.",
-                "<div id=13 class='com.microsoft.emmx:id/voice_search_button' description='Start voice search'>  </div>\n": "The voice search button could be used as an alternative way to input the search query.",
-                "<div id=5 class='com.microsoft.emmx:id/edge_overflow_button' description='Browser menu'>  </div>\n": "The browser menu could be used to access more options or settings if needed during the search.",
-                "<div id=6 class='com.microsoft.emmx:id/forward_button' description='Go forward'>  </div>\n": "The forward button would be used to navigate forward after the search.",
-                "<div id=7 class='com.microsoft.emmx:id/back_button' description='Go back'>  </div>\n": "The back button would be used to navigate back if the user needs to modify the search or go back to the previous page."
+                "<button id=1 class='' description='Meet'>  </button>\n": "This component opens the Google Meet page and isn't related to accessing the user's emails.",
+                "<div id=2 class='com.google.android.gm:id/compose_button' description='Compose'> Compose </div>\n": "The button triggers the email compose interface. While it's an important feature, it doesn't directly align with the current user goal of viewing all emails.",
+                "<div id=3 class='com.google.android.gm:id/open_search' description='Open navigation drawer,Signed in as Bowen Wang saltyp0rridge20@gmail.com\nAccount and settings.'> Search in mail\n    <p> Search in mail </p> </div>\n": "This button opens a navigation drawer that includes an 'All Mail' option, directly supporting the user's intended task.",
+                "<button id=4 class='com.google.android.gm:id/selected_account_disc_gmail' description='Signed in as Bowen Wang saltyp0rridge20@gmail.com\nAccount and settings.'>  </button>\n": "While the button provides important settings and account options, it isn't directly linked with the action of accessing all emails in the account.",
+                "<div id=5 class='' description='Open navigation drawer'>  </div>\n": "This button, similar to the previous one, opens a navigation drawer and potentially has the 'All Mail' option too. Hence, should be considered."
             }
         },
         {
@@ -58,27 +42,27 @@
                 "candidate1": {
                     "action": "click",
                     "text": null,
-                    "reason": "The user may want to perform a search or type a web address, so clicking on the search box component would be the appropriate action."
+                    "reason": "Switching to the 'Meet' feature is not relevant to accessing emails."
                 },
                 "candidate2": {
                     "action": "click",
                     "text": null,
-                    "reason": "The user may want to perform a voice search, so clicking on the voice search button component would be the appropriate action."
+                    "reason": "To compose a new email, not relevant to accessing all emails."
                 },
                 "candidate3": {
                     "action": "click",
                     "text": null,
-                    "reason": "The user may want to access the browser menu, so clicking on the browser menu button component would be the appropriate action."
+                    "reason": "To open the navigation drawer and search for emails."
                 },
                 "candidate4": {
                     "action": "click",
                     "text": null,
-                    "reason": "The user may want to go forward to a previous page, so clicking on the go forward button component would be the appropriate action."
+                    "reason": "To open the account and settings, not relevant to accessing all emails."
                 },
                 "candidate5": {
                     "action": "click",
                     "text": null,
-                    "reason": "The user may want to go back to a previous page, so clicking on the go back button component would be the appropriate action."
+                    "reason": "To open the navigation drawer, not relevant to accessing all emails."
                 }
             }
         },
@@ -86,37 +70,30 @@
             "Name": "Evaluate",
             "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
             "Output": {
-                "<div id=15 class='com.microsoft.emmx:id/search_box_text' > Search or type web address </div>\n": 10.0,
-                "<div id=13 class='com.microsoft.emmx:id/voice_search_button' description='Start voice search'>  </div>\n": 10.0,
-                "<div id=5 class='com.microsoft.emmx:id/edge_overflow_button' description='Browser menu'>  </div>\n": 2.0,
-                "<div id=6 class='com.microsoft.emmx:id/forward_button' description='Go forward'>  </div>\n": 1.0,
-                "<div id=7 class='com.microsoft.emmx:id/back_button' description='Go back'>  </div>\n": 1.0
-            },
-            "LLM_scorer_reason": [
-                "Can directly search the required item",
-                "Can use voice search to find the required item",
-                "Accessing the browser menu doesn't directly contribute to the task",
-                "There is no necessity to go forward in the browser right now",
-                "There is no necessity to go back in the browser right now"
-            ]
+                "<button id=1 class='' description='Meet'>  </button>\n": 1,
+                "<div id=2 class='com.google.android.gm:id/compose_button' description='Compose'> Compose </div>\n": 1,
+                "<div id=3 class='com.google.android.gm:id/open_search' description='Open navigation drawer,Signed in as Bowen Wang saltyp0rridge20@gmail.com\nAccount and settings.'> Search in mail\n    <p> Search in mail </p> </div>\n": 2,
+                "<button id=4 class='com.google.android.gm:id/selected_account_disc_gmail' description='Signed in as Bowen Wang saltyp0rridge20@gmail.com\nAccount and settings.'>  </button>\n": 1,
+                "<div id=5 class='' description='Open navigation drawer'>  </div>\n": 4
+            }
         },
         {
             "Name": "Decide",
             "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
             "Output": {
-                "status": "go on",
-                "reason": "The user has opened the search box in the browser, which is a step towards completing the task of searching for the best rated coffee maker on Lowe's website. However, they haven't typed 'best rated coffee maker on Lowe's' into the search box or performed the search yet. More actions are needed to finish the task."
+                "status": "wrong",
+                "reason": "The user is on the main interface but instead of accessing the mail list, they clicked on 'Open navigation drawer'. The current screen does not show the list of all emails. Therefore, the user went into a wrong branch and needs to take the correct action to view all mails."
             }
         }
     ],
-    "@Page_description": "Bottom toolbar with options to go back, go forward, access browser menu, switch or close tabs, and share. News and more section with options to add a site. Search box to search or type web address.",
-    "@Previous_Step": " -> Page:Bottom toolbar with options to go back, go forward, access browser menu, switch or close tabs, and share. News and more section with options to add a site. Search box to search or type web address.",
-    "@Action": "Action: Click on <div id=15 class='com.microsoft.emmx:id/search_box_text' > Search or type web address </div>\n",
+    "@Page_description": "Main interface of the Gmail application",
+    "@Previous_Step": " -> Page:Main interface of the Gmail application",
+    "@Action": "Action: Click on <div id=5 class='' description='Open navigation drawer'>  </div>\n",
     "@Similar_task": [
-        "Search for a product by scanning a barcode on Taobao:['Home', 'Tap the camera icon', 'Scan', 'Point the camera at the barcode', 'Tap the product name']",
-        "View recommended answers on Zhihu:['Tap the profile icon on the bottom right', 'Tap the message icon on the top left', 'Select Recommended Answers from the list']",
-        "Recommend an answer to another user on Zhihu:['Tap the answer you want to recommend', 'Tap the share icon on the bottom right', 'Select Recommend to Friends from the options', 'Choose a user from your contacts or enter a user name in the search bar', 'Add a message if needed', 'Tap Send']",
-        "Write a review for my purchase on Taobao:['Me', 'My Orders', 'Select the order you want to review', 'Tap Write a Review', 'Rate the item and write your comments', 'Tap Submit']"
+        "Clear chat history on WeChat group 2:['Long press the chat you want to clear', 'Delete Chat', 'Delete']",
+        "View my notifications or messages on Zhihu:['Tap the profile icon on the bottom right', 'Tap the bell icon or the message icon on the top left', 'Select a notification or message from the list']",
+        "log out of my WeChat account:['Me', 'Settings', 'Log Out', 'Confirm']",
+        "Change the language on my WeChat app into English:['Me', 'Settings', 'General', 'Language', 'English']"
     ],
-    "@Successive_Page": "<div id=1 class='com.microsoft.emmx:id/mic_button' description='Start voice search'>  </div>\n<div id=2 class='com.microsoft.emmx:id/camera_button' description='Start camera search'>  </div>\n<div id=3 class='com.microsoft.emmx:id/url_bar' > Search or type web address </div>\n<div id=4 class='' > News and more </div>\n<div id=5 class='com.microsoft.emmx:id/top_sites_container' > Add a site\n    <div id=6 class='com.microsoft.emmx:id/edge_top_sites_title' > Add a site </div>\n </div>\n<div id=7 class='com.microsoft.emmx:id/voice_search_button' description='Start voice search'>  </div>\n<div id=8 class='com.microsoft.emmx:id/camera_search_button' description='Start camera search'>  </div>\n<div id=9 class='com.microsoft.emmx:id/search_box_text' > Search or type web address </div>\n<div id=10 class='' >  </div>\n"
+    "@Successive_Page": "<button id=1 class='' description='Meet'>  </button>\n<div id=2 class='com.google.android.gm:id/compose_button' description='Compose'> Compose </div>\n<div id=3 class='com.google.android.gm:id/open_search' description='Open navigation drawer,Signed in as Bowen Wang saltyp0rridge20@gmail.com\nAccount and settings.'> Search in mail\n    <p> Search in mail </p>\n    <button id=4 class='com.google.android.gm:id/selected_account_disc_gmail' description='Signed in as Bowen Wang saltyp0rridge20@gmail.com\nAccount and settings.'>  </button>\n\n    <div id=5 class='' description='Open navigation drawer'>  </div>\n </div>\n"
 }

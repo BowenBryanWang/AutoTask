@@ -1,0 +1,29 @@
+<div id=1 class='com.google.android.gm:id/hub_drawer_label_container' > Notes </div>
+<div id=2 class='com.google.android.gm:id/hub_drawer_label_container' > Trash
+    <p> 3 </p> </div>
+<div id=3 class='com.google.android.gm:id/hub_drawer_label_container' > Spam
+    <p> 4 </p> </div>
+<div id=4 class='com.google.android.gm:id/hub_drawer_label_container' > All mail
+    <p> 58 </p> </div>
+<div id=5 class='com.google.android.gm:id/hub_drawer_label_container' > Drafts </div>
+<div id=6 class='com.google.android.gm:id/hub_drawer_label_container' > Outbox </div>
+<div id=7 class='com.google.android.gm:id/hub_drawer_label_container' > Scheduled </div>
+<div id=8 class='com.google.android.gm:id/hub_drawer_label_container' > Sent </div>
+<div id=9 class='com.google.android.gm:id/hub_drawer_label_container' > Important
+    <p> 3 </p> </div>
+<div id=10 class='com.google.android.gm:id/hub_drawer_label_container' > Snoozed </div>
+<div id=11 class='com.google.android.gm:id/hub_drawer_label_container' > Starred </div>
+<div id=12 class='com.google.android.gm:id/hub_drawer_label_container' > Social </div>
+<div id=13 class='com.google.android.gm:id/hub_drawer_label_container' > Promotions </div>
+<div id=14 class='com.google.android.gm:id/hub_drawer_label_container' > Primary
+    <p> 1 </p> </div>
+<button id=15 class='' description='Meet'>  </button>
+<div id=16 class='com.google.android.gm:id/compose_button' description='Compose'> Compose </div>
+<div id=17 class='com.google.android.gm:id/open_search' description='Open navigation drawer,Signed in as Bowen Wang saltyp0rridge20@gmail.com
+Account and settings.'> Search in mail
+    <p> Search in mail </p>
+    <button id=18 class='com.google.android.gm:id/selected_account_disc_gmail' description='Signed in as Bowen Wang saltyp0rridge20@gmail.com
+Account and settings.'>  </button>
+
+    <div id=19 class='' description='Open navigation drawer'>  </div>
+ </div>

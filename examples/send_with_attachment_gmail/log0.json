@@ -1,0 +1,99 @@
+{
+    "@User_intent": "send a google drive attachment in the gmail app",
+    "@Page_components": [
+        "<button id=1 class='' description='Meet'>  </button>\n",
+        "<div id=2 class='com.google.android.gm:id/compose_button' description='Compose'> Compose </div>\n",
+        "<div id=3 class='com.google.android.gm:id/open_search' description='Open navigation drawer,Signed in as Bowen Wang saltyp0rridge20@gmail.com\nAccount and settings.'> Search in mail\n    <p> Search in mail </p> </div>\n",
+        "<button id=4 class='com.google.android.gm:id/selected_account_disc_gmail' description='Signed in as Bowen Wang saltyp0rridge20@gmail.com\nAccount and settings.'>  </button>\n",
+        "<div id=5 class='' description='Open navigation drawer'>  </div>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "Output": {
+                "<button id=1 class='' description='Meet'>  </button>\n": "Open a page for Google Meet integration",
+                "<div id=2 class='com.google.android.gm:id/compose_button' description='Compose'> Compose </div>\n": [
+                    " <div  class='com.google.android.gm:id/composearea_tap_trap_bottom' >  </div><div  class='' > Compose email </div><div  class='com.google.android.gm:id/subject' > Subject </div><button  class='com.google.android.gm:id/add_cc_bcc' description='Add Cc/Bcc'>  </button><div  class='' >  </div><div  class='com.google.android.gm:id/peoplekit_autocomplete_to_prefix' > To </div><div  class='com.google.android.gm:id/from_label' description='From'> From </div><button  class='' description='More options'>  </button><div  class='com.google.android.gm:id/send' description='Send'>  </div><div  class='com.google.android.gm:id/add_attachment' description='Attach file'>  </div><div  class='' description='Navigate up'>  </div>"
+                ],
+                "<div id=3 class='com.google.android.gm:id/open_search' description='Open navigation drawer,Signed in as Bowen Wang saltyp0rridge20@gmail.com\nAccount and settings.'> Search in mail\n    <p> Search in mail </p> </div>\n": [
+                    " <div  class='com.google.android.gm:id/hub_drawer_label_container' > Help & feedback </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > Settings </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > Contacts </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > Calendar </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > Notes </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > Trash    <p> 3 </p> </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > Spam    <p> 23 </p> </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > All mail    <p> 53 </p> </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > Drafts </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > Outbox </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > Scheduled </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > Sent </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > Important </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > Snoozed </div><div  class='com.google.android.gm:id/hub_drawer_label_container' > Starred </div><button  class='' description='Meet'>  </button><div  class='com.google.android.gm:id/compose_button' description='Compose'> Compose </div><div  class='com.google.android.gm:id/open_search' description='Open navigation drawer;;Signed in as Bowen Wang saltyp0rridge20@gmail.comAccount and settings.'> Search in mail    <p> Search in mail </p>    <button  class='com.google.android.gm:id/selected_account_disc_gmail' description='Signed in as Bowen Wang saltyp0rridge20@gmail.comAccount and settings.'>  </button>    <div  class='' description='Open navigation drawer'>  </div> </div>"
+                ],
+                "<button id=4 class='com.google.android.gm:id/selected_account_disc_gmail' description='Signed in as Bowen Wang saltyp0rridge20@gmail.com\nAccount and settings.'>  </button>\n": "Open a page with account details and settings",
+                "<div id=5 class='' description='Open navigation drawer'>  </div>\n": "Open the navigation drawer with more options"
+            }
+        },
+        {
+            "Name": "Select",
+            "Description": "This module is a selection model, selecting the 5 possible component without relativity ranking to be acted on catering to user's intent",
+            "Note": "This individual module only select 5 highly related components,without ranking them,and without analyzing the correctness of the components aligning with user's content ",
+            "Output": {
+                "<div id=2 class='com.google.android.gm:id/compose_button' description='Compose'> Compose </div>\n": "The 'Compose' button would be the first step to sending an email, user can directly compose a new email by clicking on this button.",
+                "<div id=3 class='com.google.android.gm:id/open_search' description='Open navigation drawer,Signed in as Bowen Wang saltyp0rridge20@gmail.com\nAccount and settings.'> Search in mail\n    <p> Search in mail </p> </div>\n": "This is a button to open the navigation drawer, which might have options to attach files or a Google Drive attachment.",
+                "<button id=4 class='com.google.android.gm:id/selected_account_disc_gmail' description='Signed in as Bowen Wang saltyp0rridge20@gmail.com\nAccount and settings.'>  </button>\n": "This component leads to an account detail and settings page. There might be options here to add attachments in Gmail.",
+                "<div id=5 class='' description='Open navigation drawer'>  </div>\n": "This 'Open navigation drawer' widget may also contain options to add attachments.",
+                "<button id=1 class='' description='Meet'>  </button>\n": "While the 'Meet' button does not directly relate to sending an email, it might contain related Google Drive options for adding attachments."
+            }
+        },
+        {
+            "Name": "Plan",
+            "Description": "This module is a plan module, planning the next action based on the selected components, whether click or edit",
+            "Output": {
+                "candidate1": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To compose a new email and attach a Google Drive file."
+                },
+                "candidate2": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To open the search functionality, not relevant to attaching a Google Drive file."
+                },
+                "candidate3": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To access the account and settings, not relevant to attaching a Google Drive file."
+                },
+                "candidate4": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To open the navigation drawer, not relevant to attaching a Google Drive file."
+                },
+                "candidate5": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To access the 'Meet' feature, not relevant to attaching a Google Drive file."
+                }
+            }
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Output": {
+                "<div id=2 class='com.google.android.gm:id/compose_button' description='Compose'> Compose </div>\n": 5,
+                "<div id=3 class='com.google.android.gm:id/open_search' description='Open navigation drawer,Signed in as Bowen Wang saltyp0rridge20@gmail.com\nAccount and settings.'> Search in mail\n    <p> Search in mail </p> </div>\n": 1,
+                "<button id=4 class='com.google.android.gm:id/selected_account_disc_gmail' description='Signed in as Bowen Wang saltyp0rridge20@gmail.com\nAccount and settings.'>  </button>\n": 1,
+                "<div id=5 class='' description='Open navigation drawer'>  </div>\n": 1,
+                "<button id=1 class='' description='Meet'>  </button>\n": 5
+            }
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "status": "go on",
+                "reason": "The user has started composing a new email, which is necessary in order to send a Google Drive attachment. However, the user has not yet attached a file from Google Drive. Further actions are needed to complete this task."
+            }
+        }
+    ],
+    "@Page_description": "Main interface of the Gmail application",
+    "@Previous_Step": " -> Page:Main interface of the Gmail application",
+    "@Action": "Action: Click on <div id=2 class='com.google.android.gm:id/compose_button' description='Compose'> Compose </div>\n",
+    "@Similar_task": [
+        "Share a TikTok video to WhatsApp:['Tap the video you want to share', 'Tap the arrow icon', 'Tap the WhatsApp icon', 'Choose a contact or group', 'Tap Send']",
+        "Save a TikTok video to my phone:['Tap the video you want to save', 'Tap the arrow icon', 'Tap Save video']",
+        "Scan a QR code to add a new contact on WeChat:['Contacts', '+', 'Scan QR Code', 'Align the QR code within the frame', 'Confirm to add']",
+        "Backup my WeChat chat history to my computer:['Me', 'Settings', 'Chat', 'Chat Backup', 'Back Up', 'Scan the QR code on your computer\ufffd\ufffds WeChat app']"
+    ],
+    "@Successive_Page": "<div id=1 class='com.google.android.gm:id/composearea_tap_trap_bottom' >  </div>\n<div id=2 class='com.google.android.gm:id/subject' > Subject </div>\n<button id=3 class='com.google.android.gm:id/add_cc_bcc' description='Add Cc/Bcc'>  </button>\n<div id=4 class='' >  </div>\n<div id=5 class='com.google.android.gm:id/peoplekit_autocomplete_to_prefix' > To </div>\n<div id=6 class='com.google.android.gm:id/from_label' description='From'> From </div>\n<button id=7 class='' description='More options'>  </button>\n<div id=8 class='com.google.android.gm:id/send' description='Send'>  </div>\n<div id=9 class='com.google.android.gm:id/add_attachment' description='Attach file'>  </div>\n<div id=10 class='' description='Navigate up'>  </div>\n"
+}

@@ -1,0 +1,109 @@
+{
+    "@User_intent": "check Google app version",
+    "@Page_components": [
+        "<button id=1 class='com.google.android.googlequicksearchbox:id/googleapp_navigation_bar_collections' description='Collections Button'> Collections </button>\n",
+        "<button id=2 class='com.google.android.googlequicksearchbox:id/googleapp_navigation_bar_search' description='Search'> Search </button>\n",
+        "<div id=3 class='' description='Like this card,Share Chat with pandas DataFrames using LLMs,More options'>  </div>\n",
+        "<div id=4 class='' description='More options'>  </div>\n",
+        "<div id=5 class='' description='Share Chat with pandas DataFrames using LLMs'>  </div>\n",
+        "<div id=6 class='' description='Like this card'>  </div>\n",
+        "<div id=7 class='com.google.android.googlequicksearchbox:id/googleapp_facade_search_box' description='Search\u2026,Voice search,Camera search'> Search\u2026 </div>\n",
+        "<div id=8 class='com.google.android.googlequicksearchbox:id/googleapp_lens_icon' description='Camera search'>  </div>\n",
+        "<div id=9 class='com.google.android.googlequicksearchbox:id/googleapp_mic_icon' description='Voice search'>  </div>\n",
+        "<button id=10 class='com.google.android.googlequicksearchbox:id/googleapp_selected_account_disc' description='Signed in as Bowen Wang saltyp0rridge20@gmail.com\nAccount and settings.'>  </button>\n",
+        "<button id=11 class='com.google.android.googlequicksearchbox:id/googleapp_share_doodle_image' description='Share doodle'>  </button>\n",
+        "<button id=12 class='com.google.android.googlequicksearchbox:id/googleapp_doodle' description='Singapore National Elections 2023'>  </button>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "Output": {
+                "<button id=1 class='com.google.android.googlequicksearchbox:id/googleapp_navigation_bar_collections' description='Collections Button'> Collections </button>\n": "Navigate to a page where you can access your collections",
+                "<button id=2 class='com.google.android.googlequicksearchbox:id/googleapp_navigation_bar_search' description='Search'> Search </button>\n": "Navigate to a search page",
+                "<div id=3 class='' description='Like this card,Share Chat with pandas DataFrames using LLMs,More options'>  </div>\n": "Display a card with options to like, share, and chat about pandas DataFrames using LLMs",
+                "<div id=4 class='' description='More options'>  </div>\n": "Display a card with more options",
+                "<div id=5 class='' description='Share Chat with pandas DataFrames using LLMs'>  </div>\n": "Display a card to share chat about pandas DataFrames using LLMs",
+                "<div id=6 class='' description='Like this card'>  </div>\n": "Display a card to like",
+                "<div id=7 class='com.google.android.googlequicksearchbox:id/googleapp_facade_search_box' description='Search\u2026,Voice search,Camera search'> Search\u2026 </div>\n": "Display a search box with options for voice search and camera search",
+                "<div id=8 class='com.google.android.googlequicksearchbox:id/googleapp_lens_icon' description='Camera search'>  </div>\n": "Display a camera search icon",
+                "<div id=9 class='com.google.android.googlequicksearchbox:id/googleapp_mic_icon' description='Voice search'>  </div>\n": "Display a voice search icon",
+                "<button id=10 class='com.google.android.googlequicksearchbox:id/googleapp_selected_account_disc' description='Signed in as Bowen Wang saltyp0rridge20@gmail.com\nAccount and settings.'>  </button>\n": "Display a button indicating the signed-in account and settings",
+                "<button id=11 class='com.google.android.googlequicksearchbox:id/googleapp_share_doodle_image' description='Share doodle'>  </button>\n": "Display a button to share a doodle",
+                "<button id=12 class='com.google.android.googlequicksearchbox:id/googleapp_doodle' description='Singapore National Elections 2023'>  </button>\n": "Display a doodle related to the Singapore National Elections 2023"
+            }
+        },
+        {
+            "Name": "Select",
+            "Description": "This module is a selection model, selecting the 5 possible component without relativity ranking to be acted on catering to user's intent",
+            "Note": "This individual module only select 5 highly related components,without ranking them,and without analyzing the correctness of the components aligning with user's content ",
+            "Output": {
+                "<button id=10 class='com.google.android.googlequicksearchbox:id/googleapp_selected_account_disc' description='Signed in as Bowen Wang saltyp0rridge20@gmail.com\nAccount and settings.'>  </button>\n": "This component represents the user's account and settings, which is usually where the app version can be found.",
+                "<button id=2 class='com.google.android.googlequicksearchbox:id/googleapp_navigation_bar_search' description='Search'> Search </button>\n": "This is a search button component, where it might be possible to directly search for the app version.",
+                "<button id=1 class='com.google.android.googlequicksearchbox:id/googleapp_navigation_bar_collections' description='Collections Button'> Collections </button>\n": "The Collections button might contain certain information including the app version, though it's less likely, it's a potential pathway to check",
+                "<div id=7 class='com.google.android.googlequicksearchbox:id/googleapp_facade_search_box' description='Search\u2026,Voice search,Camera search'> Search\u2026 </div>\n": "The search box allows direct querying, making it a possible pathway to check for such an option.",
+                "<button id=11 class='com.google.android.googlequicksearchbox:id/googleapp_share_doodle_image' description='Share doodle'>  </button>\n": "While sharing doodles seems unrelated, it's possible that the share feature would contain the app version as part of the shared content metadata."
+            }
+        },
+        {
+            "Name": "Plan",
+            "Description": "This module is a plan module, planning the next action based on the selected components, whether click or edit",
+            "Output": {
+                "candidate1": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To access the account and settings page where the app version can be found."
+                },
+                "candidate2": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To perform a search, not relevant to checking the app version."
+                },
+                "candidate3": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To access the collections feature, not relevant to checking the app version."
+                },
+                "candidate4": {
+                    "action": "edit",
+                    "text": null,
+                    "reason": "To enter a search query, not relevant to checking the app version."
+                },
+                "candidate5": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To share a doodle, not relevant to checking the app version."
+                }
+            }
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Output": {
+                "<button id=10 class='com.google.android.googlequicksearchbox:id/googleapp_selected_account_disc' description='Signed in as Bowen Wang saltyp0rridge20@gmail.com\nAccount and settings.'>  </button>\n": 34,
+                "<button id=2 class='com.google.android.googlequicksearchbox:id/googleapp_navigation_bar_search' description='Search'> Search </button>\n": 6,
+                "<button id=1 class='com.google.android.googlequicksearchbox:id/googleapp_navigation_bar_collections' description='Collections Button'> Collections </button>\n": 3,
+                "<div id=7 class='com.google.android.googlequicksearchbox:id/googleapp_facade_search_box' description='Search\u2026,Voice search,Camera search'> Search\u2026 </div>\n": 6,
+                "<button id=11 class='com.google.android.googlequicksearchbox:id/googleapp_share_doodle_image' description='Share doodle'>  </button>\n": 3
+            }
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "status": "go on",
+                "reason": "The user has correctly navigated to the 'Account and settings' section, which is aligned with the task to check the Google app version. However, the app version information was not located in the current UI screen. \u2018Settings\u2019 is often where app version information is found in most application interfaces. Therefore, the user should continue with further action, likely clicking on 'Settings'."
+            }
+        }
+    ],
+    "@Page_description": "Google app interface",
+    "@Previous_Step": " -> Page:Google app interface",
+    "@Action": "Action: Click on <button id=10 class='com.google.android.googlequicksearchbox:id/googleapp_selected_account_disc' description='Signed in as Bowen Wang saltyp0rridge20@gmail.com\nAccount and settings.'>  </button>\n",
+    "@Similar_task": [
+        "Change the language on my WeChat app into English:['Me', 'Settings', 'General', 'Language', 'English']",
+        "Search for nearby people on WeChat:['Discover', 'People Nearby', 'Start Search', 'Tap on the name of the person you want to chat with', 'Send a greeting message']",
+        "Check my WeChat balance and transaction history:['Me', 'Pay', 'Wallet', 'Tap on your balance', 'Transaction Records']",
+        "Check my credit score on Alipay:['Home', 'My', 'Credit Score']"
+    ],
+    "@Successive_Page": "<div id=1 class='com.google.android.googlequicksearchbox:id/og_tos_button' > Terms of Service </div>\n<div id=2 class='com.google.android.googlequicksearchbox:id/og_privacy_policy_button' > Privacy Policy </div>\n<div id=3 class='com.google.android.googlequicksearchbox:id/og_card' > Help & feedback </div>\n<div id=4 class='com.google.android.googlequicksearchbox:id/og_card' > Settings </div>\n<div id=5 class='com.google.android.googlequicksearchbox:id/og_card' > Your data in Search </div>\n<div id=6 class='com.google.android.googlequicksearchbox:id/og_card' > Reminders </div>\n<div id=7 class='com.google.android.googlequicksearchbox:id/og_card' > Results about you\n    <p> Beta </p> </div>\n<div id=8 class='com.google.android.googlequicksearchbox:id/og_card' description='Delete last 15 minutes of Search history from your Google account'> Delete last 15 minutes </div>\n<div id=9 class='com.google.android.googlequicksearchbox:id/og_card' > Search history\n    <p> Saving </p> </div>\n<div id=10 class='com.google.android.googlequicksearchbox:id/og_card' > New Chrome incognito tab </div>\n<div id=11 class='com.google.android.googlequicksearchbox:id/my_account_chip' > Manage your Google Account </div>\n<div id=12 class='com.google.android.googlequicksearchbox:id/selected_account_view' description='Change profile picture.,Signed in as Bowen Wang\nsaltyp0rridge20@gmail.com,Expand account list.'> Bowen Wang\n    <p> saltyp0rridge20@gmail.com </p>\n    <button id=13 class='com.google.android.googlequicksearchbox:id/account_avatar' description='Change profile picture.'>  </button>\n </div>\n<button id=14 class='com.google.android.googlequicksearchbox:id/og_header_close_button' description='Close'>  </button>\n"
+}

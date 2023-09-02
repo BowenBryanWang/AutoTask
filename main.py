@@ -35,6 +35,7 @@ def demo_route() -> Union[str, Response]:
     # return {'node_id': 1, 'trail': '[0,0]', 'action_type': 'text', 'text': "Lowe's", 'ori_absolute_id': 'android.widget.FrameLayout|0;android.widget.LinearLayout|0;android.widget.FrameLayout|0;android.widget.FrameLayout|0;android.widget.FrameLayout|0;android.view.ViewGroup|0;android.widget.FrameLayout|0;android.widget.FrameLayout|0;android.view.ViewGroup|0;android.widget.ScrollView|0;android.widget.LinearLayout|1;android.widget.LinearLayout|0;android.widget.EditText'}
     screen = Screen(INDEX)
     screen.update(request=request.form)
+    print("INDEX",INDEX)
     if STATUS == "start":
         STATUS = "running"
         if COMPUTATIONAL_GRAPH != []:

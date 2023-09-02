@@ -47,10 +47,10 @@ class Screen:
         self.page_instance = PageInstance()
         self.page_instance.load_from_dict("", json.loads(self.layout))
         self.page_root = self.page_instance.ui_root
-        if len(self.page_root.children[0].children[0].children) == 2:
-            print("FUCK")
-            self.page_root.children[0].children[0].children = [
-                self.page_root.children[0].children[0].children[0]]
+        # if len(self.page_root.children[0].children[0].children) == 2:
+        #     print("FUCK")
+        #     self.page_root.children[0].children[0].children = [
+        #         self.page_root.children[0].children[0].children[0]]
         print("all_text", self.page_root.generate_all_text())
         self.semantic_nodes,relation = self.page_root.get_all_semantic_nodes()
 

@@ -1,7 +1,3 @@
-# coding=utf-8
-#  这个文件强调的是一个应用爬虫结果的组织形式
-
-import csv
 import os.path
 from page import Utility
 import json

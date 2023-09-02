@@ -5,7 +5,7 @@ from typing import Optional
 
 import tqdm
 
-from .knowledge import PageJump_KB, Task_KB
+from .knowledge import Error_KB, PageJump_KB, Task_KB
 from src.decide import Decide
 from src.evaluate import Evaluate
 from src.feedback import Feedback
@@ -63,14 +63,16 @@ class Model:
 
         #####################################################
         # 3. Submodules
-        self.database = Database(
-            user="root", password="wbw12138zy,.", host="127.0.0.1", database="GUI_LLM")
+        # self.database = Database(
+        #     user="root", password="wbw12138zy,.", host="127.0.0.1", database="GUI_LLM")
         print("· database connected")
         self.PageJump_KB = PageJump_KB(None)
         
         print("· pagejump_kb initialized")
         self.Task_KB = Task_KB()
+        self.Error_KB = Error_KB()
         self.similar_tasks,self.similar_traces = self.Task_KB.find_most_similar_tasks(self.task)
+        self.error_experiences = self.Error_KB.find_experiences(self.task)
         print("· task_kb initialized")
         self.predict_module = Predict(self, self.PageJump_KB)
         print("· predict module initialized")
@@ -98,7 +100,7 @@ class Model:
         """
         if self.prev_model is not None:
             status = self.prev_model.decide_module.decide(self.screen)
-            if status == "Wrong":
+            if status == "wrong":
                 # self.prev_model.feedback_module.feedback()
                 print("wrong: feedback started")
                 return  {"node_id": 1, "trail": "[0,0]", "action_type": "back"},"wrong"

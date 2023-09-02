@@ -1,0 +1,129 @@
+{
+    "@User_intent": "manage bookmarks in the chrome app",
+    "@Page_components": [
+        "<div id=1 class='com.android.chrome:id/menu_button' description='More options'>  </div>\n",
+        "<div id=2 class='com.android.chrome:id/tab_switcher_button' description='Switch or close tabs'>  </div>\n",
+        "<div id=3 class='com.android.chrome:id/optional_toolbar_button' description='Manage account'>  </div>\n",
+        "<div id=4 class='com.android.chrome:id/home_button' description='Home'>  </div>\n",
+        "<div id=5 class='' description='Share \u3010\u5fae\u4fe1\u81ea\u52a8\u5316\u3011\u4f7f\u7528c#\u5b9e\u73b0\u5fae\u4fe1\u81ea\u52a8\u5316- \u56db\u5904\u89c2\u5bdf,Card Menu \u3010\u5fae\u4fe1\u81ea\u52a8\u5316\u3011\u4f7f\u7528c#\u5b9e\u73b0\u5fae\u4fe1\u81ea\u52a8\u5316- \u56db\u5904\u89c2\u5bdf'>  </div>\n",
+        "<div id=6 class='' description='Card Menu \u3010\u5fae\u4fe1\u81ea\u52a8\u5316\u3011\u4f7f\u7528c#\u5b9e\u73b0\u5fae\u4fe1\u81ea\u52a8\u5316- \u56db\u5904\u89c2\u5bdf'>  </div>\n",
+        "<div id=7 class='' description='Share \u3010\u5fae\u4fe1\u81ea\u52a8\u5316\u3011\u4f7f\u7528c#\u5b9e\u73b0\u5fae\u4fe1\u81ea\u52a8\u5316- \u56db\u5904\u89c2\u5bdf'>  </div>\n",
+        "<div id=8 class='' description='Share Boost Your Bottom Line and Performance: OpenAI\u2019s 3.5T Fine-Tuning with LangSmith,Card Menu Boost Your Bottom Line and Performance: OpenAI\u2019s 3.5T Fine-Tuning with LangSmith'>  </div>\n",
+        "<div id=9 class='' description='Card Menu Boost Your Bottom Line and Performance: OpenAI\u2019s 3.5T Fine-Tuning with LangSmith'>  </div>\n",
+        "<div id=10 class='' description='Share Boost Your Bottom Line and Performance: OpenAI\u2019s 3.5T Fine-Tuning with LangSmith'>  </div>\n",
+        "<div id=11 class='com.android.chrome:id/header_menu' description='Options for Discover'>  </div>\n",
+        "<button id=12 class='' description='Navigate: V2EX: www.v2ex.com'> V2EX </button>\n",
+        "<button id=13 class='' description='Navigate: \u7ef4\u57fa\u767e\u79d1: zh.m.wikipedia.org'> \u7ef4\u57fa\u767e\u79d1 </button>\n",
+        "<button id=14 class='' description='Navigate: GitHub: github.com'> GitHub </button>\n",
+        "<button id=15 class='' description='Navigate: Facebook: m.facebook.com'> Facebook </button>\n",
+        "<button id=16 class='' description='Navigate: \u864e\u6251: www.hupu.com'> \u864e\u6251 </button>\n",
+        "<button id=17 class='' description='Navigate: \u767e\u5ea6: www.baidu.com'> \u767e\u5ea6 </button>\n",
+        "<button id=18 class='' description='Navigate: Decoder: localhost'> Decoder </button>\n",
+        "<button id=19 class='' description='Navigate: https://m.youtube.com/: m.youtube.com'> https://m.youtube.com/ </button>\n",
+        "<button id=20 class='com.android.chrome:id/lens_camera_button' description='Search with your camera using Google Lens'>  </button>\n",
+        "<button id=21 class='com.android.chrome:id/voice_search_button' description='Start voice search'>  </button>\n",
+        "<div id=22 class='com.android.chrome:id/search_box_text' > Search or type web address </div>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "Output": {
+                "<div id=1 class='com.android.chrome:id/menu_button' description='More options'>  </div>\n": "Access more options",
+                "<div id=2 class='com.android.chrome:id/tab_switcher_button' description='Switch or close tabs'>  </div>\n": "Switch or close tabs",
+                "<div id=3 class='com.android.chrome:id/optional_toolbar_button' description='Manage account'>  </div>\n": "Manage account",
+                "<div id=4 class='com.android.chrome:id/home_button' description='Home'>  </div>\n": "Go back to the home page",
+                "<div id=5 class='' description='Share \u3010\u5fae\u4fe1\u81ea\u52a8\u5316\u3011\u4f7f\u7528c#\u5b9e\u73b0\u5fae\u4fe1\u81ea\u52a8\u5316- \u56db\u5904\u89c2\u5bdf,Card Menu \u3010\u5fae\u4fe1\u81ea\u52a8\u5316\u3011\u4f7f\u7528c#\u5b9e\u73b0\u5fae\u4fe1\u81ea\u52a8\u5316- \u56db\u5904\u89c2\u5bdf'>  </div>\n": "Share content related to '\u5fae\u4fe1\u81ea\u52a8\u5316'",
+                "<div id=6 class='' description='Card Menu \u3010\u5fae\u4fe1\u81ea\u52a8\u5316\u3011\u4f7f\u7528c#\u5b9e\u73b0\u5fae\u4fe1\u81ea\u52a8\u5316- \u56db\u5904\u89c2\u5bdf'>  </div>\n": "Access a card menu related to '\u5fae\u4fe1\u81ea\u52a8\u5316'",
+                "<div id=7 class='' description='Share \u3010\u5fae\u4fe1\u81ea\u52a8\u5316\u3011\u4f7f\u7528c#\u5b9e\u73b0\u5fae\u4fe1\u81ea\u52a8\u5316- \u56db\u5904\u89c2\u5bdf'>  </div>\n": "Share content related to '\u5fae\u4fe1\u81ea\u52a8\u5316'",
+                "<div id=8 class='' description='Share Boost Your Bottom Line and Performance: OpenAI\u2019s 3.5T Fine-Tuning with LangSmith,Card Menu Boost Your Bottom Line and Performance: OpenAI\u2019s 3.5T Fine-Tuning with LangSmith'>  </div>\n": "Share content related to 'Boost Your Bottom Line and Performance: OpenAI\u2019s 3.5T Fine-Tuning with LangSmith'",
+                "<div id=9 class='' description='Card Menu Boost Your Bottom Line and Performance: OpenAI\u2019s 3.5T Fine-Tuning with LangSmith'>  </div>\n": "Access a card menu related to 'Boost Your Bottom Line and Performance: OpenAI\u2019s 3.5T Fine-Tuning with LangSmith'",
+                "<div id=10 class='' description='Share Boost Your Bottom Line and Performance: OpenAI\u2019s 3.5T Fine-Tuning with LangSmith'>  </div>\n": "Share content related to 'Boost Your Bottom Line and Performance: OpenAI\u2019s 3.5T Fine-Tuning with LangSmith'",
+                "<div id=11 class='com.android.chrome:id/header_menu' description='Options for Discover'>  </div>\n": "Options for Discover",
+                "<button id=12 class='' description='Navigate: V2EX: www.v2ex.com'> V2EX </button>\n": "Navigate to V2EX website",
+                "<button id=13 class='' description='Navigate: \u7ef4\u57fa\u767e\u79d1: zh.m.wikipedia.org'> \u7ef4\u57fa\u767e\u79d1 </button>\n": "Navigate to \u7ef4\u57fa\u767e\u79d1 website",
+                "<button id=14 class='' description='Navigate: GitHub: github.com'> GitHub </button>\n": "Navigate to GitHub website",
+                "<button id=15 class='' description='Navigate: Facebook: m.facebook.com'> Facebook </button>\n": "Navigate to Facebook website",
+                "<button id=16 class='' description='Navigate: \u864e\u6251: www.hupu.com'> \u864e\u6251 </button>\n": "Navigate to \u864e\u6251 website",
+                "<button id=17 class='' description='Navigate: \u767e\u5ea6: www.baidu.com'> \u767e\u5ea6 </button>\n": "Navigate to \u767e\u5ea6 website",
+                "<button id=18 class='' description='Navigate: Decoder: localhost'> Decoder </button>\n": "Navigate to Decoder website",
+                "<button id=19 class='' description='Navigate: https://m.youtube.com/: m.youtube.com'> https://m.youtube.com/ </button>\n": "Navigate to https://m.youtube.com/ website",
+                "<button id=20 class='com.android.chrome:id/lens_camera_button' description='Search with your camera using Google Lens'>  </button>\n": "Search with your camera using Google Lens",
+                "<button id=21 class='com.android.chrome:id/voice_search_button' description='Start voice search'>  </button>\n": "Start voice search",
+                "<div id=22 class='com.android.chrome:id/search_box_text' > Search or type web address </div>\n": "Search or type web address"
+            }
+        },
+        {
+            "Name": "Select",
+            "Description": "This module is a selection model, selecting the 5 possible component without relativity ranking to be acted on catering to user's intent",
+            "Note": "This individual module only select 5 highly related components,without ranking them,and without analyzing the correctness of the components aligning with user's content ",
+            "Output": {
+                "<div id=1 class='com.android.chrome:id/menu_button' description='More options'>  </div>\n": "This component represents the 'More options' button, which is commonly used to access additional settings and features in the Chrome app.",
+                "<div id=2 class='com.android.chrome:id/tab_switcher_button' description='Switch or close tabs'>  </div>\n": "This component represents the 'Switch or close tabs' button, which is relevant to managing bookmarks as it allows users to switch between tabs and close unwanted tabs.",
+                "<div id=3 class='com.android.chrome:id/optional_toolbar_button' description='Manage account'>  </div>\n": "This component represents the 'Manage account' button, which may include options for syncing bookmarks across devices or managing bookmark-related settings.",
+                "<div id=4 class='com.android.chrome:id/home_button' description='Home'>  </div>\n": "This component represents the 'Home' button, which could be useful for managing bookmarks as it allows users to quickly navigate to their homepage or bookmarks page.",
+                "<div id=5 class='' description='Share \u3010\u5fae\u4fe1\u81ea\u52a8\u5316\u3011\u4f7f\u7528c#\u5b9e\u73b0\u5fae\u4fe1\u81ea\u52a8\u5316- \u56db\u5904\u89c2\u5bdf,Card Menu \u3010\u5fae\u4fe1\u81ea\u52a8\u5316\u3011\u4f7f\u7528c#\u5b9e\u73b0\u5fae\u4fe1\u81ea\u52a8\u5316- \u56db\u5904\u89c2\u5bdf'>  </div>\n": "This component represents a section related to sharing and bookmarking content. Exploring this component may provide options for managing bookmarks and sharing bookmarked content."
+            }
+        },
+        {
+            "Name": "Plan",
+            "Description": "This module is a plan module, planning the next action based on the selected components, whether click or edit",
+            "Output": {
+                "candidate1": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To access more options, which may include managing bookmarks."
+                },
+                "candidate2": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To switch or close tabs, not directly related to managing bookmarks."
+                },
+                "candidate3": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To manage the user's account, not specifically for managing bookmarks."
+                },
+                "candidate4": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To go back to the home page, not directly related to managing bookmarks."
+                },
+                "candidate5": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To interact with a specific webpage or share it, not directly related to managing bookmarks."
+                }
+            }
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Output": {
+                "<div id=1 class='com.android.chrome:id/menu_button' description='More options'>  </div>\n": 35,
+                "<div id=2 class='com.android.chrome:id/tab_switcher_button' description='Switch or close tabs'>  </div>\n": 15,
+                "<div id=3 class='com.android.chrome:id/optional_toolbar_button' description='Manage account'>  </div>\n": 13,
+                "<div id=4 class='com.android.chrome:id/home_button' description='Home'>  </div>\n": 15,
+                "<div id=5 class='' description='Share \u3010\u5fae\u4fe1\u81ea\u52a8\u5316\u3011\u4f7f\u7528c#\u5b9e\u73b0\u5fae\u4fe1\u81ea\u52a8\u5316- \u56db\u5904\u89c2\u5bdf,Card Menu \u3010\u5fae\u4fe1\u81ea\u52a8\u5316\u3011\u4f7f\u7528c#\u5b9e\u73b0\u5fae\u4fe1\u81ea\u52a8\u5316- \u56db\u5904\u89c2\u5bdf'>  </div>\n": 14
+            }
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "status": "go on",
+                "reason": "The user has successfully navigated to the 'More options' section of the Chrome browser interface, which contains the 'Bookmarks' button. To manage bookmarks, the user needs to click on the 'Bookmarks' button, which is the next logical step to perform."
+            }
+        }
+    ],
+    "@Page_description": "Google Chrome browser interface",
+    "@Previous_Step": " -> Page:Google Chrome browser interface",
+    "@Action": "Action: Click on <div id=1 class='com.android.chrome:id/menu_button' description='More options'>  </div>\n",
+    "@Similar_task": [
+        "View my bookmarks on Zhihu:['Tap the profile icon on the bottom right', 'Tap the bookmark icon on the top left', 'Select a bookmark from the list']",
+        "Bookmark an answer on Zhihu:['Tap the answer you want to bookmark', 'Tap the bookmark icon on the bottom right', 'Confirm your bookmark']",
+        "Backup my WeChat chat history to my computer:['Me', 'Settings', 'Chat', 'Chat Backup', 'Back Up', 'Scan the QR code on your computer\ufffd\ufffds WeChat app']",
+        "Edit or delete a collection on Zhihu:['Tap the profile icon on the bottom right', 'Tap Collections under your profile information', 'Select a collection from the list', 'Tap the three dots icon on the top right', 'Select Edit or Delete from the menu', 'Make changes or confirm deletion']"
+    ],
+    "@Successive_Page": "<div id=1 class='com.android.chrome:id/help_id' description='Help & feedback'> Help & feedback </div>\n<div id=2 class='com.android.chrome:id/preferences_id' description='Settings'> Settings </div>\n<div id=3 class='com.android.chrome:id/divider_line_id' >  </div>\n<div id=4 class='com.android.chrome:id/recent_tabs_menu_id' description='Recent tabs'> Recent tabs </div>\n<div id=5 class='com.android.chrome:id/all_bookmarks_menu_id' description='Bookmarks'> Bookmarks </div>\n<div id=6 class='com.android.chrome:id/downloads_menu_id' description='Downloads'> Downloads </div>\n<div id=7 class='com.android.chrome:id/open_history_menu_id' description='History'> History </div>\n<div id=8 class='com.android.chrome:id/divider_line_id' >  </div>\n<div id=9 class='com.android.chrome:id/new_incognito_tab_menu_id' description='New Incognito tab'> New Incognito tab </div>\n<div id=10 class='com.android.chrome:id/new_tab_menu_id' description='New tab'> New tab </div>\n<div id=11 class='com.android.chrome:id/update_menu_id' description='Update Chrome'> Update Chrome\n    <p> Newer version is available </p> </div>\n<div id=12 class='com.android.chrome:id/button_five' description='Refresh'>  </div>\n<div id=13 class='com.android.chrome:id/button_four' description='Page info'>  </div>\n<div id=14 class='com.android.chrome:id/button_three' description='Download'>  </div>\n<div id=15 class='com.android.chrome:id/button_two' description='Bookmark'>  </div>\n<div id=16 class='com.android.chrome:id/button_one' description='Forward'>  </div>\n"
+}

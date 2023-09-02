@@ -1,0 +1,115 @@
+{
+    "@User_intent": "turn on notifications settings in the gmail app",
+    "@Page_components": [
+        "<div id=1 class='' >  </div>\n",
+        "<div id=2 class='' > Auto-fit messages\n    <p> Shrink messages to fit the screen </p> </div>\n",
+        "<div id=3 class='android:id/checkbox' >  </div>\n",
+        "<div id=4 class='' > Default reply action\n    <p> Choose your default reply action </p> </div>\n",
+        "<div id=5 class='' > Swipe actions\n    <p> Configure swipe actions to quickly act on emails in the conversation list </p> </div>\n",
+        "<div id=6 class='' > Hide bottom navigation on scroll </div>\n",
+        "<div id=7 class='android:id/checkbox' >  </div>\n",
+        "<div id=8 class='' > Conversation list density\n    <p> Default </p> </div>\n",
+        "<div id=9 class='' > Conversation view\n    <p> Group emails in the same conversation together for IMAP, POP3, and Exchange accounts </p> </div>\n",
+        "<div id=10 class='android:id/checkbox' >  </div>\n",
+        "<div id=11 class='' > Manage notifications </div>\n",
+        "<div id=12 class='' > Default notification action\n    <p> Archive </p> </div>\n",
+        "<div id=13 class='' > Theme\n    <p> System default </p> </div>\n",
+        "<button id=14 class='' description='More options'>  </button>\n",
+        "<div id=15 class='' description='Navigate up'>  </div>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "Output": {
+                "<div id=1 class='' >  </div>\n": "Empty div element",
+                "<div id=2 class='' > Auto-fit messages\n    <p> Shrink messages to fit the screen </p> </div>\n": "Div element with auto-fit messages feature",
+                "<div id=3 class='android:id/checkbox' >  </div>\n": "Checkbox element",
+                "<div id=4 class='' > Default reply action\n    <p> Choose your default reply action </p> </div>\n": "Div element with default reply action",
+                "<div id=5 class='' > Swipe actions\n    <p> Configure swipe actions to quickly act on emails in the conversation list </p> </div>\n": "Div element with swipe actions configuration",
+                "<div id=6 class='' > Hide bottom navigation on scroll </div>\n": "Div element for hiding bottom navigation on scroll",
+                "<div id=7 class='android:id/checkbox' >  </div>\n": "Checkbox element",
+                "<div id=8 class='' > Conversation list density\n    <p> Default </p> </div>\n": "Div element with conversation list density",
+                "<div id=9 class='' > Conversation view\n    <p> Group emails in the same conversation together for IMAP, POP3, and Exchange accounts </p> </div>\n": "Div element with conversation view settings",
+                "<div id=10 class='android:id/checkbox' >  </div>\n": "Checkbox element",
+                "<div id=11 class='' > Manage notifications </div>\n": "Div element for managing notifications",
+                "<div id=12 class='' > Default notification action\n    <p> Archive </p> </div>\n": "Div element with default notification action",
+                "<div id=13 class='' > Theme\n    <p> System default </p> </div>\n": "Div element with theme settings",
+                "<button id=14 class='' description='More options'>  </button>\n": "Button element for more options",
+                "<div id=15 class='' description='Navigate up'>  </div>\n": "Div element for navigating up"
+            }
+        },
+        {
+            "Name": "Select",
+            "Description": "This module is a selection model, selecting the 5 possible component without relativity ranking to be acted on catering to user's intent",
+            "Note": "This individual module only select 5 highly related components,without ranking them,and without analyzing the correctness of the components aligning with user's content ",
+            "Output": {
+                "<div id=11 class='' > Manage notifications </div>\n": "The component with id=11 represents 'Manage Notifications' within the settings page. As the user's intent is to turn on notifications, this component is highly likely to pertain to the intended action.",
+                "<div id=12 class='' > Default notification action\n    <p> Archive </p> </div>\n": "The component with id=12, labeled as 'Default notification action', may correspond to the overall notification settings. It, therefore, is a potential candidate for turning on notifications.",
+                "<div id=3 class='android:id/checkbox' >  </div>\n": "The component with id=3 is styled as a checkbox and, while we lack description, checkboxes often represent toggle actions like turning off/on notifications.",
+                "<div id=7 class='android:id/checkbox' >  </div>\n": "The component with id=7 also presents a checkbox. Again, checkboxes are frequently used to toggle settings on and off and in this context, it could be related to notification settings.",
+                "<div id=10 class='android:id/checkbox' >  </div>\n": "The fifth selection, component with id=10 is another checkbox element. As mentioned earlier, checkboxes are typically used for toggle actions like activating or deactivating certain features. Hence, it could be related to notification settings and should be further investigated."
+            }
+        },
+        {
+            "Name": "Plan",
+            "Description": "This module is a plan module, planning the next action based on the selected components, whether click or edit",
+            "Output": {
+                "candidate1": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To access the notification settings."
+                },
+                "candidate2": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To change the default notification action, not specifically related to turning on notifications."
+                },
+                "candidate3": {
+                    "action": "edit",
+                    "text": "on",
+                    "reason": "To turn on the notifications."
+                },
+                "candidate4": {
+                    "action": "edit",
+                    "text": "on",
+                    "reason": "To turn on the notifications."
+                },
+                "candidate5": {
+                    "action": "edit",
+                    "text": "on",
+                    "reason": "To turn on the notifications."
+                }
+            }
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Output": {
+                "<div id=11 class='' > Manage notifications </div>\n": 20,
+                "<div id=12 class='' > Default notification action\n    <p> Archive </p> </div>\n": 10,
+                "<div id=3 class='android:id/checkbox' >  </div>\n": 15,
+                "<div id=7 class='android:id/checkbox' >  </div>\n": 13,
+                "<div id=10 class='android:id/checkbox' >  </div>\n": 13
+            }
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "status": "go on",
+                "reason": "The user has navigated correctly to the notifications settings which is in line with the task of managing notifications for the Gmail app. However, the action trace does not show the user has turned on the notifications. Thus, further actions are needed."
+            }
+        }
+    ],
+    "@Page_description": "Settings page of an email application",
+    "@Previous_Step": " -> Page:Account settings page -> Action: Click on <div id=3 class='' > General settings </div>\n -> Page:Settings page of an email application -> Action: Click on <div id=11 class='' > Manage notifications </div>\n -> Page:Settings page of an email application",
+    "@Action": "Action: Click on <div id=11 class='' > Manage notifications </div>\n",
+    "@Similar_task": [
+        "Turn on push notifications for comments and likes on Weibo:['Me', 'Settings', 'Notifications', 'Toggle on Comments and Likes']",
+        "Turn off notifications from TikTok:['Me', 'Settings and privacy', 'Notifications', 'Toggle off Allow notifications']",
+        "View my notifications or messages on Zhihu:['Tap the profile icon on the bottom right', 'Tap the bell icon or the message icon on the top left', 'Select a notification or message from the list']",
+        "Turn off WeChat notifications for chat group 2:['Select the group 2', 'Toggle on Mute Notifications']"
+    ],
+    "@Successive_Page": "<div id=1 class='' description='Navigate up'>  </div>\n<div id=2 class='' >  </div>\n<div id=3 class='' > Screen time\n    <p> 25 minutes today </p> </div>\n<div id=4 class='' > Mobile data & Wi\u2011Fi\n    <p> 2.63 MB used since Aug 5 </p> </div>\n<div id=5 class='' > Storage & cache\n    <p> 31.83 MB used in internal storage </p> </div>\n<div id=6 class='' > Permissions\n    <p> \u00a0 </p> </div>\n<div id=7 class='' > Notifications\n    <p> About 1 notification per day </p> </div>\n<div id=8 class='' > Force stop </div>\n<div id=9 class='' > Disable </div>\n<div id=10 class='' > Open </div>\n"
+}
