@@ -1,61 +1,30 @@
-<button id=1 class='' description='Meet'>  </button>
-<div id=2 class='com.google.android.gm:id/compose_button' description='Compose'> Compose </div>
-<div id=3 class='com.google.android.gm:id/viewified_conversation_item_view' > Unread, Important, , 🔳 Turing Post, , Cohere AI Chronicle — Challenging Tech Giants With AI For All, Bringing Google-Quality AI to Everyone While Addressing Concerns About LLMs Biases ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌, ,  at 08:04, labels: Inbox, 
-    <p> 🔳 Turing Post </p>
-    <p> 08:04 </p>
-    <p> Cohere AI Chronicle — Challenging Tech Giants With AI For All </p>
-    <p> Bringing Google-Quality AI to Everyone While Addressing Concerns About LLMs Biases ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ </p>
-    <button id=4 class='com.google.android.gm:id/contact_image' >  </button>
+<div id=1 class='' > Confirm before archiving
+    <div id=2 class='android:id/checkbox' >  </div>
  </div>
-<div id=5 class='com.google.android.gm:id/viewified_conversation_item_view' > , Important, , ETS Product Innovation and Development, , Last chance to participate! Earn CNY 50 by sharing your TOEFL registration experience, To view this email as a web page, click here TOEFL Logo Dear BOWEN, You still have time to help us improve the TOEFL registration process, and it will take just five minutes! Complete the brief survey, ,  at 10:00, labels: Inbox, 
-    <p> ETS Product Innovation and Development </p>
-    <p> 10:00 </p>
-    <p> Last chance to participate! Earn CNY 50 by sharing your TOEFL registration experience </p>
-    <p> To view this email as a web page, click here TOEFL Logo Dear BOWEN, You still have time to help us improve the TOEFL registration process, and it will take just five minutes! Complete the brief survey </p>
-    <button id=6 class='com.google.android.gm:id/contact_image' >  </button>
+<div id=3 class='' > Confirm before deleting
+    <div id=4 class='android:id/checkbox' >  </div>
  </div>
-<div id=7 class='com.google.android.gm:id/viewified_conversation_item_view' > Unread, Important, , GLaDOS, , [Action Required]GLaDOS 服务到期提醒(1天), Hello, 您的 GLaDOS 账户(saltyp0rridge20@gmail.com)在接近过期，请到网站完成续费。请在务必在过期前续费，在会员过期后续费会造成短暂的使用故障(会员中断后重新开通需要60-120分钟)。 如果中断会员后再次续费的情况下，超过2个小时仍然断网，您可以通过在线帮助来联系我们。 提醒邮件会在会员过期后自动停止发送。 We just wanted to give you, ,  at 16:30, labels: Inbox, 
-    <p> GLaDOS </p>
-    <p> 16:30 </p>
-    <p> [Action…]GLaDOS 服务到期提醒(1天) </p>
-    <p> Hello, 您的 GLaDOS 账户(saltyp0rridge20@gmail.com)在接近过期，请到网站完成续费。请在务必在过期前续费，在会员过期后续费会造成短暂的使用故障(会员中断后重新开通需要60-120分钟)。 如果中断会员后再次续费的情况下，超过2个小时仍然断网，您可以通过在线帮助来联系我们。 提醒邮件会在会员过期后自动停止发送。 We just wanted to give you </p>
-    <button id=8 class='com.google.android.gm:id/contact_image' >  </button>
+<div id=5 class='' > Open web links in Gmail
+    <p> Turn on for faster browsing </p>
+    <div id=6 class='android:id/checkbox' >  </div>
  </div>
-<div id=9 class='com.google.android.gm:id/viewified_conversation_item_view' > Unread, , , Researcher.Life, , Complete Your All Access Purchase and Save 50% Today!, Hi Researcher, I noticed that you were interested in Researcher.Life's All Access subscription. I don't want you to miss out on the incredible benefits it offers! The All Access pack offers you, ,  at 16:35, labels: Inbox, 
-    <p> Researcher.Life </p>
-    <p> 16:35 </p>
-    <p> Complete Your All Access Purchase and Save 50% Today! </p>
-    <p> Hi Researcher, I noticed that you were interested in Researcher.Life's All Access subscription. I don't want you to miss out on the incredible benefits it offers! The All Access pack offers you </p>
-    <button id=10 class='com.google.android.gm:id/contact_image' >  </button>
+<div id=7 class='' > Auto-advance
+    <p> Show conversation list after you archive or delete </p> </div>
+<div id=8 class='' > Auto-fit messages
+    <p> Shrink messages to fit the screen </p>
+    <div id=9 class='android:id/checkbox' >  </div>
  </div>
-<div id=11 class='com.google.android.gm:id/viewified_conversation_item_view' description=' File'> Unread, Important, , Felicia Tan Fang Yi, , Weekly Lab Event: Week 36, Hi Everyone, We will have the following lab events next week. Monday, 4 Sept Stand-up Zoom Meeting: 9 am. For all hired members and project managers (master and Ph.D. students). Tuesday, 5 Sept Stand-, ,  at 16:54, labels: Inbox, 
-    <p> Felicia Tan Fang Yi </p>
-    <p> 16:54 </p>
-    <p> Weekly Lab Event: Week 36 </p>
-    <p> Hi Everyone, We will have the following lab events next week. Monday, 4 Sept Stand-up Zoom Meeting: 9 am. For all hired members and project managers (master and Ph.D. students). Tuesday, 5 Sept Stand- </p>
-    <p> 2023 (May-Aug) </p>
-    <div id=12 class='com.google.android.gm:id/attachment_name' > 2023 (May-Aug) </div>
-
-    <button id=13 class='com.google.android.gm:id/contact_image' >  </button>
+<div id=10 class='' > Default reply action
+    <p> Choose your default reply action </p> </div>
+<div id=11 class='' > Swipe actions
+    <p> Configure swipe actions to quickly act on emails in the conversation list </p> </div>
+<div id=12 class='' > Hide bottom navigation on scroll
+    <div id=13 class='android:id/checkbox' >  </div>
  </div>
-<div id=14 class='com.google.android.gm:id/viewified_conversation_item_view' > Unread, Important, , Janet Quadras, , Welcome to Researcher.Life! Get started with your free Essentials pack, Check out what we have in store for you! Dear Salty, Congratulations on taking the first step toward managing your research life better! My name is Janet Quadras, and I lead customer support at, ,  at 16:55, labels: Inbox, 
-    <p> Janet Quadras </p>
-    <p> 16:55 </p>
-    <p> Welcome to Researcher.Life! Get started with your free Essentials pack </p>
-    <p> Check out what we have in store for you! Dear Salty, Congratulations on taking the first step toward managing your research life better! My name is Janet Quadras, and I lead customer support at </p>
-    <button id=15 class='com.google.android.gm:id/contact_image' >  </button>
+<div id=14 class='' > Conversation list density
+    <p> Default </p> </div>
+<div id=15 class='' > Group emails in the same conversation together for IMAP, POP3, and Exchange accounts
+    <div id=16 class='android:id/checkbox' >  </div>
  </div>
-<div id=16 class='com.google.android.gm:id/hide_filters_text' > Hide filters </div>
-<button id=17 class='com.google.android.gm:id/conversation_list_filter_icon' description='Filter icon'>  </button>
-<div id=18 class='' > Attachment </div>
-<div id=19 class='' > To </div>
-<div id=20 class='' > From </div>
-<div id=21 class='' > All mail </div>
-<div id=22 class='com.google.android.gm:id/open_search' description='Open navigation drawer,Signed in as Bowen Wang saltyp0rridge20@gmail.com
-Account and settings.'> Search in mail
-    <p> Search in mail </p>
-    <button id=23 class='com.google.android.gm:id/selected_account_disc_gmail' description='Signed in as Bowen Wang saltyp0rridge20@gmail.com
-Account and settings.'>  </button>
-
-    <div id=24 class='' description='Open navigation drawer'>  </div>
- </div>
+<button id=17 class='' description='More options'>  </button>
+<div id=18 class='' description='Navigate up'>  </div>

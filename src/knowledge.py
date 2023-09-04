@@ -5,8 +5,9 @@ from langchain import FAISS
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 from langchain.document_loaders.csv_loader import CSVLoader
+import openai
 
-OPENAI_KEY = os.getenv('OPENAI_KEY', default="sk-dXUeoKXznBmiycgc06831a96F6Be42149e9aD25eDfA15e8c")
+OPENAI_KEY = os.getenv('OPENAI_API_KEY')
 class KnowledgeBase:
     def __init__(self, database):
         self.database = database
@@ -24,14 +25,12 @@ class PageJump_KB(KnowledgeBase):
         self.edge_data = copy.deepcopy(self.data)
         self.origin_data = copy.deepcopy(self.data)
         for i in range(len(self.data)):
-
             self.edge_data[i].page_content = self.data[i].page_content.split("Edge:")[1].split("Destination:")[0]
-
             self.origin_data[i].page_content = self.data[i].page_content.split("Origin:")[1].split("Edge:")[0]
-
         self.embeddings = OpenAIEmbeddings(
-            client="GUI_LLM", openai_api_key=OPENAI_KEY,openai_api_base="https://api.ai-yyds.com/v1")
-
+            client="GUI_LLM", openai_api_key=OPENAI_KEY)
+        print(openai.api_key)
+        print(openai.api_base)
         self.db = FAISS.from_documents(self.edge_data, self.embeddings)
         self.retriever = self.db.as_retriever(search_type="similarity_score_threshold", search_kwargs={"score_threshold": .9})
         
@@ -65,7 +64,7 @@ class Task_KB(KnowledgeBase):
             self.task_json = json.load(f)
         self.tasks = self.task_json.keys()
         self.embeddings = OpenAIEmbeddings(
-            client="GUI_LLM", openai_api_key=OPENAI_KEY,openai_api_base="https://api.ai-yyds.com/v1")
+            client="GUI_LLM", openai_api_key=OPENAI_KEY)
         self.db = FAISS.from_texts(self.tasks, self.embeddings)
 
     def update_datas(self, new_task):
@@ -98,9 +97,9 @@ class Error_KB(KnowledgeBase):
                 self.traces.append(line.split(",")[1])
                 self.new_screens.append(line.split(",")[2])
                 self.reasons.append(line.split(",")[3])
-            
+        
         self.embeddings = OpenAIEmbeddings(
-            client="GUI_LLM", openai_api_key=OPENAI_KEY,openai_api_base="https://api.ai-yyds.com/v1")
+            client="GUI_LLM", openai_api_key=OPENAI_KEY)
         self.db = FAISS.from_texts([j+"<EnS>"+k for j,k in zip(self.tasks,self.traces)], self.embeddings)
 
     def update_datas(self, new_task,new_trace,new_screen,new_reason):

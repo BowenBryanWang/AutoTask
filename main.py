@@ -67,7 +67,7 @@ def demo_route() -> Union[str, Response]:
             STATUS = "backtracking"
             return result
         if work_status == "Execute":
-            STATUS = "start"
+            # STATUS = "start"
             INDEX += 1
             GRAPH_ACTION.append(result)
             return result

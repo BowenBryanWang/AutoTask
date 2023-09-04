@@ -1,8 +1,7 @@
 import os
 import openai
 import json
-openai.api_key = os.getenv('OPENAI_KEY', default="sk-dXUeoKXznBmiycgc06831a96F6Be42149e9aD25eDfA15e8c")
-openai.api_base = "https://api.ai-yyds.com/v1"
+openai.api_key = os.getenv('OPENAI_API_KEY')
 
 
 class Suggest:
@@ -15,24 +14,14 @@ class Suggest:
         self.prompt_select = [
             {
                 "role": "system",
-                "content": """You are an AI assistant specialized in UI Automation. Based on user's intent and the current screen's components, your task is to analyze, understand the screen. SELECT the top five most possible components to the user's intent thinking step by step. Summarize your selections at the end of your response.
-Think step by step, select the top five most possible components to the user's intent.
+                "content": """You are an AI assistant specialized in UI Automation. Based on user's intent and the current screen's components, your task is to analyze, understand the screen. SELECT the top most possible components (at most 5) to the user's intent thinking step by step. Summarize your selections at the end of your response.
+Think step by step, select the top most possible (at most 5, less is ok) components to the user's intent.
 The components are organized as HTML format and after-click components are showed and warpped (if any) to support further reasoning.
 Remember DO not select any components without id. Only select original components with id.
 You can refer to some completed examples similar to user's intent. But don't follow the examples exactly, though; they serve only as hints.
 Hint:
 1, Some of the components may be warpped by its parent node (such as <div><node/></div>), thus it inherits attibutes from parent node. So when selecting candidates you should consider its relationship with its parent node's info.
-Output only one JSON object structured like {"result":[]-the id of selected candidate,"reason":[]-reason for each candidate} at the end of your response. You must select five!
-Sample output:{
-    "result": [5,10,2,3,4],
-    "reason":[
-        "...",
-        "...",
-        "...",
-        "...",
-        "..."
-    ]
-}
+Output only one JSON object structured like {"result":[]-the id of selected candidate,"reason":[]-reason for each candidate} at the end of your response.
                 """
             },
             {
@@ -81,7 +70,7 @@ Sample output:{
                     '''
                     Examples from Library:
                     {}
-                    You must select 5 components!
+                    You should select at most 5 components!
                 """.format(self.model.task, self.model.current_path_str, self.model.extended_info,[j+":"+"=>".join(k) for j,k in zip(self.model.similar_tasks,self.model.similar_traces)])
             },
         ]
@@ -179,11 +168,11 @@ Think step-by-step about the process of updating the [Select Module] and output 
             {
                 "role": "system",
                 "content":
-                """You are an AI assistant specialized in UI Automation. Now you have successfully obtained the top five UI components that are most likely to align with the user's intent. Now, you need to determine the actions to be performed on each of these UI components. 
+                """You are an AI assistant specialized in UI Automation. Now you have successfully obtained the top UI components that are most likely to align with the user's intent. Now, you need to determine the actions to be performed on each of these UI components. 
                 There are two main types of actions: 
                     1,clicking on a component (no text parameter needed) 
                     2,editing a component (you should also determine the text parameter).
-For each of the top five components, analyze the possible action to be taken and, if it involves an editing action, provide the corresponding text parameter as well. 
+For each of the top components, analyze the possible action to be taken and, if it involves an editing action, provide the corresponding text parameter as well. 
 Reason step by step to provide the actions and text parameters for each component based on the user's intent and the context of the current screen.
 Output a JSON object structured like 
 {"candidate1":{"action": the action to be taken,either "click" or "edit", "text": the text parameter for the action if any (Optional),"reason": the reason},

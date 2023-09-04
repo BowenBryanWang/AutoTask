@@ -6,8 +6,7 @@ import openai
 import json
 import tqdm
 
-openai.api_key = os.getenv('OPENAI_KEY', default="sk-dXUeoKXznBmiycgc06831a96F6Be42149e9aD25eDfA15e8c")
-openai.api_base = "https://api.ai-yyds.com/v1"
+openai.api_key = os.getenv('OPENAI_API_KEY')
 
 
 def add_value_to_html_tag(key: str, value: str) -> str:

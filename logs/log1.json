@@ -1,0 +1,94 @@
+{
+    "@User_intent": "turn off sync settings in the gmail app",
+    "@Page_components": [
+        "<div id=1 class='' > Open web links in Gmail </div>\n",
+        "<div id=2 class='' > Auto-advance\n    <p> Show conversation list after you archive or delete </p> </div>\n",
+        "<div id=3 class='' > Auto-fit messages\n    <p> Shrink messages to fit the screen </p> </div>\n",
+        "<div id=4 class='android:id/checkbox' >  </div>\n",
+        "<div id=5 class='' > Default reply action\n    <p> Choose your default reply action </p> </div>\n",
+        "<div id=6 class='' > Swipe actions\n    <p> Configure swipe actions to quickly act on emails in the conversation list </p> </div>\n",
+        "<div id=7 class='' > Hide bottom navigation on scroll </div>\n",
+        "<div id=8 class='android:id/checkbox' >  </div>\n",
+        "<div id=9 class='' > Conversation list density\n    <p> Default </p> </div>\n",
+        "<div id=10 class='' > Conversation view\n    <p> Group emails in the same conversation together for IMAP, POP3, and Exchange accounts </p> </div>\n",
+        "<div id=11 class='android:id/checkbox' >  </div>\n",
+        "<div id=12 class='' > Manage notifications </div>\n",
+        "<div id=13 class='' > Default notification action\n    <p> Archive </p> </div>\n",
+        "<button id=14 class='' description='More options'>  </button>\n",
+        "<div id=15 class='' description='Navigate up'>  </div>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "Output": {
+                "<div id=1 class='' > Open web links in Gmail </div>\n": "Option to open web links directly in Gmail",
+                "<div id=2 class='' > Auto-advance\n    <p> Show conversation list after you archive or delete </p> </div>\n": "Option to automatically show the next conversation after archiving or deleting a message",
+                "<div id=3 class='' > Auto-fit messages\n    <p> Shrink messages to fit the screen </p> </div>\n": "Option to auto-fit messages to the screen size",
+                "<div id=4 class='android:id/checkbox' >  </div>\n": "Checkbox to enable or disable the current setting",
+                "<div id=5 class='' > Default reply action\n    <p> Choose your default reply action </p> </div>\n": "Option to set the default reply action",
+                "<div id=6 class='' > Swipe actions\n    <p> Configure swipe actions to quickly act on emails in the conversation list </p> </div>\n": "Option to configure swipe actions for quick email management",
+                "<div id=7 class='' > Hide bottom navigation on scroll </div>\n": "Option to hide the bottom navigation bar when scrolling",
+                "<div id=8 class='android:id/checkbox' >  </div>\n": "Checkbox to enable or disable the current setting",
+                "<div id=9 class='' > Conversation list density\n    <p> Default </p> </div>\n": "Option to set the density of the conversation list",
+                "<div id=10 class='' > Conversation view\n    <p> Group emails in the same conversation together for IMAP, POP3, and Exchange accounts </p> </div>\n": "Option to group emails in the same conversation together for IMAP, POP3, and Exchange accounts",
+                "<div id=11 class='android:id/checkbox' >  </div>\n": "Checkbox to enable or disable the current setting",
+                "<div id=12 class='' > Manage notifications </div>\n": "Option to manage notifications",
+                "<div id=13 class='' > Default notification action\n    <p> Archive </p> </div>\n": "Option to set the default notification action",
+                "<button id=14 class='' description='More options'>  </button>\n": "Button to access more options",
+                "<div id=15 class='' description='Navigate up'>  </div>\n": "Button to navigate back to the previous page"
+            }
+        },
+        {
+            "Name": "Select",
+            "Description": "This module is a selection model, selecting the 5 possible component without relativity ranking to be acted on catering to user's intent",
+            "Note": "This individual module only select 5 highly related components,without ranking them,and without analyzing the correctness of the components aligning with user's content ",
+            "Output": {
+                "<button id=14 class='' description='More options'>  </button>\n": "This component is a 'More options' button which could potentially contain the option to turn off sync settings in a submenu.",
+                "<div id=15 class='' description='Navigate up'>  </div>\n": "This is the 'Navigate up' button, which might be required if the user needs to go back to a previous screen to access the sync settings option."
+            }
+        },
+        {
+            "Name": "Plan",
+            "Description": "This module is a plan module, planning the next action based on the selected components, whether click or edit",
+            "Output": {
+                "candidate1": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To access more options in the settings page."
+                },
+                "candidate2": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To navigate back to the previous page."
+                }
+            }
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Output": {
+                "<button id=14 class='' description='More options'>  </button>\n": 3,
+                "<div id=15 class='' description='Navigate up'>  </div>\n": 1
+            }
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "status": "wrong",
+                "reason": "The user initially navigated to 'General settings' which could potentially have the sync settings. However, the user then navigated to 'More options' which appears to be in the wrong direction, since the available options on the newest UI screen do not involve sync settings. The user needs to find the right path towards sync settings in order to complete the task."
+            }
+        }
+    ],
+    "@Page_description": "Settings page of the Gmail application",
+    "@Previous_Step": " -> Page:Account management interface with options for adding accounts, viewing existing accounts, and accessing general settings -> Action: Click on <div id=3 class='' > General settings </div>\n -> Page:Settings page of the Gmail application",
+    "@Action": "Action: Click on <button id=14 class='' description='More options'>  </button>\n",
+    "@Similar_task": [
+        "Turn off notifications from TikTok:['Me', 'Settings and privacy', 'Notifications', 'Toggle off Allow notifications']",
+        "Turn off WeChat notifications for chat group 2:['Select the group 2', 'Toggle on Mute Notifications']",
+        "log out of my WeChat account:['Me', 'Settings', 'Log Out', 'Confirm']",
+        "Change the language on my WeChat app into English:['Me', 'Settings', 'General', 'Language', 'English']"
+    ],
+    "@Successive_Page": "<div id=1 class='' > Help & feedback </div>\n<div id=2 class='' > Clear picture approvals </div>\n<div id=3 class='' > Clear search history </div>\n<div id=4 class='' > Manage accounts </div>\n"
+}
