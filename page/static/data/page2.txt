@@ -1,8 +1,0 @@
-<div id=1 class='' > Bold text
-    <switch id=2 class='android:id/switch_widget' clickable> Off </switch>
- </div>
-<button id=3 class='com.android.settings:id/icon_end_frame' description='Make larger'>  </button>
-<button id=4 class='com.android.settings:id/icon_start_frame' description='Make smaller'>  </button>
-<button id=5 class='com.android.settings:id/icon_end_frame' description='Make larger'>  </button>
-<button id=6 class='com.android.settings:id/icon_start_frame' description='Make smaller'>  </button>
-<div id=7 class='' description='Navigate up'>  </div>
