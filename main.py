@@ -103,7 +103,7 @@ def keyboard_listener():
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Flask app with argparse integration")
-    parser.add_argument("--task", type=str, help="Specify the TASK parameter", default="change text size in settings app")
+    parser.add_argument("--task", type=str, help="Specify the TASK parameter", default="increase text size one step in settings app")
     args = parser.parse_args()
 
     TASK = args.task

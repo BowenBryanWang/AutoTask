@@ -9,7 +9,7 @@ import tqdm
 from src.utility import GPT
 
 openai.api_key = os.getenv('OPENAI_API_KEY')
-
+openai.organization = 'org-veTDIexYdGbOKcYt8GW4SNOH'
 
 def add_value_to_html_tag(key: str, value: str) -> str:
     index = key.find(">")

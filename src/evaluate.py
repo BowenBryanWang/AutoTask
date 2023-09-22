@@ -14,7 +14,7 @@ import openai
 
 from src.utility import GPT
 openai.api_key = os.getenv('OPENAI_API_KEY')
-
+openai.organization = 'org-veTDIexYdGbOKcYt8GW4SNOH'
 NUM_JUDGES = 1
 
 

@@ -5,7 +5,7 @@ from loguru import logger
 import requests
 import os
 openai.api_key = os.getenv('OPENAI_API_KEY')
-
+openai.organization = 'org-veTDIexYdGbOKcYt8GW4SNOH'
 class Feedback:
     def __init__(self, model) -> None:
         self.model = model
