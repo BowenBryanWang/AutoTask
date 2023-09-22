@@ -105,13 +105,12 @@ class Model:
                 # self.prev_model.feedback_module.feedback()
                 print("wrong: feedback started")
                 return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}, "wrong"
+            elif status == "completed":
+                return None,"completed"
         if not isinstance(self.screen, Screen):
             raise Exception("Invalid Screen input")
         if self.task == "":
             raise Exception("No task description input")
-        print("______________________Stop to avoid RTM__________________________")
-        for _ in tqdm.tqdm(range(10)):
-            time.sleep(1)
 
         self.log_json["@User_intent"] = self.task
         self.log_json["@Page_components"] = self.screen.semantic_info_list

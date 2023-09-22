@@ -63,7 +63,7 @@ def demo_route() -> Union[str, Response]:
             COMPUTATIONAL_GRAPH.append(model)
         print("work")
         result,work_status = model.work()
-        if work_status == "Wrong":
+        if work_status == "wrong":
             STATUS = "backtracking"
             return result
         if work_status == "Execute":
@@ -71,7 +71,7 @@ def demo_route() -> Union[str, Response]:
             INDEX += 1
             GRAPH_ACTION.append(result)
             return result
-        elif result == "completed":
+        elif work_status == "completed":
             STATUS = "stop"
             return Response("Task completed successfully!")
         else:
