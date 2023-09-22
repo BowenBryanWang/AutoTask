@@ -1,0 +1,50 @@
+system:
+
+You are an expert in User Interface (UI) automation. Your task is to predict the potential UI components that will be displayed after interacting with elements on the UI.
+You are given a list of UI components and their attributes. Based on all the UI components on the current page and the relationship between them, reasonably deduce, predict, and synthesize the overall information of the page and the details of each UI component.
+
+1. Reason step-by-step about the short one-sentence description of the current page.
+2. Think step-by-step about what the successive page might be like. Summarize the prediction results in short sentence.
+3. Think step-by-step about how the UI components in the successive page would be like. List them in the final answer as short as possible.
+i.e. (<div> Voice Search</div>:{"description":a voice input page for searching","comps":["<div>Voice Input</div>","<button>Enter</button>"]}).
+4. Output the predictions in a JSON formated like:
+{
+  "Page": "..."(One-sentence description of the current page),
+  "id_x": {"description":"..."(Predicted description for the successive UI page with id=x),"comps:[](Predicted components as a list for the successive UI page with id=x)},
+  ......(x is the id of the current UI component,you should iterate over all the UI components)
+}
+        
+
+user:
+
+<button id=1 class='com.whatsapp:id/home_tab_layout' description='Status'> Status </button>
+<button id=2 class='com.whatsapp:id/button'> Add Status </button>
+<button id=3 class='com.whatsapp:id/home_tab_layout' description='Community'>  </button>
+                            
+
+assistant:
+
+{
+    "Page": "Main interface of the WhatsApp application",
+    "id_1": {"description":"Display a new page where you can view the status updates of contacts","comps":["<div>My Status</div>","<button>Update Status</button>"]},
+    "id_2": {"description":"Mean to add a new status update","comps":["<div>New Status</div>","<div>Enter</div>"]},
+    "id_3": {"description":"Lead to a page with group chats or a community forum.","comps":["<div>Community Member</div>","<div>Add Member</div>"]}
+}
+                            
+
+user:
+
+                            ["<div id=1 class='' > Bold text </div>\n", "<switch id=2 class='android:id/switch_widget' clickable> Off </switch>\n", "<button id=3 class='com.android.settings:id/icon_end_frame' description='Make larger'>  </button>\n", "<button id=4 class='com.android.settings:id/icon_start_frame' description='Make smaller'>  </button>\n", "<button id=5 class='com.android.settings:id/icon_end_frame' description='Make larger'>  </button>\n", "<button id=6 class='com.android.settings:id/icon_start_frame' description='Make smaller'>  </button>\n", "<div id=7 class='' description='Navigate up'>  </div>\n"]
+                            
+
+===response===
+{
+    "Page": "Text settings interface with options to adjust text size and style",
+    "id_1": {"description":"Display a page with options to change text style","comps":["<div>Text Style</div>","<button>Italic</button>","<button>Underline</button>"]},
+    "id_2": {"description":"Switch to turn on or off the bold text feature","comps":["<div>Switch Status</div>"]},
+    "id_3": {"description":"Increase the size of the text","comps":["<div>Text Size</div>","<button>Make Larger</button>"]},
+    "id_4": {"description":"Decrease the size of the text","comps":["<div>Text Size</div>","<button>Make Smaller</button>"]},
+    "id_5": {"description":"Increase the size of the text","comps":["<div>Text Size</div>","<button>Make Larger</button>"]},
+    "id_6": {"description":"Decrease the size of the text","comps":["<div>Text Size</div>","<button>Make Smaller</button>"]},
+    "id_7": {"description":"Navigate to the previous page","comps":["<div>Previous Page</div>"]}
+}

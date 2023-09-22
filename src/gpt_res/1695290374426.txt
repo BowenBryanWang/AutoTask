@@ -1,0 +1,67 @@
+system:
+You are an AI assistant specialized in UI Automation. Based on user's intent and the current screen's components, your task is to analyze, understand the screen. SELECT the top most possible components (at most 5) to the user's intent thinking step by step. Summarize your selections at the end of your response.
+Think step by step, select the top most possible (at most 5, less is ok) components to the user's intent.
+The components are organized as HTML format and after-click components are showed and warpped (if any) to support further reasoning.
+Remember DO not select any components without id. Only select original components with id.
+You can refer to some completed examples similar to user's intent. But don't follow the examples exactly, though; they serve only as hints.
+Hint:
+1, Some of the components may be warpped by its parent node (such as <div><node/></div>), thus it inherits attibutes from parent node. So when selecting candidates you should consider its relationship with its parent node's info.
+Output only one JSON object structured like {"result":[]-the id of selected candidate,"reason":[]-reason for each candidate} at the end of your response.
+                
+
+user:
+
+                    Intention:'send a message "Hello" to Bowen'
+                    Current path: -> Main interface of the WhatsApp application
+                    Components:
+                    '''HTML
+                    <p id=1 class='com.whatsapp:id/fab' description='New chat'></p>
+                    <button id=2 class='com.whatsapp:id/home_tab_layout' description='Calls'> Calls</button>
+                    <button id=3 class='com.whatsapp:id/home_tab_layout' description='Status'>Status</button>
+                    <button id=4 class='com.whatsapp:id/home_tab_layout' description='Community'></button>
+                    <button id=5 class='com.whatsapp:id/menuitem_overflow' description='More options'></button>
+                    <p id=6 class='com.whatsapp:id/menuitem_search' description='Search'></p>
+                    <p id=7 class='com.whatsapp:id/menuitem_camera' description='Camera'></p>
+                    <p id=8 class='' description='end-to-end encrypted'></p>
+                    <button id=9 class='com.whatsapp:id/contact_photo' description='Yellow'></button>
+                    <button id=10 class='com.whatsapp:id/contact_photo' description='Wang Bowen'></button>
+                    '''
+                
+
+assistant:
+
+                {
+                    "result": [5,10,2,3,4],
+                    "reason":[
+                    "This component represents the overflow menu, which often contains additional settings and options. It's a common place to find settings related to appearance and themes, including Dark mode.",
+                    "This component likely represents a contact or profile photo. Tapping on a contact or profile photo often reveals additional options and settings, which may include Dark mode or appearance-related settings.",
+                    "While this component represents the 'Calls' tab, it is worth exploring as some apps provide accessibility options, including Dark mode, within the tab navigation.",
+                    "Similar to the 'Calls' tab, the 'Status' tab might contain accessibility or appearance-related options, including Dark mode.",
+                    "Although the description is empty for this component, it is worth exploring as it could potentially lead to settings related to appearance or themes, including Dark mode."
+                    ]
+                }
+                
+
+user:
+
+                    Intention :'change text size in settings app'.
+                    Current path:  -> Page:Settings page of an Android device
+                    Components:
+                    '''HTML
+                    ['<div id=1 class=\'\'  next="Page to manage location settings" > Location </div>\n', '<div id=2 class=\'\'  next="Page to manage security and privacy settings" > Security & privacy\n    <p> App security, device lock, permissions </p> </div>\n', '<div id=3 class=\'\'  next="Page to manage accessibility settings" > Accessibility\n    <p> Display, interaction, audio </p> </div>\n', '<div id=4 class=\'\'  next="Page to manage wallpaper and style settings" > Wallpaper & style\n    <p> Colors, themed icons, app grid </p> </div>\n', '<div id=5 class=\'\'  next="Page to manage display settings" > Display\n    <p> Dark theme, font size, brightness </p> </div>\n', '<div id=6 class=\'\'  next="Page to manage sound and vibration settings" > Sound & vibration\n    <p> Volume, haptics, Do Not Disturb </p> </div>\n', '<div id=7 class=\'\'  next="Page to manage storage settings" > Storage\n    <p> 49% used - 4.10 GB free </p> </div>\n', '<div id=8 class=\'\'  next="Page to manage battery settings" > Battery\n    <p> 100% </p> </div>\n', '<div id=9 class=\'\'  next="Page to manage notification settings" > Notifications\n    <p> Notification history, conversations </p> </div>\n', '<div id=10 class=\'com.android.settings:id/search_action_bar\'  next="Page to search settings" > Search settings </div>\n']
+                    '''
+                    Examples from Library:
+                    ["Change the font size on WeChat:['Me', 'Settings', 'General', 'Font Size', 'Choose a font size from small to large']", "Change the font size on Zhihu:['Tap the profile icon on the bottom right', 'Tap the gear icon on the top right', 'Tap Font Size under Display Settings', 'Choose a font size from the options']", "Change the language on my WeChat app into English:['Me', 'Settings', 'General', 'Language', 'English']", "Change the theme color of my Weibo app to blue:['Me', 'Settings', 'General', 'Theme Color', 'Select blue']"]
+                    You should select at most 5 components!
+                
+
+===response===
+
+                {
+                    "result": [5,3,10],
+                    "reason":[
+                    "This component leads to the 'Display' settings page, which is typically where text size adjustments can be made.",
+                    "This component leads to the 'Accessibility' settings page, which often includes options for text size for those with visual impairments.",
+                    "This component represents the 'Search settings' function, which could be used to directly search for text size settings."
+                    ]
+                }

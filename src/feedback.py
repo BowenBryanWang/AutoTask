@@ -10,7 +10,7 @@ class Feedback:
     def __init__(self, model) -> None:
         self.model = model
 
-    def feedback(self):
+    def feedback(self,reason):
         with open("logs/log{}.json".format(self.model.index), "r") as f:
             print("· log{} Read".format(self.model.index))
             print(self.model.log_json)
@@ -19,50 +19,31 @@ class Feedback:
     {
         "role": "system",
         "content": """
-You are an expert in UI automation and robust error handling. Your task is to critically evaluate an action trace produced by a primitive LLM, which tracks human intent but is known for its inaccuracies. Utilizing the log files from each module of this primitive LLM, you should identify errors and provide actionable feedback for improvements.
-Use the following steps to respond to user inputs. Fully restate each step before proceeding. i.e. "Step 1: Reason...".
-Step 1: Evaluate the Rationality of the Current Step:
-
-a. Analyze the user intent for the task "@User_intent" and compare with similar examples "@Similar_task".
+You are an expert in UI automation and robust error handling. Your task is to critically evaluate an action trace produced by a primitive LLM, which follows human intent but is known for its inaccuracies. Utilizing the log files from each module of this primitive LLM, you should identify possible errors.
+You should:
+a. Analyze the user intent for the task "@User_intent" and can refer to similar examples "@Similar_task".
 b. Review the components "@Page_components" and the description "@Page_description" of the current page.
-c. Assess previous steps "@Previous_Steps", the "@Action" taking in this step and the subsequent page "@Successive_Page", ensuring they align with user's intent
-Step 2: Analyze "@Module" Log Details:
+c. Analyze previous steps "@Previous_Steps", the "@Action" taking in this step and the subsequent page "@Successive_Page", identify if the Action in this step directly cause the error.
+d. If you do think the error is caused by this step's Action, output the new modified action that is chose from the "@Page_components".
+e. If you think the error is in the earlier steps but not this step thus we should move a step back in the history traces to identify the error, output "Back".
 
-a. Given the current and subsequent page components, inspect the logs of the "predict" module. Identify any misjudgments that could mislead subsequent modules if any.
-b. Examine the "select" module logs. This module selects the 5 possible component (equally, without relativity ranking) to be acted on catering to user's intent. Identify any omissions.These 5 candidates can contain wrong components but should not miss any correct ones.
-c. Scrutinize the "plan" module. This module independently plans action on the candidates selected by Select Module ignoring whether they are rational. Just Determine if the action (either click or edit) is logical.
-d. Reassess the "evaluate" module logs and their scoring reasons. Re-evaluate candidate scores, cross-referencing with information from the successive page.
-e. Skip the "decide" module, assuming its accuracy.
-
-Each part works independently, so you need to diagnose each part individually during your analyzing.
-Step 3: Format your findings into a JSON structure as follows:
+Finally, output a JSON format:
 {
-  "predict module": {
-    "status": "error" if major errors occur; "right" if no need to modify it,
-    "reason": "Detailed reason",
-    "feedback": "Specific feedback suggestions"
-  },
-  "select module" : {
-    "status": "error" if any omission occurs; "right" if 5 candidates did not miss any relatively correct one, (selecting some irrelevant components is ok, you just need to justify if this module missed any correct component.You don't need to analyze the correctness of each candidate in this step.)
-    "reason": "Detailed reason",
-    "feedback": Provide the missing component.
-  },
-  "plan module" : {
-    "status": "error" if any action type is wrong; "right" if no need to change each action type,
-    "reason": "Detailed reason",
-    "feedback": Provide the specific modified action type.
-  },
-  "evaluate module" : {
-    "status": "error" if top-scored component is wrong; "right" if no need to change top-scored component,
-    "reason": "Detailed reason",
-    "feedback": "Specific feedback suggestions"
-  },
-
+    "result": "back" or "modify",
+    "modify": {
+        "comp":the right component that you corrected,
+        "type":"click" or "edit",
+        "para": the edit parameter.
+    }
 }
-Your feedback json would be directily integrated into the prompt of each module of the primitive LLM for training.
-Ensure your feedback is practical and specific."""
-            }
+"""}
         ]
+        self.prompt.append({
+            "role": "user",
+            "content": """
+                Wrong reason: {}
+                """.format(reason)
+        })
         self.prompt.append({
             "role": "user",
             "content": """
@@ -128,24 +109,34 @@ Ensure your feedback is practical and specific."""
         else:
             print("No JSON found in the response string.")
 
-        self.predict_advice = response.get("predict module")
-        self.select_advice = response.get("select module")
-        self.plan_advice = response.get("plan module")
-        self.evaluate_advice = response.get("evaluate module")
-        if all(advice.get("status") == "right" for advice in [self.predict_advice, self.select_advice, self.plan_advice, self.evaluate_advice]) or not self.model.prev_model:
-            return True
-        if self.predict_advice and self.select_advice and self.plan_advice and self.evaluate_advice:
-            if self.predict_advice.get("status") == "wrong":
-                self.model.predict_module.update(self.predict_advice)
-            if self.select_advice.get("status") == "wrong":
-                self.model.select_module.update(self.select_advice)
-            if self.plan_advice.get("status") == "wrong":
-                self.model.plan_module.update(self.plan_advice)
-            if self.evaluate_advice.get("status") == "wrong":
-                self.model.evaluate_module.update(self.evaluate_advice)
-        return False
+        self.error_status = response.get("result")
+        if self.error_status == "back":
+            return None,None
+        else:
+            action = response.get("modify")
+            action_comp = action.get("comp")
+            action_type = action.get("type")
+            action_para = action.get("para")
+            self.model.node_selected_id = int(action_comp.split("id=")[1].split(" ")[0])
+            current_action = process_action_info(action_type, action_para, action_comp)
+            nodes = self.model.screen.semantic_nodes["nodes"]
+            node = nodes[self.model.node_selected_id - 1]
+            if action_type == "click":
+                center = {"x": (node.bound[0] + node.bound[2]) // 2, "y": (node.bound[1] + node.bound[3]) // 2}
+                perform = {"node_id": 1, "trail": "[" + str(center["x"]) + "," + str(center["y"]) + "]", "action_type": "click"}
+                print(perform)
+                return "yes",perform
+            elif action_type == "edit":
+                perform = {"node_id": 1, "trail": "[0,0]", "action_type": "text", "text": action_para,"ori_absolute_id":node.absolute_id}
+                print(perform)
+                return "yes",perform
             
-        
+            
+def process_action_info(action, params, node):
+    if action == "click":
+        return "Action: Click on {}".format(node)
+    elif action == "edit":
+        return "Action: Edit {} with {}".format(node, params)
 
 
 # with open("../logs/log{}.json".format(0), "r") as f:

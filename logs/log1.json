@@ -1,42 +1,67 @@
 {
-    "@User_intent": "turn off sync settings in the gmail app",
+    "@User_intent": "change text size in settings app",
     "@Page_components": [
-        "<div id=1 class='' > Open web links in Gmail </div>\n",
-        "<div id=2 class='' > Auto-advance\n    <p> Show conversation list after you archive or delete </p> </div>\n",
-        "<div id=3 class='' > Auto-fit messages\n    <p> Shrink messages to fit the screen </p> </div>\n",
-        "<div id=4 class='android:id/checkbox' >  </div>\n",
-        "<div id=5 class='' > Default reply action\n    <p> Choose your default reply action </p> </div>\n",
-        "<div id=6 class='' > Swipe actions\n    <p> Configure swipe actions to quickly act on emails in the conversation list </p> </div>\n",
-        "<div id=7 class='' > Hide bottom navigation on scroll </div>\n",
-        "<div id=8 class='android:id/checkbox' >  </div>\n",
-        "<div id=9 class='' > Conversation list density\n    <p> Default </p> </div>\n",
-        "<div id=10 class='' > Conversation view\n    <p> Group emails in the same conversation together for IMAP, POP3, and Exchange accounts </p> </div>\n",
-        "<div id=11 class='android:id/checkbox' >  </div>\n",
-        "<div id=12 class='' > Manage notifications </div>\n",
-        "<div id=13 class='' > Default notification action\n    <p> Archive </p> </div>\n",
-        "<button id=14 class='' description='More options'>  </button>\n",
-        "<div id=15 class='' description='Navigate up'>  </div>\n"
+        "<div id=1 class='' > Bold text </div>\n",
+        "<switch id=2 class='android:id/switch_widget' clickable> Off </switch>\n",
+        "<button id=3 class='com.android.settings:id/icon_end_frame' description='Make larger'>  </button>\n",
+        "<button id=4 class='com.android.settings:id/icon_start_frame' description='Make smaller'>  </button>\n",
+        "<button id=5 class='com.android.settings:id/icon_end_frame' description='Make larger'>  </button>\n",
+        "<button id=6 class='com.android.settings:id/icon_start_frame' description='Make smaller'>  </button>\n",
+        "<div id=7 class='' description='Navigate up'>  </div>\n"
     ],
     "@Module": [
         {
             "Name": "Predict",
             "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
             "Output": {
-                "<div id=1 class='' > Open web links in Gmail </div>\n": "Option to open web links directly in Gmail",
-                "<div id=2 class='' > Auto-advance\n    <p> Show conversation list after you archive or delete </p> </div>\n": "Option to automatically show the next conversation after archiving or deleting a message",
-                "<div id=3 class='' > Auto-fit messages\n    <p> Shrink messages to fit the screen </p> </div>\n": "Option to auto-fit messages to the screen size",
-                "<div id=4 class='android:id/checkbox' >  </div>\n": "Checkbox to enable or disable the current setting",
-                "<div id=5 class='' > Default reply action\n    <p> Choose your default reply action </p> </div>\n": "Option to set the default reply action",
-                "<div id=6 class='' > Swipe actions\n    <p> Configure swipe actions to quickly act on emails in the conversation list </p> </div>\n": "Option to configure swipe actions for quick email management",
-                "<div id=7 class='' > Hide bottom navigation on scroll </div>\n": "Option to hide the bottom navigation bar when scrolling",
-                "<div id=8 class='android:id/checkbox' >  </div>\n": "Checkbox to enable or disable the current setting",
-                "<div id=9 class='' > Conversation list density\n    <p> Default </p> </div>\n": "Option to set the density of the conversation list",
-                "<div id=10 class='' > Conversation view\n    <p> Group emails in the same conversation together for IMAP, POP3, and Exchange accounts </p> </div>\n": "Option to group emails in the same conversation together for IMAP, POP3, and Exchange accounts",
-                "<div id=11 class='android:id/checkbox' >  </div>\n": "Checkbox to enable or disable the current setting",
-                "<div id=12 class='' > Manage notifications </div>\n": "Option to manage notifications",
-                "<div id=13 class='' > Default notification action\n    <p> Archive </p> </div>\n": "Option to set the default notification action",
-                "<button id=14 class='' description='More options'>  </button>\n": "Button to access more options",
-                "<div id=15 class='' description='Navigate up'>  </div>\n": "Button to navigate back to the previous page"
+                "<div id=1 class='' > Bold text </div>\n": {
+                    "description": "Display a page with options to change text style",
+                    "comps": [
+                        "<div>Text Style</div>",
+                        "<button>Italic</button>",
+                        "<button>Underline</button>"
+                    ]
+                },
+                "<switch id=2 class='android:id/switch_widget' clickable> Off </switch>\n": {
+                    "description": "Switch to turn on or off the bold text feature",
+                    "comps": [
+                        "<div>Switch Status</div>"
+                    ]
+                },
+                "<button id=3 class='com.android.settings:id/icon_end_frame' description='Make larger'>  </button>\n": {
+                    "description": "Increase the size of the text",
+                    "comps": [
+                        "<div>Text Size</div>",
+                        "<button>Make Larger</button>"
+                    ]
+                },
+                "<button id=4 class='com.android.settings:id/icon_start_frame' description='Make smaller'>  </button>\n": {
+                    "description": "Decrease the size of the text",
+                    "comps": [
+                        "<div>Text Size</div>",
+                        "<button>Make Smaller</button>"
+                    ]
+                },
+                "<button id=5 class='com.android.settings:id/icon_end_frame' description='Make larger'>  </button>\n": {
+                    "description": "Increase the size of the text",
+                    "comps": [
+                        "<div>Text Size</div>",
+                        "<button>Make Larger</button>"
+                    ]
+                },
+                "<button id=6 class='com.android.settings:id/icon_start_frame' description='Make smaller'>  </button>\n": {
+                    "description": "Decrease the size of the text",
+                    "comps": [
+                        "<div>Text Size</div>",
+                        "<button>Make Smaller</button>"
+                    ]
+                },
+                "<div id=7 class='' description='Navigate up'>  </div>\n": {
+                    "description": "Navigate to the previous page",
+                    "comps": [
+                        "<div>Previous Page</div>"
+                    ]
+                }
             }
         },
         {
@@ -44,8 +69,11 @@
             "Description": "This module is a selection model, selecting the 5 possible component without relativity ranking to be acted on catering to user's intent",
             "Note": "This individual module only select 5 highly related components,without ranking them,and without analyzing the correctness of the components aligning with user's content ",
             "Output": {
-                "<button id=14 class='' description='More options'>  </button>\n": "This component is a 'More options' button which could potentially contain the option to turn off sync settings in a submenu.",
-                "<div id=15 class='' description='Navigate up'>  </div>\n": "This is the 'Navigate up' button, which might be required if the user needs to go back to a previous screen to access the sync settings option."
+                "<button id=3 class='com.android.settings:id/icon_end_frame' description='Make larger'>  </button>\n": "This component represents a button to increase the text size, which aligns with the user's intent to change text size.",
+                "<button id=4 class='com.android.settings:id/icon_start_frame' description='Make smaller'>  </button>\n": "This component represents a button to decrease the text size, which aligns with the user's intent to change text size.",
+                "<button id=5 class='com.android.settings:id/icon_end_frame' description='Make larger'>  </button>\n": "This component represents another button to increase the text size, which aligns with the user's intent to change text size.",
+                "<button id=6 class='com.android.settings:id/icon_start_frame' description='Make smaller'>  </button>\n": "This component represents another button to decrease the text size, which aligns with the user's intent to change text size.",
+                "<switch id=2 class='android:id/switch_widget' clickable> Off </switch>\n": "This component represents a switch to turn on or off the bold text feature. Although not directly related to changing text size, it is a related setting that the user might be interested in."
             }
         },
         {
@@ -55,12 +83,27 @@
                 "candidate1": {
                     "action": "click",
                     "text": null,
-                    "reason": "To access more options in the settings page."
+                    "reason": "To increase the text size, the 'Make larger' button should be clicked."
                 },
                 "candidate2": {
                     "action": "click",
                     "text": null,
-                    "reason": "To navigate back to the previous page."
+                    "reason": "To decrease the text size, the 'Make smaller' button should be clicked."
+                },
+                "candidate3": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To increase the text size, the 'Make larger' button should be clicked."
+                },
+                "candidate4": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "To decrease the text size, the 'Make smaller' button should be clicked."
+                },
+                "candidate5": {
+                    "action": "click",
+                    "text": null,
+                    "reason": "The switch widget is not relevant to changing the text size."
                 }
             }
         },
@@ -68,27 +111,30 @@
             "Name": "Evaluate",
             "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
             "Output": {
-                "<button id=14 class='' description='More options'>  </button>\n": 3,
-                "<div id=15 class='' description='Navigate up'>  </div>\n": 1
+                "<button id=3 class='com.android.settings:id/icon_end_frame' description='Make larger'>  </button>\n": 5,
+                "<button id=4 class='com.android.settings:id/icon_start_frame' description='Make smaller'>  </button>\n": 5,
+                "<button id=5 class='com.android.settings:id/icon_end_frame' description='Make larger'>  </button>\n": 5,
+                "<button id=6 class='com.android.settings:id/icon_start_frame' description='Make smaller'>  </button>\n": 5,
+                "<switch id=2 class='android:id/switch_widget' clickable> Off </switch>\n": 1
             }
         },
         {
             "Name": "Decide",
             "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
             "Output": {
-                "status": "wrong",
-                "reason": "The user initially navigated to 'General settings' which could potentially have the sync settings. However, the user then navigated to 'More options' which appears to be in the wrong direction, since the available options on the newest UI screen do not involve sync settings. The user needs to find the right path towards sync settings in order to complete the task."
+                "status": "completed",
+                "reason": "The user has navigated to the 'Text settings' section and clicked on the 'Make larger' button, which suggests that they have successfully increased the text size. This is consistent with the task of changing the text size in the settings app."
             }
         }
     ],
-    "@Page_description": "Settings page of the Gmail application",
-    "@Previous_Step": " -> Page:Account management interface with options for adding accounts, viewing existing accounts, and accessing general settings -> Action: Click on <div id=3 class='' > General settings </div>\n -> Page:Settings page of the Gmail application",
-    "@Action": "Action: Click on <button id=14 class='' description='More options'>  </button>\n",
+    "@Page_description": "Text settings interface with options to adjust text size and style",
+    "@Previous_Step": " -> Page:Display settings page of an Android device -> Action: Click on <div id=1 class='' > Display size and text </div>\n -> Page:Text settings interface with options to adjust text size and style",
+    "@Action": "Action: Click on <button id=3 class='com.android.settings:id/icon_end_frame' description='Make larger'>  </button>\n",
     "@Similar_task": [
-        "Turn off notifications from TikTok:['Me', 'Settings and privacy', 'Notifications', 'Toggle off Allow notifications']",
-        "Turn off WeChat notifications for chat group 2:['Select the group 2', 'Toggle on Mute Notifications']",
-        "log out of my WeChat account:['Me', 'Settings', 'Log Out', 'Confirm']",
-        "Change the language on my WeChat app into English:['Me', 'Settings', 'General', 'Language', 'English']"
+        "Change the font size on WeChat:['Me', 'Settings', 'General', 'Font Size', 'Choose a font size from small to large']",
+        "Change the font size on Zhihu:['Tap the profile icon on the bottom right', 'Tap the gear icon on the top right', 'Tap Font Size under Display Settings', 'Choose a font size from the options']",
+        "Change the language on my WeChat app into English:['Me', 'Settings', 'General', 'Language', 'English']",
+        "Change the theme color of my Weibo app to blue:['Me', 'Settings', 'General', 'Theme Color', 'Select blue']"
     ],
-    "@Successive_Page": "<div id=1 class='' > Help & feedback </div>\n<div id=2 class='' > Clear picture approvals </div>\n<div id=3 class='' > Clear search history </div>\n<div id=4 class='' > Manage accounts </div>\n"
+    "@Successive_Page": "<div id=1 class='' > \n    <switch id=2 class='android:id/switch_widget' clickable> Off </switch>\n </div>\n<button id=3 class='com.android.settings:id/icon_end_frame' description='Make larger'>  </button>\n<button id=4 class='com.android.settings:id/icon_start_frame' description='Make smaller'>  </button>\n<button id=5 class='com.android.settings:id/icon_end_frame' description='Make larger'>  </button>\n<button id=6 class='com.android.settings:id/icon_start_frame' description='Make smaller'>  </button>\n<div id=7 class='' description='Navigate up'>  </div>\n"
 }

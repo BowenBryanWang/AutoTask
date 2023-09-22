@@ -19,7 +19,7 @@ class PageJump_KB(KnowledgeBase):
         loader = CSVLoader(file_path='src/KB/pagejump.csv', csv_args={
             'delimiter': ',',
             'quotechar': '"',
-            'fieldnames': ['Origin', 'Edge', 'Destination']
+            'fieldnames': ['Origin', 'Edge', 'Destination',"Description"]
         })
         self.data = loader.load()
         self.edge_data = copy.deepcopy(self.data)

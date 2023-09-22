@@ -6,19 +6,17 @@ import openai
 import json
 import tqdm
 
+from src.utility import GPT
+
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
 
 def add_value_to_html_tag(key: str, value: str) -> str:
-    # last_index = key.rfind(" </")
-    # if last_index != -1:
-    #     key = key[:last_index] + "\n/* Below are predicted after-click components */\n    " + \
-    #         value + " </" + \
-    #         key[last_index + 3:]
-    # return key
     index = key.find(">")
-    key = key[:index] + " next=\"" + value.replace("\n","") + "\" " + key[index:]
+    key = key[:index] + " next=\"" + \
+        value.replace("\n", "") + "\" " + key[index:]
     return key
+
 
 def add_son_to_father(l: list, relation: list[tuple]) -> list:
     for index_father, index_son in relation:
@@ -81,35 +79,31 @@ class Predict():
             self.next_comp = [""]*len(self.model.screen.semantic_info_list)
             self.comp_json = dict.fromkeys(
                 self.model.screen.semantic_info_list, [])
-            # with open("logs/predict_log{}.log".format(self.model.index), "a") as f:
-            #     f.write("--------------------Predict--------------------\n")
-            # log_file = logger.add(
-            #     "logs/predict_log{}.log".format(self.model.index), rotation="500 MB")
-            # logger.debug("Predict for Model {}".format(self.model.index))
-
-            # logger.info("Current Path: {}".format(self.model.current_path_str))
-            # logger.info("Task: {}".format(self.model.task))
             if self.modified_result:
-                self.comp_json = json.loads(self.modified_result[self.modified_result.find("{"):self.modified_result.find("}")+1])
-                self.next_comp = [self.comp_json[key] for key in self.model.screen.semantic_info_list]
+                self.comp_json = json.loads(self.modified_result[self.modified_result.find(
+                    "{"):self.modified_result.find("}")+1])
+                self.next_comp = [self.comp_json[key]
+                                  for key in self.model.screen.semantic_info_list]
                 self.model.extended_info = [add_value_to_html_tag(
                     key, "\n".join(value)) for key, value in self.comp_json.items()]
                 self.model.extended_info = add_son_to_father(
                     self.model.extended_info, self.model.screen.trans_relation)
             else:
-                predict_node = copy.deepcopy(self.model.screen.semantic_info_list)
+                predict_node = copy.deepcopy(
+                    self.model.screen.semantic_info_list)
                 print("beforequery", self.model.screen.semantic_info_list)
                 for i in tqdm.tqdm(range(len(self.model.screen.semantic_info_list))):
                     res = self.query(self.model.screen.semantic_info_str,
-                                    self.model.screen.semantic_info_list[i])
+                                     self.model.screen.semantic_info_list[i])
                     if res:
                         res = res[0].split("\\n")
                         print(len(res))
                         if len(res) >= 4:
                             res = random.sample(res, 5)
                         res = [re.sub(r'id=\d+', '', s) for s in res]
-                        self.next_comp[i] = res
-                        self.comp_json[self.model.screen.semantic_info_list[i]] = res
+                        self.next_comp[i] = {"description": "", "comp": res}
+                        self.comp_json[self.model.screen.semantic_info_list[i]] = {
+                            "description": "", "comp": res}
                         predict_node[i] += "/* Don't predict this, output [] */"
                 print("afterquery", self.comp_json)
 
@@ -121,12 +115,13 @@ You are an expert in User Interface (UI) automation. Your task is to predict the
 You are given a list of UI components and their attributes. Based on all the UI components on the current page and the relationship between them, reasonably deduce, predict, and synthesize the overall information of the page and the details of each UI component.
 
 1. Reason step-by-step about the short one-sentence description of the current page.
-2. Think step-by-step about what the successive page might be like and how about it's UI components. Summarize the prediction results in short sentence.
-i.e. (<div> Voice Search</div>:" a voice input page for searching").
-3. Output the predictions in a JSON formated like:
+2. Think step-by-step about what the successive page might be like. Summarize the prediction results in short sentence.
+3. Think step-by-step about how the UI components in the successive page would be like. List them in the final answer as short as possible.
+i.e. (<div> Voice Search</div>:{"description":a voice input page for searching","comps":["<div>Voice Input</div>","<button>Enter</button>"]}).
+4. Output the predictions in a JSON formated like:
 {
   "Page": "..."(One-sentence description of the current page),
-  "id_x": "..."(Predicted description for the successive UI page with id=x),
+  "id_x": {"description":"..."(Predicted description for the successive UI page with id=x),"comps:[](Predicted components as a list for the successive UI page with id=x)},
   ......(x is the id of the current UI component,you should iterate over all the UI components)
 }
         """
@@ -144,9 +139,9 @@ i.e. (<div> Voice Search</div>:" a voice input page for searching").
                         "content": """
 {
     "Page": "Main interface of the WhatsApp application",
-    "id_1": "Display a new page where you can view the status updates of contacts",
-    "id_2": "Mean to add a new status update",
-    "id_3": "Lead to a page with group chats or a community forum.",
+    "id_1": {"description":"Display a new page where you can view the status updates of contacts","comps":["<div>My Status</div>","<button>Update Status</button>"]},
+    "id_2": {"description":"Mean to add a new status update","comps":["<div>New Status</div>","<div>Enter</div>"]},
+    "id_3": {"description":"Lead to a page with group chats or a community forum.","comps":["<div>Community Member</div>","<div>Add Member</div>"]}
 }
                             """
                     },
@@ -160,33 +155,28 @@ i.e. (<div> Voice Search</div>:" a voice input page for searching").
                 if self.insert_prompt:
                     self.prompt.append(self.insert_prompt)
                 print(self.prompt[-1])
-                response = openai.ChatCompletion.create(
-                    model="gpt-4",
-                    messages=self.prompt,
-                    temperature=0,
-                )
-                response_text = response["choices"][0]["message"]["content"]
-                self.resp = response_text
-                print(response_text)
-                response_text = json.loads(
-                    response_text[response_text.find("{"):response_text.find("}")+1])
+                response = GPT(self.prompt)
+                self.resp = response
+                response_text = response
                 print("JSON:----", response_text)
                 self.model.page_description = response_text["Page"]
                 self.model.log_json["@Page_description"] = self.model.page_description
-                self.model.current_path.append("Page:"+self.model.page_description)
-                self.model.current_path_str = " -> ".join(self.model.current_path)
+                self.model.current_path.append(
+                    "Page:"+self.model.page_description)
+                self.model.current_path_str = " -> ".join(
+                    self.model.current_path)
                 for key in response_text.keys():
                     if "id_" in key:
                         index = int(key.split("_")[1])-1
                         if response_text[key] != []:
                             self.next_comp[index] = response_text[key]
                             self.comp_json[self.model.screen.semantic_info_list[index]
-                                        ] = response_text[key]
+                                           ] = response_text[key]
                         else:
                             if self.next_comp[index] == "":
                                 self.next_comp[index] = []
-                                self.comp_json[self.model.screen.semantic_info_list[index]] = [
-                                ]
+                                self.comp_json[self.model.screen.semantic_info_list[index]] = {
+                                }
                             else:
                                 continue
                     else:
@@ -195,7 +185,7 @@ i.e. (<div> Voice Search</div>:" a voice input page for searching").
                 print("next_comp: ", self.next_comp)
 
                 self.model.extended_info = [add_value_to_html_tag(
-                    key, "\n".join(value)) for key, value in self.comp_json.items()]
+                    key, value["description"]) for key, value in self.comp_json.items()]
                 print("extended_info: ", self.model.extended_info)
                 self.model.extended_info = add_son_to_father(
                     self.model.extended_info, self.model.screen.trans_relation)
@@ -242,16 +232,8 @@ Think step-by-step about the process of updating the [Predict Module] and output
                 Original Output of [Predict Module]:{}
                 """.format(self.comp_json)
         })
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=self.update_prompt,
-            temperature=1,
-        )
-        response_text = response["choices"][0]["message"]["content"]
-        print(response_text)
-        resp = json.loads(
-            response_text[response_text.find("{"):response_text.find("}")+1])
-        
+        response = GPT(self.prompt)
+        resp = response
         strategy = resp["strategy"]
         prompt = resp["prompt"]
         output = resp["output"]

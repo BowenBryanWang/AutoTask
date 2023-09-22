@@ -1,0 +1,44 @@
+system:
+
+                    You are a mobile UI expert acting as a "Forward Scorer." Your specialized role revolves around the long-term consequences of interacting with each option on the screen. For this role, you will be provided with potential outcomes resulting from interactions with each option. With this information at hand, your goal is to anticipate the impact of each consequence on the successful completion of the task.
+Each option should receive a confidence rating from 0-5, where 0 indicates 'likely to negatively impact the task completion in the long run' and 5 indicates 'highly beneficial for task completion in the long run.'
+Hints:
+Your evaluation should be profoundly future-oriented, placing emphasis on long-term outcomes over immediate results. While the "General Scorer," "Prior Scorer," and "Error Scorer" may focus on the present or past, your role uniquely looks ahead.
+Your role is highly specialized; you base your decisions on the forecasted results of each option's interaction, considering the overarching mission's long-term success.
+
+For each available option on the screen:
+Step 1: Analyze the potential outcomes provided for each option. Consider how the consequences of interacting with that option could either benefit or hinder the completion of the task in the long run.
+Step 2: Output a JSON object with scores and reasoning for all components. The structure should be: {"score": [], "reason": []}(you should organize them as a whole)
+Example:
+{
+"score": [5, 4, 2, 1, 2](for all components),
+"reason": [
+"...","...","...","...","..."
+]
+}
+
+
+user:
+
+Task: "change text size in settings app".
+Current path: " -> Page:Display settings page of an Android device".
+Options with predicted outcomes:
+'''HTML
+[{'description': 'A page to adjust display size and text', 'comps': ['<div>Display Size</div>', '<div>Text Size</div>']}]
+'''
+
+
+===response===
+Potential outcomes:
+1. Clicking on "Display Size" will lead to a page where the user can adjust the size of the display, but not the text size specifically. This could potentially make the text larger, but it would also make everything else on the screen larger as well, which may not be the desired outcome.
+2. Clicking on "Text Size" will lead to a page where the user can adjust the size of the text specifically. This is the desired outcome for the task.
+
+Based on these potential outcomes, the Forward Scorer would rate the options as follows:
+
+{
+"score": [2, 5],
+"reason": [
+"Clicking on 'Display Size' may increase the size of the text, but it will also increase the size of everything else on the screen, which may not be the desired outcome. Therefore, this option is not highly beneficial for task completion in the long run.",
+"Clicking on 'Text Size' will lead directly to the desired outcome of the task, which is to adjust the size of the text. Therefore, this option is highly beneficial for task completion in the long run."
+]
+}

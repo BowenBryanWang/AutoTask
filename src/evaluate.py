@@ -11,6 +11,8 @@ import math
 import os
 import numpy as np
 import openai
+
+from src.utility import GPT
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
 NUM_JUDGES = 1
@@ -69,10 +71,8 @@ class Evaluate():
         self.judges = [LLM_Judge(self)]
         judge_scores = []
         weights = self.allocator.allocate()
-        asyncio.run(self.judges[0].score_concurrently())
-        # while self.judges[0].result["general"] == [] or self.judges[0].result["prior"] == [] or self.judges[0].result["error"] == [] or self.judges[0].result["forward"] == []:
-        #     print("waiting")
-        #     time.sleep(1)
+        # asyncio.run(self.judges[0].score_concurrently())
+        self.judges[0].score_sequentially()
         judge = self.judges[0]
         print("general", judge.result["general"])
         print("prior", judge.result["prior"])
@@ -80,10 +80,14 @@ class Evaluate():
         print("forward", judge.result["forward"])
         for i in range(len(self.model.candidate)):
             judge_scores.append(
-                judge.result["general"][i] if judge.result["general"][i] else 0
-                + judge.result["prior"][i] if judge.result["prior"][i] else 0
-                + judge.result["error"][i] if judge.result["error"][i] else 0
-                + judge.result["forward"][i] if judge.result["forward"][i] else 0
+                judge.result["general"][i] if judge.result["general"] != [
+                ] and judge.result["general"][i] else 0
+                + judge.result["prior"][i] if judge.result["prior"] != [
+                ] and judge.result["prior"][i] else 0
+                + judge.result["error"][i] if judge.result["error"] != [
+                ] and judge.result["error"][i] else 0
+                + judge.result["forward"][i] if judge.result["forward"] != [
+                ] and judge.result["forward"][i] else 0
             )
         print("judge_scores", judge_scores)
         self.score = judge_scores
@@ -160,7 +164,7 @@ class LLM_Judge(Judge):
     async def LLM_output(self, name, prompt):
         print("prompt:", prompt[-1])
         resp = await openai.ChatCompletion.acreate(
-            model="gpt-4", messages=prompt, temperature=0)
+            model="gpt-3.5-turbo", messages=prompt, temperature=0.5)
         text = resp.choices[0]["message"]["content"]
         print("text", text)
         json_string = text[text.find("{"):text.rfind("}")+1]
@@ -251,9 +255,7 @@ Example:
 "...","...","...","...","..."
 ]
 
-
 Hints:
-
 1,Your evaluation should be based solely on the prior successful examples provided. Do not consider any other factors, they are the job of the "General Scorer" and "Error Scorer." and "Forward Scorer".
 2,Your role is highly specialized; you consider the past successful examples as a knowledge base to evaluate the options on the current page. However, be aware that the current task may vary from the examples.
 """
@@ -343,9 +345,97 @@ Options with predicted outcomes:
 '''
 """.format(self.evaluate.model.task, self.evaluate.model.current_path_str, [self.evaluate.model.predict_module.next_comp[i-1] for i in self.evaluate.model.candidate])
             }]
-        tasks = [self.LLM_output("general", self.general_prompt), self.LLM_output(
-            "prior", self.prior_prompt), self.LLM_output("error", self.error_prompt), self.LLM_output("forward", self.forward_prompt)]
+        tasks = [self.LLM_output(
+            "prior", self.prior_prompt), self.LLM_output("forward", self.forward_prompt)]
         await asyncio.gather(*tasks)
+
+    def score_sequentially(self):
+        self.prior_prompt = [
+            {
+                "role": "system",
+                "content": """
+You are a mobile UI expert acting as a "Prior Scorer." Your specialized role focuses on guiding the user by refering to prior examples of successfully completed tasks. These prior examples, extracted from a task library, serve as the ground-truth and include detailed task descriptions and execution paths. 
+Your job is to rate the available options on the current page based on their similarity to the prior examples. For each option, provide a confidence rating from 0-5, where 0 indicates 'unlikely to help' and 5 indicates 'highly likely to help.'
+
+For each available option on the screen:
+
+Step 1: Compare each option against the prior successful examples. Evaluate how closely each option aligns with the steps or features present in the examples, keeping in mind that the current task might differ.
+Step 2: Output a JSON object with scores and reasoning. The structure should be: {"score": [], "reason": []}
+Example:
+{
+"score": [5, 4, 2, 1, 2],
+"reason": [
+"...","...","...","...","..."
+]
+
+Hints:
+1,Your evaluation should be based solely on the prior successful examples provided. Do not consider any other factors, they are the job of the "General Scorer" and "Error Scorer." and "Forward Scorer".
+2,Your role is highly specialized; you consider the past successful examples as a knowledge base to evaluate the options on the current page. However, be aware that the current task may vary from the examples.
+"""
+            },
+            {
+                "role": "user",
+                "content": """
+Task: "{}".
+Current path: {}.
+Examples:{}
+Options:
+'''HTML
+{}
+'''
+""".format(self.evaluate.model.task, self.evaluate.model.current_path_str, [j+":"+"=>".join(k) for j, k in zip(self.evaluate.model.similar_tasks, self.evaluate.model.similar_traces)], "".join([self.evaluate.model.screen.semantic_info_list[i-1] for i in self.evaluate.model.candidate]))
+            }]
+        self.forward_prompt = [
+            {
+                "role": "system",
+                "content": """
+                    You are a mobile UI expert acting as a "Forward Scorer." Your specialized role revolves around the long-term consequences of interacting with each option on the screen. For this role, you will be provided with potential outcomes resulting from interactions with each option. With this information at hand, your goal is to anticipate the impact of each consequence on the successful completion of the task.
+Each option should receive a confidence rating from 0-5, where 0 indicates 'likely to negatively impact the task completion in the long run' and 5 indicates 'highly beneficial for task completion in the long run.'
+Hints:
+Your evaluation should be profoundly future-oriented, placing emphasis on long-term outcomes over immediate results. While the "General Scorer," "Prior Scorer," and "Error Scorer" may focus on the present or past, your role uniquely looks ahead.
+Your role is highly specialized; you base your decisions on the forecasted results of each option's interaction, considering the overarching mission's long-term success.
+
+For each available option on the screen:
+Step 1: Analyze the potential outcomes provided for each option. Consider how the consequences of interacting with that option could either benefit or hinder the completion of the task in the long run.
+Step 2: Output a JSON object with scores and reasoning for all components. The structure should be: {"score": [], "reason": []}(you should organize them as a whole)
+Example:
+{
+"score": [5, 4, 2, 1, 2](for all components),
+"reason": [
+"...","...","...","...","..."
+]
+}
+"""
+            },
+            {
+                "role": "user",
+                "content": """
+Task: "{}".
+Current path: "{}".
+Options with predicted outcomes:
+'''HTML
+{}
+'''
+""".format(self.evaluate.model.task, self.evaluate.model.current_path_str, [self.evaluate.model.predict_module.next_comp[i-1] for i in self.evaluate.model.candidate])
+            }]
+        resp = GPT(self.prior_prompt)
+        if resp:
+            score, reason = resp["score"], resp["reason"]
+            self.result["prior"] = score
+            self.reason["prior"] = reason
+            print("score", score)
+            print("reason", reason)
+        print("---------------------------" + "prior" +
+              " done---------------------------")
+        resp = GPT(self.forward_prompt)
+        if resp:
+            score, reason = resp["score"], resp["reason"]
+            self.result["forward"] = score
+            self.reason["forward"] = reason
+            print("score", score)
+            print("reason", reason)
+        print("---------------------------" + "forward" +
+              " done---------------------------")
 
     def score(self):
         self.prompt = [
@@ -467,97 +557,6 @@ Think step-by-step about the process of updating the[Evaluate Module] and output
             }
         else:
             self.modified_result = output
-
-
-class IG_Judge(Judge):
-    """
-    TODO：This class represents a judge that evaluates a candidate item using Information Gain.
-    描述的是当点击一个控件后，任务完成的不确定性下降的程度，或者说带来的新信息有多少
-    信息增益：熵-条件熵
-    熵：当前任务完成的不确定性/混乱程度：所有candidate被选择的概率的熵
-    条件熵：在选择了一个candidate后，任务完成的不确定性：选择candidate后带来的新页面中，每个元素被选择的概率的熵
-    被选择的概率：通过语义相似度计算，计算出每个元素被选择的概率
-    计算出信息增益后按照Minmax归一化到0-10分
-    """
-
-    def __init__(self, evaluate: Evaluate):
-        super().__init__(evaluate)
-        self.nlp = spacy.load('en_core_web_md')
-
-    def score(self):
-        # 计算初始熵
-        if self.evaluate.model.candidate == []:
-            raise Exception("Please call Select function first!")
-        initial_entropy, initial_probs = self.calculate_entropy(
-            [self.evaluate.model.screen.semantic_info_list[i-1] for i in self.evaluate.model.candidate])
-
-        if self.evaluate.model.predict_module.comp_json == {}:
-            raise Exception("Please call Predict function first!")
-        information_gains = []
-
-        # # 创建进程池
-        # with ProcessPoolExecutor() as executor:
-        #     # 并行计算信息增益
-        #     futures = [executor.submit(self.calculate_information_gain, i, self.evaluate.model.candidate[i], initial_entropy,
-        #                                initial_probs, self.evaluate.model.predict_module) for i in range(len(self.evaluate.model.candidate))]
-        #     # 计算条件熵
-
-        # 获取计算结果
-        # information_gains = [future.result() for future in futures]
-        for i in range(len(self.evaluate.model.candidate)):
-            information_gains.append(self.calculate_information_gain(i, self.evaluate.model.screen.semantic_info_list[self.evaluate.model.candidate[i]-1], initial_entropy,
-                                                                     initial_probs, self.evaluate.model.predict_module))
-
-        # 归一化
-        normalized_score = (information_gains - np.min(information_gains)) / \
-            (np.max(information_gains) - np.min(information_gains)) * 5
-
-        return normalized_score
-
-    def calculate_information_gain(self, i, candidate, initial_entropy, initial_probs, predict_module):
-        conditional_entropy, _ = self.calculate_entropy(
-            predict_module.comp_json[candidate])
-        return (initial_entropy - conditional_entropy) * initial_probs[i]
-
-    def calculate_entropy(self, candidates):
-        """
-        计算熵
-        """
-        probs = []
-        # 使用spacy解析字符串，得到词向量
-        doc_task = self.nlp(self.evaluate.model.task)
-
-        # 将词向量转换为矩阵
-        matrix_task = np.array([token.vector for token in doc_task])
-
-        # 计算每个元素与任务描述的语义相似度
-        for candidate in candidates:
-            doc_candidate = self.nlp(candidate)
-            matrix_candidate = np.array(
-                [token.vector for token in doc_candidate])
-            similarity = cosine_similarity(matrix_task, matrix_candidate)
-            probs.append(similarity[0][0])
-
-        # 概率归一化
-        probs = np.array(probs)
-        probs = probs / probs.sum()
-
-        # 计算熵
-        entropy = 0
-        for p in probs:
-            entropy -= p * math.log2(p)
-
-        return entropy, probs
-
-
-class Markov_Judge(Judge):
-    """
-    This class represents a judge that evaluates a candidate item using the Markov algorithm.
-    基于历史数据的，在已完成的路径中，选择该节点后，下一个节点被选择的频率分布，例如某个按钮点击频率次数太低，就不会被选中。
-    """
-
-    def __init__(self, evaluate: Evaluate):
-        super().__init__(evaluate)
 
 
 class Allocator:

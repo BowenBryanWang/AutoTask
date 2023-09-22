@@ -1,6 +1,8 @@
 import os
 import openai
 import json
+
+from src.utility import GPT
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
 
@@ -71,7 +73,7 @@ Output only one JSON object structured like {"result":[]-the id of selected cand
                     Examples from Library:
                     {}
                     You should select at most 5 components!
-                """.format(self.model.task, self.model.current_path_str, self.model.extended_info,[j+":"+"=>".join(k) for j,k in zip(self.model.similar_tasks,self.model.similar_traces)])
+                """.format(self.model.task, self.model.current_path_str, self.model.extended_info, [j+":"+"=>".join(k) for j, k in zip(self.model.similar_tasks, self.model.similar_traces)])
             },
         ]
 
@@ -80,33 +82,28 @@ Output only one JSON object structured like {"result":[]-the id of selected cand
         else:
             if self.insert_prompt:
                 self.prompt_select.append(self.insert_prompt)
-            response = openai.ChatCompletion.create(
-                model="gpt-4",
-                messages=self.prompt_select,
-                temperature=1,
-            )
-            response_text = response["choices"][0]["message"]["content"]
-        print(response_text)
-        self.resp = response_text
-        candidate = json.loads(
-            response_text[response_text.find("{"):response_text.find("}")+1])
+            response = GPT(self.prompt_select)
+        print(response)
+        self.resp = response
+        candidate = response
         self.model.candidate = candidate["result"]
         self.model.candidate_reason = candidate["reason"]
-        self.model.candidate_str = [self.model.screen.semantic_info_list[i-1] if self.model.screen.semantic_info_list[i-1] else "<None exist>" for i in self.model.candidate]
+        self.model.candidate_str = [self.model.screen.semantic_info_list[i-1]
+                                    if self.model.screen.semantic_info_list[i-1] else "<None exist>" for i in self.model.candidate]
         try:
             self.model.candidate_str.remove("<None exist>")
         except:
             pass
         print(self.model.candidate_str)
-        result_json={}
+        result_json = {}
         for i in range(len(self.model.candidate)):
             key = self.model.candidate_str[i]
             value = self.model.candidate_reason[i] if self.model.candidate_reason[i] else ""
             result_json[key] = value
         log_info = {
-            "Name":"Select",
-            "Description":"This module is a selection model, selecting the 5 possible component without relativity ranking to be acted on catering to user's intent",
-            "Note":"This individual module only select 5 highly related components,without ranking them,and without analyzing the correctness of the components aligning with user's content ",
+            "Name": "Select",
+            "Description": "This module is a selection model, selecting the 5 possible component without relativity ranking to be acted on catering to user's intent",
+            "Note": "This individual module only select 5 highly related components,without ranking them,and without analyzing the correctness of the components aligning with user's content ",
             "Output": result_json,
         }
         self.model.log_json["@Module"].append(log_info)
@@ -147,7 +144,7 @@ Think step-by-step about the process of updating the [Select Module] and output 
         print(response_text)
         resp = json.loads(
             response_text[response_text.find("{"):response_text.find("}")+1])
-        
+
         strategy = resp["strategy"]
         prompt = resp["prompt"]
         output = resp["output"]
@@ -158,7 +155,6 @@ Think step-by-step about the process of updating the [Select Module] and output 
             }
         else:
             self.modified_result = output
-
 
     def plan(self):
         """
@@ -234,18 +230,11 @@ Candidates:{}""".format(self.model.task, self.model.page_description, self.model
         #     "logs/suggest_log{}.log".format(self.model.index), rotation="500 MB")
         # logger.debug("Plan for Model {}".format(self.model.index))
         # logger.info("Prompt: {}".format(json.dumps(self.prompt_plan[-1])))
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=self.prompt_plan,
-            temperature=0,
-        )
-        response_text = response["choices"][0]["message"]["content"]
-        response = json.loads(
-            response_text)
+        response = GPT(self.prompt_plan)
         print(response)
         log_info = {
-            "Name":"Plan",
-            "Description":"This module is a plan module, planning the next action based on the selected components, whether click or edit",
+            "Name": "Plan",
+            "Description": "This module is a plan module, planning the next action based on the selected components, whether click or edit",
             "Output": response
         }
         self.model.log_json["@Module"].append(log_info)
@@ -259,4 +248,3 @@ Candidates:{}""".format(self.model.task, self.model.page_description, self.model
                     "action") else ""
                 self.model.candidate_text[i] = candidate.get("text") if candidate.get(
                     "text") else ""
-        

@@ -78,11 +78,13 @@ def demo_route() -> Union[str, Response]:
             return Response("Task failed.")
     if STATUS=="backtracking":
         INDEX-=1
-        if COMPUTATIONAL_GRAPH[INDEX].feedback():
+        res,act = COMPUTATIONAL_GRAPH[INDEX].feedback()
+        if res is not None:
             STATUS="start"
             INDEX+=1
-            return GRAPH_ACTION[INDEX-1]
+            return act
         else:
+            print("bbbbbback")
             return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}
     return Response("0")
 
@@ -93,7 +95,7 @@ def index() -> Union[str, Response]:
 
 def keyboard_listener():
     global STATUS
-    while True:  # 添加无限循环
+    while True:  
         input("Press Enter to start the task execution...")
         STATUS = "start"
         print("Task execution started!")
@@ -101,7 +103,7 @@ def keyboard_listener():
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Flask app with argparse integration")
-    parser.add_argument("--task", type=str, required=True, help="Specify the TASK parameter")
+    parser.add_argument("--task", type=str, help="Specify the TASK parameter", default="change text size in settings app")
     args = parser.parse_args()
 
     TASK = args.task

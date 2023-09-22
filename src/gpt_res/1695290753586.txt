@@ -1,37 +1,5 @@
-import json
-import openai
-from loguru import logger
-import requests
-import os
-
-from src.utility import GPT
-
-openai.api_key = os.getenv('OPENAI_API_KEY')
-
-
-class Decide:
-    def __init__(self, model) -> None:
-        """
-        Initializes a Decide object with a given OpenAI model.
-
-        Args:
-            model (str): The name of the OpenAI model to use.
-        """
-        self.model = model
-
-    def decide(self, new_screen):
-        """
-        Uses the OpenAI model to generate a response to the prompt.
-
-        Returns:
-            str: The status of the decision made by the model.
-        """
-        # with open("./src/KB/pagejump.csv", "a") as f:
-        #     f.write("{},{},{},{}\n".format(self.model.screen.semantic_info_str.replace('\n', '').replace(",",";;"),self.model.current_path[-1].replace('\n', '').replace(",",";;"), new_screen.semantic_info_str.replace('\n', '').replace(",",";;"),))
-        print("___________________________decide___________________________")
-        self.prompt = [{
-            "role": "system",
-            "content": """You are a professor with in-depth knowledge of User Interface (UI) tasks and their action traces. You are assigned a specific UI task along with an action trace. Your task is to evaluate if the action trace aligns with the assigned task, categorizing the trace as: 
+system:
+You are a professor with in-depth knowledge of User Interface (UI) tasks and their action traces. You are assigned a specific UI task along with an action trace. Your task is to evaluate if the action trace aligns with the assigned task, categorizing the trace as: 
 1,completed: After the last action and based on the newest UI screen, the user's task is completed;
 2,wrong: After the last action and based on the newest UI screen, the action trace goes into a wrong branch and need to be corrected;
 3,go on: After the last action and based on the newest UI screen, the action trace is on the right track but not completed yet. Further actions are needed to complete the task.
@@ -41,11 +9,10 @@ You should comprehensively analyze the above three fields or refer to similar ex
 Use the following steps to respond to user inputs. Fully restate each step before proceeding. i.e. "Step 1: Reason...".
 Step 1:Reason step-by-step about the relationship of the action trace  and UI task.
 Step 2:Reason step-by-step about whether the newest UI screen is consistent with the UI task result.
-Step 3:Output a JSON object structured like: {"status": "completed" or "wrong" or "go on", "reason": reason for the decision}."""
-        },
-            {
-            "role": "user",
-            "content": """
+Step 3:Output a JSON object structured like: {"status": "completed" or "wrong" or "go on", "reason": reason for the decision}.
+
+user:
+
 Task: Add a new contact called Steven
 Action Trace: [Page]: Main interface of WhatsApp => [Action]: click on <button id=1 class='com.whatsapp:id/fab' description='New chat'>  </button> => [Page]: Adding new chat and invite friends
 Last Page:
@@ -59,11 +26,10 @@ Last Page:
 <button id=13 class='com.whatsapp:id/menuitem_overflow' description='More options'>  </button>
 <p id=14 class='com.whatsapp:id/menuitem_search' description='Search'>  </p>
 <p id=15 class='' description='Navigate up'>  </p>
-            """
-        },
-            {
-            "role": "assistant",
-            "content": """
+            
+
+assistant:
+
 Step 1: Reason step-by-step about the relationship of the action trace and UI task.
 Given UI Task: Add a new chat with Steven.
 The user starts on the main interface of WhatsApp.
@@ -87,42 +53,36 @@ Based on the provided information, the user should continue their actions to sea
 
 
 
-"""
-        },
-            {
-            "role": "user",
-            "content": """
-Task:{}
-Action trace:{}
-Last Page:{}
-Completed Examples from Library:
-{}
-            """.format(self.model.task, self.model.current_path_str, new_screen.semantic_info, [j+":"+"=>".join(k) for j, k in zip(self.model.similar_tasks, self.model.similar_traces)])
-        }]
-        response = GPT(self.prompt)
-        self.model.log_json["@Similar_task"] = [j+":"+"=>".join(k) for j, k in zip(
-            self.model.similar_tasks, self.model.similar_traces)]
-        # 提取回答当中的json部分
-        answer = response
 
-        log_info = {
-            "Name": "Decide",
-            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
-            "Output": answer
-        }
-        self.model.log_json["@Module"].append(log_info)
-        self.model.log_json["@Successive_Page"] = self.model.next_model.screen.semantic_info_str
-        with open("logs/log{}.json".format(self.model.index), "w") as f:
-            print("· log{} generated".format(self.model.index))
-            print(self.model.log_json)
-            json.dump(self.model.log_json, f, indent=4)
-        if answer["status"] == "wrong":
-            with open("./src/KB/errors.csv", "w") as f:
-                f.write("{},{},{},{}".format(str(self.model.task), self.model.current_path_str.replace("\n", "").replace(
-                    ",", "::"), new_screen.semantic_info_str.replace("\n", "").replace(",", "::"), answer["reason"].replace("\n", "").replace(",", " ")))
-        if answer["status"] == "completed":
-            # task.json
-            with open("./src/KB/task.json", "r") as f:
-                task_json = json.load(f)
-                task_json[self.model.task] = self.model.current_path_str
-        return answer["status"]
+
+user:
+
+Task:change text size in settings app
+Action trace:->Page:Settings page of an Android device->Action: Click on <div id=5 class='' > Display
+    <p> Dark theme, font size, brightness </p> </div>
+
+Last Page:["<div id=1 class='' > Navigation mode\n    <p> Gesture navigation </p> </div>\n", "<div id=2 class='' > Display size and text </div>\n", "<div id=3 class='' > Screen saver\n    <p> On / Clock </p> </div>\n", "<div id=4 class='' description='Dark theme'> Dark theme\n    <p> Will never turn on automatically </p>\n    <switch id=5 class='com.android.settings:id/switchWidget' clickable> Off </switch>\n </div>\n", "<div id=6 class='' > Screen timeout\n    <p> Not set </p> </div>\n", "<div id=7 class='' > Lock screen\n    <p> Show all notification content </p> </div>\n", "<div id=8 class='' > Brightness level\n    <p> 83% </p> </div>\n", "<div id=9 class='' description='Navigate up'>  </div>\n"]
+Completed Examples from Library:
+["Change the font size on WeChat:['Me', 'Settings', 'General', 'Font Size', 'Choose a font size from small to large']", "Change the font size on Zhihu:['Tap the profile icon on the bottom right', 'Tap the gear icon on the top right', 'Tap Font Size under Display Settings', 'Choose a font size from the options']", "Change the language on my WeChat app into English:['Me', 'Settings', 'General', 'Language', 'English']", "Change the theme color of my Weibo app to blue:['Me', 'Settings', 'General', 'Theme Color', 'Select blue']"]
+            
+
+===response===
+Step 1: Reason step-by-step about the relationship of the action trace and UI task.
+Given UI Task: Change text size in settings app.
+The user starts on the Settings page of an Android device.
+The user clicks on the 'Display' option, which includes 'Dark theme, font size, brightness'.
+Based on this action trace, the user seems to be on the correct path to changing the text size since they've navigated to the 'Display' section from the main Settings page. However, the task specifically mentioned changing the text size, and it's important to check if this action has been completed.
+
+Step 2: Reason step-by-step about whether the newest UI screen is consistent with the UI task result.
+Upon observing the provided 'Last Page' UI elements:
+There are multiple options present, including 'Navigation mode', 'Display size and text', 'Screen saver', 'Dark theme', 'Screen timeout', 'Lock screen', 'Brightness level'.
+There's an option labeled 'Display size and text' which seems to be the correct place to change the text size.
+As per the task, we are looking for an action or an option related to changing the text size, which seems to be present but not yet clicked or interacted with.
+Given this information, while the user is in the appropriate section to change the text size, they have not yet made the change.
+
+Step 3: Output a JSON object structured like:
+{
+  "status": "go on",
+  "reason": "The user has navigated to the 'Display' section, which is consistent with the task of changing the text size. However, there is no indication that the text size has been changed in the current UI screen. Further actions are needed."
+}
+Based on the provided information, the user should continue their actions to click on 'Display size and text' and then make the desired changes to the text size to complete the task.

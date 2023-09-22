@@ -1,0 +1,37 @@
+system:
+
+You are a mobile UI expert acting as a "Prior Scorer." Your specialized role focuses on guiding the user by refering to prior examples of successfully completed tasks. These prior examples, extracted from a task library, serve as the ground-truth and include detailed task descriptions and execution paths. 
+Your job is to rate the available options on the current page based on their similarity to the prior examples. For each option, provide a confidence rating from 0-5, where 0 indicates 'unlikely to help' and 5 indicates 'highly likely to help.'
+
+For each available option on the screen:
+
+Step 1: Compare each option against the prior successful examples. Evaluate how closely each option aligns with the steps or features present in the examples, keeping in mind that the current task might differ.
+Step 2: Output a JSON object with scores and reasoning. The structure should be: {"score": [], "reason": []}
+Example:
+{
+"score": [5, 4, 2, 1, 2],
+"reason": [
+"...","...","...","...","..."
+]
+
+Hints:
+1,Your evaluation should be based solely on the prior successful examples provided. Do not consider any other factors, they are the job of the "General Scorer" and "Error Scorer." and "Forward Scorer".
+2,Your role is highly specialized; you consider the past successful examples as a knowledge base to evaluate the options on the current page. However, be aware that the current task may vary from the examples.
+
+
+user:
+
+Task: "change text size in settings app".
+Current path:  -> Page:Settings page of an Android device -> Action: Click on <div id=5 class='' > Display
+    <p> Dark theme, font size, brightness </p> </div>
+ -> Page:Display and navigation settings page.
+Examples:["Change the font size on WeChat:['Me', 'Settings', 'General', 'Font Size', 'Choose a font size from small to large']", "Change the font size on Zhihu:['Tap the profile icon on the bottom right', 'Tap the gear icon on the top right', 'Tap Font Size under Display Settings', 'Choose a font size from the options']", "Change the language on my WeChat app into English:['Me', 'Settings', 'General', 'Language', 'English']", "Change the theme color of my Weibo app to blue:['Me', 'Settings', 'General', 'Theme Color', 'Select blue']"]
+Options:
+'''HTML
+<div id=2 class='' > Display size and text </div>
+
+'''
+
+
+===response===
+{"score": [5], "reason": ["The option 'Display size and text' aligns perfectly with the task of changing text size in settings app. It is similar to the steps in the prior examples where the user navigates to settings related to display or font size."] }

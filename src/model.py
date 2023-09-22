@@ -15,7 +15,6 @@ from src.suggest import Suggest
 import json
 
 
-
 class Model:
 
     def __init__(self, screen: Optional[Screen] = None, description: str = "", prev_model=None, index=0):
@@ -54,7 +53,8 @@ class Model:
             self.prev_model = prev_model
             prev_model.next_model = self
             self.current_path = copy.deepcopy(self.prev_model.current_path)
-            self.current_path_str = copy.deepcopy(self.prev_model.current_path_str)
+            self.current_path_str = copy.deepcopy(
+                self.prev_model.current_path_str)
         else:
             self.current_path = [self.screen.page_description]
             self.current_path_str = self.screen.page_description
@@ -67,11 +67,12 @@ class Model:
         #     user="root", password="wbw12138zy,.", host="127.0.0.1", database="GUI_LLM")
         print("· database connected")
         self.PageJump_KB = PageJump_KB(None)
-        
+
         print("· pagejump_kb initialized")
         self.Task_KB = Task_KB()
         self.Error_KB = Error_KB()
-        self.similar_tasks,self.similar_traces = self.Task_KB.find_most_similar_tasks(self.task)
+        self.similar_tasks, self.similar_traces = self.Task_KB.find_most_similar_tasks(
+            self.task)
         self.error_experiences = self.Error_KB.find_experiences(self.task)
         print("· task_kb initialized")
         self.predict_module = Predict(self, self.PageJump_KB)
@@ -103,15 +104,11 @@ class Model:
             if status == "wrong":
                 # self.prev_model.feedback_module.feedback()
                 print("wrong: feedback started")
-                return  {"node_id": 1, "trail": "[0,0]", "action_type": "back"},"wrong"
-
+                return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}, "wrong"
         if not isinstance(self.screen, Screen):
             raise Exception("Invalid Screen input")
-
         if self.task == "":
             raise Exception("No task description input")
-
-        # 日志记录
         print("______________________Stop to avoid RTM__________________________")
         for _ in tqdm.tqdm(range(10)):
             time.sleep(1)
@@ -121,6 +118,10 @@ class Model:
         self.log_json["@Module"] = []
 
         self.predict_module.predict()
+        if self.prev_model is not None:
+            with open("./src/KB/pagejump.csv", "a") as f:
+                f.write("{},{},{},{}\n".format(self.prev_model.screen.semantic_info_str.replace('\n', '').replace(",", ";;"), self.prev_model.current_path[-1].replace(
+                    '\n', '').replace(",", ";;"), self.screen.semantic_info_str.replace('\n', '').replace(",", ";;"), self.page_description))
         self.suggest_module.suggest()
         self.suggest_module.plan()
         self.evaluate_module.evaluate()
@@ -132,16 +133,18 @@ class Model:
                 print(self.node_selected_id - 1)
                 print(node.generate_all_semantic_info())
                 if self.node_selected_action == "click":
-                    center = {"x": (node.bound[0] + node.bound[2]) // 2, "y": (node.bound[1] + node.bound[3]) // 2}
-                    perform = {"node_id": 1, "trail": "[" + str(center["x"]) + "," + str(center["y"]) + "]", "action_type": "click"}
+                    center = {"x": (
+                        node.bound[0] + node.bound[2]) // 2, "y": (node.bound[1] + node.bound[3]) // 2}
+                    perform = {"node_id": 1, "trail": "[" + str(center["x"]) + "," + str(
+                        center["y"]) + "]", "action_type": "click"}
                     print(perform)
-                    return perform,"Execute"
+                    return perform, "Execute"
                 elif self.node_selected_action == "edit":
-                    perform = {"node_id": 1, "trail": "[0,0]", "action_type": "text", "text": self.node_selected_text,"ori_absolute_id":node.absolute_id}
+                    perform = {"node_id": 1, "trail": "[0,0]", "action_type": "text",
+                               "text": self.node_selected_text, "ori_absolute_id": node.absolute_id}
                     print(perform)
-                    return perform,"Execute"
+                    return perform, "Execute"
             else:
                 raise Exception("Invalid node_selected_id")
         else:
             raise Exception("No semantic nodes found in the screen")
-        
