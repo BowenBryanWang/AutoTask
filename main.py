@@ -1,10 +1,8 @@
 import argparse
 import threading
-import time
-from flask import jsonify
 from flask import Response
-from typing import List, Dict, Any, Union
-from flask import Flask, render_template, request
+from typing import Union
+from flask import Flask, request
 from src.model import Model
 
 from page.init import Screen
@@ -21,7 +19,7 @@ COMPUTATIONAL_GRAPH = []
 GRAPH_ACTION = []
 ACTION_TRACE = {
     "ACTION": [],
-    "ACTION_DESC"
+    "ACTION_DESC" : [],
     "TRACE": [],
     "TRACE_DESC": [],
 }
@@ -68,16 +66,15 @@ def demo() -> Union[str, Response]:
             return Response("Task failed.")
     if STATUS == "backtracking":
         INDEX -= 1
-        res, act = COMPUTATIONAL_GRAPH[INDEX].feedback_module.feedback()
+        res, act = COMPUTATIONAL_GRAPH[INDEX].feedback_module.feedback(COMPUTATIONAL_GRAPH[INDEX].wrong_reason)
         if res is not None:
-            
-            COMPUTATIONAL_GRAPH = COMPUTATIONAL_GRAPH[:INDEX]
+            COMPUTATIONAL_GRAPH = COMPUTATIONAL_GRAPH[:INDEX+1]
             result, work_status = COMPUTATIONAL_GRAPH[INDEX].work(ACTION_TRACE)
             if work_status == "wrong":
                 STATUS = "backtracking"
                 return result
             elif work_status == "Execute":
-                ACTION_TRACE["ACTION"].append(model.log_json["@Action"])
+                ACTION_TRACE["ACTION"].append(COMPUTATIONAL_GRAPH[INDEX].log_json["@Action"])
                 ACTION_TRACE["ACTION_DESC"].append("Error Recovery")
                 ACTION_TRACE["TRACE"].append(COMPUTATIONAL_GRAPH[INDEX].candidate_str)
                 ACTION_TRACE["TRACE_DESC"].append(COMPUTATIONAL_GRAPH[INDEX].page_description)
@@ -98,10 +95,6 @@ def demo() -> Union[str, Response]:
             return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}
     return Response("0")
 
-
-@app.route("/", methods=("GET", "POST"))
-def index() -> Union[str, Response]:
-    return render_template("index.html", elements=json.dumps({"result": "", "image_id": 1, "semantic_info": "", "chart_data": "", "line_data": ""}))
 
 
 def keyboard_listener():

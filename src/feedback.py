@@ -60,7 +60,7 @@ Finally, output a JSON format like this example:
             "role": "user",
             "content": """
                 Similar Tasks: {}
-                """.format(self.info["@Similar_task"])
+                """.format(self.info["@Similar_tasks"])
         })
         self.prompt.append({
             "role": "user",
@@ -106,7 +106,7 @@ Finally, output a JSON format like this example:
             return None,None
         else:
             p_score = response.get("punishment")
-            self.model.evaluate_model.update_weights(p_score)
+            self.model.evaluate_module.update_weights(p_score)
             return "yes","yes"
             
 

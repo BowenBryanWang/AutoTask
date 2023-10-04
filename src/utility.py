@@ -52,7 +52,7 @@ def chat(prompt):
     response = openai.ChatCompletion.create(
         model='gpt-4',
         messages=prompt,
-        temperature=0,
+        temperature=0.5,
         stream=True  # this time, we set stream=True
     )
     collected_messages = ""
@@ -163,15 +163,15 @@ def Task_UI_grounding_prompt(task, current_path_str, similar_tasks, similar_trac
         {
             "role": "system",
             "content": """You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
-Only guiding by your external knowledge is irreliable and inaccurate, so you are give two kinds of ground-truths, they are:
+Only guiding by your knowledge is irreliable , so you are give two kinds of ground-truths, they are:
 1, the tutorial of how to fulfill the task, estimated through retriving the knowledge libraray and learned from similar tasks.
-2, current UI screen, which contains the components of current UI screen and their corresponding interaction results.
-Basically the tutorial represents how to do the task conceptually without grounding and the UI screen represents the UI ground-truth. You need to ground the task knowledge with the UI knowledge, thus build a connection between them.
+2, current extended UI screen, which contains the components of current UI screen and their corresponding interaction results.
+Basically the tutorial represents how to do the task conceptually without grounding and the UI screen represents the UI ground-truth. You need to conbine them, thus build a connection between them.
 Finnaly, your job is to rate the available options on the current page based on your grounding. For each option, provide a confidence rating from 0-10, where 0 indicates 'unlikely' and 10 indicates 'highly likely'
 
 For each available option on the screen:
 
-Step 1: Compare each option against the prior successful examples. Evaluate how closely each option aligns with the steps or features present in the examples, keeping in mind that the current task might differ.
+Step 1: Think step by step about how there two kinds of knowlegde lead you to score each UI element.
 Step 2: Output a JSON object with scores and reasoning. The structure should be: {"score": [], "reason": []}
 Example:
 {
@@ -239,13 +239,10 @@ def decide_prompt(task, ACTION_TRACE, semantic_info):
             "content": """You are a professor with in-depth knowledge of User Interface (UI) tasks and their action traces. You are assigned a specific UI task along with an action trace. Your task is to evaluate if the action trace aligns with the assigned task, categorizing the trace as: 
 1,completed: After the last action and based on the newest UI screen, the user's task is completed;
 2,wrong: After the last action and based on the newest UI screen, the action trace goes into a wrong branch and need to be corrected;
-3,go on: After the last action and based on the newest UI screen, the action trace is on the right track but not completed yet. Further actions are needed to complete the task.
-You can refer to some completed examples similar to user's intent. But don't follow the examples exactly, though; they serve only as hints.
-"Task" stands for user's intent; "Action Trace" stands for the user's current action traces on the mobile; "Last Page" stands for UI structure after the last action.
-You should comprehensively analyze the above three fields or refer to similar examples to make a synthesis conclusion.
+3,go on: After the last action and based on the newest UI screen, the action trace is on the right track but not completed yet.
 Use the following steps to respond to user inputs. Fully restate each step before proceeding. i.e. "Step 1: Reason...".
 Step 1:Reason step-by-step about the relationship of the action trace  and UI task.
-Step 2:Reason step-by-step about whether the newest UI screen is consistent with the UI task result.
+Step 2:Reason step-by-step about whether the newest action leading to the newest UI screen is consistent with the UI task result.Decide whether the lastest action leads to a wrong branch and needs navigate back.
 Step 3:Output a JSON object structured like: {"status": "completed" or "wrong" or "go on", "reason": reason for the decision}."""
             },
             {
@@ -296,3 +293,9 @@ Action trace:{}
 Latest Page:{}
 """.format(task,ACTION_TRACE,semantic_info)
     }]
+
+def process_action_info(action, params, node):
+    if action == "click":
+        return "Action: Click on {}".format(node)
+    elif action == "edit":
+        return "Action: Edit {} with {}".format(node, params)

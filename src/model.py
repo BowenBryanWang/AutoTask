@@ -51,11 +51,9 @@ class Model:
             self.prev_model = prev_model
             prev_model.next_model = self
             self.current_path = copy.deepcopy(self.prev_model.current_path)
-            self.current_path_str = copy.deepcopy(
-                self.prev_model.current_path_str)
         else:
             self.current_path = [self.screen.page_description]
-            self.current_path_str = self.screen.page_description
+
         self.next_model = None
         #####################################################
 

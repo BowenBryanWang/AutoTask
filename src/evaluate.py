@@ -13,7 +13,8 @@ class Evaluate():
         self.reason = []
         self.weights = []
 
-    def log_decorator(self, func):
+    @staticmethod
+    def log_decorator(func):
         def wrapper(self, *args, **kwargs):
             result = func(self, *args, **kwargs)  # 调用原始函数
             # 在原始函数执行完毕后执行以下代码
@@ -33,7 +34,10 @@ class Evaluate():
     def evaluate(self):
         resp = GPT(Task_UI_grounding_prompt(self.model.task, self.model.current_path_str, self.model.similar_tasks,self.model.similar_traces, self.model.predicted_step, self.model.screen.semantic_info_list, self.model.predict_module.next_comp))
         self.score, self.reason = resp["score"], resp["reason"]
-        self.score = self.score * self.weights if self.weights else self.score
+        print(self.score)
+        print(self.weights)
+        self.score = (np.array(self.score) * np.array(self.weights)).tolist() if self.weights != [] else self.score
+        print(self.score)
         self.model.node_selected = self.model.screen.semantic_info_list[np.argmax(self.score)]
         response = GPT(plan_prompt(self.model.task,self.model.page_description, self.model.node_selected))
         self.model.node_selected_action, self.model.node_selected_text = response.get("action"), response.get("text")
@@ -43,7 +47,12 @@ class Evaluate():
         return self.score
 
     def update_weights(self, weights):
-        self.update_weights = [(10-i)/10 for i in weights]
+        w = [0]*len(self.model.screen.semantic_info_list)
+        for key,item in weights.items():
+            if key.startswith("id_"):
+                index = int(key.split("_")[1]) - 1
+                w[index] = int(item)
+        self.weights = [(10-i)/10 for i in w]
 
 
 

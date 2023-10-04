@@ -11,7 +11,7 @@ class Decide:
     def __init__(self, model) -> None:
         self.model = model
 
-    def log_decorator(self, func):
+    def log_decorator(func):
         def wrapper(self, *args, **kwargs):
             result = func(self, *args, **kwargs)  # 调用原始函数
             # 在原始函数执行完毕后执行以下代码
@@ -25,13 +25,14 @@ class Decide:
                 json.dump(self.model.log_json, f, indent=4)
             return result  # 返回原始函数的结果（如果有的话）
         return wrapper
-    
+
     @log_decorator
     def decide(self, new_screen, ACTION_TRACE):
         print("___________________________decide___________________________")
-        
-        self.answer = GPT(decide_prompt(self.model.task,ACTION_TRACE,new_screen.semantic_info))
-        
+
+        self.answer = GPT(decide_prompt(
+            self.model.task, ACTION_TRACE, new_screen.semantic_info))
+        self.model.wrong_reason = self.answer["reason"]
         if self.answer["status"] == "completed":
             with open("./src/KB/task.json", "r") as f:
                 task_json = json.load(f)
