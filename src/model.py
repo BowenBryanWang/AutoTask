@@ -11,7 +11,6 @@ from src.evaluate import Evaluate
 from src.feedback import Feedback
 from page.init import Screen
 from src.predict import Predict
-from src.suggest import Suggest
 import json
 
 
@@ -42,7 +41,6 @@ class Model:
         self.node_selected = None  # 用于存储被选择的控件
         self.node_selected_id: int = 0  # 用于存储被选择的控件的id
         self.current_path: list[str] = []  # 用于存储当前的路径
-        self.current_path_str: str = ""  # 用于存储当前的路径的字符串表示
         self.log_json: dict = {}  # 用于存储日志信息
         #####################################################
 
@@ -77,8 +75,6 @@ class Model:
         print("· task_kb initialized")
         self.predict_module = Predict(self, self.PageJump_KB)
         print("· predict module initialized")
-        self.suggest_module = Suggest(self)
-        print("· suggest module initialized")
         self.evaluate_module = Evaluate(self)
         print("· evaluate module initialized")
         self.decide_module = Decide(self)
@@ -86,31 +82,20 @@ class Model:
         self.feedback_module = Feedback(self)
         print("· modules initialized")
         #####################################################
+        
+    @property
+    def current_path_str(self):
+        return " -> ".join(self.current_path)
+    
 
-    def work(self):
-        """
-        This method represents the main loop of the model.
-
-        @description:
-        This function works as follows:
-        - Call the predict method of the predict module to predict the next screen.
-        - Call the suggest method of the suggest module to suggest candidate items.
-        - Call the evaluate method of the evaluate module to evaluate the candidate items.
-        - Call the decide method of the decide module to decide the next screen.
-        - Call the feedback method of the feedback module to provide feedback to the model.
-        """
+    def work(self,ACTION_TRACE = None):
         if self.prev_model is not None:
-            status = self.prev_model.decide_module.decide(self.screen)
+            status = self.prev_model.decide_module.decide(self.screen,ACTION_TRACE)
             if status == "wrong":
-                # self.prev_model.feedback_module.feedback()
                 print("wrong: feedback started")
                 return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}, "wrong"
             elif status == "completed":
                 return None,"completed"
-        if not isinstance(self.screen, Screen):
-            raise Exception("Invalid Screen input")
-        if self.task == "":
-            raise Exception("No task description input")
 
         self.log_json["@User_intent"] = self.task
         self.log_json["@Page_components"] = self.screen.semantic_info_list
@@ -121,29 +106,26 @@ class Model:
             with open("./src/KB/pagejump.csv", "a") as f:
                 f.write("{},{},{},{}\n".format(self.prev_model.screen.semantic_info_str.replace('\n', '').replace(",", ";;"), self.prev_model.current_path[-1].replace(
                     '\n', '').replace(",", ";;"), self.screen.semantic_info_str.replace('\n', '').replace(",", ";;"), self.page_description))
-        self.suggest_module.suggest()
-        self.suggest_module.plan()
         self.evaluate_module.evaluate()
 
-        if "nodes" in self.screen.semantic_nodes:
-            nodes = self.screen.semantic_nodes["nodes"]
-            if self.node_selected_id > 0 and self.node_selected_id <= len(nodes):
-                node = nodes[self.node_selected_id - 1]
-                print(self.node_selected_id - 1)
-                print(node.generate_all_semantic_info())
-                if self.node_selected_action == "click":
-                    center = {"x": (
-                        node.bound[0] + node.bound[2]) // 2, "y": (node.bound[1] + node.bound[3]) // 2}
-                    perform = {"node_id": 1, "trail": "[" + str(center["x"]) + "," + str(
-                        center["y"]) + "]", "action_type": "click"}
-                    print(perform)
-                    return perform, "Execute"
-                elif self.node_selected_action == "edit":
-                    perform = {"node_id": 1, "trail": "[0,0]", "action_type": "text",
-                               "text": self.node_selected_text, "ori_absolute_id": node.absolute_id}
-                    print(perform)
-                    return perform, "Execute"
-            else:
-                raise Exception("Invalid node_selected_id")
+
+        nodes = self.screen.semantic_nodes["nodes"]
+        if self.node_selected_id > 0 and self.node_selected_id <= len(nodes):
+            node = nodes[self.node_selected_id - 1]
+            print(self.node_selected_id - 1)
+            print(node.generate_all_semantic_info())
+            if self.node_selected_action == "click":
+                center = {"x": (
+                    node.bound[0] + node.bound[2]) // 2, "y": (node.bound[1] + node.bound[3]) // 2}
+                perform = {"node_id": 1, "trail": "[" + str(center["x"]) + "," + str(
+                    center["y"]) + "]", "action_type": "click"}
+                print(perform)
+                return perform, "Execute"
+            elif self.node_selected_action == "edit":
+                perform = {"node_id": 1, "trail": "[0,0]", "action_type": "text",
+                            "text": self.node_selected_text, "ori_absolute_id": node.absolute_id}
+                print(perform)
+                return perform, "Execute"
         else:
-            raise Exception("No semantic nodes found in the screen")
+            raise Exception("Invalid node_selected_id")
+

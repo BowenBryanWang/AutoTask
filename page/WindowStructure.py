@@ -254,10 +254,9 @@ class UINode:
         prob = 1
         # 如果节点的面积大于页面面积的0.4，给予惩罚
         if self.area > 1080*2310*0.4:
-            # print("area too large")
             prob *= 0.5
         if self.clickable:
-            prob *= 1.8
+            prob *= 2
         else:
             prob *= 0.5
         if self.executable:
@@ -270,10 +269,8 @@ class UINode:
         else:
             prob *= 0.5
         if self.has_similar_children():
-
             prob *= 0.5
         if self.editable:
-
             prob *= 1.5
         if self.node_class == "android.widget.EditText":
             prob *= 1.5
