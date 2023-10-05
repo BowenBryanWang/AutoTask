@@ -166,18 +166,17 @@ def Task_UI_grounding_prompt(task, current_path_str, similar_tasks, similar_trac
 Only guiding by your knowledge is irreliable , so you are give two kinds of ground-truths, they are:
 1, the tutorial of how to fulfill the task, estimated through retriving the knowledge libraray and learned from similar tasks.
 2, current extended UI screen, which contains the components of current UI screen and their corresponding interaction results.
-Basically the tutorial represents how to do the task conceptually without grounding and the UI screen represents the UI ground-truth. You need to conbine them, thus build a connection between them.
-Finnaly, your job is to rate the available options on the current page based on your grounding. For each option, provide a confidence rating from 0-10, where 0 indicates 'unlikely' and 10 indicates 'highly likely'
-
-For each available option on the screen:
+Basically the tutorial represents how to do the task conceptually without grounding and the UI screen represents the ground-truth. You need to conbine them, thus build a connection between them.
+Finnaly, your job is to rate the available options on the current page based on your grounding. For each option, provide a confidence rating from 1.0-10.0, where 1.0 indicates 'definitely no' and 5.0 indicates 'normal' and 10.0 indicates 'most likely'
+Note that your scoring should indicate diversity between all of them, avoid giving same scores in case of identication.
 
 Step 1: Think step by step about how there two kinds of knowlegde lead you to score each UI element.
 Step 2: Output a JSON object with scores and reasoning. The structure should be: {"score": [], "reason": []}
 Example:
 {
-"score": [10, 8, 4, 1, 2],
+"score": [10, 8, 4, 1, 2,...] (for each UI element),
 "reason": [
-"...","...","...","...","..."
+"...","...","...","...","...",... (for each UI element)
 ]
 """
         },

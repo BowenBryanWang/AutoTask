@@ -80,7 +80,7 @@ class Predict():
         self.model.predicted_step = result["result"]
         print("predicted_step", self.model.predicted_step)
         print(predict_node)
-        response_text = GPT(UI_grounding_prompt(predict_node.remove("None") if ("None" in predict_node) else predict_node))
+        response_text = GPT(UI_grounding_prompt(list(filter(lambda x: x != "None", predict_node))))
         self.model.page_description = response_text["Page"]
         self.model.current_path.append("Page:"+self.model.page_description)
         for key, value in response_text.items():

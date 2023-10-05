@@ -33,10 +33,13 @@ class Evaluate():
     @log_decorator
     def evaluate(self):
         resp = GPT(Task_UI_grounding_prompt(self.model.task, self.model.current_path_str, self.model.similar_tasks,self.model.similar_traces, self.model.predicted_step, self.model.screen.semantic_info_list, self.model.predict_module.next_comp))
-        self.score, self.reason = resp["score"], resp["reason"]
+        self.score, self.reason = np.array(resp["score"])/10, resp["reason"]
+        if self.weights == []:
+            self.weights = [1] * len(self.score)
+        self.score = np.exp(self.score) / np.sum(np.exp(self.score))
         print(self.score)
         print(self.weights)
-        self.score = (np.array(self.score) * np.array(self.weights)).tolist() if self.weights != [] else self.score
+        self.score = (self.score * np.array(self.weights)).tolist() if self.weights != [] else self.score
         print(self.score)
         self.model.node_selected = self.model.screen.semantic_info_list[np.argmax(self.score)]
         response = GPT(plan_prompt(self.model.task,self.model.page_description, self.model.node_selected))
@@ -52,7 +55,7 @@ class Evaluate():
             if key.startswith("id_"):
                 index = int(key.split("_")[1]) - 1
                 w[index] = int(item)
-        self.weights = [(10-i)/10 for i in w]
+        self.weights = (np.array(self.weights) * np.array([(10-i)/10 for i in w])).tolist()
 
 
 

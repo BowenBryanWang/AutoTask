@@ -67,6 +67,10 @@ def demo() -> Union[str, Response]:
     if STATUS == "backtracking":
         INDEX -= 1
         res, act = COMPUTATIONAL_GRAPH[INDEX].feedback_module.feedback(COMPUTATIONAL_GRAPH[INDEX].wrong_reason)
+        ACTION_TRACE["ACTION"].append("Click on navigate back due to error")
+        ACTION_TRACE["ACTION_DESC"].append("BACK")
+        ACTION_TRACE["TRACE"].append(COMPUTATIONAL_GRAPH[INDEX].candidate_str)
+        ACTION_TRACE["TRACE_DESC"].append(COMPUTATIONAL_GRAPH[INDEX].page_description)
         if res is not None:
             COMPUTATIONAL_GRAPH = COMPUTATIONAL_GRAPH[:INDEX+1]
             result, work_status = COMPUTATIONAL_GRAPH[INDEX].work(ACTION_TRACE)
@@ -75,7 +79,7 @@ def demo() -> Union[str, Response]:
                 return result
             elif work_status == "Execute":
                 ACTION_TRACE["ACTION"].append(COMPUTATIONAL_GRAPH[INDEX].log_json["@Action"])
-                ACTION_TRACE["ACTION_DESC"].append("Error Recovery")
+                ACTION_TRACE["ACTION_DESC"].append("Retry after error detection")
                 ACTION_TRACE["TRACE"].append(COMPUTATIONAL_GRAPH[INDEX].candidate_str)
                 ACTION_TRACE["TRACE_DESC"].append(COMPUTATIONAL_GRAPH[INDEX].page_description)
                 STATUS = "start"
@@ -87,10 +91,7 @@ def demo() -> Union[str, Response]:
             else:
                 return Response("Task failed.")
         else:
-            ACTION_TRACE["ACTION"].append("Backtrack")
-            ACTION_TRACE["ACTION_DESC"].append("BACK")
-            ACTION_TRACE["TRACE"].append(COMPUTATIONAL_GRAPH[INDEX].candidate_str)
-            ACTION_TRACE["TRACE_DESC"].append(COMPUTATIONAL_GRAPH[INDEX].page_description)
+            
             print("------------------------back--------------------------")
             return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}
     return Response("0")
@@ -109,7 +110,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")
     parser.add_argument("--task", type=str, help="Specify the TASK parameter",
-                        default="increase text size one step in settings app")
+                        default="import contacts from device (from file) on 'contacts' app")
     args = parser.parse_args()
 
     TASK = args.task
