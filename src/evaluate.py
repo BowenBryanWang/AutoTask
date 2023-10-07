@@ -28,7 +28,7 @@ class Evaluate():
             })
             if not os.path.exists("logs"):
                 os.mkdir("logs")
-                with open("logs/log{}.json".format(self.model.index), "w") as f:
+                with open("logs/log{}.json".format(self.model.index), "w", encoding="utf-8") as f:
                     json.dump(self.model.log_json, f, indent=4)
             print("node_selected", self.model.node_selected)
             print("node_selected_id", self.model.node_selected_id)

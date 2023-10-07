@@ -79,7 +79,7 @@ class Model:
     def decide_before_and_log(func):
         def wrapper(self, *args, **kwargs):
             if self.prev_model is not None:
-                with open("./src/KB/pagejump.csv", "r") as f:
+                with open("./src/KB/pagejump.csv", "r", encoding="utf-8") as f:
                     reader = csv.reader(f)
                     prev_info = process_string(
                         self.prev_model.screen.semantic_info_str)
@@ -89,7 +89,7 @@ class Model:
                                == prev_path for row in reader)
 
                 if not flag:
-                    with open("./src/KB/pagejump.csv", "a", newline='') as f:
+                    with open("./src/KB/pagejump.csv", "a", newline='', encoding="utf-8") as f:
                         writer = csv.writer(f)
                         writer.writerow([
                             prev_info,

@@ -1,1 +1,368 @@
-{}
+{
+  "Please change my alert sound in message notifications into sound effect 'Cupid'": [
+    "['instructions\ufffd\ufffdMe,Settins,Message Notifications,Alert Sound,Cupid']"
+  ],
+  "Turn off WeChat notifications for chat group 2": [
+    "['Select the group 2', 'Toggle on Mute Notifications']"
+  ],
+  "Change the language on my WeChat app into English": [
+    "['Me', 'Settings', 'General', 'Language', 'English']"
+  ],
+  "Clear chat history on WeChat group 2": [
+    "['Long press the chat you want to clear', 'Delete Chat', 'Delete']"
+  ],
+  "Add a new friend whose phone Number is 18866668888 on WeChat": [
+    "['Contacts', '+ >Add Contacts', 'Enter Mobile 18866668888', 'search', 'Send friend request']"
+  ],
+  "Create a group chat with my friends mike and john on WeChat": [
+    "['Contacts', '+ >New Chat', 'Select mike and john', 'Done']"
+  ],
+  "Enable Fingerprint Pay on WeChat pay": [
+    "['Me', 'Pay', '...', 'Fingerprint Pay', 'Enable']"
+  ],
+  "log out of my WeChat account": ["['Me', 'Settings', 'Log Out', 'Confirm']"],
+  "Unlink the QQ ID on my WeChat": [
+    "['Me', 'Settings', 'account security', 'more Settings', 'QQ ID', '...', 'Unlink QQ ID']"
+  ],
+  "Change my WeChat profile picture": [
+    "['Me', 'Tap on your profile picture', 'Change Profile Photo', 'Choose a photo from your album or take a new one', 'Use Photo']"
+  ],
+  "Send a voice message to my friend Lisa on WeChat": [
+    "['Open the chat with Lisa', 'Tap and hold the microphone icon', 'Speak your message', 'Release the icon to send']"
+  ],
+  "Scan a QR code to add a new contact on WeChat": [
+    "['Contacts', '+', 'Scan QR Code', 'Align the QR code within the frame', 'Confirm to add']"
+  ],
+  "Share my location with my friend Tom on WeChat": [
+    "['Open the chat with Tom', 'Tap on the + icon', 'Location', 'Real-time Location', 'Share My Location']"
+  ],
+  "Set a custom wallpaper for my chat with Mike on WeChat": [
+    "['Open the chat with Mike', 'Tap on the name of Mike at the top', 'Chat Wallpaper', 'Choose a wallpaper from your album or the default ones']"
+  ],
+  "Change my WeChat nickname": [
+    "['Me', 'Tap on your profile picture', 'Tap on your nickname', 'Enter a new nickname', 'Save']"
+  ],
+  "Send a red packet to my friend John on WeChat": [
+    "['Open the chat with John', 'Tap on the + icon', 'Red Packet', 'Enter the amount and a message', 'Pay']"
+  ],
+  "Join a WeChat group by group ID": [
+    "['Contacts', '+', 'Join Private Group', 'Enter the group ID', 'Join Group']"
+  ],
+  "Create a WeChat mini program": [
+    "['Discover', 'Mini Programs', 'Tap on the + icon', 'Create', 'Choose a template and a name for your mini program', 'Follow the instructions to customize and publish your mini program']"
+  ],
+  "Delete a friend from my WeChat contacts": [
+    "['Contacts', 'Tap on the name of the friend you want to delete', 'Tap on the three dots icon at the top right corner', 'Delete', 'Confirm']"
+  ],
+  "Backup my WeChat chat history to my computer": [
+    "['Me', 'Settings', 'Chat', 'Chat Backup', 'Back Up', 'Scan the QR code on your computer\ufffd\ufffds WeChat app']"
+  ],
+  "Translate a message from English to Chinese on WeChat": [
+    "['Open the chat with the message you want to translate', 'Long press the message', 'Translate', 'Choose the target language as Chinese']"
+  ],
+  "Make a video call to my friend Lisa on WeChat": [
+    "['Open the chat with Lisa', 'Tap on the video camera icon at the top right corner', 'Wait for Lisa to answer']"
+  ],
+  "Check my WeChat balance and transaction history": [
+    "['Me', 'Pay', 'Wallet', 'Tap on your balance', 'Transaction Records']"
+  ],
+  "Post a moment on WeChat": [
+    "['Discover', 'Moments', 'Tap on the camera icon at the top right corner', 'Choose a photo or a video from your album or take a new one', 'Add a caption and choose who can see your moment', 'Send']"
+  ],
+  "Search for nearby people on WeChat": [
+    "['Discover', 'People Nearby', 'Start Search', 'Tap on the name of the person you want to chat with', 'Send a greeting message']"
+  ],
+  "Change the font size on WeChat": [
+    "['Me', 'Settings', 'General', 'Font Size', 'Choose a font size from small to large']"
+  ],
+  "Change the video quality to high definition on TikTok": [
+    "['Me', 'Settings and privacy', 'Data Saver', 'Toggle off Data Saver']"
+  ],
+  "Follow a user whose username is @funnyvideos on TikTok": [
+    "['Tap the magnifying glass icon', 'Enter @funnyvideos in the search bar', 'Tap the user\ufffd\ufffds profile', 'Tap Follow']"
+  ],
+  "Share a TikTok video to WhatsApp": [
+    "['Tap the video you want to share', 'Tap the arrow icon', 'Tap the WhatsApp icon', 'Choose a contact or group', 'Tap Send']"
+  ],
+  "Turn on dark mode on TikTok": [
+    "['Me', 'Settings and privacy', 'Content and activity', 'Dark mode', 'Choose Dark']"
+  ],
+  "Delete a comment I made on a TikTok video": [
+    "['Tap the video where I commented', 'Tap the comment icon', 'Find my comment and swipe left', 'Tap the trash icon', 'Tap Delete']"
+  ],
+  "Like a TikTok video": [
+    "['Tap the video you want to like', 'Tap the heart icon']"
+  ],
+  "Comment on a TikTok video": [
+    "['Tap the video you want to comment on', 'Tap the comment icon', 'Enter your comment', 'Tap Post']"
+  ],
+  "Save a TikTok video to my phone": [
+    "['Tap the video you want to save', 'Tap the arrow icon', 'Tap Save video']"
+  ],
+  "Report a TikTok video for inappropriate content": [
+    "['Tap the video you want to report', 'Tap the arrow icon', 'Tap Report', 'Choose a reason', 'Tap Submit']"
+  ],
+  "Block a user on TikTok": [
+    "['Tap the user\ufffd\ufffds profile', 'Tap the three dots icon', 'Tap Block', 'Confirm']"
+  ],
+  "Change my profile picture on TikTok": [
+    "['Me', 'Tap my profile picture', 'Choose Take a photo or Select from gallery', 'Crop and adjust the photo', 'Tap Save']"
+  ],
+  "Edit my bio on TikTok": [
+    "['Me', 'Tap Edit profile', 'Tap the bio section', 'Enter my bio', 'Tap Save']"
+  ],
+  "Change my username on TikTok": [
+    "['Me', 'Tap Edit profile', 'Tap the username section', 'Enter my new username', 'Tap Save']"
+  ],
+  "Turn off notifications from TikTok": [
+    "['Me', 'Settings and privacy', 'Notifications', 'Toggle off Allow notifications']"
+  ],
+  "Log out of my TikTok account": [
+    "['Me', 'Settings and privacy', 'Manage account', 'Scroll down and tap Log out', 'Confirm']"
+  ],
+  "Search for a product by scanning a barcode on Taobao": [
+    "['Home', 'Tap the camera icon', 'Scan', 'Point the camera at the barcode', 'Tap the product name']"
+  ],
+  "Add an item to my shopping cart on Taobao": [
+    "['Tap the item you want to buy', 'Tap Add to Cart', 'Confirm the quantity and specifications', 'Tap Done']"
+  ],
+  "Check out and pay for my order on Taobao": [
+    "['Cart', 'Select the items you want to pay for', 'Tap Check Out', 'Confirm the shipping address and payment method', 'Tap Pay Now']"
+  ],
+  "Track the delivery status of my order on Taobao": [
+    "['Me', 'My Orders', 'Select the order you want to track', 'Tap Logistics Details', 'View the delivery progress']"
+  ],
+  "Apply for a refund or return on Taobao": [
+    "['Me', 'My Orders', 'Select the order you want to refund or return', 'Tap Apply for After-sales', 'Choose the reason and upload evidence if needed', 'Tap Submit']"
+  ],
+  "Change my password on Taobao": [
+    "['Me', 'Settings', 'Account Security', 'Change Password', 'Enter your current and new password', 'Tap Confirm']"
+  ],
+  "Change my profile picture on Taobao": [
+    "['Me', 'Tap your profile picture', 'Tap Edit Profile', 'Tap your profile picture again', 'Choose a photo from your album or take a new one', 'Tap Save']"
+  ],
+  "Chat with a seller on Taobao": [
+    "['Tap the item you are interested in', 'Tap the chat icon at the bottom right corner', 'Type your message and tap Send']"
+  ],
+  "Collect an item to my favorites on Taobao": [
+    "['Tap the item you like', 'Tap the heart icon at the top right corner', 'Choose a category to save it']"
+  ],
+  "Share an item with my friends on Taobao": [
+    "['Tap the item you want to share', 'Tap the share icon at the bottom left corner', 'Choose a platform or app to share it']"
+  ],
+  "Browse live streams on Taobao": [
+    "['Home', 'Tap the TV icon at the top left corner', 'Swipe left or right to switch between different live streams', 'Tap the screen to interact with the host or buy products']"
+  ],
+  "Join a group buying deal on Taobao": [
+    "['Tap the item you want to buy', 'Tap Group Buying', 'Choose the group size and price', 'Tap Join Group', 'Invite your friends to join the group within the time limit']"
+  ],
+  "Redeem a coupon on Taobao": [
+    "['Tap the item you want to buy', 'Tap Get Coupon', 'Choose a coupon and tap Receive', 'Go back to the item page and tap Buy Now', 'The coupon will be automatically applied at checkout']"
+  ],
+  "Write a review for my purchase on Taobao": [
+    "['Me', 'My Orders', 'Select the order you want to review', 'Tap Write a Review', 'Rate the item and write your comments', 'Tap Submit']"
+  ],
+  "Change my delivery address on Taobao": [
+    "['Me', 'Settings', 'Manage Address', 'Tap Add New Address or edit an existing one', 'Enter your name, phone number, and address details', 'Tap Save']"
+  ],
+  "Check my balance and transactions on Taobao": [
+    "['Me', 'My Alipay', 'Enter your password or use biometric authentication', 'View your balance and transaction history']"
+  ],
+  "Withdraw money from my Alipay account on Taobao": [
+    "['Me', 'My Alipay', 'Enter your password or use biometric authentication', 'Tap Withdraw', 'Enter the amount and choose a bank card', 'Tap Confirm']"
+  ],
+  "Recharge my mobile phone credit on Taobao": [
+    "['Me', 'Recharge Center', 'Choose Mobile Recharge', 'Enter your phone number and choose an amount', 'Tap Pay Now']"
+  ],
+  "Scan a QR code to pay with Alipay": [
+    "['Home', 'Scan', 'Align the QR code with the camera', 'Enter the amount', 'Confirm']"
+  ],
+  "Transfer money to a friend on Alipay": [
+    "['Home', 'Transfer', 'Select a friend or enter their phone number', 'Enter the amount and a message (optional)', 'Confirm']"
+  ],
+  "Check my balance on Alipay": ["['Home', 'My', 'Balance']"],
+  "Recharge my phone credit with Alipay": [
+    "['Home', 'Recharge', 'Select your phone number or enter another one', 'Choose an amount', 'Confirm']"
+  ],
+  "Buy a movie ticket with Alipay": [
+    "['Home', 'Entertainment', 'Movie Tickets', 'Select a movie and a cinema', 'Choose a seat and a time', 'Confirm']"
+  ],
+  "Pay a utility bill with Alipay": [
+    "['Home', 'Life', 'Utilities', 'Select a utility type and a city', 'Enter your account number or scan the barcode on your bill', 'Confirm']"
+  ],
+  "Book a hotel with Alipay": [
+    "['Home', 'Travel', 'Hotels', 'Enter your destination and dates', 'Choose a hotel and a room type', 'Confirm']"
+  ],
+  "Order food delivery with Alipay": [
+    "['Home', 'Food Delivery', 'Enter your address or use GPS', 'Choose a restaurant and dishes', 'Confirm']"
+  ],
+  "Buy a train ticket with Alipay": [
+    "['Home', 'Travel', 'Train Tickets', 'Enter your departure and arrival stations and dates', 'Choose a train and a seat class', 'Confirm']"
+  ],
+  "Donate to a charity with Alipay": [
+    "['Home', 'Public Welfare', 'Choose a charity and a project', 'Enter the amount and a message (optional)', 'Confirm']"
+  ],
+  "Buy insurance with Alipay": [
+    "['Home', 'Insurance', 'Choose an insurance type and a plan', 'Enter your personal information and beneficiaries', 'Confirm']"
+  ],
+  "Rent a bike with Alipay": [
+    "['Home', 'Transportation', 'Bike Sharing', 'Scan the QR code on the bike or enter the bike number', 'Unlock the bike and ride it to your destination', 'Lock the bike and pay the fee']"
+  ],
+  "Buy a lottery ticket with Alipay": [
+    "['Home', 'Entertainment', 'Lottery', 'Choose a lottery type and numbers', 'Confirm']"
+  ],
+  "Send a red packet to a group chat on Alipay": [
+    "['Home', 'Chat', 'Select a group chat or create one', 'Tap the + icon and select Red Packet', 'Enter the amount and the number of recipients (optional)', 'Confirm']"
+  ],
+  "Check my credit score on Alipay": ["['Home', 'My', 'Credit Score']"],
+  "Buy a gift card with Alipay": [
+    "['Home', 'Life', 'Gift Cards', 'Choose a gift card type and a store', 'Enter the amount and the recipient\ufffd\ufffds phone number', 'Confirm']"
+  ],
+  "Pay for a taxi with Alipay": [
+    "['Home', 'Transportation', 'Taxi', 'Enter your destination or use GPS', 'Choose a taxi type and a payment method', 'Confirm']"
+  ],
+  "Invest in a fund with Alipay": [
+    "['Home', 'Wealth Management', 'Funds', 'Choose a fund and a risk level', 'Enter the amount and confirm']"
+  ],
+  "Buy flowers with Alipay": [
+    "['Home', 'Life', 'Flowers', 'Choose a flower type and a delivery date', 'Enter the recipient\ufffd\ufffds name, phone number and address', 'Confirm']"
+  ],
+  "Book a massage with Alipay": [
+    "['Home', 'Life', 'Massage', 'Choose a massage type and a time slot', 'Enter your name, phone number and address', 'Confirm']"
+  ],
+  "Buy a game card with Alipay": [
+    "['Home', 'Entertainment', 'Game Cards', 'Choose a game and a card value', 'Enter your game account or scan the QR code on the game screen', 'Confirm']"
+  ],
+  "Pay for parking with Alipay": [
+    "['Home', 'Transportation', 'Parking', 'Scan the QR code on the parking meter or enter the parking lot number and your license plate number', 'Confirm']"
+  ],
+  "Buy tickets for an event with Alipay": [
+    "['Home', 'Entertainment', 'Events', 'Choose an event and a date', 'Choose a ticket type and a quantity', 'Confirm']"
+  ],
+  "Order groceries with Alipay": [
+    "['Home', 'Food Delivery', 'Groceries', 'Choose a store and products', 'Confirm']"
+  ],
+  "Apply for a loan with Alipay": [
+    "['Home', 'Wealth Management', 'Loans', 'Choose a loan type and a plan', 'Enter your personal information and income proof (optional)', 'Confirm']"
+  ],
+  "Post a new status with a picture on Weibo": [
+    "['Home', '+', 'Photo', 'Select a picture', 'Next', 'Write your status', 'Send']"
+  ],
+  "Follow a user whose username is zhangsan on Weibo": [
+    "['Discover', 'Search', 'Enter zhangsan', 'Tap on the user profile', 'Follow']"
+  ],
+  "Turn on push notifications for comments and likes on Weibo": [
+    "['Me', 'Settings', 'Notifications', 'Toggle on Comments and Likes']"
+  ],
+  "Change the theme color of my Weibo app to blue": [
+    "['Me', 'Settings', 'General', 'Theme Color', 'Select blue']"
+  ],
+  "Delete a status that I posted on Weibo": [
+    "['Go to your profile page', 'Tap on the status you want to delete', 'Tap on the three dots icon', 'Delete', 'Confirm']"
+  ],
+  "Share a video on Weibo": [
+    "['Home', '+', 'Video', 'Select or record a video', 'Next', 'Write your status', 'Send']"
+  ],
+  "Block a user on Weibo": [
+    "['Go to the user\ufffd\ufffds profile page', 'Tap on the three dots icon', 'Block', 'Confirm']"
+  ],
+  "Edit my profile information on Weibo": [
+    "['Me', 'Tap on the edit icon next to your profile picture', 'Change your information as you wish', 'Save']"
+  ],
+  "Report a spam or abusive status on Weibo": [
+    "['Tap on the status you want to report', 'Tap on the three dots icon', 'Report', 'Select a reason', 'Submit']"
+  ],
+  "Create a poll on Weibo": [
+    "['Home', '+', 'Vote', 'Write your question and options', 'Set the duration and visibility of the poll', 'Send']"
+  ],
+  "Join a live stream on Weibo": [
+    "['Discover', 'Live Stream', 'Select a live stream you want to join', 'Tap on the play button']"
+  ],
+  "Send a private message to a user on Weibo": [
+    "['Go to the user\ufffd\ufffds profile page', 'Tap on the message icon', 'Write your message', 'Send']"
+  ],
+  "View trending topics on Weibo": [
+    "['Discover', 'Hot Search', 'Tap on a topic you are interested in']"
+  ],
+  "Like or comment on a status on Weibo": [
+    "['Tap on the status you want to like or comment on', 'Tap on the heart icon to like or the speech bubble icon to comment']"
+  ],
+  "View my followers and following list on Weibo": [
+    "['Me', 'Tap on the number of followers or following under your profile picture']"
+  ],
+  "Follow a topic on Zhihu": [
+    "['Tap the magnifying glass icon', 'Enter the topic name in the search bar', 'Tap the topic from the results', 'Tap the Follow button']"
+  ],
+  "Edit my profile on Zhihu": [
+    "['Tap the profile icon on the bottom right', 'Tap the Edit button on the top right', 'Make changes to your profile information', 'Tap Save']"
+  ],
+  "Share a question or answer on Zhihu to WeChat": [
+    "['Tap the question or answer you want to share', 'Tap the share icon on the bottom right', 'Select WeChat from the options', 'Choose a contact or group to share with']"
+  ],
+  "Report an inappropriate question or answer on Zhihu": [
+    "['Tap the question or answer you want to report', 'Tap the three dots icon on the top right', 'Select Report from the menu', 'Choose a reason for reporting', 'Tap Submit']"
+  ],
+  "Change the font size on Zhihu": [
+    "['Tap the profile icon on the bottom right', 'Tap the gear icon on the top right', 'Tap Font Size under Display Settings', 'Choose a font size from the options']"
+  ],
+  "Comment on an answer on Zhihu": [
+    "['Tap the answer you want to comment on', 'Tap the comment icon on the bottom left', 'Enter your comment in the text box', 'Tap Send']"
+  ],
+  "Vote up or down an answer on Zhihu": [
+    "['Tap the answer you want to vote on', 'Tap the up or down arrow on the bottom left', 'Confirm your vote']"
+  ],
+  "Bookmark an answer on Zhihu": [
+    "['Tap the answer you want to bookmark', 'Tap the bookmark icon on the bottom right', 'Confirm your bookmark']"
+  ],
+  "Search for questions or answers on Zhihu": [
+    "['Tap the magnifying glass icon', 'Enter your keywords in the search bar', 'Tap Search', 'Filter by questions or answers if needed']"
+  ],
+  "Ask a question on Zhihu": [
+    "['Tap the + icon on the bottom center', 'Select Ask a question from the menu', 'Enter your question title and details in the text boxes', 'Add topics and invite experts if needed', 'Tap Publish']"
+  ],
+  "Answer a question on Zhihu": [
+    "['Tap the question you want to answer', 'Tap the Answer button on the bottom center', 'Enter your answer in the text box', 'Add images or links if needed', 'Tap Publish']"
+  ],
+  "Edit or delete an answer on Zhihu": [
+    "['Tap the answer you want to edit or delete', 'Tap the three dots icon on the top right', 'Select Edit or Delete from the menu', 'Make changes or confirm deletion']"
+  ],
+  "View my followers or following on Zhihu": [
+    "['Tap the profile icon on the bottom right', 'Tap Followers or Following under your profile information', 'Scroll through the list of users']"
+  ],
+  "Send a message to another user on Zhihu": [
+    "['Tap the profile icon on the bottom right', 'Tap the message icon on the top left', 'Tap the + icon on the top right', 'Enter the user name in the search bar', 'Select the user from the results', 'Enter your message in the text box', 'Tap Send']"
+  ],
+  "View my notifications or messages on Zhihu": [
+    "['Tap the profile icon on the bottom right', 'Tap the bell icon or the message icon on the top left', 'Select a notification or message from the list']"
+  ],
+  "Join a live event on Zhihu": [
+    "['Tap the Live icon on the bottom center', 'Select a live event from the list', 'Tap the Join button', 'Confirm your payment if needed']"
+  ],
+  "Block a user on Zhihu": [
+    "['Tap the user profile you want to block', 'Tap the three dots icon on the top right', 'Select Block from the menu', 'Confirm your block']"
+  ],
+  "View my bookmarks on Zhihu": [
+    "['Tap the profile icon on the bottom right', 'Tap the bookmark icon on the top left', 'Select a bookmark from the list']"
+  ],
+  "View my drafts on Zhihu": [
+    "['Tap the profile icon on the bottom right', 'Tap the gear icon on the top right', 'Tap Drafts under Account Settings', 'Select a draft from the list']"
+  ],
+  "View my collections on Zhihu": [
+    "['Tap the profile icon on the bottom right', 'Tap Collections under your profile information', 'Select a collection from the list']"
+  ],
+  "Create a collection on Zhihu": [
+    "['Tap the profile icon on the bottom right', 'Tap Collections under your profile information', 'Tap the + icon on the top right', 'Enter a name and description for your collection', 'Tap Create']"
+  ],
+  "Add an answer to a collection on Zhihu": [
+    "['Tap the answer you want to add to a collection', 'Tap the three dots icon on the top right', 'Select Add to Collection from the menu', 'Choose a collection from the list or create a new one']"
+  ],
+  "Edit or delete a collection on Zhihu": [
+    "['Tap the profile icon on the bottom right', 'Tap Collections under your profile information', 'Select a collection from the list', 'Tap the three dots icon on the top right', 'Select Edit or Delete from the menu', 'Make changes or confirm deletion']"
+  ],
+  "Recommend an answer to another user on Zhihu": [
+    "['Tap the answer you want to recommend', 'Tap the share icon on the bottom right', 'Select Recommend to Friends from the options', 'Choose a user from your contacts or enter a user name in the search bar', 'Add a message if needed', 'Tap Send']"
+  ],
+  "View recommended answers on Zhihu": [
+    "['Tap the profile icon on the bottom right', 'Tap the message icon on the top left', 'Select Recommended Answers from the list']"
+  ]
+}

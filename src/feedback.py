@@ -13,7 +13,7 @@ class Feedback:
         self.model = model
 
     def feedback(self,reason):
-        with open("logs/log{}.json".format(self.model.index), "r") as f:
+        with open("logs/log{}.json".format(self.model.index), "r",encoding="utf-8") as f:
             print("· log{} Read".format(self.model.index))
             print(self.model.log_json)
             self.info: dict = json.loads(f.read())

@@ -65,7 +65,7 @@ class Task_KB(KnowledgeBase):
         self.tasks = []
         self.similar_tasks = []
         self.similar_traces = []
-        with open(os.path.join(os.path.dirname(__file__), 'KB/task.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), 'KB/task.json'), 'r', encoding="utf-8") as f:
             self.task_json = json.load(f)
         self.tasks = self.task_json.keys()
         self.embeddings = OpenAIEmbeddings(
@@ -93,7 +93,7 @@ class Error_KB(KnowledgeBase):
         self.traces = []
         self.new_screens = []
         self.reasons = []
-        with open(os.path.join(os.path.dirname(__file__), 'KB/errors.csv'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), 'KB/errors.csv'), 'r', encoding="utf-8") as f:
             # 第一列存为task，第二列存为trace
             for line in f.readlines():
                 if line.startswith("Task"):

@@ -128,7 +128,7 @@ class Screen:
                             (tmp_node.findBlockNode(), tmp_node))
                     for node_info in value["negative_ref"]:
                         print("node_info", node_info)
-                        with open('./page/static/data/'+'page' + str(node_info["page_id"]) + '.json', 'r')as fp:
+                        with open('./page/static/data/'+'page' + str(node_info["page_id"]) + '.json', 'r', encoding="utf-8")as fp:
                             tmp_layout = json.loads(fp.read())
                         tmp_page_instance = PageInstance()
                         if isinstance(tmp_layout, list):
@@ -143,7 +143,7 @@ class Screen:
                         tmp_negative_ref_nodes.append(
                             (tmp_node.findBlockNode(), tmp_node))
                     for node_info in value["positive"]:
-                        with open('./page/static/data/'+'page' + str(node_info["page_id"]) + '.json', 'r')as fp:
+                        with open('./page/static/data/'+'page' + str(node_info["page_id"]) + '.json', 'r', encoding="utf-8")as fp:
                             tmp_layout = json.loads(fp.read())
                         tmp_page_instance = PageInstance()
                         if isinstance(tmp_layout, list):
