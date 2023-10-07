@@ -11,3 +11,4 @@ src/gpt_res
 page/__pycache__/
 page/static/
 src/__pycache__
+Shots/
