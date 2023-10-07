@@ -35,7 +35,7 @@ class Screen:
 
     def update(self, request):
         if not os.path.exists("./page/static/data"):
-            os.mkdir("./page/static/data")
+            os.makedirs("./page/static/data")
         # if not self.describermanagers_init:
         #     self.init_describer()  # 全局第一次初始化discribermanagers
         self.cnt += 1  # 将数据存储时候页面的编号
