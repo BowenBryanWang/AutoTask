@@ -82,8 +82,7 @@ class Task_KB(KnowledgeBase):
         for i in range(len(docs)):
             self.similar_tasks.append(docs[i][0].page_content)
             self.similar_traces.append(self.task_json[docs[i][0].page_content])
-            print("内容", docs[i][0].page_content)
-            print("分数", docs[i][1])
+
         return self.similar_tasks, self.similar_traces
 
 
