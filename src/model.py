@@ -95,7 +95,6 @@ class Model:
                             prev_info,
                             prev_path,
                             process_string(self.screen.semantic_info_str),
-                            self.page_description
                         ])
                 status = self.prev_model.decide_module.decide(
                     self.screen, kwargs.get("ACTION_TRACE"))
@@ -111,9 +110,18 @@ class Model:
             return result
         return wrapper
 
+    def add_description(self):
+        # 在pagejump.csv的最后一行的最后一项添加self.page_description
+        with open("./src/KB/pagejump.csv", "r", encoding="utf-8") as f:
+            reader = csv.reader(f)
+            for row in reader:
+                if row[2] == process_string(self.screen.semantic_info_str):
+                    row[3] = self.page_description
+
     @decide_before_and_log
     def work(self, ACTION_TRACE=None):
         self.predict_module.predict()
+        self.add_description()
         self.evaluate_module.evaluate()
         return self.execute()
 
