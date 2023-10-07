@@ -67,7 +67,8 @@ class Evaluate():
         self.model.current_action = process_action_info(
             self.model.node_selected_action, self.model.node_selected_text, self.model.node_selected)
         self.model.current_path.append(self.model.current_action)
-        self.model.final_node = self.model.screen.semantic_nodes["nodes"][self.node_selected_id - 1]
+        self.model.final_node = self.model.screen.semantic_nodes[
+            "nodes"][self.model.node_selected_id - 1]
 
     def update_weights(self, weights):
         w = [0]*len(self.model.screen.semantic_info_list)
