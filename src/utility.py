@@ -35,7 +35,7 @@ def persist_to_file(file_name, use_cache=True):
 
                 store_path = os.path.join(
                     store_path, f"{int(time.time() * 1000)}{'cache' if cache_used else ''}.txt")
-                with open(store_path, 'w') as f:
+                with open(store_path, 'w', encoding="utf-8") as f:
                     f.write(
                         '\n'.join([f'{x["role"]}:\n{x["content"]}\n' for x in args['prompt']]))
                     f.write('\n')

@@ -77,7 +77,7 @@ class Screen:
 
         self.semantic_info_str = "".join(self.semantic_info)
 
-        with open('./page/static/data/page{}.txt'.format(self.cnt), 'w') as fp:
+        with open('./page/static/data/page{}.txt'.format(self.cnt), 'w', encoding="utf-8") as fp:
             fp.write("".join(self.semantic_info))
         print("semantic_info", self.semantic_info_str)
         print("semantic_nodes", len(self.semantic_nodes))
@@ -87,7 +87,7 @@ class Screen:
         print("time:", end_time-start_time, flush=True)
         with open('./page/static/data/imagedata{}.jpg'.format(self.cnt), 'wb') as fp:
             fp.write(self.imgdata)
-        with open('./page/static/data/page{}.json'.format(self.cnt), 'w') as fp:
+        with open('./page/static/data/page{}.json'.format(self.cnt), 'w', encoding="utf-8") as fp:
             fp.write(self.layout)
         return "OK"
 
@@ -114,7 +114,7 @@ class Screen:
                     tmp_negative_ref_nodes = []
                     tmp_positive_nodes = []
                     for node_info in value["positive_ref"]:
-                        with open('./page/static/data/'+'page' + str(node_info["page_id"]) + '.json', 'r')as fp:
+                        with open('./page/static/data/'+'page' + str(node_info["page_id"]) + '.json', 'r', encoding="utf-8")as fp:
                             tmp_layout = json.loads(fp.read())
                         tmp_page_instance = PageInstance()
                         if isinstance(tmp_layout, list):
