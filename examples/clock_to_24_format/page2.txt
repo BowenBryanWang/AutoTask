@@ -1,5 +1,0 @@
-<div id=1 class='' > Help </div>
-<div id=2 class='' > Send feedback </div>
-<div id=3 class='' > Privacy policy </div>
-<div id=4 class='' > Settings </div>
-<div id=5 class='' > Screen saver </div>

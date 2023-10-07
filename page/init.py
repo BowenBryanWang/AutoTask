@@ -1,5 +1,6 @@
 import base64
 import json
+import os
 import time
 
 import numpy as np
@@ -29,10 +30,12 @@ class Screen:
     upload_time = 0
     page_description = ""
 
-    def __init__(self,cnt=0) -> None:
+    def __init__(self, cnt=0) -> None:
         self.cnt = cnt
 
     def update(self, request):
+        if not os.path.exists("./page/static/data"):
+            os.mkdir("./page/static/data")
         # if not self.describermanagers_init:
         #     self.init_describer()  # 全局第一次初始化discribermanagers
         self.cnt += 1  # 将数据存储时候页面的编号
@@ -52,7 +55,7 @@ class Screen:
         #     self.page_root.children[0].children[0].children = [
         #         self.page_root.children[0].children[0].children[0]]
         print("all_text", self.page_root.generate_all_text())
-        self.semantic_nodes,relation = self.page_root.get_all_semantic_nodes()
+        self.semantic_nodes, relation = self.page_root.get_all_semantic_nodes()
 
         # 创建与semantic_nodes["nodes"]等长的type列表，用于存放每个节点的类型
         # self.semantic_nodes["type"] = [
@@ -69,9 +72,11 @@ class Screen:
         #             self.semantic_nodes["type"][i] = key.split(";")[-2]
         # print("semantic_nodes", self.semantic_nodes["type"])
 
-        self.semantic_info,self.semantic_info_list,self.trans_relation = transfer_2_html(self.semantic_nodes["nodes"],relation)
+        self.semantic_info, self.semantic_info_list, self.trans_relation = transfer_2_html(
+            self.semantic_nodes["nodes"], relation)
 
         self.semantic_info_str = "".join(self.semantic_info)
+
         with open('./page/static/data/page{}.txt'.format(self.cnt), 'w') as fp:
             fp.write("".join(self.semantic_info))
         print("semantic_info", self.semantic_info_str)

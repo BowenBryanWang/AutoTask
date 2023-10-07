@@ -1,9 +1,10 @@
 
 import copy
-import time
+import csv
 from typing import Optional
 
-import tqdm
+
+from src.utility import generate_perform, process_string
 
 from .knowledge import Error_KB, PageJump_KB, Task_KB
 from src.decide import Decide
@@ -11,7 +12,6 @@ from src.evaluate import Evaluate
 from src.feedback import Feedback
 from page.init import Screen
 from src.predict import Predict
-import json
 
 
 class Model:
@@ -58,72 +58,75 @@ class Model:
         #####################################################
 
         #####################################################
-        # 3. Submodules
-        # self.database = Database(
-        #     user="root", password="wbw12138zy,.", host="127.0.0.1", database="GUI_LLM")
-        print("· database connected")
-        self.PageJump_KB = PageJump_KB(None)
 
-        print("· pagejump_kb initialized")
+        self.PageJump_KB = PageJump_KB(None)
         self.Task_KB = Task_KB()
         self.Error_KB = Error_KB()
         self.similar_tasks, self.similar_traces = self.Task_KB.find_most_similar_tasks(
             self.task)
         self.error_experiences = self.Error_KB.find_experiences(self.task)
-        print("· task_kb initialized")
         self.predict_module = Predict(self, self.PageJump_KB)
-        print("· predict module initialized")
         self.evaluate_module = Evaluate(self)
-        print("· evaluate module initialized")
         self.decide_module = Decide(self)
-        print("· decide module initialized")
         self.feedback_module = Feedback(self)
-        print("· modules initialized")
+        print("________________INITIAL_DONE________________")
         #####################################################
-        
+
     @property
     def current_path_str(self):
         return " -> ".join(self.current_path)
-    
 
-    def work(self,ACTION_TRACE = None):
-        if self.prev_model is not None:
-            status = self.prev_model.decide_module.decide(self.screen,ACTION_TRACE)
-            if status == "wrong":
-                print("wrong: feedback started")
-                return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}, "wrong"
-            elif status == "completed":
-                return None,"completed"
+    def decide_before_and_log(func):
+        def wrapper(self, *args, **kwargs):
+            if self.prev_model is not None:
+                with open("./src/KB/pagejump.csv", "r") as f:
+                    reader = csv.reader(f)
+                    prev_info = process_string(
+                        self.prev_model.screen.semantic_info_str)
+                    prev_path = process_string(
+                        self.prev_model.current_path[-1])
+                    flag = any(row[0] == prev_info and row[1]
+                               == prev_path for row in reader)
+                # 如果不存在相同的行，则追加到文件中
+                if not flag:
+                    with open("./src/KB/pagejump.csv", "a", newline='') as f:
+                        writer = csv.writer(f)
+                        writer.writerow([
+                            prev_info,
+                            prev_path,
+                            process_string(self.screen.semantic_info_str),
+                            self.page_description
+                        ])
+                status = self.prev_model.decide_module.decide(
+                    self.screen, kwargs.get("ACTION_TRACE"))
+                if status == "wrong":
+                    print("wrong: feedback started")
+                    return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}, "wrong"
+                elif status == "completed":
+                    return None, "completed"
+            self.log_json["@User_intent"] = self.task
+            self.log_json["@Page_components"] = self.screen.semantic_info_list
+            self.log_json["@Module"] = []
+            result = func(self, *args, **kwargs)
+            return result
+        return wrapper
 
-        self.log_json["@User_intent"] = self.task
-        self.log_json["@Page_components"] = self.screen.semantic_info_list
-        self.log_json["@Module"] = []
-
+    @decide_before_and_log
+    def work(self, ACTION_TRACE=None):
         self.predict_module.predict()
-        if self.prev_model is not None:
-            with open("./src/KB/pagejump.csv", "a") as f:
-                f.write("{},{},{},{}\n".format(self.prev_model.screen.semantic_info_str.replace('\n', '').replace(",", ";;"), self.prev_model.current_path[-1].replace(
-                    '\n', '').replace(",", ";;"), self.screen.semantic_info_str.replace('\n', '').replace(",", ";;"), self.page_description))
         self.evaluate_module.evaluate()
+        return self.execute()
 
-
-        nodes = self.screen.semantic_nodes["nodes"]
-        if self.node_selected_id > 0 and self.node_selected_id <= len(nodes):
-            node = nodes[self.node_selected_id - 1]
-            print(self.node_selected_id - 1)
-            print(node.generate_all_semantic_info())
-            if self.node_selected_action == "click":
-                center = {"x": (
-                    node.bound[0] + node.bound[2]) // 2, "y": (node.bound[1] + node.bound[3]) // 2}
-                perform = {"node_id": 1, "trail": "[" + str(center["x"]) + "," + str(
-                    center["y"]) + "]", "action_type": "click"}
-                print(perform)
-                return perform, "Execute"
-            elif self.node_selected_action == "edit":
-                perform = {"node_id": 1, "trail": "[0,0]", "action_type": "text",
-                            "text": self.node_selected_text, "ori_absolute_id": node.absolute_id}
-                print(perform)
-                return perform, "Execute"
-        else:
-            raise Exception("Invalid node_selected_id")
-
+    def execute(self):
+        node = self.final_node
+        if self.node_selected_action == "click":
+            center_x = (node.bound[0] + node.bound[2]) // 2
+            center_y = (node.bound[1] + node.bound[3]) // 2
+            perform = generate_perform("click", center_x, center_y)
+            print(perform)
+            return perform, "Execute"
+        elif self.node_selected_action == "edit":
+            perform = generate_perform(
+                "text", text=self.node_selected_text, absolute_id=node.absolute_id)
+            print(perform)
+            return perform, "Execute"

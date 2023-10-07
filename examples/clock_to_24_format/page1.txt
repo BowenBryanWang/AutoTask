@@ -1,6 +1,0 @@
-<button id=1 class='com.google.android.deskclock:id/tab_menu_bedtime' description='Bedtime'> Bedtime </button>
-<button id=2 class='com.google.android.deskclock:id/tab_menu_stopwatch' description='Stopwatch'> Stopwatch </button>
-<button id=3 class='com.google.android.deskclock:id/tab_menu_timer' description='Timer'> Timer </button>
-<button id=4 class='com.google.android.deskclock:id/tab_menu_alarm' description='Alarm'> Alarm </button>
-<div id=5 class='com.google.android.deskclock:id/fab' description='Add city'>  </div>
-<button id=6 class='com.google.android.deskclock:id/overflow_action_button' description='More options'>  </button>

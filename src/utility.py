@@ -290,11 +290,43 @@ Based on the provided information, the user should continue their actions to sea
             "content": """Task:{}
 Action trace:{}
 Latest Page:{}
-""".format(task,ACTION_TRACE,semantic_info)
+""".format(task, ACTION_TRACE, semantic_info)
     }]
+
 
 def process_action_info(action, params, node):
     if action == "click":
         return "Action: Click on {}".format(node)
     elif action == "edit":
         return "Action: Edit {} with {}".format(node, params)
+
+
+def process_string(s):
+    return s.replace('\n', '').replace(',', ';;')
+
+
+def generate_perform(action_type, x=0, y=0, text="", absolute_id=""):
+    return {
+        "node_id": 1,
+        "trail": f"[{x},{y}]",
+        "action_type": action_type,
+        "text": text,
+        "ori_absolute_id": absolute_id
+    }
+
+
+def add_value_to_html_tag(key: str, value: str) -> str:
+    index = key.find(">")
+    key = key[:index] + " next=\"" + \
+        value.replace("\n", "") + "\" " + key[index:]
+    return key
+
+
+def add_son_to_father(l: list, relation: list[tuple]) -> list:
+    for index_father, index_son in relation:
+        last_index = l[index_father].rfind(" </")
+        if last_index != -1:
+            l[index_father] = l[index_father][:last_index] + "\n    " + \
+                l[index_son] + " </" + \
+                l[index_father][last_index + 3:]
+    return l

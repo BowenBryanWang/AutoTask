@@ -1,2 +1,0 @@
-<div id=1 class='' > Insert from Drive </div>
-<div id=2 class='' > Attach file </div>

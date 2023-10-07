@@ -21,8 +21,10 @@ class Decide:
                 "Output": self.answer
             })
             self.model.log_json["@Successive_Page"] = self.model.next_model.screen.semantic_info_str
-            with open("logs/log{}.json".format(self.model.index), "w") as f:
-                json.dump(self.model.log_json, f, indent=4)
+            if not os.path.exists("logs/log{}.json".format(self.model.index)):
+                os.mkdir("logs/log{}.json".format(self.model.index))
+                with open("logs/log{}.json".format(self.model.index), "w") as f:
+                    json.dump(self.model.log_json, f, indent=4)
             return result  # 返回原始函数的结果（如果有的话）
         return wrapper
 
@@ -34,6 +36,7 @@ class Decide:
             self.model.task, ACTION_TRACE, new_screen.semantic_info))
         self.model.wrong_reason = self.answer["reason"]
         if self.answer["status"] == "completed":
+
             with open("./src/KB/task.json", "r") as f:
                 task_json = json.load(f)
                 task_json[self.model.task] = self.model.current_path_str

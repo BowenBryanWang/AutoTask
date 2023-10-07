@@ -1,5 +1,0 @@
-<div id=1 class='' > Add account </div>
-<div id=2 class='' > saltyp0rridge20@gmail.com </div>
-<div id=3 class='' > General settings </div>
-<button id=4 class='' description='More options'>  </button>
-<div id=5 class='' description='Navigate up'>  </div>

@@ -1,4 +1,5 @@
 import argparse
+import shutil
 import threading
 from flask import Response
 from typing import Union
@@ -19,7 +20,7 @@ COMPUTATIONAL_GRAPH = []
 GRAPH_ACTION = []
 ACTION_TRACE = {
     "ACTION": [],
-    "ACTION_DESC" : [],
+    "ACTION_DESC": [],
     "TRACE": [],
     "TRACE_DESC": [],
 }
@@ -47,7 +48,7 @@ def demo() -> Union[str, Response]:
         COMPUTATIONAL_GRAPH.append(model)
         print("work")
         result, work_status = model.work(ACTION_TRACE)
-        
+
         if work_status == "wrong":
             STATUS = "backtracking"
             return result
@@ -60,17 +61,20 @@ def demo() -> Union[str, Response]:
             INDEX += 1
             return result
         elif work_status == "completed":
+            save_to_file(TASK)
             STATUS = "stop"
             return Response("Task completed successfully!")
         else:
             return Response("Task failed.")
     if STATUS == "backtracking":
         INDEX -= 1
-        res, act = COMPUTATIONAL_GRAPH[INDEX].feedback_module.feedback(COMPUTATIONAL_GRAPH[INDEX].wrong_reason)
+        res, act = COMPUTATIONAL_GRAPH[INDEX].feedback_module.feedback(
+            COMPUTATIONAL_GRAPH[INDEX].wrong_reason)
         ACTION_TRACE["ACTION"].append("Click on navigate back due to error")
         ACTION_TRACE["ACTION_DESC"].append("BACK")
         ACTION_TRACE["TRACE"].append(COMPUTATIONAL_GRAPH[INDEX].candidate_str)
-        ACTION_TRACE["TRACE_DESC"].append(COMPUTATIONAL_GRAPH[INDEX].page_description)
+        ACTION_TRACE["TRACE_DESC"].append(
+            COMPUTATIONAL_GRAPH[INDEX].page_description)
         if res is not None:
             COMPUTATIONAL_GRAPH = COMPUTATIONAL_GRAPH[:INDEX+1]
             result, work_status = COMPUTATIONAL_GRAPH[INDEX].work(ACTION_TRACE)
@@ -78,24 +82,38 @@ def demo() -> Union[str, Response]:
                 STATUS = "backtracking"
                 return result
             elif work_status == "Execute":
-                ACTION_TRACE["ACTION"].append(COMPUTATIONAL_GRAPH[INDEX].log_json["@Action"])
-                ACTION_TRACE["ACTION_DESC"].append("Retry after error detection")
-                ACTION_TRACE["TRACE"].append(COMPUTATIONAL_GRAPH[INDEX].candidate_str)
-                ACTION_TRACE["TRACE_DESC"].append(COMPUTATIONAL_GRAPH[INDEX].page_description)
+                ACTION_TRACE["ACTION"].append(
+                    COMPUTATIONAL_GRAPH[INDEX].log_json["@Action"])
+                ACTION_TRACE["ACTION_DESC"].append(
+                    "Retry after error detection")
+                ACTION_TRACE["TRACE"].append(
+                    COMPUTATIONAL_GRAPH[INDEX].candidate_str)
+                ACTION_TRACE["TRACE_DESC"].append(
+                    COMPUTATIONAL_GRAPH[INDEX].page_description)
                 STATUS = "start"
                 INDEX += 1
                 return result
             elif work_status == "completed":
+                save_to_file(TASK)
                 STATUS = "stop"
                 return Response("Task completed successfully!")
             else:
                 return Response("Task failed.")
         else:
-            
+
             print("------------------------back--------------------------")
             return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}
     return Response("0")
 
+
+def save_to_file(task_name):
+    task_name = task_name.replace(" ", "_")
+    # 在同级目录./Shots下创建一个名为task_name的文件夹
+    if not os.path.exists("./Shots/{}".format(task_name)):
+        os.mkdir("./Shots/{}".format(task_name))
+        # 将./logs文件夹和./Page/static/data文件夹移到其下
+        shutil.move("./logs", "./Shots/{}".format(task_name))
+        shutil.move("./Page/static/data", "./Shots/{}".format(task_name))
 
 
 def keyboard_listener():
