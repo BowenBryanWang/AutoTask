@@ -21,10 +21,9 @@ class Decide:
                 "Output": self.answer
             })
             self.model.log_json["@Successive_Page"] = self.model.next_model.screen.semantic_info_str
-            if not os.path.exists("logs"):
-                os.mkdir("logs")
-                with open("logs/log{}.json".format(self.model.index), "w", encoding="utf-8") as f:
-                    json.dump(self.model.log_json, f, indent=4)
+
+            with open("logs/log{}.json".format(self.model.index), "w", encoding="utf-8") as f:
+                json.dump(self.model.log_json, f, indent=4)
             return result  # 返回原始函数的结果（如果有的话）
         return wrapper
 

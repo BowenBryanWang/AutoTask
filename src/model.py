@@ -108,17 +108,8 @@ class Model:
             self.log_json["@User_intent"] = self.task
             self.log_json["@Page_components"] = self.screen.semantic_info_list
             self.log_json["@Module"] = []
-            result = func(self, *args, **kwargs)
-            return result
+            return func(self, *args, **kwargs)
         return wrapper
-
-    def add_description(self):
-        # 在pagejump.csv的最后一行的最后一项添加self.page_description
-        with open("./src/KB/pagejump.csv", "r", encoding="utf-8") as f:
-            reader = csv.reader(f)
-            for row in reader:
-                if row[2] == process_string(self.screen.semantic_info_str):
-                    row.append(self.page_description)
 
     @ decide_before_and_log
     def work(self, ACTION_TRACE=None):

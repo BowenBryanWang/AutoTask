@@ -47,7 +47,7 @@ def demo() -> Union[str, Response]:
                       prev_model=COMPUTATIONAL_GRAPH[-1] if COMPUTATIONAL_GRAPH != [] else None, index=INDEX)
         COMPUTATIONAL_GRAPH.append(model)
         print("work")
-        result, work_status = model.work(ACTION_TRACE)
+        result, work_status = model.work(ACTION_TRACE=ACTION_TRACE)
 
         if work_status == "wrong":
             STATUS = "backtracking"
@@ -77,7 +77,8 @@ def demo() -> Union[str, Response]:
             COMPUTATIONAL_GRAPH[INDEX].page_description)
         if res is not None:
             COMPUTATIONAL_GRAPH = COMPUTATIONAL_GRAPH[:INDEX+1]
-            result, work_status = COMPUTATIONAL_GRAPH[INDEX].work(ACTION_TRACE)
+            result, work_status = COMPUTATIONAL_GRAPH[INDEX].work(
+                ACTION_TRACE=ACTION_TRACE)
             if work_status == "wrong":
                 STATUS = "backtracking"
                 return result
@@ -110,7 +111,7 @@ def save_to_file(task_name):
     task_name = task_name.replace(" ", "_")
     # 在同级目录./Shots下创建一个名为task_name的文件夹
     if not os.path.exists("./Shots/{}".format(task_name)):
-        os.mkdir("./Shots/{}".format(task_name))
+        os.makedirs("./Shots/{}".format(task_name))
         # 将./logs文件夹和./Page/static/data文件夹移到其下
         shutil.move("./logs", "./Shots/{}".format(task_name))
         shutil.move("./Page/static/data", "./Shots/{}".format(task_name))

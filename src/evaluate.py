@@ -26,10 +26,9 @@ class Evaluate():
                 "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
                 "Output": {key: item for key, item in zip(self.model.screen.semantic_info_list, self.score)},
             })
-            if not os.path.exists("logs"):
-                os.mkdir("logs")
-                with open("logs/log{}.json".format(self.model.index), "w", encoding="utf-8") as f:
-                    json.dump(self.model.log_json, f, indent=4)
+
+            with open("logs/log{}.json".format(self.model.index), "w", encoding="utf-8") as f:
+                json.dump(self.model.log_json, f, indent=4)
             print("node_selected", self.model.node_selected)
             print("node_selected_id", self.model.node_selected_id)
             print(self.model.final_node.generate_all_semantic_info())
