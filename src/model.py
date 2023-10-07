@@ -78,24 +78,26 @@ class Model:
 
     def decide_before_and_log(func):
         def wrapper(self, *args, **kwargs):
+            print("ACTION_TRACE", kwargs.get("ACTION_TRACE"))
             if self.prev_model is not None:
-                with open("./src/KB/pagejump.csv", "r", encoding="utf-8") as f:
-                    reader = csv.reader(f)
-                    prev_info = process_string(
-                        self.prev_model.screen.semantic_info_str)
-                    prev_path = process_string(
-                        self.prev_model.current_path[-1])
-                    flag = any(row[0] == prev_info and row[1]
-                               == prev_path for row in reader)
+                # with open("./src/KB/pagejump.csv", "r", encoding="utf-8") as f:
+                #     reader = csv.reader(f)
+                #     prev_info = process_string(
+                #         self.prev_model.screen.semantic_info_str)
+                #     prev_path = process_string(
+                #         self.prev_model.current_path[-1])
+                #     flag = any(row[0] == prev_info and row[1]
+                #                == prev_path for row in reader)
 
-                if not flag:
-                    with open("./src/KB/pagejump.csv", "a", newline='', encoding="utf-8") as f:
-                        writer = csv.writer(f)
-                        writer.writerow([
-                            prev_info,
-                            prev_path,
-                            process_string(self.screen.semantic_info_str),
-                        ])
+                # if not flag:
+                #     with open("./src/KB/pagejump.csv", "a", newline='', encoding="utf-8") as f:
+                #         writer = csv.writer(f)
+                #         writer.writerow([
+                #             prev_info,
+                #             prev_path,
+                #             process_string(self.screen.semantic_info_str),
+                #             self.page_description
+                #         ])
                 status = self.prev_model.decide_module.decide(
                     self.screen, kwargs.get("ACTION_TRACE"))
                 if status == "wrong":
@@ -116,12 +118,30 @@ class Model:
             reader = csv.reader(f)
             for row in reader:
                 if row[2] == process_string(self.screen.semantic_info_str):
-                    row[3] = self.page_description
+                    row.append(self.page_description)
 
-    @decide_before_and_log
+    @ decide_before_and_log
     def work(self, ACTION_TRACE=None):
         self.predict_module.predict()
-        self.add_description()
+        if self.prev_model is not None:
+            with open("./src/KB/pagejump.csv", "r", encoding="utf-8") as f:
+                reader = csv.reader(f)
+                prev_info = process_string(
+                    self.prev_model.screen.semantic_info_str)
+                prev_path = process_string(
+                    self.prev_model.current_path[-1])
+                flag = any(row[0] == prev_info and row[1]
+                           == prev_path for row in reader)
+
+            if not flag:
+                with open("./src/KB/pagejump.csv", "a", newline='', encoding="utf-8") as f:
+                    writer = csv.writer(f)
+                    writer.writerow([
+                        prev_info,
+                        prev_path,
+                        process_string(self.screen.semantic_info_str),
+                        self.page_description
+                    ])
         self.evaluate_module.evaluate()
         return self.execute()
 

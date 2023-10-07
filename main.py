@@ -57,7 +57,7 @@ def demo() -> Union[str, Response]:
             ACTION_TRACE["ACTION_DESC"].append("NEXT")
             ACTION_TRACE["TRACE"].append(model.candidate_str)
             ACTION_TRACE["TRACE_DESC"].append(model.page_description)
-            STATUS = "start"
+            # STATUS = "start"
             INDEX += 1
             return result
         elif work_status == "completed":
@@ -90,7 +90,7 @@ def demo() -> Union[str, Response]:
                     COMPUTATIONAL_GRAPH[INDEX].candidate_str)
                 ACTION_TRACE["TRACE_DESC"].append(
                     COMPUTATIONAL_GRAPH[INDEX].page_description)
-                STATUS = "start"
+                # STATUS = "start"
                 INDEX += 1
                 return result
             elif work_status == "completed":
