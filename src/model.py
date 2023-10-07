@@ -87,7 +87,7 @@ class Model:
                         self.prev_model.current_path[-1])
                     flag = any(row[0] == prev_info and row[1]
                                == prev_path for row in reader)
-                # 如果不存在相同的行，则追加到文件中
+
                 if not flag:
                     with open("./src/KB/pagejump.csv", "a", newline='') as f:
                         writer = csv.writer(f)

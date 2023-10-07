@@ -41,3 +41,6 @@ class Decide:
                 task_json = json.load(f)
                 task_json[self.model.task] = self.model.current_path_str
         return self.answer["status"]
+
+    def extract_knowledge(self):
+        pass

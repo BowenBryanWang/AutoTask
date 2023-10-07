@@ -26,8 +26,8 @@ class Evaluate():
                 "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
                 "Output": {key: item for key, item in zip(self.model.screen.semantic_info_list, self.score)},
             })
-            if not os.path.exists("logs/log{}.json".format(self.model.index)):
-                os.mkdir("logs/log{}.json".format(self.model.index))
+            if not os.path.exists("logs"):
+                os.mkdir("logs")
                 with open("logs/log{}.json".format(self.model.index), "w") as f:
                     json.dump(self.model.log_json, f, indent=4)
             print("node_selected", self.model.node_selected)
@@ -38,11 +38,11 @@ class Evaluate():
 
     @log_decorator
     def evaluate(self):
-        self.score()
+        self.score_comp()
         self.select_top_one()
         return self.score
 
-    def score(self):
+    def score_comp(self):
         resp = GPT(Task_UI_grounding_prompt(self.model.task, self.model.current_path_str, self.model.similar_tasks,
                    self.model.similar_traces, self.model.predicted_step, self.model.screen.semantic_info_list, self.model.predict_module.next_comp))
         self.score, self.reason = np.array(resp["score"])/10, resp["reason"]
