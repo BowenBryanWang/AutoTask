@@ -1,3 +1,4 @@
+from pynput import keyboard
 import argparse
 import shutil
 import threading
@@ -14,6 +15,7 @@ from page.NodeDescriberManager import *
 app = Flask(__name__)
 
 TASK = ""
+MODE = ""
 STATUS = "stop"
 INDEX = 0
 COMPUTATIONAL_GRAPH = []
@@ -50,14 +52,20 @@ def demo() -> Union[str, Response]:
         result, work_status = model.work(ACTION_TRACE=ACTION_TRACE)
 
         if work_status == "wrong":
-            STATUS = "backtracking"
+            if MODE == "normal":
+                STATUS = "backtracking"
+            elif MODE == "preserve":
+                STATUS = "running"
             return result
         elif work_status == "Execute":
             ACTION_TRACE["ACTION"].append(model.log_json["@Action"])
             ACTION_TRACE["ACTION_DESC"].append("NEXT")
             ACTION_TRACE["TRACE"].append(model.candidate_str)
             ACTION_TRACE["TRACE_DESC"].append(model.page_description)
-            # STATUS = "start"
+            if MODE == "normal":
+                STATUS = "start"
+            elif MODE == "preserve":
+                STATUS = "running"
             INDEX += 1
             return result
         elif work_status == "completed":
@@ -80,7 +88,10 @@ def demo() -> Union[str, Response]:
             result, work_status = COMPUTATIONAL_GRAPH[INDEX].work(
                 ACTION_TRACE=ACTION_TRACE)
             if work_status == "wrong":
-                STATUS = "backtracking"
+                if MODE == "normal":
+                    STATUS = "backtracking"
+                elif MODE == "preserve":
+                    STATUS = "running"
                 return result
             elif work_status == "Execute":
                 ACTION_TRACE["ACTION"].append(
@@ -91,7 +102,10 @@ def demo() -> Union[str, Response]:
                     COMPUTATIONAL_GRAPH[INDEX].candidate_str)
                 ACTION_TRACE["TRACE_DESC"].append(
                     COMPUTATIONAL_GRAPH[INDEX].page_description)
-                # STATUS = "start"
+                if MODE == "normal":
+                    STATUS = "start"
+                elif MODE == "preserve":
+                    STATUS = "running"
                 INDEX += 1
                 return result
             elif work_status == "completed":
@@ -117,22 +131,32 @@ def save_to_file(task_name):
         shutil.move("./Page/static/data", "./Shots/{}".format(task_name))
 
 
-def keyboard_listener():
+def on_key_release(key):
     global STATUS
-    while True:
-        input("Press Enter to start the task execution...")
+    if key == keyboard.Key.enter:
         STATUS = "start"
         print("Task execution started!")
+    elif key == keyboard.Key.delete:
+        STATUS = "backtracking"
+        print("Backtracking started!")
+
+
+def keyboard_listener():
+    with keyboard.Listener(on_release=on_key_release) as listener:
+        listener.join()
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")
     parser.add_argument("--task", type=str, help="Specify the TASK parameter",
-                        default="import contacts from device (from file) on 'contacts' app")
+                        default="View data usage of 'T-mobile' on this phone")
+    parser.add_argument("--mode", type=str, choices=["normal", "preserve"],
+                        default="normal", help="Specify the mode: 'normal' or 'preserve'")
     args = parser.parse_args()
 
     TASK = args.task
+    MODE = args.mode
 
     # Start the keyboard listener in a separate thread
     keyboard_thread = threading.Thread(target=keyboard_listener)

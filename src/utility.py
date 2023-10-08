@@ -84,7 +84,7 @@ def process_action_info(action, params, node):
         return "Action: Edit {} with {}".format(node, params)
 
 
-def task_grounding_prompt(task, similar_tasks, similar_traces):
+def task_grounding_prompt(task, similar_tasks, similar_traces, previous_action, current_ui):
     return [
         {
             "role": "system",
@@ -93,7 +93,7 @@ You are an expert in User Interface (UI) automation. Your task is to predict the
 You are given the original user's intent and a list of ground-truth of similar task-executions on UI. 
 Based on your knowledge, reasonably predict, and synthesize the step-by-step execution tutorials of the user's intent.
 You are also given some examples of similar tasks and their executions, which you can refer to and help you figure out the tutorial of user's execution
-
+The output of each step of the tutorial should clearly seperate each step to a function and with parameters (if have), such as Click("My contact"), Edit("Name", "Steven").
 
 Think step by step and then output the predictions in a JSON formated like:
 {
@@ -107,6 +107,13 @@ Think step by step and then output the predictions in a JSON formated like:
                     User task: {}
                     Similar examples: {}
                     """.format(task, [j+":"+"=>".join(k) for j, k in zip(similar_tasks, similar_traces)])
+        },
+        {
+            "role": "user",
+            "content": """Additionally,you are also given the [previous Action Trace] and the [current UI screen], which you can refer to and help you adjust the tutorial based on the real circumstance on UI.
+Previous Action:{}
+Current UI:{}
+                    """.format(previous_action, current_ui)
         }
     ]
 
@@ -168,13 +175,13 @@ Only guiding by your knowledge is irreliable , so you are give two kinds of grou
 2, current extended UI screen, which contains the components of current UI screen and their corresponding interaction results.
 Basically the tutorial represents how to do the task conceptually without grounding and the UI screen represents the ground-truth. You need to conbine them, thus build a connection between them.
 Finnaly, your job is to rate the available options on the current page based on your grounding. For each option, provide a confidence rating from 1.0-10.0, where 1.0 indicates 'definitely no' and 5.0 indicates 'normal' and 10.0 indicates 'most likely'
-Note that your scoring should indicate diversity between all of them, avoid giving same scores in case of identication.
+Note that your scoring should be diverse between all of them, avoid giving same scores to some of them in case of identication. Because we need to select the top one.
 
 Step 1: Think step by step about how there two kinds of knowlegde lead you to score each UI element.
 Step 2: Output a JSON object with scores and reasoning. The structure should be: {"score": [], "reason": []}
 Example:
 {
-"score": [10, 8, 4, 1, 2,...] (for each UI element),
+"score": [9.6, 6.5, 4.0, 1.0, 2.7,...] (for each UI element),
 "reason": [
 "...","...","...","...","...",... (for each UI element)
 ]
@@ -329,4 +336,5 @@ def add_son_to_father(l: list, relation: list[tuple]) -> list:
             l[index_father] = l[index_father][:last_index] + "\n    " + \
                 l[index_son] + " </" + \
                 l[index_father][last_index + 3:]
-    return l
+        l[index_son] = ""
+    return list(filter(lambda x: x != "", l))

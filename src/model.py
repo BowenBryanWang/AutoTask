@@ -113,7 +113,7 @@ class Model:
 
     @ decide_before_and_log
     def work(self, ACTION_TRACE=None):
-        self.predict_module.predict()
+        self.predict_module.predict(ACTION_TRACE)
         if self.prev_model is not None:
             with open("./src/KB/pagejump.csv", "r", encoding="utf-8") as f:
                 reader = csv.reader(f)

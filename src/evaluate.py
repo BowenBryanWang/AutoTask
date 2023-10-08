@@ -43,7 +43,7 @@ class Evaluate():
 
     def score_comp(self):
         resp = GPT(Task_UI_grounding_prompt(self.model.task, self.model.current_path_str, self.model.similar_tasks,
-                   self.model.similar_traces, self.model.predicted_step, self.model.screen.semantic_info_list, self.model.predict_module.next_comp))
+                   self.model.similar_traces, self.model.predicted_step, self.model.screen.semantic_info_list, self.model.predict_module.comp_json))
         self.score, self.reason = np.array(resp["score"])/10, resp["reason"]
         if self.weights == []:
             self.weights = [1] * len(self.score)
@@ -55,8 +55,10 @@ class Evaluate():
         print(self.score)
 
     def select_top_one(self):
-        self.model.node_selected = self.model.screen.semantic_info_list[np.argmax(
-            self.score)]
+        top_index = np.argmax(self.score)
+        # 在semantic_info_list遍历，找到包含"id="+str(top_index+1)的元素，然后返回该元素
+        self.model.node_selected = list(filter(
+            lambda x: "id="+str(top_index+1) in x, self.model.screen.semantic_info_list))[0]
         response = GPT(plan_prompt(self.model.task,
                        self.model.page_description, self.model.node_selected))
         self.model.node_selected_action, self.model.node_selected_text = response.get(
@@ -66,8 +68,9 @@ class Evaluate():
         self.model.current_action = process_action_info(
             self.model.node_selected_action, self.model.node_selected_text, self.model.node_selected)
         self.model.current_path.append(self.model.current_action)
-        self.model.final_node = self.model.screen.semantic_nodes[
-            "nodes"][self.model.node_selected_id - 1]
+
+        self.model.final_node = self.model.screen.semantic_nodes["nodes"][self.model.screen.semantic_info_list.index(
+            self.model.node_selected)]
 
     def update_weights(self, weights):
         w = [0]*len(self.model.screen.semantic_info_list)

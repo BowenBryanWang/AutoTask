@@ -49,7 +49,8 @@ class UINode:
         self.clickable = (crt_layout['@clickable'] ==
                           'true') or (crt_layout['@clickable'] == True)
         if '@enabled' in crt_layout:
-            self.enabled = (crt_layout['@enabled'] =='true') or (crt_layout['@enabled'] == True)
+            self.enabled = (crt_layout['@enabled'] ==
+                            'true') or (crt_layout['@enabled'] == True)
         else:
             self.enabled = False
         if '@focusable' in crt_layout:
@@ -268,13 +269,15 @@ class UINode:
             prob *= 1.5
         else:
             prob *= 0.5
+        if self.text != "":
+            prob *= 100
         if self.has_similar_children():
             prob *= 0.5
         if self.editable:
             prob *= 1.5
         if self.node_class == "android.widget.EditText":
             prob *= 1.5
-        if self.parent and len(self.parent.children) >6:
+        if self.parent and len(self.parent.children) > 6:
             prob *= 2
         elif self.parent and len(self.parent.children) > 3:
             prob *= 1.5
@@ -313,48 +316,31 @@ class UINode:
             return 1
         else:
             return 0
+
     def get_all_semantic_nodes(self):
         # 此函数的作用是获取当前页面中所有的有语义的节点
         # 从根节点开始
 
         stack = [self]
-        res = {"nodes": [],"info":[]}
-        # with open('./我的.csv', 'a', newline='') as f:
-            # writer = csv.writer(f)
+        res = {"nodes": [], "info": []}
         while stack:
             node = stack.pop()
             if node.is_selected() >= 1:
                 res["nodes"].append(node)
                 res["info"].append(node.generate_all_semantic_info())
-            # else:
-                # writer.writerow([node.depth, node.node_class, node.text!="", node.content_desc!="", node.area, node.clickable,
-                #                 node.long_clickable, node.editable, node.scrollable, node.selected, node.checked, node.checkable, node.enabled, node.focusable, node.focused, len(node.children), len(node.parent.children) if node.parent else 0,0])
             for child in node.children:
                 stack.append(child)
-        # 对res进行剪枝，规则为：若res中一节点是另一节点的祖先，则删除祖先节点
-        # print("before pruning:",len(res["nodes"]))
         relation = []
         for i in range(len(res["nodes"])):
-            for j in range(i+1,len(res["nodes"])):
+            for j in range(i+1, len(res["nodes"])):
                 if res["nodes"][i] and res["nodes"][j] and res["nodes"][i].is_ancestor(res["nodes"][j]):
-                    print("????????????")
-                    print("son",res["nodes"][i].text)
-                    print("father",res["nodes"][j].text)
-                    relation.append((res["nodes"][j],res["nodes"][i]))
+                    relation.append((res["nodes"][j], res["nodes"][i]))
                 elif res["nodes"][i] and res["nodes"][j] and res["nodes"][j].is_ancestor(res["nodes"][i]):
-                    print("????????????")
-                    print("son",res["nodes"][j].text)
-                    print("father",res["nodes"][i].text)
-                    relation.append((res["nodes"][i],res["nodes"][j]))
-                elif res["nodes"][i] and res["nodes"][j]  and res["info"][i] == res["info"][j] and res["nodes"][i].bound ==  res["nodes"][j].bound:
-                    print("检测到相同",res["info"][i],res["info"][j],res["nodes"][i].bound,res["nodes"][j].bound)              
+                    relation.append((res["nodes"][i], res["nodes"][j]))
+                elif res["nodes"][i] and res["nodes"][j] and res["info"][i] == res["info"][j] and res["nodes"][i].bound == res["nodes"][j].bound:
                     res["nodes"][j] = None
-        # for node in res["nodes"]:
-        #     if node is not None:
-        #         writer.writerow([node.depth, node.node_class, node.text!="", node.content_desc!="", node.area, node.clickable,
-        #                         node.long_clickable, node.editable, node.scrollable, node.selected, node.checked, node.checkable, node.enabled, node.focusable, node.focused, len(node.children), len(node.parent.children) if node.parent else 0,1])
         res["nodes"] = [node for node in res["nodes"] if node is not None]
-        return res,relation
+        return res, relation
 
     def common_ancestor(self, other1, other2):
         if other1 is None or other2 is None:
