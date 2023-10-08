@@ -151,14 +151,11 @@ if __name__ == "__main__":
         description="Flask app with argparse integration")
     parser.add_argument("--task", type=str, help="Specify the TASK parameter",
                         default="View data usage of 'T-mobile' on this phone")
-    parser.add_argument("--mode", type=str, choices=["normal", "preserve"],
-                        default="normal", help="Specify the mode: 'normal' or 'preserve'")
+
     args = parser.parse_args()
 
     TASK = args.task
-    MODE = args.mode
 
-    # Start the keyboard listener in a separate thread
     keyboard_thread = threading.Thread(target=keyboard_listener)
     keyboard_thread.daemon = True
     keyboard_thread.start()
