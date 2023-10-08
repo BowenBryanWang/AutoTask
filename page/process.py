@@ -3,19 +3,6 @@ import copy
 
 
 def mask(s):
-    match s:
-        case "com.tencent.mm:id/kd_":
-            return "Tab"
-        case "com.tencent.mm:id/iwg":
-            return "Item"
-        case "com.tencent.mm:id/grs":
-            return "Dropdown menu"
-        case "com.tencent.mm:id/bth":
-            return "message"
-        case "com.tencent.mm:id/g0":
-            return "Go Back"
-        case "com.tencent.mm:id/iwc":
-            return "Function"
     return s
 
 

@@ -5,10 +5,10 @@ src/static/data
 __pycache__
 **/__pycache__
 logs/
-__pycache__
 *.pickle
 src/gpt_res
 page/__pycache__/
 page/static/
 src/__pycache__
 Shots/
+.vscode/

@@ -9,7 +9,6 @@ from src.model import Model
 
 from page.init import Screen
 from page.WindowStructure import *
-from page.NodeDescriberManager import *
 
 
 app = Flask(__name__)
