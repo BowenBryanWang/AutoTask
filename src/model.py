@@ -17,35 +17,19 @@ from src.predict import Predict
 class Model:
 
     def __init__(self, screen: Optional[Screen] = None, description: str = "", prev_model=None, index=0):
-        """
-        Initializes a Model object with the given screen and description.
-
-        Args:
-        - screen: A Screen object representing the current screen information.
-        - description: A string representing the task description.
-        - prev_model: A Model object representing the previous model.
-
-        Returns:
-        None
-        """
-        #####################################################
-        # 1. Common variables
-        self.index: int = index  # 当前model的索引
+        self.index: int = index
         if screen is not None:
-            self.screen = screen  # Screen类，用于存储界面信息
-        self.task: str = description  # 任务描述
-        self.candidate: list[int] = []  # 用于存储候选的控件,首次应该在suggest中初始化
-        self.candidate_str: list[str] = []  # 用于存储候选的控件的字符串表示
-        self.candidate_action: list[str] = [None]*5  # plan模块当中对于候选控件的动作
-        self.candidate_text: list[str | None] = [None]*5  # plan模块当中对于候选控件的动作参数
-        self.node_selected = None  # 用于存储被选择的控件
-        self.node_selected_id: int = 0  # 用于存储被选择的控件的id
-        self.current_path: list[str] = []  # 用于存储当前的路径
-        self.log_json: dict = {}  # 用于存储日志信息
-        #####################################################
+            self.screen = screen
+        self.task: str = description
+        self.candidate: list[int] = []
+        self.candidate_str: list[str] = []
+        self.candidate_action: list[str] = [None]*5
+        self.candidate_text: list[str | None] = [None]*5
+        self.node_selected = None
+        self.node_selected_id: int = 0
+        self.current_path: list[str] = []
+        self.log_json: dict = {}
 
-        #####################################################
-        # 2. Take Model as Node for Computational Graph
         self.prev_model = prev_model
         if prev_model is not None:
             self.prev_model = prev_model
@@ -55,9 +39,6 @@ class Model:
             self.current_path = [self.screen.page_description]
 
         self.next_model = None
-        #####################################################
-
-        #####################################################
 
         self.PageJump_KB = PageJump_KB(None)
         self.Task_KB = Task_KB()
@@ -70,7 +51,6 @@ class Model:
         self.decide_module = Decide(self)
         self.feedback_module = Feedback(self)
         print("________________INITIAL_DONE________________")
-        #####################################################
 
     @property
     def current_path_str(self):
@@ -111,7 +91,7 @@ class Model:
             return func(self, *args, **kwargs)
         return wrapper
 
-    @ decide_before_and_log
+    @decide_before_and_log
     def work(self, ACTION_TRACE=None):
         self.predict_module.predict(ACTION_TRACE)
         if self.prev_model is not None:
@@ -123,7 +103,6 @@ class Model:
                     self.prev_model.current_path[-1])
                 flag = any(row[0] == prev_info and row[1]
                            == prev_path for row in reader)
-
             if not flag:
                 with open("./src/KB/pagejump.csv", "a", newline='', encoding="utf-8") as f:
                     writer = csv.writer(f)

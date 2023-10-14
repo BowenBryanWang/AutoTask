@@ -90,7 +90,7 @@ def task_grounding_prompt(task, similar_tasks, similar_traces, previous_action, 
             "role": "system",
             "content": """
 You are an expert in User Interface (UI) automation. Your task is to predict the actual execution steps of user's intent based on your knowledge.
-You are given the original user's intent and a list of ground-truth of similar task-executions on UI. 
+You are given the original user's intent and a list of ground-truth of similar task-executions on UI.
 Based on your knowledge, reasonably predict, and synthesize the step-by-step execution tutorials of the user's intent.
 You are also given some examples of similar tasks and their executions, which you can refer to and help you figure out the tutorial of user's execution
 The output of each step of the tutorial should clearly seperate each step to a function and with parameters (if have), such as Click("My contact"), Edit("Name", "Steven").
@@ -215,15 +215,15 @@ def plan_prompt(task, page_description, node_selected):
         {
             "role": "system",
             "content":
-                """You are an AI assistant specialized in UI Automation. Now you have successfully obtained the top UI component that are most likely to operate with based on user's intent. Now, you need to determine the action to be performed on it. 
-There are two main types of actions: 
-    1,clicking on a component (no text parameter needed) 
+                """You are an AI assistant specialized in UI Automation. Now you have successfully obtained the top UI component that are most likely to operate with based on user's intent. Now, you need to determine the action to be performed on it.
+There are two main types of actions:
+    1,clicking on a component (no text parameter needed)
     2,editing a component (you should also determine the text parameter).
-For the top component, analyze the possible action to be taken and, if it involves an editing action, provide the corresponding text parameter as well. 
+For the top component, analyze the possible action to be taken and, if it involves an editing action, provide the corresponding text parameter as well.
 Reason step by step to provide the actions and text parameters for it based on the user's intent and the context of the current screen.
-Output a JSON object structured like 
+Output a JSON object structured like
 {
-    "action": the action to be taken, either "click" or "edit", 
+    "action": the action to be taken, either "click" or "edit",
     "text": the text parameter for the action if any (Optional),
     "reason": the reason,
 },
@@ -242,7 +242,7 @@ Top Candidate:{}""".format(task, page_description, node_selected)
 def decide_prompt(task, ACTION_TRACE, semantic_info):
     return [{
             "role": "system",
-            "content": """You are a professor with in-depth knowledge of User Interface (UI) tasks and their action traces. You are assigned a specific UI task along with an action trace. Your task is to evaluate if the action trace aligns with the assigned task, categorizing the trace as: 
+            "content": """You are a professor with in-depth knowledge of User Interface (UI) tasks and their action traces. You are assigned a specific UI task along with an action trace. Your task is to evaluate if the action trace aligns with the assigned task, categorizing the trace as:
 1,completed: After the last action and based on the newest UI screen, the user's task is completed;
 2,wrong: After the last action and based on the newest UI screen, the action trace goes into a wrong branch and need to be corrected;
 3,go on: After the last action and based on the newest UI screen, the action trace is on the right track but not completed yet.
@@ -301,6 +301,35 @@ Latest Page:{}
     }]
 
 
+def Knowledge_prompt(TASK, ACTION_TRACE):
+    return [
+        {
+            "role": "system",
+            "content": """You are an active learner in User Interface (UI) automation. Your task is to learn and summarize UI automation pieces of knowledge from completed User Task and Action Trace.
+You are given the User's Task and an actual action trace of it. Use the following steps to think:
+1, Try to reproduce the ACTION_TRACE while keeping an eye on each page and analyzing each steps' insights provided. Reason step by step on the insights of the relationship between TASK and ACTION-TRACE from a higher level and generate SOFT knowledge of connecting them, it could be hints, experiences, or shortcuts.
+    1.1, Specificly, think step by step on what kind of SOFT knowledge can be extracted from them to guide better action-selection, which means how an AI agent choose correct next-step when exploring in the UI.(i.e. "In settings page, network functions would be more related to 'Newwork' button"......)
+    1.2, Then think step by step on what kind of SOFT knowledge can be extracted from them to guide better status-decision, which means how an AI agent decide the status of task execution, either finished or in-the-process or wrong. (i.e. "If a switch button is clicked from off to on, that would imply that the completion of 'Turn on XXX' task")
+2, Follow the action trace to reproduce the execution process, focusing on the error backtracking process (that is, when the traces go wrong and then navigate back to correct). Think step by step about each backtrack, analyze if they are essential, and summarize error knowledge from them; it could be notices, traps, or other formats. ("i.e. ,"XXX means a possible wrong exection when YYY, you should be aware of ZZZ")
+"""
+        }, {
+            "role": "user",
+            "content": """TASK:{}
+ACTION TRACE:{}
+Be smart and insightful, think step by step, finally,summarize them into a json format:""".format(TASK, ACTION_TRACE)
+        },
+        {
+            "role": "user",
+            "content": """'''HTML
+{
+    "selection":[](organize as a list if have)
+    "decision"[](organize as a list if have)
+    "error-handling":[](organize as a list if have)
+}'''"""
+        }
+    ]
+
+
 def process_action_info(action, params, node):
     if action == "click":
         return "Action: Click on {}".format(node)
@@ -334,7 +363,6 @@ def add_son_to_father(l: list, relation: list[tuple]) -> list:
         last_index = l[index_father].rfind(" </")
         if last_index != -1:
             l[index_father] = l[index_father][:last_index] + "\n    " + \
-                l[index_son] + " </" + \
-                l[index_father][last_index + 3:]
+                l[index_son] + " </" + l[index_father][last_index + 3:]
         l[index_son] = ""
     return list(filter(lambda x: x != "", l))

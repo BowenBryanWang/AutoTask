@@ -29,16 +29,7 @@ ACTION_TRACE = {
 
 @app.route('/demo', methods=['POST'])
 def demo() -> Union[str, Response]:
-    """
-    This function handles the '/demo' route for the Flask app. It receives POST requests and updates the screen
-    based on the request form. It then creates a new Model object and appends it to the computational graph. Finally,
-    it calls the work() method of the Model object and returns the result as a JSON object or a Response object.
-
-    Returns:
-        Union[str, Response]: A JSON object or a Response object.
-    """
     global TASK, STATUS, INDEX, COMPUTATIONAL_GRAPH, GRAPH_ACTION
-    # return {'node_id': 1, 'trail': '[0,0]', 'action_type': 'text', 'text': "Lowe's", 'ori_absolute_id': 'android.widget.FrameLayout|0;android.widget.LinearLayout|0;android.widget.FrameLayout|0;android.widget.FrameLayout|0;android.widget.FrameLayout|0;android.view.ViewGroup|0;android.widget.FrameLayout|0;android.widget.FrameLayout|0;android.view.ViewGroup|0;android.widget.ScrollView|0;android.widget.LinearLayout|1;android.widget.LinearLayout|0;android.widget.EditText'}
     screen = Screen(INDEX)
     screen.update(request=request.form)
     print("INDEX", INDEX)
@@ -122,12 +113,10 @@ def demo() -> Union[str, Response]:
 
 def save_to_file(task_name):
     task_name = task_name.replace(" ", "_")
-    # 在同级目录./Shots下创建一个名为task_name的文件夹
     if not os.path.exists("./Shots/{}".format(task_name)):
         os.makedirs("./Shots/{}".format(task_name))
-        # 将./logs文件夹和./Page/static/data文件夹移到其下
         shutil.move("./logs", "./Shots/{}".format(task_name))
-        shutil.move("./Page/static/data", "./Shots/{}".format(task_name))
+        shutil.move("./Page/data", "./Shots/{}".format(task_name))
 
 
 def on_key_release(key):
@@ -157,9 +146,7 @@ if __name__ == "__main__":
     TASK = args.task
     MODE = args.mode
 
-    # Start the keyboard listener in a separate thread
     keyboard_thread = threading.Thread(target=keyboard_listener)
     keyboard_thread.daemon = True
     keyboard_thread.start()
-
     app.run(host='localhost', port=5002)

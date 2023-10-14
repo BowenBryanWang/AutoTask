@@ -93,7 +93,6 @@ class Error_KB(KnowledgeBase):
         self.new_screens = []
         self.reasons = []
         with open(os.path.join(os.path.dirname(__file__), 'KB/errors.csv'), 'r', encoding="utf-8") as f:
-            # 第一列存为task，第二列存为trace
             for line in f.readlines():
                 if line.startswith("Task"):
                     continue

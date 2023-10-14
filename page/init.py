@@ -42,8 +42,8 @@ class Screen:
         self.page_description = ""
 
     def update(self, request):
-        if not os.path.exists("./page/static/data"):
-            os.makedirs("./page/static/data")
+        if not os.path.exists("./page/data"):
+            os.makedirs("./page/data")
         self.cnt += 1  # 将数据存储时候页面的编号
         start_time = time.time()  # 记录开始时间
         self.page_id_now = self.cnt
@@ -64,15 +64,15 @@ class Screen:
 
         self.semantic_info_str = "".join(self.semantic_info)
 
-        with open('./page/static/data/page{}.txt'.format(self.cnt), 'w', encoding="utf-8") as fp:
+        with open('./page/data/page{}.txt'.format(self.cnt), 'w', encoding="utf-8") as fp:
             fp.write("".join(self.semantic_info))
         print("semantic_info", self.semantic_info_str)
         end_time = time.time()
         self.upload_time = end_time  # 记录本次上传的时间
         print("upload_time", self.upload_time)
         print("time:", end_time-start_time, flush=True)
-        with open('./page/static/data/imagedata{}.jpg'.format(self.cnt), 'wb') as fp:
+        with open('./page/data/imagedata{}.jpg'.format(self.cnt), 'wb') as fp:
             fp.write(self.imgdata)
-        with open('./page/static/data/page{}.json'.format(self.cnt), 'w', encoding="utf-8") as fp:
+        with open('./page/data/page{}.json'.format(self.cnt), 'w', encoding="utf-8") as fp:
             fp.write(self.layout)
         return "OK"

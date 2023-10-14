@@ -1,7 +1,7 @@
-static/data/imagedata*
-static/data/page*
+data/imagedata*
+data/page*
 node_modules
-src/static/data
+src/data
 __pycache__
 **/__pycache__
 logs/
