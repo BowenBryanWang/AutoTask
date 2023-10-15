@@ -95,7 +95,7 @@ class Model:
     def work(self, ACTION_TRACE=None):
         self.predict_module.predict(ACTION_TRACE)
         if self.prev_model is not None:
-            with open("./src/KB/pagejump.csv", "r", encoding="utf-8") as f:
+            with open("./src/KB/pagejump/pagejump.csv", "r", encoding="utf-8") as f:
                 reader = csv.reader(f)
                 prev_info = process_string(
                     self.prev_model.screen.semantic_info_str)
@@ -104,7 +104,7 @@ class Model:
                 flag = any(row[0] == prev_info and row[1]
                            == prev_path for row in reader)
             if not flag:
-                with open("./src/KB/pagejump.csv", "a", newline='', encoding="utf-8") as f:
+                with open("./src/KB/pagejump/pagejump.csv", "a", newline='', encoding="utf-8") as f:
                     writer = csv.writer(f)
                     writer.writerow([
                         prev_info,

@@ -4,6 +4,49 @@ import json
 import pickle
 import os
 import time
+import spacy
+import pandas as pd
+import pickle
+import os
+
+nlp = spacy.load("en_core_web_md")
+
+
+def cache_decorator():
+    def wrapper(function):
+        def wrapped_function(*args, **kwargs):
+            csv_file = args[1]
+            cache_file = args[2]
+            if not os.path.exists(cache_file):
+                result = function(*args, **kwargs)
+                with open(cache_file, 'wb') as f:
+                    pickle.dump(result, f)
+                return result
+            else:
+                with open(cache_file, 'rb') as f:
+                    return pickle.load(f)
+        return wrapped_function
+    return wrapper
+
+
+@cache_decorator()
+def get_vectors_from_csv(csv_file="", cache_file="", field=""):
+    df = pd.read_csv(csv_file)
+    database_texts = df[field].tolist()
+    vectors = [nlp(text).vector for text in database_texts]
+    return database_texts, vectors
+
+
+def get_top_similarities(s, csv_file, k, field):
+    cache_file = csv_file.replace(".csv", "_"+field+".pickle")
+    database_texts, database_vectors = get_vectors_from_csv(
+        csv_file=csv_file, cache_file=cache_file, field=field)
+    s_vector = nlp(s).vector
+    similarities = [(text, s_vector.dot(vector))
+                    for text, vector in zip(database_texts, database_vectors)]
+    sorted_texts = [text for text, _ in sorted(
+        similarities, key=lambda x: x[1], reverse=True)[:k]]
+    return sorted_texts
 
 
 def persist_to_file(file_name, use_cache=True):
