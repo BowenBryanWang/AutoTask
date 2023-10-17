@@ -1,5 +1,5 @@
 import json
-from src.utility import add_son_to_father, add_value_to_html_tag
+from src.utility import add_son_to_father, add_value_to_html_tag, get_top_combined_similarities_group, process_string
 import copy
 import random
 import os
@@ -47,20 +47,24 @@ class Predict():
     def UI_grounding(self):
         SEMANTIC_INFO = list(
             filter(lambda x: "id=" in x, self.model.screen.semantic_info_list))
-        SEMANTIC_STR = self.model.screen.semantic_info_str
+        SEMANTIC_STR = process_string(self.model.screen.semantic_info_str)
         self.current_comp = SEMANTIC_INFO
         self.next_comp = [""]*len(SEMANTIC_INFO)
         self.comp_json = dict.fromkeys(
             SEMANTIC_INFO, [])
         predict_node = copy.deepcopy(
             SEMANTIC_INFO)
-        for i in tqdm.tqdm(range(len(SEMANTIC_INFO))):
-            res = self.query(SEMANTIC_STR, SEMANTIC_INFO[i])
-            if res:
-                self.next_comp[i] = {"description": "", "comp": res}
-                self.comp_json[SEMANTIC_INFO[i]] = {
-                    "description": "", "comp": res}
-                predict_node[i] = "None"
+        queries = [[SEMANTIC_STR, SEMANTIC_INFO[i]]
+                   for i in range(len(SEMANTIC_INFO))]
+        results = get_top_combined_similarities_group(queries=queries, csv_file=os.path.join(
+            os.path.dirname(__file__), 'KB/pagejump/pagejump.csv'), k=1, fields=["Origin", "Edge"])
+        for index, r in enumerate(results):
+            if r != "Not found":
+                self.next_comp[index] = {
+                    "description": r["Description"], "comp": r["Destination"]}
+                self.comp_json[SEMANTIC_INFO[index]] = {
+                    "description": r["Description"], "comp": r["Destination"]}
+                predict_node[index] = "None"
         indexs = [i for i, x in enumerate(predict_node) if x == "None"]
         predict_prompt = list(filter(lambda x: not any(
             [str(index+1) in x for index in indexs]), self.model.screen.semantic_info_list))
@@ -90,9 +94,6 @@ class Predict():
         self.UI_grounding()
 
     def query(self, page, node):
-        """
-        # TODO：Queries the knowledge from KB
-        """
         res = self.pagejump_KB.find_next_page(page, node)
         if res != []:
             res = res[0].split("\\n")

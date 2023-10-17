@@ -11,7 +11,7 @@ def transfer_2_html(semantic_nodes, relation: list[tuple]):
     real_comp = []
 
     for node in semantic_nodes:
-        if "TextView" in node.node_class:
+        if (node.node_class == "android.widget.TextView" or ".TextView" in node.node_class) and not node.clickable:
             temp = node.generate_all_semantic_info()
             html_element = "<p class='{}' {}> {} </p>\n".format(
                 mask(node.resource_id),
@@ -61,14 +61,34 @@ def transfer_2_html(semantic_nodes, relation: list[tuple]):
             )
             html_components.append(html_element)
             real_comp.append(html_element)
+        elif "EditText" in node.node_class:
+            if node.editable:
+                html_element = "<input id={} class='{}' {} {} editable > {} </input>\n".format(
+                    len(real_comp)+1,
+                    mask(node.resource_id),
+                    "description='"+",".join(temp["content-desc"])+"'" if ",".join(
+                        temp["content-desc"]) != "" else "",
+                    "enabled" if node.enabled else "Not enabled",
+                    "".join(temp["text"]) if temp["text"] == temp["Major_text"] else temp["Major_text"][0] + "\n    " + "".join(["<p> " + i + " </p>\n    " for i in temp["text"][1:]])[:-5])
+            else:
+                html_element = "<button id={} class='{}' {} {} clickable ineditable > {} </button>\n".format(
+                    len(real_comp)+1,
+                    mask(node.resource_id),
+                    "description='"+",".join(temp["content-desc"])+"'" if ",".join(
+                        temp["content-desc"]) != "" else "",
+                    "enabled" if node.enabled else "Not enabled",
+                    "".join(temp["text"]) if temp["text"] == temp["Major_text"] else temp["Major_text"][0] + "\n    " + "".join(["<p> " + i + " </p>\n    " for i in temp["text"][1:]])[:-5])
+            html_components.append(html_element)
+            real_comp.append(html_element)
         else:
             temp = node.generate_all_semantic_info()
             print(temp)
-            html_element = "<div id={} class='{}' {}> {} </div>\n".format(
+            html_element = "<div id={} class='{}' {} {}> {} </div>\n".format(
                 len(real_comp)+1,
                 mask(node.resource_id),
                 "description='"+",".join(temp["content-desc"])+"'" if ",".join(
                     temp["content-desc"]) != "" else "",
+                "enabled" if node.enabled else "Not enabled",
                 "".join(temp["text"]) if temp["text"] == temp["Major_text"] else temp["Major_text"][0] + "\n    " + "".join(["<p> " + i + " </p>\n    " for i in temp["text"][1:]])[:-5])
             html_components.append(html_element)
             real_comp.append(html_element)

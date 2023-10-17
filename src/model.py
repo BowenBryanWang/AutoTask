@@ -6,7 +6,7 @@ from typing import Optional
 
 from src.utility import generate_perform, process_string
 
-from .knowledge import Error_KB, PageJump_KB, Task_KB
+from .knowledge import Decision_KB, Error_KB, PageJump_KB, Selection_KB, Task_KB
 from src.decide import Decide
 from src.evaluate import Evaluate
 from src.feedback import Feedback
@@ -43,9 +43,10 @@ class Model:
         self.PageJump_KB = PageJump_KB(None)
         self.Task_KB = Task_KB()
         self.Error_KB = Error_KB()
+        self.Decision_KB = Decision_KB()
+        self.Selection_KB = Selection_KB()
         self.similar_tasks, self.similar_traces = self.Task_KB.find_most_similar_tasks(
             self.task)
-        self.error_experiences = self.Error_KB.find_experiences(self.task)
         self.predict_module = Predict(self, self.PageJump_KB)
         self.evaluate_module = Evaluate(self)
         self.decide_module = Decide(self)
@@ -59,6 +60,7 @@ class Model:
     def decide_before_and_log(func):
         def wrapper(self, *args, **kwargs):
             print("ACTION_TRACE", kwargs.get("ACTION_TRACE"))
+            print("flag", kwargs.get("flag"))
             if self.prev_model is not None:
                 # with open("./src/KB/pagejump.csv", "r", encoding="utf-8") as f:
                 #     reader = csv.reader(f)
@@ -78,13 +80,14 @@ class Model:
                 #             process_string(self.screen.semantic_info_str),
                 #             self.page_description
                 #         ])
-                status = self.prev_model.decide_module.decide(
-                    self.screen, kwargs.get("ACTION_TRACE"))
-                if status == "wrong":
-                    print("wrong: feedback started")
-                    return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}, "wrong"
-                elif status == "completed":
-                    return None, "completed"
+                if kwargs.get("flag") != "debug":
+                    status = self.prev_model.decide_module.decide(
+                        self.screen, kwargs.get("ACTION_TRACE"))
+                    if status == "wrong":
+                        print("wrong: feedback started")
+                        return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}, "wrong"
+                    elif status == "completed":
+                        return None, "completed"
             self.log_json["@User_intent"] = self.task
             self.log_json["@Page_components"] = self.screen.semantic_info_list
             self.log_json["@Module"] = []
@@ -92,7 +95,7 @@ class Model:
         return wrapper
 
     @decide_before_and_log
-    def work(self, ACTION_TRACE=None):
+    def work(self, ACTION_TRACE=None, flag="normal"):
         self.predict_module.predict(ACTION_TRACE)
         if self.prev_model is not None:
             with open("./src/KB/pagejump/pagejump.csv", "r", encoding="utf-8") as f:
@@ -112,7 +115,7 @@ class Model:
                         process_string(self.screen.semantic_info_str),
                         self.page_description
                     ])
-        self.evaluate_module.evaluate()
+        self.evaluate_module.evaluate(ACTION_TRACE)
         return self.execute()
 
     def execute(self):

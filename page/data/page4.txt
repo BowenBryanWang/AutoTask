@@ -1,0 +1,132 @@
+<div id=1 class='' description='Saving to Web & App Activity,Viewed area around Americas,Image of the activity item “Viewed area around Americas“.' enabled> Google - My Activity
+    <p> Maps Activity </p>
+    <p> History </p>
+    <p> Controls </p>
+    <p> More </p>
+    <p> History </p>
+    <p> The Maps activity you keep is used to improve your experience. You can see your activity, delete it manually, or choose to delete it automatically using the controls on this page. </p>
+    <p> Product Image </p>
+    <p> Saving to Web & App Activity </p>
+    <p> Auto-delete (18 months) </p>
+    <p> Google protects your privacy and security. </p>
+    <p> Manage My Activity verification </p>
+    <p> Jump to date </p>
+    <p> Filter by product </p>
+    <p> Delete </p>
+    <p> Today </p>
+    <p> Delete all activity from Today. </p>
+    <p> Some activity may not appear yet </p>
+    <p> Card showing an activity from Maps </p>
+    <p> Logo for Maps </p>
+    <p> Maps </p>
+    <p> Delete activity item Viewed area around Americas </p>
+    <p> Viewed area around Americas </p>
+    <p> 9:22 PM •  </p>
+    <p> Open details of activity "Viewed area around Americas" </p>
+    <p> Card showing an activity from Maps </p>
+    <p> Logo for Maps </p>
+    <p> Maps </p>
+    <p> Delete activity item Viewed area around United States </p>
+    <div id=2 class='yDmH0d' description='Saving to Web & App Activity,Viewed area around Americas,Image of the activity item “Viewed area around Americas“.' enabled> Maps Activity
+    <p> History </p>
+    <p> Controls </p>
+    <p> More </p>
+    <p> History </p>
+    <p> The Maps activity you keep is used to improve your experience. You can see your activity, delete it manually, or choose to delete it automatically using the controls on this page. </p>
+    <p> Product Image </p>
+    <p> Saving to Web & App Activity </p>
+    <p> Auto-delete (18 months) </p>
+    <p> Google protects your privacy and security. </p>
+    <p> Manage My Activity verification </p>
+    <p> Jump to date </p>
+    <p> Filter by product </p>
+    <p> Delete </p>
+    <p> Today </p>
+    <p> Delete all activity from Today. </p>
+    <p> Some activity may not appear yet </p>
+    <p> Card showing an activity from Maps </p>
+    <p> Logo for Maps </p>
+    <p> Maps </p>
+    <p> Delete activity item Viewed area around Americas </p>
+    <p> Viewed area around Americas </p>
+    <p> 9:22 PM •  </p>
+    <p> Open details of activity "Viewed area around Americas" </p>
+    <p> Card showing an activity from Maps </p>
+    <p> Logo for Maps </p>
+    <p> Maps </p>
+    <p> Delete activity item Viewed area around United States </p> </div>
+
+    <div id=3 class='' description='Saving to Web & App Activity,Viewed area around Americas,Image of the activity item “Viewed area around Americas“.' enabled> History
+    <p> The Maps activity you keep is used to improve your experience. You can see your activity, delete it manually, or choose to delete it automatically using the controls on this page. </p>
+    <p> Product Image </p>
+    <p> Saving to Web & App Activity </p>
+    <p> Auto-delete (18 months) </p>
+    <p> Google protects your privacy and security. </p>
+    <p> Manage My Activity verification </p>
+    <p> Jump to date </p>
+    <p> Filter by product </p>
+    <p> Delete </p>
+    <p> Today </p>
+    <p> Delete all activity from Today. </p>
+    <p> Some activity may not appear yet </p>
+    <p> Card showing an activity from Maps </p>
+    <p> Logo for Maps </p>
+    <p> Maps </p>
+    <p> Delete activity item Viewed area around Americas </p>
+    <p> Viewed area around Americas </p>
+    <p> 9:22 PM •  </p>
+    <p> Open details of activity "Viewed area around Americas" </p>
+    <p> Card showing an activity from Maps </p>
+    <p> Logo for Maps </p>
+    <p> Maps </p>
+    <p> Delete activity item Viewed area around United States </p> </div>
+
+    <div id=4 class=''  enabled> Card showing an activity from Maps
+    <p> Logo for Maps </p>
+    <p> Maps </p>
+    <p> Delete activity item Viewed area around United States </p> </div>
+
+    <div id=5 class=''  enabled> Delete activity item Viewed area around United States </div>
+
+    <div id=6 class=''  enabled> Logo for Maps </div>
+
+    <div id=7 class='' description='Viewed area around Americas,Image of the activity item “Viewed area around Americas“.' enabled> Card showing an activity from Maps
+    <p> Logo for Maps </p>
+    <p> Maps </p>
+    <p> Delete activity item Viewed area around Americas </p>
+    <p> Viewed area around Americas </p>
+    <p> 9:22 PM •  </p>
+    <p> Open details of activity "Viewed area around Americas" </p> </div>
+
+    <div id=8 class='' description='Image of the activity item “Viewed area around Americas“.' enabled>  </div>
+
+    <div id=9 class=''  enabled> Open details of activity "Viewed area around Americas" </div>
+
+    <div id=10 class='' description='Viewed area around Americas' enabled> Viewed area around Americas </div>
+
+    <div id=11 class=''  enabled> Delete activity item Viewed area around Americas </div>
+
+    <div id=12 class=''  enabled> Logo for Maps </div>
+
+    <div id=13 class=''  enabled> Delete all activity from Today. </div>
+
+    <div id=14 class=''  enabled> Delete </div>
+
+    <div id=15 class=''  enabled> Filter by product </div>
+
+    <div id=16 class=''  enabled> Jump to date </div>
+
+    <div id=17 class=''  enabled> Manage My Activity verification </div>
+
+    <div id=18 class=''  enabled> Auto-delete (18 months) </div>
+
+    <div id=19 class='' description='Saving to Web & App Activity' enabled> Saving to Web & App Activity </div>
+
+    <div id=20 class=''  enabled> Product Image </div>
+
+    <div id=21 class='xid('moreTabId')'  enabled> More </div>
+
+    <div id=22 class='xid('controlsTabId')'  enabled> Controls </div>
+
+    <div id=23 class='xid('historyTabId')'  enabled> History </div>
+ </div>

@@ -1,0 +1,161 @@
+<div id=1 class='' description='Saving to Web & App Activity,Viewed area around United States,Image of the activity item “Viewed area around United States“.' enabled> Google - My Activity
+    <p> Maps Activity </p>
+    <p> History </p>
+    <p> Controls </p>
+    <p> More </p>
+    <p> History </p>
+    <p> The Maps activity you keep is used to improve your experience. You can see your activity, delete it manually, or choose to delete it automatically using the controls on this page. </p>
+    <p> Product Image </p>
+    <p> Saving to Web & App Activity </p>
+    <p> Auto-delete (18 months) </p>
+    <p> Google protects your privacy and security. </p>
+    <p> Manage My Activity verification </p>
+    <p> Jump to date </p>
+    <p> Filter by product </p>
+    <p> Delete </p>
+    <p> Delete menu </p>
+    <p> Delete today </p>
+    <p> Delete custom range </p>
+    <p> Delete all time </p>
+    <p> Auto-delete </p>
+    <p> Today </p>
+    <p> Delete all activity from Today. </p>
+    <p> Some activity may not appear yet </p>
+    <p> Card showing an activity from Maps </p>
+    <p> Logo for Maps </p>
+    <p> Maps </p>
+    <p> Delete activity item Viewed area around United States </p>
+    <p> Viewed area around United States </p>
+    <p> 8:34 PM •  </p>
+    <p> Open details of activity "Viewed area around United States" </p>
+    <p> Card showing an activity from Maps </p>
+    <p> Logo for Maps </p>
+    <p> Maps </p>
+    <p> Delete activity item Maps </p>
+    <div id=2 class='yDmH0d' description='Saving to Web & App Activity,Viewed area around United States,Image of the activity item “Viewed area around United States“.' enabled> Maps Activity
+    <p> History </p>
+    <p> Controls </p>
+    <p> More </p>
+    <p> History </p>
+    <p> The Maps activity you keep is used to improve your experience. You can see your activity, delete it manually, or choose to delete it automatically using the controls on this page. </p>
+    <p> Product Image </p>
+    <p> Saving to Web & App Activity </p>
+    <p> Auto-delete (18 months) </p>
+    <p> Google protects your privacy and security. </p>
+    <p> Manage My Activity verification </p>
+    <p> Jump to date </p>
+    <p> Filter by product </p>
+    <p> Delete </p>
+    <p> Delete menu </p>
+    <p> Delete today </p>
+    <p> Delete custom range </p>
+    <p> Delete all time </p>
+    <p> Auto-delete </p>
+    <p> Today </p>
+    <p> Delete all activity from Today. </p>
+    <p> Some activity may not appear yet </p>
+    <p> Card showing an activity from Maps </p>
+    <p> Logo for Maps </p>
+    <p> Maps </p>
+    <p> Delete activity item Viewed area around United States </p>
+    <p> Viewed area around United States </p>
+    <p> 8:34 PM •  </p>
+    <p> Open details of activity "Viewed area around United States" </p>
+    <p> Card showing an activity from Maps </p>
+    <p> Logo for Maps </p>
+    <p> Maps </p>
+    <p> Delete activity item Maps </p> </div>
+
+    <div id=3 class='' description='Saving to Web & App Activity,Viewed area around United States,Image of the activity item “Viewed area around United States“.' enabled> History
+    <p> The Maps activity you keep is used to improve your experience. You can see your activity, delete it manually, or choose to delete it automatically using the controls on this page. </p>
+    <p> Product Image </p>
+    <p> Saving to Web & App Activity </p>
+    <p> Auto-delete (18 months) </p>
+    <p> Google protects your privacy and security. </p>
+    <p> Manage My Activity verification </p>
+    <p> Jump to date </p>
+    <p> Filter by product </p>
+    <p> Delete </p>
+    <p> Delete menu </p>
+    <p> Delete today </p>
+    <p> Delete custom range </p>
+    <p> Delete all time </p>
+    <p> Auto-delete </p>
+    <p> Today </p>
+    <p> Delete all activity from Today. </p>
+    <p> Some activity may not appear yet </p>
+    <p> Card showing an activity from Maps </p>
+    <p> Logo for Maps </p>
+    <p> Maps </p>
+    <p> Delete activity item Viewed area around United States </p>
+    <p> Viewed area around United States </p>
+    <p> 8:34 PM •  </p>
+    <p> Open details of activity "Viewed area around United States" </p>
+    <p> Card showing an activity from Maps </p>
+    <p> Logo for Maps </p>
+    <p> Maps </p>
+    <p> Delete activity item Maps </p> </div>
+
+    <div id=4 class=''  enabled> Card showing an activity from Maps
+    <p> Logo for Maps </p>
+    <p> Maps </p>
+    <p> Delete activity item Maps </p> </div>
+
+    <div id=5 class=''  enabled> Delete activity item Maps </div>
+
+    <div id=6 class=''  enabled> Logo for Maps </div>
+
+    <div id=7 class='' description='Viewed area around United States,Image of the activity item “Viewed area around United States“.' enabled> Card showing an activity from Maps
+    <p> Logo for Maps </p>
+    <p> Maps </p>
+    <p> Delete activity item Viewed area around United States </p>
+    <p> Viewed area around United States </p>
+    <p> 8:34 PM •  </p>
+    <p> Open details of activity "Viewed area around United States" </p> </div>
+
+    <div id=8 class='' description='Image of the activity item “Viewed area around United States“.' enabled>  </div>
+
+    <div id=9 class=''  enabled> Open details of activity "Viewed area around United States" </div>
+
+    <div id=10 class='' description='Viewed area around United States' enabled> Viewed area around United States </div>
+
+    <div id=11 class=''  enabled> Delete activity item Viewed area around United States </div>
+
+    <div id=12 class=''  enabled> Logo for Maps </div>
+
+    <div id=13 class=''  enabled> Delete all activity from Today. </div>
+
+    <div id=14 class=''  enabled> Delete menu
+    <p> Delete today </p>
+    <p> Delete custom range </p>
+    <p> Delete all time </p>
+    <p> Auto-delete </p> </div>
+
+    <div id=15 class=''  enabled> Auto-delete </div>
+
+    <div id=16 class=''  enabled> Delete all time </div>
+
+    <div id=17 class=''  enabled> Delete custom range </div>
+
+    <div id=18 class=''  enabled> Delete today </div>
+
+    <div id=19 class=''  enabled> Delete </div>
+
+    <div id=20 class=''  enabled> Filter by product </div>
+
+    <div id=21 class=''  enabled> Jump to date </div>
+
+    <div id=22 class=''  enabled> Manage My Activity verification </div>
+
+    <div id=23 class=''  enabled> Auto-delete (18 months) </div>
+
+    <div id=24 class='' description='Saving to Web & App Activity' enabled> Saving to Web & App Activity </div>
+
+    <div id=25 class=''  enabled> Product Image </div>
+
+    <div id=26 class='xid('moreTabId')'  enabled> More </div>
+
+    <div id=27 class='xid('controlsTabId')'  enabled> Controls </div>
+
+    <div id=28 class='xid('historyTabId')'  enabled> History </div>
+ </div>

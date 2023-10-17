@@ -1,3 +1,4 @@
+import json
 from pynput import keyboard
 import argparse
 import shutil
@@ -32,7 +33,10 @@ def demo() -> Union[str, Response]:
     global TASK, STATUS, INDEX, COMPUTATIONAL_GRAPH, GRAPH_ACTION
     screen = Screen(INDEX)
     screen.update(request=request.form)
+    while screen.semantic_info_list == []:
+        return Response("0")
     print("INDEX", INDEX)
+    # return {'node_id': 1, 'trail': '[0,0]', 'action_type': 'text', 'text': 'tsinghua', 'ori_absolute_id': 'android.widget.FrameLayout|0;android.widget.LinearLayout|0;android.widget.FrameLayout|0;android.widget.LinearLayout|0;android.widget.FrameLayout|0;android.view.ViewGroup|0;android.view.ViewGroup|1;android.widget.FrameLayout|0;android.widget.FrameLayout|0;android.widget.LinearLayout|0;android.widget.FrameLayout|0;android.widget.LinearLayout|0;android.widget.FrameLayout|0;android.widget.LinearLayout|0;android.widget.EditText'}
     if STATUS == "start":
         STATUS = "running"
         model = Model(screen=screen, description=TASK,
@@ -40,7 +44,7 @@ def demo() -> Union[str, Response]:
         COMPUTATIONAL_GRAPH.append(model)
         print("work")
         result, work_status = model.work(ACTION_TRACE=ACTION_TRACE)
-
+        model.final_result = result
         if work_status == "wrong":
             if MODE == "normal":
                 STATUS = "backtracking"
@@ -65,6 +69,13 @@ def demo() -> Union[str, Response]:
         else:
             return Response("Task failed.")
     if STATUS == "backtracking":
+        all_text_uploaded = screen.page_root.generate_all_text()
+        for index, step in enumerate(COMPUTATIONAL_GRAPH):
+            if step.screen.page_root.generate_all_text() == all_text_uploaded:
+                if index == INDEX-1:
+                    continue
+                else:
+                    return step.final_result
         INDEX -= 1
         res, act = COMPUTATIONAL_GRAPH[INDEX].feedback_module.feedback(
             COMPUTATIONAL_GRAPH[INDEX].wrong_reason)
@@ -76,7 +87,8 @@ def demo() -> Union[str, Response]:
         if res is not None:
             COMPUTATIONAL_GRAPH = COMPUTATIONAL_GRAPH[:INDEX+1]
             result, work_status = COMPUTATIONAL_GRAPH[INDEX].work(
-                ACTION_TRACE=ACTION_TRACE)
+                ACTION_TRACE=ACTION_TRACE, flag="debug")
+            COMPUTATIONAL_GRAPH[INDEX].final_result = result
             if work_status == "wrong":
                 if MODE == "normal":
                     STATUS = "backtracking"
@@ -112,6 +124,9 @@ def demo() -> Union[str, Response]:
 
 
 def save_to_file(task_name):
+    global ACTION_TRACE
+    with open(os.path.join(os.path.dirname(__file__), "logs/final.json"), 'w', encoding="utf-8") as f:
+        json.dump(ACTION_TRACE, f, ensure_ascii=False, indent=4)
     task_name = task_name.replace(" ", "_")
     if not os.path.exists("./Shots/{}".format(task_name)):
         os.makedirs("./Shots/{}".format(task_name))
@@ -138,7 +153,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")
     parser.add_argument("--task", type=str, help="Specify the TASK parameter",
-                        default="View data usage of 'T-mobile' on this phone")
+                        default="Delete all my LOCATION History in Google Maps")
     parser.add_argument("--mode", type=str, choices=["normal", "preserve"],
                         default="normal", help="Specify the mode: 'normal' or 'preserve'")
     args = parser.parse_args()

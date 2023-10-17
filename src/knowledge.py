@@ -7,6 +7,8 @@ from langchain.vectorstores import FAISS
 from langchain.document_loaders.csv_loader import CSVLoader
 import openai
 
+from src.utility import get_top_combined_similarities, get_top_similarities
+
 OPENAI_KEY = os.getenv('OPENAI_API_KEY')
 
 
@@ -18,7 +20,7 @@ class KnowledgeBase:
 class PageJump_KB(KnowledgeBase):
     def __init__(self, database):
         super().__init__(database)
-        loader = CSVLoader(file_path='src/KB/pagejump.csv', csv_args={
+        loader = CSVLoader(file_path='src/KB/pagejump/pagejump.csv', csv_args={
             'delimiter': ',',
             'quotechar': '"',
             'fieldnames': ['Origin', 'Edge', 'Destination', "Description"]
@@ -62,75 +64,59 @@ class PageJump_KB(KnowledgeBase):
 
 class Task_KB(KnowledgeBase):
     def __init__(self):
-        self.tasks = []
-        self.similar_tasks = []
-        self.similar_traces = []
-        with open(os.path.join(os.path.dirname(__file__), 'KB/task.json'), 'r', encoding="utf-8") as f:
-            self.task_json = json.load(f)
-        self.tasks = self.task_json.keys()
-        self.embeddings = OpenAIEmbeddings(
-            client="GUI_LLM", openai_api_key=OPENAI_KEY)
-        self.db = FAISS.from_texts(self.tasks, self.embeddings)
-
-    def update_datas(self, new_task):
-        self.tasks += new_task
-        self.db.add_documents(new_task)
+        pass
 
     def find_most_similar_tasks(self, query):
-        docs = self.db.similarity_search_with_score(query)
-        print(docs)
-        for i in range(len(docs)):
-            self.similar_tasks.append(docs[i][0].page_content)
-            self.similar_traces.append(self.task_json[docs[i][0].page_content])
-
-        return self.similar_tasks, self.similar_traces
+        result = get_top_similarities(s=query, csv_file=os.path.join(
+            os.path.dirname(__file__), 'KB/task/task.csv'), k=5, field="Task")
+        similar_task, similar_trace = zip(
+            *[(i["Task"], i["Trace"]) for i in result])
+        return similar_task, similar_trace
 
 
 class Error_KB(KnowledgeBase):
     def __init__(self):
-        self.tasks = []
-        self.traces = []
-        self.new_screens = []
-        self.reasons = []
-        with open(os.path.join(os.path.dirname(__file__), 'KB/errors.csv'), 'r', encoding="utf-8") as f:
-            for line in f.readlines():
-                if line.startswith("Task"):
-                    continue
-                self.tasks.append(line.split(",")[0])
-                self.traces.append(line.split(",")[1])
-                self.new_screens.append(line.split(",")[2])
-                self.reasons.append(line.split(",")[3])
-
-        self.embeddings = OpenAIEmbeddings(
-            client="GUI_LLM", openai_api_key=OPENAI_KEY)
-        self.db = FAISS.from_texts(
-            [j+"<EnS>"+k for j, k in zip(self.tasks, self.traces)], self.embeddings)
-
-    def update_datas(self, new_task, new_trace, new_screen, new_reason):
-        self.tasks += new_task
-        self.traces += new_trace
-        self.new_screens += new_screen
-        self.reasons += new_reason
-        self.db.add_documents(new_task+"<EnS>"+new_trace)
+        pass
 
     def find_experiences(self, query):
-        docs = self.db.similarity_search_with_score(query)
-        print(docs)
-        self.experiences = []
-        for i in range(len(docs)):
-            # self.similar_tasks.append(docs[i][0].page_content)
-            # self.similar_traces.append(self.task_json[docs[i][0].page_content])
-            # print("内容", docs[i][0].page_content)
-            # print("分数", docs[i][1])
-            # 综合二者找到对应的下标,根据分割得到的task和trace
-            task, trace = docs[i][0].page_content.split("<EnS>")
-            # 综合二者找到对应的下标
-            index = self.tasks.index(task)
-            self.experiences.append(
-                {"task": task, "trace": trace, "new_screen": self.new_screens[index], "reason": self.reasons[index]})
-        return self.experiences
+        result = get_top_combined_similarities(queries=query, csv_file=os.path.join(
+            os.path.dirname(__file__), 'KB/error/error.csv'), k=5, fields=["Task", "Knowledge"])
+        if result:
+            task, knowledge = zip(
+                *[(i["Task"], i["Trace"]) for i in result])
+            return task, knowledge
+        else:
+            return None, None
 
-        return self.similar_tasks, self.similar_traces
+
+class Decision_KB(KnowledgeBase):
+    def __init__(self):
+        pass
+
+    def find_experiences(self, query):
+        result = get_top_combined_similarities(queries=query, csv_file=os.path.join(
+            os.path.dirname(__file__), 'KB/decision/decision.csv'), k=5, fields=["Task", "Knowledge"])
+        if result:
+            task, knowledge = zip(
+                *[(i["Task"], i["Trace"]) for i in result])
+            return task, knowledge
+        else:
+            return None, None
+
+
+class Selection_KB(KnowledgeBase):
+    def __init__(self):
+        pass
+
+    def find_experiences(self, query):
+        result = get_top_combined_similarities(queries=query, csv_file=os.path.join(
+            os.path.dirname(__file__), 'KB/selection/selection.csv'), k=5, fields=["Task", "Knowledge"])
+        if result:
+            task, knowledge = zip(
+                *[(i["Task"], i["Trace"]) for i in result])
+            return task, knowledge
+        else:
+            return None, None
 
 
 if __name__ == "__main__":

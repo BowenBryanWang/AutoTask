@@ -8,45 +8,113 @@ import spacy
 import pandas as pd
 import pickle
 import os
+import numpy as np
+from typing import List, Tuple, Any
+
 
 nlp = spacy.load("en_core_web_md")
 
 
-def cache_decorator():
-    def wrapper(function):
-        def wrapped_function(*args, **kwargs):
-            csv_file = args[1]
-            cache_file = args[2]
-            if not os.path.exists(cache_file):
-                result = function(*args, **kwargs)
-                with open(cache_file, 'wb') as f:
-                    pickle.dump(result, f)
-                return result
-            else:
-                with open(cache_file, 'rb') as f:
-                    return pickle.load(f)
-        return wrapped_function
-    return wrapper
+def cache_decorator(function):
+    def wrapped_function(*args, **kwargs):
+        cache_file = kwargs['cache_file']
+
+        if not os.path.exists(cache_file):
+            result = function(*args, **kwargs)
+            with open(cache_file, 'wb') as f:
+                pickle.dump(result, f)
+            return result
+        else:
+            with open(cache_file, 'rb') as f:
+                return pickle.load(f)
+    return wrapped_function
 
 
-@cache_decorator()
-def get_vectors_from_csv(csv_file="", cache_file="", field=""):
+@cache_decorator
+def get_vectors_from_csv(csv_file: str, cache_file: str, field: str) -> Tuple[Any, List[Any]]:
     df = pd.read_csv(csv_file)
     database_texts = df[field].tolist()
     vectors = [nlp(text).vector for text in database_texts]
-    return database_texts, vectors
+    return df, vectors  # Return the entire DataFrame
 
 
-def get_top_similarities(s, csv_file, k, field):
+def get_top_similarities(s: str, csv_file: str, k: int, field: str) -> List[Any]:
     cache_file = csv_file.replace(".csv", "_"+field+".pickle")
-    database_texts, database_vectors = get_vectors_from_csv(
+    df, database_vectors = get_vectors_from_csv(
         csv_file=csv_file, cache_file=cache_file, field=field)
+    database_texts = df[field].tolist()
     s_vector = nlp(s).vector
-    similarities = [(text, s_vector.dot(vector))
-                    for text, vector in zip(database_texts, database_vectors)]
-    sorted_texts = [text for text, _ in sorted(
+    similarities = [(row, np.dot(s_vector, vector) / (np.linalg.norm(s_vector) * np.linalg.norm(vector)))
+                    for row, vector in zip(df.to_dict(orient='records'), database_vectors)]
+    sorted_rows = [row for row, _ in sorted(
         similarities, key=lambda x: x[1], reverse=True)[:k]]
-    return sorted_texts
+    return sorted_rows  # Returns top-k rows with all fields
+
+
+def get_top_combined_similarities(queries, csv_file, k, fields):
+    if len(queries) != len(fields):
+        raise ValueError(
+            "The length of 'queries' and 'fields' must be the same.")
+
+    database_vectors_list = []
+    for field in fields:
+        cache_file = csv_file.replace(".csv", "_" + field + ".pickle")
+        df, database_vectors = get_vectors_from_csv(
+            csv_file=csv_file, cache_file=cache_file, field=field)
+        database_vectors_list.append(database_vectors)
+
+    # Calculate similarity vectors for each query
+    similarity_vectors = [nlp(query).vector for query in queries]
+
+    combined_similarities = []
+    for index, row in enumerate(df.to_dict(orient='records')):
+        product_similarity = 1
+        for sim_vector, db_vectors in zip(similarity_vectors, database_vectors_list):
+            product_similarity *= sim_vector.dot(db_vectors[index]) / (
+                np.linalg.norm(sim_vector) * np.linalg.norm(db_vectors[index]))
+        combined_similarities.append((row, product_similarity))
+
+    sorted_rows = [row for row, _ in sorted(
+        combined_similarities, key=lambda x: x[1], reverse=True)[:k]]
+
+    return sorted_rows  # Returns top-k rows with all fields based on combined similarity
+
+
+def get_top_combined_similarities_group(queries, csv_file, k, fields):
+
+    database_vectors_list = []
+    for field in fields:
+        cache_file = csv_file.replace(".csv", "_" + field + ".pickle")
+        df, database_vectors = get_vectors_from_csv(
+            csv_file=csv_file, cache_file=cache_file, field=field)
+        database_vectors_list.append(database_vectors)
+
+    # Calculate similarity vectors for each query
+    similarity_vectors = [[nlp(query[0]).vector, nlp(
+        query[1]).vector] for query in queries]
+
+    top_results = []
+
+    for query_set in similarity_vectors:
+        if len(query_set) != len(fields):
+            raise ValueError(
+                "Each query set must have the same length as 'fields'.")
+        # Calculate similarity vectors for each query in the set
+        combined_similarities = []
+        for index, row in enumerate(df.to_dict(orient='records')):
+            product_similarity = 1
+            for sim_vector, db_vectors in zip(query_set, database_vectors_list):
+                product_similarity *= sim_vector.dot(db_vectors[index]) / (
+                    np.linalg.norm(sim_vector) * np.linalg.norm(db_vectors[index]))
+            combined_similarities.append((row, product_similarity))
+
+        sorted_rows = sorted(
+            combined_similarities, key=lambda x: x[1], reverse=True)[:1]
+        if sorted_rows[0][1] > 0.95:
+            top_results.append(sorted_rows[0][0])
+        else:
+            top_results.append("Not found")
+    return top_results
 
 
 def persist_to_file(file_name, use_cache=True):
@@ -156,6 +224,7 @@ Think step by step and then output the predictions in a JSON formated like:
             "content": """Additionally,you are also given the [previous Action Trace] and the [current UI screen], which you can refer to and help you adjust the tutorial based on the real circumstance on UI.
 Previous Action:{}
 Current UI:{}
+Attention: you should pay attention to the ACTION_TRACE["ACTION"] and more, it conveys the user's actions till now,where some BACK action may occur indicating possible error, you should adjust your tutorial based on it.
                     """.format(previous_action, current_ui)
         }
     ]
@@ -208,7 +277,7 @@ i.e. (<div> Voice Search</div>:{"description":a voice input page for searching",
     ]
 
 
-def Task_UI_grounding_prompt(task, current_path_str, similar_tasks, similar_traces, predicted_step, semantic_info_list, next_comp):
+def Task_UI_grounding_prompt(task, current_path_str, similar_tasks, similar_traces, predicted_step, semantic_info_list, next_comp, Knowledge):
     return [
         {
             "role": "system",
@@ -218,8 +287,8 @@ Only guiding by your knowledge is irreliable , so you are give two kinds of grou
 2, current extended UI screen, which contains the components of current UI screen and their corresponding interaction results.
 Basically the tutorial represents how to do the task conceptually without grounding and the UI screen represents the ground-truth. You need to conbine them, thus build a connection between them.
 Finnaly, your job is to rate the available options on the current page based on your grounding. For each option, provide a confidence rating from 1.0-10.0, where 1.0 indicates 'definitely no' and 5.0 indicates 'normal' and 10.0 indicates 'most likely'
-Note that your scoring should be diverse between all of them, avoid giving same scores to some of them in case of identication. Because we need to select the top one.
 
+Follow steps below:
 Step 1: Think step by step about how there two kinds of knowlegde lead you to score each UI element.
 Step 2: Output a JSON object with scores and reasoning. The structure should be: {"score": [], "reason": []}
 Example:
@@ -236,20 +305,31 @@ Example:
 Current path: {}.
 Examples:{}
 Estimated tutorial: {}
+These tutorials serve as hints, they are not absolutely right and may be subjective so do not score all by them.
 Current UI:
 '''HTML
 {}
 '''
 Successive results of current UI:
 {}
+REMEMBER always give Back buttons like "Navigate up" the score of 1.0, they are not allowed to perform.
+NOTE that your scoring should be diverse between all of them, avoid giving same scores to some of them in case of identication.
+DO not assign 1.0 to all other components, don't be that absolute.
 """.format(
-                    task,
-                    current_path_str,
-                    [j+":"+"=>".join(k) for j, k in zip(
-                        similar_tasks, similar_traces)],
-                    predicted_step,
-                    "".join(semantic_info_list),
-                    next_comp)
+                task,
+                current_path_str,
+                [j+":"+"=>".join(k) for j, k in zip(
+                    similar_tasks, similar_traces)],
+                predicted_step,
+                "".join(semantic_info_list),
+                next_comp
+            )
+        }, {
+            "role": "user",
+            "content": """Knowledge:
+{}
+These are knowledge accumulated form previous task execution iterations, you should think step by step about how these would guide you to score each components.
+""".format(Knowledge)
         }]
 
 
@@ -282,7 +362,7 @@ Top Candidate:{}""".format(task, page_description, node_selected)
     ]
 
 
-def decide_prompt(task, ACTION_TRACE, semantic_info):
+def decide_prompt(task, ACTION_TRACE, semantic_info, Knowledge):
     return [{
             "role": "system",
             "content": """You are a professor with in-depth knowledge of User Interface (UI) tasks and their action traces. You are assigned a specific UI task along with an action trace. Your task is to evaluate if the action trace aligns with the assigned task, categorizing the trace as:
@@ -340,7 +420,15 @@ Based on the provided information, the user should continue their actions to sea
             "content": """Task:{}
 Action trace:{}
 Latest Page:{}
+Especially, [] means it's empty in the latest page and cannot go on.
 """.format(task, ACTION_TRACE, semantic_info)
+    },
+        {
+        "role": "user",
+            "content": """Knowledge:
+{}
+These are knowledge accumulated form previous task execution iterations, you should think step by step about how these would guide you to score each components.
+""".format(Knowledge)
     }]
 
 

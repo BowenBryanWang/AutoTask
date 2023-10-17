@@ -1,0 +1,18 @@
+<div id=1 class='' > Chat </div>
+<div id=2 class='' > Notifications
+    <p> Off </p> </div>
+<div id=3 class='' > Electric vehicle settings </div>
+<div id=4 class='' > Maps history </div>
+<div id=5 class='' > Location accuracy tips </div>
+<div id=6 class='' > Accessibility settings </div>
+<div id=7 class='' > Personal content </div>
+<div id=8 class='' > Google location settings </div>
+<div id=9 class='' > Pinned trips settings </div>
+<div id=10 class='' > Video settings </div>
+<div id=11 class='' > Edit home or work </div>
+<div id=12 class='' > Wi‑Fi only
+    <switch id=13 class='com.google.android.apps.maps:id/switchWidget' clickable> Off </switch>
+ </div>
+<div id=14 class='' > Offline maps settings </div>
+<p class='com.google.android.apps.maps:id/title' > Settings </p>
+<div id=15 class='com.google.android.apps.maps:id/nav_button' description='Navigate up' enabled>  </div>
