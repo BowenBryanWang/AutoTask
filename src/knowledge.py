@@ -18,7 +18,7 @@ class KnowledgeBase:
 class PageJump_KB(KnowledgeBase):
     def __init__(self, database):
         super().__init__(database)
-        loader = CSVLoader(file_path='src/KB/pagejump.csv', csv_args={
+        loader = CSVLoader(file_path='src/KB/pagejump.csv', encoding="utf-8", csv_args={
             'delimiter': ',',
             'quotechar': '"',
             'fieldnames': ['Origin', 'Edge', 'Destination', "Description"]

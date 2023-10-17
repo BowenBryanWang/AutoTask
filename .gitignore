@@ -12,3 +12,4 @@ page/__pycache__/
 page/static/
 src/__pycache__
 Shots/
+venv/

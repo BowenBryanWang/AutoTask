@@ -10,6 +10,7 @@ from src.model import Model
 from page.init import Screen
 from page.WindowStructure import *
 from page.NodeDescriberManager import *
+from src.utility import GPT
 
 
 app = Flask(__name__)
@@ -18,11 +19,16 @@ TASK = ""
 MODE = ""
 STATUS = "stop"
 INDEX = 0
-
+ACTION_TRACE = {
+    "ACTION": [],
+    "ACTION_DESC": [],
+    "TRACE": [],
+    "TRACE_DESC": [],
+}
 
 @app.route('/demo', methods=['POST'])
 def demo() -> Union[str, Response]:
-    global TASK, STATUS
+    global TASK, STATUS, ACTION_TRACE
     screen = Screen(INDEX)
     screen.update(request=request.form)
 
@@ -31,6 +37,17 @@ def demo() -> Union[str, Response]:
     # 以下是你可能用到的成员变量
     print("Screen UI semantic elements:", screen.semantic_info)
     print("Screen UI semantic list 形式:", screen.semantic_info_list)
+
+    if STATUS == "start":
+        STATUS = "running"
+        model = Model(screen=screen, description=TASK)
+        prompt = paper_provided_prompt(model.task, ACTION_TRACE, model.screen.semantic_info_list)
+        result = GPT(prompt)
+        print(result)
+        return result
+    return Response("0")
+    
+
     # TODO：任务
     # 照抄论文中的prompt，然后把刚刚这些变量和用户任务TASK输入到GPT调用里面，得到返回结果后处理好，然后return掉即可。
     # GPT如何调用？已经写好接口，参考./src/Utility.py中的GPT函数，和./src/Utility.py中的GPT调用示例 Task_grounding()函数
@@ -114,8 +131,38 @@ def demo() -> Union[str, Response]:
 
     #         print("------------------------back--------------------------")
     #         return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}
-    return Response("0")
 
+def paper_provided_prompt(task, previous_action, current_ui):
+    return [
+        {
+            "role": "system",
+            "content": 
+"""
+Given a mobile screen and a question, provide the action based on the screen
+information.
+
+Available Actions:
+{"action_type": "click", "idx": <element_idx>}
+{"action_type": "type", "text": <text>}
+{"action_type": "navigate_home"}
+{"action_type": "navigate_back"}
+{"action_type": "scroll", "direction": "up"}
+{"action_type": "scroll", "direction": "down"}
+{"action_type": "scroll", "direction": "left"}
+{"action_type": "scroll", "direction": "right"}
+"""
+        },
+        {
+            "role": "user",
+            "content": 
+"""
+Previous Actions: {}
+Screen: {}
+Instruction: {}
+Think step by step, and output JSON format.
+""".format(previous_action, current_ui, task)
+        }
+    ]
 
 def save_to_file(task_name):
     task_name = task_name.replace(" ", "_")
