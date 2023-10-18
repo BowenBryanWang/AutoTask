@@ -9,3 +9,5 @@ opencv-python
 pydotplus
 tiktoken
 faiss-cpu
+pynput
+pandas

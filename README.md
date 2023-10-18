@@ -8,7 +8,7 @@
   (原理解释；手机端 Action Record 应用本质作用是抓手机屏幕数据，通过检测像素变化，当有较大程度的像素变化时，遍捕捉截图、无障碍数据 json 等发送请求到后端，二者可以在后端./page/data 下查看)
 
 ##后端（PC 端）
-
+- 安装自然语言处理的包 python -m spacy download en_core_web_md
 - 新建终端，使用 adb 工具依次查看如下步骤：
 - 1，adb devices --list 查看虚拟机是否链接
 - 2，adb reverse tcp:5002 tcp:5002，让虚拟机的 5002 端口转发到 PC 端的 5002 端口，从而使得虚拟机能够访问 PC 端的 5002 端口
