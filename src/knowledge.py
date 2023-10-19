@@ -69,9 +69,11 @@ class Task_KB(KnowledgeBase):
     def find_most_similar_tasks(self, query):
         result = get_top_similarities(s=query, csv_file=os.path.join(
             os.path.dirname(__file__), 'KB/task/task.csv'), k=5, field="Task")
-        similar_task, similar_trace = zip(
-            *[(i["Task"], i["Trace"]) for i in result])
-        return similar_task, similar_trace
+        if len(result) > 0:
+            similar_task, similar_trace = zip(
+                *[(i["Task"], i["Trace"]) for i in result])
+            return similar_task, similar_trace
+        return [], []
 
 
 class Error_KB(KnowledgeBase):

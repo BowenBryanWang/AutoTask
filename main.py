@@ -3,13 +3,29 @@ from pynput import keyboard
 import argparse
 import shutil
 import threading
-from flask import Response
+from flask import Response, jsonify
 from typing import Union
 from flask import Flask, request
 from src.model import Model
 
 from page.init import Screen
 from page.WindowStructure import *
+
+import logging
+
+import click
+
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+
+def secho(text, file=None, nl=None, err=None, color=None, **styles):
+    pass
+
+def echo(text, file=None, nl=None, err=None, color=None, **styles):
+    pass
+
+click.echo = echo
+click.secho = secho
 
 
 app = Flask(__name__)
@@ -26,6 +42,18 @@ ACTION_TRACE = {
     "TRACE": [],
     "TRACE_DESC": [],
 }
+
+force_load_count = 0
+@app.route('/heart_beat', methods=['POST'])
+def heat_beat():
+    global force_load_count
+    force_load = force_load_count >= 2
+    if force_load:
+        force_load_count = 0
+    return jsonify({
+        "state": 'success',
+        "force_load": force_load
+    })
 
 
 @app.route('/demo', methods=['POST'])
@@ -135,13 +163,15 @@ def save_to_file(task_name):
 
 
 def on_key_release(key):
-    global STATUS
+    global STATUS, force_load_count
     if key == keyboard.Key.enter:
         STATUS = "start"
         print("Task execution started!")
     elif key == keyboard.Key.delete:
         STATUS = "backtracking"
         print("Backtracking started!")
+    elif 'char' in key.__dict__ and key.char == 'l':
+        force_load_count += 1
 
 
 def keyboard_listener():

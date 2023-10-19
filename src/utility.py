@@ -110,7 +110,7 @@ def get_top_combined_similarities_group(queries, csv_file, k, fields):
 
         sorted_rows = sorted(
             combined_similarities, key=lambda x: x[1], reverse=True)[:1]
-        if sorted_rows[0][1] > 0.95:
+        if sorted_rows[0][1] > 0.999:
             top_results.append(sorted_rows[0][0])
         else:
             top_results.append("Not found")
