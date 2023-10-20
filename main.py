@@ -49,7 +49,7 @@ auto_load = False
 def heat_beat():
     global force_load_count, auto_load
     if auto_load:
-        force_load_count += (2.0 / 3.0) # 前端每1秒发送一次，预计等待3秒 
+        force_load_count += (2.0 / 5.0) # 前端每1秒发送一次，预计等待3秒 
     force_load = force_load_count >= 2
     if force_load:
         force_load_count = 0
@@ -182,11 +182,14 @@ def on_key_release(key):
     if key == keyboard.Key.enter:
         STATUS = "start"
         print("Task execution started!")
-    elif key == keyboard.Key.delete:
-        STATUS = "backtracking"
-        print("Backtracking started!")
+    #elif key == keyboard.Key.delete:
+    #    STATUS = "backtracking"
+    #    print("Backtracking started!")
     elif 'char' in key.__dict__ and key.char == 'l':
-        force_load_count += 1
+        if key.char == 'l':
+            force_load_count += 1
+        else:
+            force_load_count = 0
 
 
 def keyboard_listener():
@@ -198,7 +201,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")
     parser.add_argument("--task", type=str, help="Specify the TASK parameter",
-                        default="Delete all my LOCATION History in Google Maps")
+                        default="Delete all the history that records where I have been in Google Maps")
     parser.add_argument("--mode", type=str, choices=["normal", "preserve"],
                         default="normal", help="Specify the mode: 'normal' or 'preserve'")
     args = parser.parse_args()

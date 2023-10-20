@@ -279,6 +279,10 @@ i.e. (<div> Voice Search</div>:{"description":a voice input page for searching",
 
 
 def Task_UI_grounding_prompt(task, current_path_str, similar_tasks, similar_traces, predicted_step, semantic_info_list, next_comp, Knowledge):
+    # Follow steps below:
+    # Step 1: Think step by step about how there two kinds of knowlegde lead you to score the UI elements.
+    # Step 2: Output a JSON object with scores and reasoning. 
+    
     return [
         {
             "role": "system",
@@ -288,14 +292,12 @@ Only guiding by your knowledge is irreliable , so you are give two kinds of grou
 2, current extended UI screen, which contains the components of current UI screen and their corresponding interaction results.
 Basically the tutorial represents how to do the task conceptually without grounding and the UI screen represents the ground-truth. You need to conbine them, thus build a connection between them.
 Finnaly, your job is to rate the available options on the current page based on your grounding. For each option, provide a confidence rating from 1.0-10.0, where 1.0 indicates 'definitely no' and 5.0 indicates 'normal' and 10.0 indicates 'most likely'
-Note that you should only output elements with ratings >= 2.
-Follow steps below:
-Step 1: Think step by step about how there two kinds of knowlegde lead you to score each UI element.
-Step 2: Output a JSON object with scores and reasoning. The structure should be: {"id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value), and "<rating>" denotes its rating. Your result should only contains elements with a rating >= 2.
+Note that you should only output elements with ratings >= 3.
+The structure of the output should be: {"id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value), and "<rating>" denotes its rating. If the rating of an element is less than 3.0, you should not display it in the final result.
 Example:
 {
-    "id_2": 9.5, "id_5": 9.0, "id_11": 2.1 
-]
+    "id_2": 9.5, "id_5": 9.0, "id_11": 3.5
+}
 """
         },
         {

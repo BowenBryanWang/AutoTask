@@ -271,7 +271,7 @@ class UINode:
                     relation.append((res["nodes"][i], res["nodes"][j]))
                 elif res["nodes"][i] and res["nodes"][j] and res["info"][i] == res["info"][j] and res["nodes"][i].bound == res["nodes"][j].bound:
                     res["nodes"][j] = None
-        res["nodes"] = [node for node in res["nodes"] if node is not None]
+        res["nodes"] = [node for node in res["nodes"][::-1] if node is not None]
         return res, relation
 
     def common_ancestor(self, other1, other2):
