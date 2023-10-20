@@ -44,19 +44,34 @@ ACTION_TRACE = {
 }
 
 force_load_count = 0
+auto_load = False
 @app.route('/heart_beat', methods=['POST'])
 def heat_beat():
-    global force_load_count
+    global force_load_count, auto_load
+    if auto_load:
+        force_load_count += (2.0 / 3.0) # 前端每1秒发送一次，预计等待3秒 
     force_load = force_load_count >= 2
     if force_load:
         force_load_count = 0
+        auto_load = False
     return jsonify({
         "state": 'success',
         "force_load": force_load
     })
 
 
+def wait_and_load_decorator(function):
+    global auto_load
+    def wrapped_function(*args, **kwargs):
+        global auto_load
+        result = function(*args, **kwargs)
+        if isinstance(result, dict) and 'action_type' in result:
+            auto_load = True
+        return result
+    return wrapped_function
+
 @app.route('/demo', methods=['POST'])
+@wait_and_load_decorator
 def demo() -> Union[str, Response]:
     global TASK, STATUS, INDEX, COMPUTATIONAL_GRAPH, GRAPH_ACTION
     screen = Screen(INDEX)

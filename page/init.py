@@ -14,10 +14,20 @@ from page.WindowStructure import PageInstance
 from page.process import transfer_2_html
 
 
+
 class Screen:
     """
     Represents a screen for UI analysis.
     """
+
+    @staticmethod
+    def process_layout(root):
+        # 删除所有不可见的元素
+        if 'node' in root:
+            if isinstance(root['node'], dict):
+                root['node'] = [root['node']]
+            root['node'] = [Screen.process_layout(x) for x in root['node'] if ('@visible' not in x or x['@visible'])]
+        return root
 
     def __init__(self, cnt=0) -> None:
         """
@@ -54,7 +64,9 @@ class Screen:
         self.layout = request['layout']
         self.imgdata = base64.b64decode(self.screenshot)
         self.page_instance = PageInstance()
-        self.page_instance.load_from_dict("", json.loads(self.layout))
+        layout_json = json.loads(self.layout)
+        layout_json = Screen.process_layout(layout_json)
+        self.page_instance.load_from_dict("", layout_json)
         self.page_root = self.page_instance.ui_root
         print("all_text", self.page_root.generate_all_text())
         self.semantic_nodes, relation = self.page_root.get_all_semantic_nodes()

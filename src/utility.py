@@ -180,8 +180,9 @@ def GPT(prompt):
     while True:
         try:
             result = chat(prompt=prompt)
-            result_json = json.loads(
-                result[result.find("{"):result.rfind("}")+1])
+            json_res = result[result.find("{"):result.rfind("}")+1]
+            json_res = json_res.replace('\\', '\\\\')
+            result_json = json.loads(json_res)
             return result_json
         except Exception as e:
             print(e)

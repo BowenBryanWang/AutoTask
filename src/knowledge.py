@@ -25,7 +25,10 @@ class PageJump_KB(KnowledgeBase):
             'quotechar': '"',
             'fieldnames': ['Origin', 'Edge', 'Destination', "Description"]
         })
-        self.data = loader.load()
+        try:
+            self.data = loader.load()
+        except:
+            self.data = []
         self.edge_data = copy.deepcopy(self.data)
         self.origin_data = copy.deepcopy(self.data)
         for i in range(len(self.data)):
