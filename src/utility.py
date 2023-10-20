@@ -288,15 +288,13 @@ Only guiding by your knowledge is irreliable , so you are give two kinds of grou
 2, current extended UI screen, which contains the components of current UI screen and their corresponding interaction results.
 Basically the tutorial represents how to do the task conceptually without grounding and the UI screen represents the ground-truth. You need to conbine them, thus build a connection between them.
 Finnaly, your job is to rate the available options on the current page based on your grounding. For each option, provide a confidence rating from 1.0-10.0, where 1.0 indicates 'definitely no' and 5.0 indicates 'normal' and 10.0 indicates 'most likely'
-
+Note that you should only output elements with ratings >= 2.
 Follow steps below:
 Step 1: Think step by step about how there two kinds of knowlegde lead you to score each UI element.
-Step 2: Output a JSON object with scores and reasoning. The structure should be: {"score": [], "reason": []}
+Step 2: Output a JSON object with scores and reasoning. The structure should be: {"id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value), and "<rating>" denotes its rating. Your result should only contains elements with a rating >= 2.
 Example:
 {
-"score": [9.6, 6.5, 4.0, 1.0, 2.7,...] (for each UI element),
-"reason": [
-"...","...","...","...","...",... (for each UI element)
+    "id_2": 9.5, "id_5": 9.0, "id_11": 2.1 
 ]
 """
         },
@@ -315,7 +313,6 @@ Successive results of current UI:
 {}
 REMEMBER always give Back buttons like "Navigate up" the score of 1.0, they are not allowed to perform.
 NOTE that your scoring should be diverse between all of them, avoid giving same scores to some of them in case of identication.
-DO not assign 1.0 to all other components, don't be that absolute.
 """.format(
                 task,
                 current_path_str,

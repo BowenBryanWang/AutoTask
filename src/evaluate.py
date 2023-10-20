@@ -46,7 +46,15 @@ class Evaluate():
             query=[self.model.task, self.model.screen.page_description])
         resp = GPT(Task_UI_grounding_prompt(self.model.task, ACTION_TRACE["ACTION"], self.model.similar_tasks,
                                             self.model.similar_traces, self.model.predicted_step, self.model.screen.semantic_info_list, self.model.predict_module.comp_json, knowledge))
-        self.score, self.reason = np.array(resp["score"])/10, resp["reason"]
+        
+        # self.score, self.reason = np.array(resp["score"])/10, resp["reason"]
+        scores = [1.0 for x in self.model.screen.semantic_info_list if 'id=' in x]
+        for key, rating in resp.items():
+            if key.startswith('id_'):
+                idx = int(key[len('id_'):]) - 1
+                scores[idx] = rating
+        self.score, self.reason = np.array(scores) / 10, ["unknown"] * len(scores)
+        
         self.model.candidate_str = [item for index, item in enumerate(self.model.screen.semantic_info_list) if index in [
             i for i, score in enumerate(self.score) if score > 3.0] and "id=" in item]
         if self.weights == []:
