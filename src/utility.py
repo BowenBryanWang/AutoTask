@@ -362,12 +362,12 @@ Only guiding by your knowledge is irreliable , so you are give two kinds of grou
 1, the tutorial of how to fulfill the task, estimated through retriving the knowledge libraray and learned from similar tasks.
 2, current extended UI screen, which contains the components of current UI screen and their corresponding interaction results.
 Basically the tutorial represents how to do the task conceptually without grounding and the UI screen represents the ground-truth. You need to conbine them, thus build a connection between them.
-Finnaly, your job is to rate the available options on the current page based on your grounding. For each option, provide a confidence rating from 1.0-10.0, where 1.0 indicates 'definitely no' and 5.0 indicates 'normal' and 10.0 indicates 'most likely'
-Note that you should only output elements with ratings >= 3.
-The structure of the output should be: {"id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value), and "<rating>" denotes its rating. If the rating of an element is less than 3.0, you should not display it in the final result.
+Finnaly, your job is to rate the available options on the current page based on your grounding. For each option, provide a confidence rating from 1.00-10.00, where 1.00 indicates 'definitely no' and 10.00 indicates 'most likely'
+The structure of the output should be: {"id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value and iterate over all possible values), and "<rating>" denotes its rating.
+Your score should be accurate to two decimal places and must be distinctive. No two elements can have the same score.
 Example:
 {
-    "id_2": 9.5, "id_5": 9.0, "id_11": 3.5
+    "id_1": 9.53, "id_2": 9.71, "id_3": 3.20
 }
 """
         },
