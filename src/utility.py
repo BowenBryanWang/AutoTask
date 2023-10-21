@@ -175,12 +175,33 @@ def chat(prompt):
 
     return collected_messages
 
+def extract_json(input_string):
+    stack = []
+    json_start_positions = []
+
+    json_strings = []
+
+    for pos, char in enumerate(input_string):
+        if char in '{[':
+            stack.append(char)
+            if len(stack) == 1:
+                json_start_positions.append(pos)
+        elif char in '}]':
+            if len(stack) == 0:
+                raise ValueError("unexpected {} at position {}".format(pos, char))
+            last_open = stack.pop()
+            if (last_open == '{' and char != '}') or (last_open == '[' and char != ']'):
+                raise ValueError("mismatched brackets {} and {} at position {}".format(last_open, char, pos))
+            if len(stack) == 0:
+                json_strings.append(input_string[json_start_positions.pop():pos+1])
+    return json_strings
 
 def GPT(prompt, auto_correct_when_json_error=True):
     while True:
         try:
             result = chat(prompt=prompt)
-            json_res = result[result.find("{"):result.rfind("}")+1]
+            jsons = extract_json(result)
+            json_res = jsons[-1] # 只处理最后一个json
             if not auto_correct_when_json_error:
                 result_json = json.loads(json_res)
             else:
@@ -292,6 +313,42 @@ i.e. (<div> Voice Search</div>:{"description":a voice input page for searching",
     ]
 
 
+def UI_grounding_prompt_only_summary(predict_node):
+    return [
+        {
+            "role": "system",
+            "content": """You are an expert in User Interface (UI) automation. Your task is to describe the current page. You are given a list of UI components and their attributes. 
+1. Reason step-by-step about the short one-sentence description of the current page.
+2. Output the predictions in a JSON formated like:
+{
+"Page": "..."(One-sentence description of the current page),
+}
+"""
+        },
+        {
+            "role": "user",
+            "content": """
+<button id=1 class='com.whatsapp:id/home_tab_layout' description='Status'> Status </button>
+<button id=2 class='com.whatsapp:id/button'> Add Status </button>
+<button id=3 class='com.whatsapp:id/home_tab_layout' description='Community'>  </button>
+                    """
+        },
+        {
+            "role": "assistant",
+            "content": """
+{
+"Page": "Main interface of the WhatsApp application",
+}
+                    """
+        },
+        {
+            "role": "user",
+            "content": """
+                    {}
+                    """.format(predict_node)
+        }
+    ]
+
 def Task_UI_grounding_prompt(task, current_path_str, similar_tasks, similar_traces, predicted_step, semantic_info_list, next_comp, Knowledge):
     # Follow steps below:
     # Step 1: Think step by step about how there two kinds of knowlegde lead you to score the UI elements.
@@ -348,22 +405,27 @@ These are knowledge accumulated form previous task execution iterations, you sho
 
 
 def plan_prompt(task, page_description, node_selected):
+    action_names = ['click']
+    action_desc = ['clicking on a component (no text parameter needed)']
+    if 'editable' in node_selected and 'ineditable' not in node_selected:
+        action_names.append('edit')
+        action_desc.append('editing a component (you should also determine the text parameter)')
+
+    newline = '\n'
     return [
         {
             "role": "system",
             "content":
-                """You are an AI assistant specialized in UI Automation. Now you have successfully obtained the top UI component that are most likely to operate with based on user's intent. Now, you need to determine the action to be performed on it.
-There are two main types of actions:
-    1,clicking on a component (no text parameter needed)
-    2,editing a component (you should also determine the text parameter).
+                f"""You are an AI assistant specialized in UI Automation. Now you have successfully obtained the top UI component that are most likely to operate with based on user's intent. Now, you need to determine the action to be performed on it.
+There {'are' if len(action_desc) > 1 else 'is'} {len(action_desc)} main type{'s' if len(action_desc) > 1 else ''} of action{'s' if len(action_desc) > 1 else ''}:
+{newline.join([f'{idx+1}. {content}' for idx, content in enumerate(action_desc)])}
 For the top component, analyze the possible action to be taken and, if it involves an editing action, provide the corresponding text parameter as well.
 Reason step by step to provide the actions and text parameters for it based on the user's intent and the context of the current screen.
 Output a JSON object structured like
-{
-    "action": the action to be taken, either "click" or "edit",
+{{
+    "action": the action to be taken, {' or '.join(action_names)},
     "text": the text parameter for the action if any (Optional),
-    "reason": the reason,
-},
+}},
 """
         },
         {

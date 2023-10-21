@@ -1,5 +1,5 @@
 import json
-from src.utility import add_son_to_father, add_value_to_html_tag, get_top_combined_similarities_group, process_string
+from src.utility import UI_grounding_prompt_only_summary, add_son_to_father, add_value_to_html_tag, get_top_combined_similarities_group, process_string
 import copy
 import random
 import os
@@ -68,7 +68,7 @@ class Predict():
         indexs = [i for i, x in enumerate(predict_node) if x == "None"]
         predict_prompt = list(filter(lambda x: not any(
             [str(index+1) in x for index in indexs]), self.model.screen.semantic_info_list))
-        response_text = GPT(UI_grounding_prompt(predict_prompt))
+        response_text = GPT(UI_grounding_prompt_only_summary(predict_prompt))
         self.model.page_description = response_text["Page"]
         self.model.current_path.append("Page:"+self.model.page_description)
         for key, value in response_text.items():

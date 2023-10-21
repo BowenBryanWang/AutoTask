@@ -70,10 +70,13 @@ class Evaluate():
         top_index = np.argmax(self.score)
         self.model.node_selected = list(filter(
             lambda x: "id="+str(top_index+1) in x, self.model.screen.semantic_info_list))[0]
-        response = GPT(plan_prompt(self.model.task,
-                                   self.model.page_description, self.model.node_selected))
-        self.model.node_selected_action, self.model.node_selected_text = response.get(
-            "action"), response.get("text")
+        if 'editable' in self.model.node_selected and 'ineditable' not in self.model.node_selected:
+            response = GPT(plan_prompt(self.model.task,
+                                    self.model.page_description, self.model.node_selected))
+            self.model.node_selected_action, self.model.node_selected_text = response.get(
+                "action"), response.get("text")
+        else:
+            self.model.node_selected_action, self.model.node_selected_text = ('click', None)
         self.model.node_selected_id = int(
             self.model.node_selected.split("id=")[1].split(" ")[0])
         self.model.current_action = process_action_info(
