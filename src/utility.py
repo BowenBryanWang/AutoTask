@@ -176,17 +176,31 @@ def chat(prompt):
     return collected_messages
 
 
-def GPT(prompt):
+def GPT(prompt, auto_correct_when_json_error=True):
     while True:
         try:
             result = chat(prompt=prompt)
             json_res = result[result.find("{"):result.rfind("}")+1]
-            json_res = json_res.replace('\\', '\\\\')
-            result_json = json.loads(json_res)
+            if not auto_correct_when_json_error:
+                result_json = json.loads(json_res)
+            else:
+                try:
+                    result_json = json.loads(json_res)
+                except Exception as e:
+                    result_json = correct_json_format(json_str=json_res, error=e)
             return result_json
         except Exception as e:
             print(e)
             continue
+
+
+def correct_json_format(json_str, error):
+    prompt = [{
+        'role': 'system',
+        'content': f'the following string cannot be parsed as a JSON string due to the error: {str(error)}.\n\n{json_str}\n\nPlease correct its format error and output the correct JSON string. Do not output anything else.'
+    }]
+
+    return GPT(prompt, auto_correct_when_json_error=False)
 
 
 def process_action_info(action, params, node):

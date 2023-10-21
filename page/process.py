@@ -62,6 +62,7 @@ def transfer_2_html(semantic_nodes, relation: list[tuple]):
             html_components.append(html_element)
             real_comp.append(html_element)
         elif "EditText" in node.node_class:
+            temp = node.generate_all_semantic_info()
             if node.editable:
                 html_element = "<input id={} class='{}' {} {} editable > {} </input>\n".format(
                     len(real_comp)+1,
