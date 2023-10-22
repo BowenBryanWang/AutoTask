@@ -117,7 +117,7 @@ def demo() -> Union[str, Response]:
             return Response("Task failed.")
     if STATUS == "backtracking":
         all_text_uploaded = screen.page_root.generate_all_text()
-        for index, step in enumerate(COMPUTATIONAL_GRAPH):
+        for index, step in [x for x in enumerate(COMPUTATIONAL_GRAPH[:-1])][::-1]:
             if step.screen.page_root.generate_all_text() == all_text_uploaded:
                 if index == INDEX-1:
                     break
@@ -204,7 +204,7 @@ def keyboard_listener():
 
 
 if __name__ == "__main__":
-    default_cmd = 'show me the security details of the email from Quora Digest'
+    default_cmd = 'show me the security details of the email to 潘立航'
     
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")
