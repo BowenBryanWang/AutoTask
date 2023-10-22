@@ -39,10 +39,11 @@ class Predict():
         return wrapper
 
     def Task_grounding(self, ACTION_TRACE=None):
-        result = GPT(task_grounding_prompt(self.model.task,
-                     self.model.similar_tasks, self.model.similar_traces, ACTION_TRACE, self.model.screen.semantic_info_list))
-        self.model.predicted_step = result["result"]
-        print("predicted_step", self.model.predicted_step)
+        self.model.predicted_step = 'unknown'
+        # result = GPT(task_grounding_prompt(self.model.task,
+        #              self.model.similar_tasks, self.model.similar_traces, ACTION_TRACE, self.model.screen.semantic_info_list))
+        # self.model.predicted_step = result["result"]
+        # print("predicted_step", self.model.predicted_step)
 
     def UI_grounding(self):
         SEMANTIC_INFO = list(

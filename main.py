@@ -45,6 +45,8 @@ ACTION_TRACE = {
 
 force_load_count = 0
 auto_load = False
+listener_global = None
+
 @app.route('/heart_beat', methods=['POST'])
 def heat_beat():
     global force_load_count, auto_load
@@ -74,6 +76,8 @@ def wait_and_load_decorator(function):
 @wait_and_load_decorator
 def demo() -> Union[str, Response]:
     global TASK, STATUS, INDEX, COMPUTATIONAL_GRAPH, GRAPH_ACTION
+    if listener_global is not None:
+        listener_global.stop()
     screen = Screen(INDEX)
     screen.update(request=request.form)
     while screen.semantic_info_list == []:
@@ -170,7 +174,7 @@ def save_to_file(task_name):
     global ACTION_TRACE
     with open(os.path.join(os.path.dirname(__file__), "logs/final.json"), 'w', encoding="utf-8") as f:
         json.dump(ACTION_TRACE, f, ensure_ascii=False, indent=4)
-    task_name = task_name.replace(" ", "_")
+    task_name = task_name.replace(" ", "_").replace(":", '_')
     if not os.path.exists("./Shots/{}".format(task_name)):
         os.makedirs("./Shots/{}".format(task_name))
         shutil.move("./logs", "./Shots/{}".format(task_name))
@@ -193,15 +197,19 @@ def on_key_release(key):
 
 
 def keyboard_listener():
+    global listener_global
     with keyboard.Listener(on_release=on_key_release) as listener:
+        listener_global = listener
         listener.join()
 
 
 if __name__ == "__main__":
+    default_cmd = 'Save Alice White (18401653329) to contact'
+    
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")
     parser.add_argument("--task", type=str, help="Specify the TASK parameter",
-                        default="Delete all the history that records where I have been in Google Maps")
+                        default=default_cmd)
     parser.add_argument("--mode", type=str, choices=["normal", "preserve"],
                         default="normal", help="Specify the mode: 'normal' or 'preserve'")
     args = parser.parse_args()

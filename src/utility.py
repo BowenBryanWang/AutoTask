@@ -203,10 +203,10 @@ def GPT(prompt, auto_correct_when_json_error=True):
             jsons = extract_json(result)
             json_res = jsons[-1] # 只处理最后一个json
             if not auto_correct_when_json_error:
-                result_json = json.loads(json_res)
+                result_json = eval(json_res, {'true': True, 'false': False})
             else:
                 try:
-                    result_json = json.loads(json_res)
+                    result_json = eval(json_res, {'true': True, 'false': False})
                 except Exception as e:
                     result_json = correct_json_format(json_str=json_res, error=e)
             return result_json
@@ -350,34 +350,34 @@ def UI_grounding_prompt_only_summary(predict_node):
     ]
 
 def Task_UI_grounding_prompt(task, current_path_str, similar_tasks, similar_traces, predicted_step, semantic_info_list, next_comp, Knowledge):
-    # Follow steps below:
-    # Step 1: Think step by step about how there two kinds of knowlegde lead you to score the UI elements.
-    # Step 2: Output a JSON object with scores and reasoning. 
     
     return [
         {
             "role": "system",
             "content": """You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
-Only guiding by your knowledge is irreliable , so you are give two kinds of ground-truths, they are:
-1, the tutorial of how to fulfill the task, estimated through retriving the knowledge libraray and learned from similar tasks.
-2, current extended UI screen, which contains the components of current UI screen and their corresponding interaction results.
-Basically the tutorial represents how to do the task conceptually without grounding and the UI screen represents the ground-truth. You need to conbine them, thus build a connection between them.
-Finnaly, your job is to rate the available options on the current page based on your grounding. For each option, provide a confidence rating from 1.00-10.00, where 1.00 indicates 'definitely no' and 10.00 indicates 'most likely'
-The structure of the output should be: {"id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value and iterate over all possible values), and "<rating>" denotes its rating.
-Your score should be accurate to two decimal places and must be distinctive. No two elements can have the same score.
+Your job is to
+(1) summary what has been done and what should be done next.
+(2) choose the next UI element to be operated considering the user task, the history operation sequence, and the current UI. You should rate the available UI elements on the current page. For each option, provide a confidence rating from 1.00-10.00, where 1.00 indicates 'definitely no' and 10.00 indicates 'most likely'. The element with the largest rating will be choosen as the next element to be operated. Your score should be accurate to two decimal places and must be distinctive.
+The structure of the output should be: {
+    "finished_steps": [...],
+    "next_steps": [...],
+    "id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value and iterate over all possible values), and "<rating>" denotes its rating.
 Example:
 {
+    "finished_steps": ["Click('Alice')"]
+    "next_steps": ["Edit('hi')", "Click('Send')"]
     "id_1": 9.53, "id_2": 9.71, "id_3": 3.20
 }
+Follow steps below:
+Step 1: Think step by step about what has been done and what should be done next.
+Step 2: Output a JSON object with scores. 
 """
         },
         {
             "role": "user",
             "content": """Task: "{}".
-Current path: {}.
+History operation sequence: {}.
 Examples:{}
-Estimated tutorial: {}
-These tutorials serve as hints, they are not absolutely right and may be subjective so do not score all by them.
 Current UI:
 '''HTML
 {}
@@ -391,7 +391,6 @@ NOTE that your scoring should be diverse between all of them, avoid giving same 
                 current_path_str,
                 [j+":"+"=>".join(k) for j, k in zip(
                     similar_tasks, similar_traces)],
-                predicted_step,
                 "".join(semantic_info_list),
                 next_comp
             )
