@@ -51,7 +51,7 @@ listener_global = None
 def heat_beat():
     global force_load_count, auto_load
     if auto_load:
-        force_load_count += (2.0 / 5.0) # 前端每1秒发送一次，预计等待3秒 
+        force_load_count += (2.0 / 10.0) # 前端每1秒发送一次，预计等待10秒 
     force_load = force_load_count >= 2
     if force_load:
         force_load_count = 0
@@ -120,7 +120,7 @@ def demo() -> Union[str, Response]:
         for index, step in enumerate(COMPUTATIONAL_GRAPH):
             if step.screen.page_root.generate_all_text() == all_text_uploaded:
                 if index == INDEX-1:
-                    continue
+                    break
                 else:
                     return step.final_result
         INDEX -= 1
@@ -204,7 +204,7 @@ def keyboard_listener():
 
 
 if __name__ == "__main__":
-    default_cmd = 'Save Alice White (18401653329) to contact'
+    default_cmd = 'show me the security details of the email from Quora Digest'
     
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")

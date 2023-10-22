@@ -440,69 +440,33 @@ Top Candidate:{}""".format(task, page_description, node_selected)
 def decide_prompt(task, ACTION_TRACE, semantic_info, Knowledge):
     return [{
             "role": "system",
-            "content": """You are a professor with in-depth knowledge of User Interface (UI) tasks and their action traces. You are assigned a specific UI task along with an action trace. Your task is to evaluate if the action trace aligns with the assigned task, categorizing the trace as:
+            "content": """You are a professor with in-depth knowledge of User Interface (UI) tasks. You are assigned a specific UI task, a history operation sequence, and the current UI (which is the result of the operation sequence).
+Your task is to evaluate if the action trace aligns with the assigned task and if the current UI is related to the UI task. You should categorize the operation sequence as:
 1,completed: After the last action and based on the newest UI screen, the user's task is completed;
-2,wrong: After the last action and based on the newest UI screen, the action trace goes into a wrong branch and need to be corrected;
-3,go on: After the last action and based on the newest UI screen, the action trace is on the right track but not completed yet.
+2,wrong: After the last action and based on the newest UI screen, the operation sequence is not correct and the current UI is not related to the UI task;
+3,go on: After the last action and based on the newest UI screen, the operation sequence may be correct, the current UI is related to the UI task,  but the task has not been completed. Further Actions should be taken on the current (may also be the subsequent pages) UI page.
 Use the following steps to respond to user inputs. Fully restate each step before proceeding. i.e. "Step 1: Reason...".
-Step 1:Reason step-by-step about the relationship of the action trace  and UI task.
-Step 2:Reason step-by-step about whether the newest action leading to the newest UI screen is consistent with the UI task result.Decide whether the lastest action leads to a wrong branch and needs navigate back.
-Step 3:Output a JSON object structured like: {"status": "completed" or "wrong" or "go on", "reason": reason for the decision}."""
-            },
-            {
-            "role": "user",
-            "content": """
-Task: Add a new contact called Steven
-Action Trace: [Page]: Main interface of WhatsApp => [Action]: click on <button id=1 class='com.whatsapp:id/fab' description='New chat'>  </button> => [Page]: Adding new chat and invite friends
-Latest Page:
-<button id=1 class='' > INVITE </button>
-<button id=3 class='' description='Yellow'> Yellow </button>
-<button id=7 class='' description='Wang Bowen'> Wang Bowen </button>
-<button id=9 class='' > Contacts on WhatsApp </button>
-<button id=10 class='' > New community </button>
-<p id=11 class='com.whatsapp:id/contactpicker_button_two' description='Scan, share QR code'>  </p>
-<button id=12 class='' > New group </button>
-<button id=13 class='com.whatsapp:id/menuitem_overflow' description='More options'>  </button>
-<p id=14 class='com.whatsapp:id/menuitem_search' description='Search'>  </p>
-<p id=15 class='' description='Navigate up'>  </p>
-            """
-            },
-            {
-            "role": "assistant",
-            "content": """
-Step 1: Reason step-by-step about the relationship of the action trace and UI task.
-Given UI Task: Add a new chat with Steven.
-The user starts on the main interface of WhatsApp.
-The user clicks on the 'New chat' button.
-The user lands on the "Adding new chat and invite friends" page.
-Based on this action trace, the user seems to be on the correct path to adding a new chat since they've navigated to the 'Adding new chat and invite friends' page from the main interface. However, the task specifically mentioned adding a chat with "Steven", and it's important to check if this action has been completed.
-Step 2: Reason step-by-step about whether the newest UI screen is consistent with the UI task result.
-Upon observing the provided 'Last Page' UI elements:
-There are multiple buttons present, with some indicating individual contacts (like '余捷', 'Yellow', 'f', '助教', 'Wang Bowen', and '老婆子 (You)') and others with different functionalities (like 'INVITE', 'Invite to WhatsApp', 'Contacts on WhatsApp', 'New community', 'New group', etc.).
-There's no button or contact labeled "Steven".
-As per the task, we are looking for an action or a button related to starting a chat with "Steven", which is not present.
-Given this information, while the user is in the appropriate section to start a new chat, they have not yet started a chat with Steven.
-Step 3: Output a JSON object structured like:
+Step 1:Reason step-by-step about the relationship of the operation sequence and UI task.
+Step 2:Reason step-by-step about whether the newest action and the newest UI screen are consistent with the UI task.
+Step 3:Output a JSON object structured like: 
 {
-  "status": "go on",
-  "reason": "The user has navigated to the 'Adding new chat and invite friends' section, which is consistent with the task of starting a new chat. However, there is no indication that a chat with 'Steven' has been started or is available in the current UI screen. Further actions are needed."
-}
-Based on the provided information, the user should continue their actions to search or scroll for "Steven" in the contacts list to complete the task.
-"""
+    "status": "completed" or "wrong" or "go on", 
+    "reason": reason for the decision
+}."""
             },
             {
             "role": "user",
             "content": """Task:{}
-Action trace:{}
-Latest Page:{}
-Especially, [] means it's empty in the latest page and cannot go on.
+Operation sequence:{}
+Latest UI Page:{}
+([] means it's empty in the latest page and cannot go on)
 """.format(task, ACTION_TRACE, semantic_info)
     },
         {
         "role": "user",
             "content": """Knowledge:
 {}
-These are knowledge accumulated form previous task execution iterations, you should think step by step about how these would guide you to score each components.
+These are knowledge accumulated form previous task execution iterations, you should think step by step about how these would guide you to the correct answer.
 """.format(Knowledge)
     }]
 
