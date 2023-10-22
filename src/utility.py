@@ -11,7 +11,6 @@ import os
 import numpy as np
 from typing import List, Tuple, Any
 
-
 nlp = spacy.load("en_core_web_md")
 
 
@@ -40,6 +39,8 @@ def get_vectors_from_csv(csv_file: str, cache_file: str, field: str) -> Tuple[An
 
 def get_top_similarities(s: str, csv_file: str, k: int, field: str) -> List[Any]:
     cache_file = csv_file.replace(".csv", "_"+field+".pickle")
+    if os.path.exists(cache_file):
+        os.remove(cache_file)
     df, database_vectors = get_vectors_from_csv(
         csv_file=csv_file, cache_file=cache_file, field=field)
     database_texts = df[field].tolist()
@@ -81,10 +82,11 @@ def get_top_combined_similarities(queries, csv_file, k, fields):
 
 
 def get_top_combined_similarities_group(queries, csv_file, k, fields):
-
     database_vectors_list = []
     for field in fields:
         cache_file = csv_file.replace(".csv", "_" + field + ".pickle")
+        if os.path.exists(cache_file):
+            os.remove(cache_file)
         df, database_vectors = get_vectors_from_csv(
             csv_file=csv_file, cache_file=cache_file, field=field)
         database_vectors_list.append(database_vectors)
@@ -103,14 +105,18 @@ def get_top_combined_similarities_group(queries, csv_file, k, fields):
         combined_similarities = []
         for index, row in enumerate(df.to_dict(orient='records')):
             product_similarity = 1
-            for sim_vector, db_vectors in zip(query_set, database_vectors_list):
-                product_similarity *= sim_vector.dot(db_vectors[index]) / (
+            for iindex, (sim_vector, db_vectors) in enumerate(zip(query_set, database_vectors_list)):
+                s = sim_vector.dot(db_vectors[index]) / (
                     np.linalg.norm(sim_vector) * np.linalg.norm(db_vectors[index]))
+                if iindex == 1 and s < 0.99:
+                    product_similarity *= 0
+                else:
+                    product_similarity *= s
             combined_similarities.append((row, product_similarity))
 
         sorted_rows = sorted(
             combined_similarities, key=lambda x: x[1], reverse=True)[:1]
-        if sorted_rows[0][1] > 0.999:
+        if sorted_rows and sorted_rows[0][1] > 0.9:
             top_results.append(sorted_rows[0][0])
         else:
             top_results.append("Not found")
@@ -175,6 +181,7 @@ def chat(prompt):
 
     return collected_messages
 
+
 def extract_json(input_string):
     stack = []
     json_start_positions = []
@@ -188,27 +195,33 @@ def extract_json(input_string):
                 json_start_positions.append(pos)
         elif char in '}]':
             if len(stack) == 0:
-                raise ValueError("unexpected {} at position {}".format(pos, char))
+                raise ValueError(
+                    "unexpected {} at position {}".format(pos, char))
             last_open = stack.pop()
             if (last_open == '{' and char != '}') or (last_open == '[' and char != ']'):
-                raise ValueError("mismatched brackets {} and {} at position {}".format(last_open, char, pos))
+                raise ValueError(
+                    "mismatched brackets {} and {} at position {}".format(last_open, char, pos))
             if len(stack) == 0:
-                json_strings.append(input_string[json_start_positions.pop():pos+1])
+                json_strings.append(
+                    input_string[json_start_positions.pop():pos+1])
     return json_strings
+
 
 def GPT(prompt, auto_correct_when_json_error=True):
     while True:
         try:
             result = chat(prompt=prompt)
             jsons = extract_json(result)
-            json_res = jsons[-1] # 只处理最后一个json
+            json_res = jsons[-1]  # 只处理最后一个json
             if not auto_correct_when_json_error:
                 result_json = eval(json_res, {'true': True, 'false': False})
             else:
                 try:
-                    result_json = eval(json_res, {'true': True, 'false': False})
+                    result_json = eval(
+                        json_res, {'true': True, 'false': False})
                 except Exception as e:
-                    result_json = correct_json_format(json_str=json_res, error=e)
+                    result_json = correct_json_format(
+                        json_str=json_res, error=e)
             return result_json
         except Exception as e:
             print(e)
@@ -349,8 +362,9 @@ def UI_grounding_prompt_only_summary(predict_node):
         }
     ]
 
+
 def Task_UI_grounding_prompt(task, current_path_str, similar_tasks, similar_traces, predicted_step, semantic_info_list, next_comp, Knowledge):
-    
+
     return [
         {
             "role": "system",
@@ -408,7 +422,8 @@ def plan_prompt(task, page_description, node_selected):
     action_desc = ['clicking on a component (no text parameter needed)']
     if 'editable' in node_selected and 'ineditable' not in node_selected:
         action_names.append('edit')
-        action_desc.append('editing a component (you should also determine the text parameter)')
+        action_desc.append(
+            'editing a component (you should also determine the text parameter)')
 
     newline = '\n'
     return [
@@ -502,13 +517,16 @@ Be smart and insightful, think step by step, finally,summarize them into a json 
 
 def process_action_info(action, params, node):
     if action == "click":
-        return "Action: Click on {}".format(node)
+        return "Click on {}".format(node)
     elif action == "edit":
-        return "Action: Edit {} with {}".format(node, params)
+        return "Edit {} with {}".format(node, params)
 
 
 def process_string(s):
-    return s.replace('\n', '').replace(',', ';;')
+    if s:
+        return s.replace('\n', '').replace(',', ';')
+    else:
+        return ""
 
 
 def generate_perform(action_type, x=0, y=0, text="", absolute_id=""):
@@ -536,3 +554,7 @@ def add_son_to_father(l: list, relation: list[tuple]) -> list:
                 l[index_son] + " </" + l[index_father][last_index + 3:]
         l[index_son] = ""
     return list(filter(lambda x: x != "", l))
+
+
+def decouple_HTML(h: str) -> str:
+    l = h.split(" ")[1:]

@@ -296,7 +296,7 @@ class UINode:
         return False
 
     def generate_all_text(self):
-        res = ""
+        res = []
         q = Queue()
         q.put(self)
         while not q.empty():
@@ -304,8 +304,8 @@ class UINode:
             for child_node in crt_node.children:
                 q.put(child_node)
             if crt_node.text is not None and len(crt_node.text) > 0:
-                res = res + crt_node.text
-        return res
+                res.append(crt_node.text)
+        return "-".join(res)
 
 
 class PageInstance:

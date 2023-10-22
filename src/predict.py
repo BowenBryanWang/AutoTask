@@ -7,7 +7,7 @@ import re
 import openai
 import tqdm
 
-from src.utility import GPT, UI_grounding_prompt, task_grounding_prompt
+from src.utility import GPT, UI_grounding_prompt, task_grounding_prompt, process_string
 
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
@@ -48,14 +48,15 @@ class Predict():
     def UI_grounding(self):
         SEMANTIC_INFO = list(
             filter(lambda x: "id=" in x, self.model.screen.semantic_info_list))
-        SEMANTIC_STR = process_string(self.model.screen.semantic_info_str)
+        # SEMANTIC_NODES= [self.model.screen.semantic_nodes["nodes"][index] for index in [
+        #     self.model.screen.semantic_info_list.index(k) for k in SEMANTIC_INFO]]
+
+        SEMANTIC_STR = self.model.screen.page_root.generate_all_text()
         self.current_comp = SEMANTIC_INFO
         self.next_comp = [""]*len(SEMANTIC_INFO)
-        self.comp_json = dict.fromkeys(
-            SEMANTIC_INFO, [])
-        predict_node = copy.deepcopy(
-            SEMANTIC_INFO)
-        queries = [[SEMANTIC_STR, SEMANTIC_INFO[i]]
+        self.comp_json = dict.fromkeys(SEMANTIC_INFO, [])
+        predict_node = copy.deepcopy(SEMANTIC_INFO)
+        queries = [[process_string(SEMANTIC_STR), process_string(SEMANTIC_INFO[i])]
                    for i in range(len(SEMANTIC_INFO))]
         results = get_top_combined_similarities_group(queries=queries, csv_file=os.path.join(
             os.path.dirname(__file__), 'KB/pagejump/pagejump.csv'), k=1, fields=["Origin", "Edge"])

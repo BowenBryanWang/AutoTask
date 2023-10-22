@@ -3,6 +3,8 @@ import copy
 import csv
 from typing import Optional
 
+import pandas as pd
+
 
 from src.utility import generate_perform, process_string
 
@@ -62,6 +64,31 @@ class Model:
             print("ACTION_TRACE", kwargs.get("ACTION_TRACE"))
             print("flag", kwargs.get("flag"))
             if self.prev_model is not None:
+                with open("./src/KB/pagejump/pagejump.csv", "r", encoding="utf-8") as f:
+                    reader = csv.reader(f)
+                    prev_info = process_string(
+                        self.prev_model.screen.page_root.generate_all_text())
+                    prev_path = process_string(self.prev_model.node_selected)
+                    prev_act = process_string(
+                        self.prev_model.node_selected_action)
+                    prev_para = process_string(
+                        self.prev_model.node_selected_text)
+                    current_info = process_string(
+                        self.screen.page_root.generate_all_text()),
+                    flag = any(row[0] == prev_info and row[1]
+                               == prev_path for row in reader)
+                if not flag:
+                    with open("./src/KB/pagejump/pagejump.csv", "a", newline='', encoding="utf-8") as f:
+                        writer = csv.writer(f)
+                        writer.writerow([
+                            prev_info,
+                            prev_path,
+                            prev_act,
+                            prev_para,
+                            current_info,
+                        ])
+
+            if self.prev_model is not None:
                 # with open("./src/KB/pagejump.csv", "r", encoding="utf-8") as f:
                 #     reader = csv.reader(f)
                 #     prev_info = process_string(
@@ -97,24 +124,7 @@ class Model:
     @decide_before_and_log
     def work(self, ACTION_TRACE=None, flag="normal"):
         self.predict_module.predict(ACTION_TRACE)
-        if self.prev_model is not None:
-            with open("./src/KB/pagejump/pagejump.csv", "r", encoding="utf-8") as f:
-                reader = csv.reader(f)
-                prev_info = process_string(
-                    self.prev_model.screen.semantic_info_str)
-                prev_path = process_string(
-                    self.prev_model.current_path[-1])
-                flag = any(row[0] == prev_info and row[1]
-                           == prev_path for row in reader)
-            if not flag:
-                with open("./src/KB/pagejump/pagejump.csv", "a", newline='', encoding="utf-8") as f:
-                    writer = csv.writer(f)
-                    writer.writerow([
-                        prev_info,
-                        prev_path,
-                        process_string(self.screen.semantic_info_str),
-                        self.page_description
-                    ])
+
         self.evaluate_module.evaluate(ACTION_TRACE)
         return self.execute()
 
