@@ -214,7 +214,8 @@ def GPT(prompt, auto_correct_when_json_error=True):
             jsons = extract_json(result)
             json_res = jsons[-1]  # 只处理最后一个json
             if not auto_correct_when_json_error:
-                result_json = eval(json_res, {'true': True, 'false': False, 'null': None})
+                result_json = eval(
+                    json_res, {'true': True, 'false': False, 'null': None})
             else:
                 try:
                     result_json = eval(
