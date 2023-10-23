@@ -63,9 +63,9 @@ class Predict():
         for index, r in enumerate(results):
             if r != "Not found":
                 self.next_comp[index] = {
-                    "description": r["Description"], "comp": r["Destination"]}
+                    "description": '', "comp": r["Dest"]}
                 self.comp_json[SEMANTIC_INFO[index]] = {
-                    "description": r["Description"], "comp": r["Destination"]}
+                    "description": '', "comp": r["Dest"]}
                 predict_node[index] = "None"
         indexs = [i for i, x in enumerate(predict_node) if x == "None"]
         predict_prompt = list(filter(lambda x: not any(

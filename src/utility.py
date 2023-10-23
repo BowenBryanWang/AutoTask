@@ -385,7 +385,7 @@ Example:
 }
 Think step by step and output your reasoning process:
 Step 1: what has been done;
-Step 2: summary the elements on the current UI and decide what should be done next;
+Step 2: summary the elements on the current UI and decide what should be done next. Possible operations: click, edit (text input)
 Step 2: Output a JSON object with scores. 
 """
         },
@@ -460,10 +460,10 @@ def decide_prompt(task, ACTION_TRACE, semantic_info, Knowledge):
 Your task is to evaluate if the action trace aligns with the assigned task and if the current UI is related to the UI task. You should categorize the operation sequence as:
 1,completed: After the last action and based on the newest UI screen, the user's task is completed;
 2,wrong: After the last action and based on the newest UI screen, the operation sequence is not correct and the current UI is not related to the UI task;
-3,go on: After the last action and based on the newest UI screen, the operation sequence may be correct, the current UI is related to the UI task,  but the task has not been completed. Further Actions should be taken on the current (may also be the subsequent pages) UI page.
+3,go on: After the last action and based on the newest UI screen, the operation sequence may be correct, the current UI is related to the UI task, but the task has not been completed. There is at least one UI element that is related with the UI task and interacting with it helps carrying out the task. Further Actions should be taken on the current (may also be the subsequent pages) UI page.
 Use the following steps to respond to user inputs. Fully restate each step before proceeding. i.e. "Step 1: Reason...".
 Step 1:Reason step-by-step about the relationship of the operation sequence and UI task.
-Step 2:Reason step-by-step about whether the newest action and the newest UI screen are consistent with the UI task.
+Step 2:Reason step-by-step about whether the newest action and the newest UI screen are consistent with the UI task. Is there any element on the screen is related with the task and you think that it should be operated next?
 Step 3:Output a JSON object structured like: 
 {
     "status": "completed" or "wrong" or "go on", 

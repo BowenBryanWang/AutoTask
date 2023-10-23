@@ -88,12 +88,12 @@ class Screen:
         self.cnt += 1  # 将数据存储时候页面的编号
         start_time = time.time()  # 记录开始时间
         self.page_id_now = self.cnt
-        self.screenshot = request["screenshot"]
+        self.screenshot = request["screenshot"] if 'screenshot' in request else None
         if request['layout'] == self.layout:
             print("Layout depredicted")
             return "error:"
         self.layout = request['layout']
-        self.imgdata = base64.b64decode(self.screenshot)
+        self.imgdata = base64.b64decode(self.screenshot) if self.screenshot is not None else None
         self.page_instance = PageInstance()
         layout_json = json.loads(self.layout)
         # Screen.process_frag_overlap(layout_json)
@@ -115,8 +115,9 @@ class Screen:
         self.upload_time = end_time  # 记录本次上传的时间
         print("upload_time", self.upload_time)
         print("time:", end_time-start_time, flush=True)
-        with open('./page/data/imagedata{}.jpg'.format(self.cnt), 'wb') as fp:
-            fp.write(self.imgdata)
+        if self.imgdata is not None:
+            with open('./page/data/imagedata{}.jpg'.format(self.cnt), 'wb') as fp:
+                fp.write(self.imgdata)
         with open('./page/data/page{}.json'.format(self.cnt), 'w', encoding="utf-8") as fp:
             fp.write(self.layout)
         return "OK"
