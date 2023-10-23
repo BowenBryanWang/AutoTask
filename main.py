@@ -42,7 +42,7 @@ GRAPH_ACTION: List[Any] = []
 ACTION_TRACE = {
     "ACTION": [],
     "ACTION_DESC": [],
-    "TRACE": [],
+    "PAGES": [],
 }
 
 force_load_count = 0
@@ -115,7 +115,7 @@ def demo() -> Union[str, Response]:
         elif work_status == "Execute":
             ACTION_TRACE["ACTION"].append(model.log_json["@Action"])
             ACTION_TRACE["ACTION_DESC"].append("NEXT")
-            ACTION_TRACE["TRACE"].append(
+            ACTION_TRACE["PAGES"].append(
                 model.screen.page_root.generate_all_text())
             if MODE == "normal":
                 STATUS = "start"
@@ -142,7 +142,7 @@ def demo() -> Union[str, Response]:
             COMPUTATIONAL_GRAPH[INDEX].wrong_reason)
         ACTION_TRACE["ACTION"].append("Click on navigate back due to error")
         ACTION_TRACE["ACTION_DESC"].append("BACK")
-        ACTION_TRACE["TRACE"].append(
+        ACTION_TRACE["PAGES"].append(
             COMPUTATIONAL_GRAPH[INDEX].screen.page_root.generate_all_text())
         if res is not None:
             COMPUTATIONAL_GRAPH = COMPUTATIONAL_GRAPH[:INDEX+1]
@@ -160,7 +160,7 @@ def demo() -> Union[str, Response]:
                     COMPUTATIONAL_GRAPH[INDEX].log_json["@Action"])
                 ACTION_TRACE["ACTION_DESC"].append(
                     "Retry after error detection")
-                ACTION_TRACE["TRACE"].append(
+                ACTION_TRACE["PAGES"].append(
                     COMPUTATIONAL_GRAPH[INDEX].screen.page_root.generate_all_text())
                 if MODE == "normal":
                     STATUS = "start"

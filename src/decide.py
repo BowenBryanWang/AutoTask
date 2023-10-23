@@ -39,7 +39,7 @@ class Decide:
         if flag == "debug":
             prompt.append(
                 {"role": "user", "content": """You are now in a BACKTRACKING process, so you obtained additional information from subsequent operation steps and then backtrack to locate errors in History Operation Sequence.
-Pay attention to 'BACK' operation in the sequence and analyze each related screen information in "TRACE". Try to reproduce the sequence and locate key-error in the History Operation Sequence.
+Pay attention to 'BACK' operation in the sequence and analyze each related screen information in "PAGES". Try to reproduce the sequence and locate key-error in the History Operation Sequence.
 Finally change original ouput JSON to:
 {
     "status":"No" (you should continue backtracking to locate errors, it's not this step's fault) or "Yes"(the error is located on this step)
