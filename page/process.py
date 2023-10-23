@@ -13,7 +13,7 @@ def transfer_2_html(semantic_nodes, relation: list[tuple]):
     for node in semantic_nodes:
         if (node.node_class == "android.widget.TextView" or ".TextView" in node.node_class) and not node.clickable:
             temp = node.generate_all_semantic_info()
-            html_element = "<p class='{}' {}> {} </p>\n".format(
+            html_element = "<p class='{}' {} > {} </p>\n".format(
                 mask(node.resource_id),
                 "description='"+",".join(temp["content-desc"])+"'" if ",".join(
                     temp["content-desc"]) != "" else "",
@@ -21,7 +21,7 @@ def transfer_2_html(semantic_nodes, relation: list[tuple]):
             html_components.append(html_element)
         elif "LinearLayout" in node.node_class:
             temp = node.generate_all_semantic_info()
-            html_element = "<div id={} class='{}' {}> {} </div>\n".format(
+            html_element = "<div id={} class='{}' {} > {} </div>\n".format(
                 len(real_comp)+1,
                 mask(node.resource_id),
                 "description='"+",".join(temp["content-desc"])+"'" if ",".join(
@@ -32,7 +32,7 @@ def transfer_2_html(semantic_nodes, relation: list[tuple]):
         elif "ImageView" in node.node_class or "RelativeLayout" in node.node_class or "FrameLayout" in node.node_class:
             temp = node.generate_all_semantic_info()
             print(temp)
-            html_element = "<button id={} class='{}' {}> {} </button>\n".format(
+            html_element = "<button id={} class='{}' {} > {} </button>\n".format(
                 len(real_comp)+1,
                 mask(node.resource_id),
                 "description='"+",".join(temp["content-desc"])+"'" if ",".join(
@@ -44,7 +44,7 @@ def transfer_2_html(semantic_nodes, relation: list[tuple]):
             html_components.append(html_element)
             real_comp.append(html_element)
         elif "Switch" in node.node_class:
-            html_element = "<switch id={} class='{}' clickable> {} </switch>\n".format(
+            html_element = "<switch id={} class='{}' clickable > {} </switch>\n".format(
                 len(real_comp)+1,
                 mask(node.resource_id),
                 "On" if node.checked else "Off",
@@ -52,7 +52,7 @@ def transfer_2_html(semantic_nodes, relation: list[tuple]):
             html_components.append(html_element)
             real_comp.append(html_element)
         elif "CheckedTextView" in node.node_class or "CheckBox" in node.node_class:
-            html_element = "<checkbox id={} class='{}' {}> {} </checkbox>\n".format(
+            html_element = "<checkbox id={} class='{}' {} > {} </checkbox>\n".format(
                 len(real_comp)+1,
                 mask(node.resource_id),
                 node.text,
@@ -84,13 +84,14 @@ def transfer_2_html(semantic_nodes, relation: list[tuple]):
         else:
             temp = node.generate_all_semantic_info()
             print(temp)
-            html_element = "<div id={} class='{}' {} {} {}> {} </div>\n".format(
+            html_element = "<div id={} class='{}' {} {} {} > {} </div>\n".format(
                 len(real_comp)+1,
                 mask(node.resource_id),
                 "description='"+",".join(temp["content-desc"])+"'" if ",".join(
                     temp["content-desc"]) != "" else "",
                 "enabled" if node.enabled else "not_enabled",
-                "" if not node.checkable else ('checked' if node.checked else 'not_checked'),
+                "" if not node.checkable else (
+                    'checked' if node.checked else 'not_checked'),
                 "".join(temp["text"]) if temp["text"] == temp["Major_text"] else temp["Major_text"][0] + "\n    " + "".join(["<p> " + i + " </p>\n    " for i in temp["text"][1:]])[:-5])
             html_components.append(html_element)
             real_comp.append(html_element)

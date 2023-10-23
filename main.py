@@ -18,11 +18,14 @@ import click
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
+
 def secho(text, file=None, nl=None, err=None, color=None, **styles):
     pass
 
+
 def echo(text, file=None, nl=None, err=None, color=None, **styles):
     pass
+
 
 click.echo = echo
 click.secho = secho
@@ -47,11 +50,12 @@ force_load_count = 0
 auto_load = False
 listener_global = None
 
+
 @app.route('/heart_beat', methods=['POST'])
 def heat_beat():
     global force_load_count, auto_load
     if auto_load:
-        force_load_count += (2.0 / 10.0) # 前端每1秒发送一次，预计等待10秒 
+        force_load_count += (2.0 / 10.0)  # 前端每1秒发送一次，预计等待10秒
     force_load = force_load_count >= 2
     if force_load:
         force_load_count = 0
@@ -64,6 +68,7 @@ def heat_beat():
 
 def wait_and_load_decorator(function):
     global auto_load
+
     def wrapped_function(*args, **kwargs):
         global auto_load
         result = function(*args, **kwargs)
@@ -71,6 +76,7 @@ def wait_and_load_decorator(function):
             auto_load = True
         return result
     return wrapped_function
+
 
 @app.route('/demo', methods=['POST'])
 @wait_and_load_decorator
@@ -186,7 +192,7 @@ def on_key_release(key):
     if key == keyboard.Key.enter:
         STATUS = "start"
         print("Task execution started!")
-    #elif key == keyboard.Key.delete:
+    # elif key == keyboard.Key.delete:
     #    STATUS = "backtracking"
     #    print("Backtracking started!")
     elif 'char' in key.__dict__ and key.char == 'l':

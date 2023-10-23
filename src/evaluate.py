@@ -46,15 +46,16 @@ class Evaluate():
             query=[self.model.task, self.model.screen.page_description])
         resp = GPT(Task_UI_grounding_prompt(self.model.task, ACTION_TRACE["ACTION"], self.model.similar_tasks,
                                             self.model.similar_traces, self.model.predicted_step, self.model.screen.semantic_info_list, self.model.predict_module.comp_json, knowledge))
-        
+
         # self.score, self.reason = np.array(resp["score"])/10, resp["reason"]
         scores = [1.0 for x in self.model.screen.semantic_info_list if 'id=' in x]
         for key, rating in resp.items():
             if key.startswith('id_'):
                 idx = int(key[len('id_'):]) - 1
                 scores[idx] = rating
-        self.score, self.reason = np.array(scores) / 10, ["unknown"] * len(scores)
-        
+        self.score, self.reason = np.array(
+            scores) / 10, ["unknown"] * len(scores)
+
         self.model.candidate_str = [item for index, item in enumerate(self.model.screen.semantic_info_list) if index in [
             i for i, score in enumerate(self.score) if score > 3.0] and "id=" in item]
         if self.weights == []:
@@ -72,17 +73,17 @@ class Evaluate():
             lambda x: "id="+str(top_index+1) in x, self.model.screen.semantic_info_list))[0]
         if 'editable' in self.model.node_selected and 'ineditable' not in self.model.node_selected:
             response = GPT(plan_prompt(self.model.task,
-                                    self.model.page_description, self.model.node_selected))
+                                       self.model.page_description, self.model.node_selected))
             self.model.node_selected_action, self.model.node_selected_text = response.get(
                 "action"), response.get("text")
         else:
-            self.model.node_selected_action, self.model.node_selected_text = ('click', None)
+            self.model.node_selected_action, self.model.node_selected_text = (
+                'click', None)
         self.model.node_selected_id = int(
             self.model.node_selected.split("id=")[1].split(" ")[0])
         self.model.current_action = process_action_info(
             self.model.node_selected_action, self.model.node_selected_text, self.model.node_selected)
         self.model.current_path.append(self.model.current_action)
-
         self.model.final_node = self.model.screen.semantic_nodes["nodes"][self.model.screen.semantic_info_list.index(
             self.model.node_selected)]
 
