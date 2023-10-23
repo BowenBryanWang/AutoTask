@@ -71,7 +71,7 @@ class Evaluate():
         self.score = (self.score * np.array(self.weights)
                       ).tolist() if self.weights != [] else self.score
         self.original_score = copy.deepcopy(self.score)
-        if all(value < 0.2 for value in self.score):
+        if all(value < 0.2 for value in self.score) and self.model.prev_model:
             return "wrong"
         if self.weights == []:
             self.weights = [1.0] * len(self.score)
