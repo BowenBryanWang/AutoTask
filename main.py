@@ -143,7 +143,7 @@ def demo() -> Union[str, Response]:
         ACTION_TRACE["ACTION"].append("Click on navigate back due to error")
         ACTION_TRACE["ACTION_DESC"].append("BACK")
         ACTION_TRACE["TRACE"].append(
-            COMPUTATIONAL_GRAPH[INDEX].page_root.generate_all_text())
+            COMPUTATIONAL_GRAPH[INDEX].screen.page_root.generate_all_text())
         if res is not None:
             COMPUTATIONAL_GRAPH = COMPUTATIONAL_GRAPH[:INDEX+1]
             result, work_status = COMPUTATIONAL_GRAPH[INDEX].work(
@@ -161,7 +161,7 @@ def demo() -> Union[str, Response]:
                 ACTION_TRACE["ACTION_DESC"].append(
                     "Retry after error detection")
                 ACTION_TRACE["TRACE"].append(
-                    COMPUTATIONAL_GRAPH[INDEX].page_root.generate_all_text())
+                    COMPUTATIONAL_GRAPH[INDEX].screen.page_root.generate_all_text())
                 if MODE == "normal":
                     STATUS = "start"
                 elif MODE == "preserve":
