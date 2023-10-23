@@ -87,21 +87,19 @@ class Model:
                             prev_para,
                             current_info,
                         ])
-
-                if kwargs.get("flag") != "debug":
-                    status = self.prev_model.decide_module.decide(
-                        new_screen=self.screen, ACTION_TRACE=kwargs.get("ACTION_TRACE"), flag="normal")
-                    if status == "wrong":
-                        print("wrong: feedback started")
-                        return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}, "wrong"
-                    elif status == "completed":
-                        return None, "completed"
-                else:
-                    status = self.prev_model.decide_module.decide(
-                        new_screen=self.screen, ACTION_TRACE=kwargs.get("ACTION_TRACE"), flag="debug")
-                    if status == "No":
-                        print("wrong: feedback started")
-                        return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}, "wrong"
+                status = self.prev_model.decide_module.decide(
+                    new_screen=self.screen, ACTION_TRACE=kwargs.get("ACTION_TRACE"), flag="normal")
+                if status == "wrong":
+                    print("wrong: feedback started")
+                    return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}, "wrong"
+                elif status == "completed":
+                    return None, "completed"
+            if self.prev_model is not None and kwargs.get("flag") == "debug":
+                status = self.prev_model.decide_module.decide(
+                    new_screen=self.screen, ACTION_TRACE=kwargs.get("ACTION_TRACE"), flag="debug")
+                if status == "No":
+                    print("wrong: feedback started")
+                    return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}, "wrong"
             self.log_json["@User_intent"] = self.task
             self.log_json["@Page_components"] = self.screen.semantic_info_list
             self.log_json["@Module"] = []
