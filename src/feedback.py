@@ -21,14 +21,13 @@ class Feedback:
         self.prompt = [
             {
                 "role": "system",
-                "content": """You are an expert in UI automation and robust error handling. Your task is to critically evaluate a history operation sequence produced by a [primitive LLM], which follows user task but is possibly inaccurate. 
-Basically, the working process of [primitive LLM] is: "Follow the user's intent -> observe UI elements on UI screen -> select UI elements and rate them -> select the top one and execute it"
-Utilizing the log files from each module of current step of the [primitive LLM], you should determine whether this step caused error.
-The only way you could do in correction is to control the rating scores by outputing different weights to them.
-[primitive LLM] works in which they cannot see further information on UI, but as an error handling expert in the backtracking process you should utilize further information that you observed on subsequent UI to help correct possible errors.
+                "content": """You are an expert in UI automation and robust error handling. Your task is to critic a operation sequence produced by a [primitive LLM],following user task but inaccurate. 
+Utilizing the log files from each module of current step of the [primitive LLM], you should locate error in the final element chosen to operate on.
+[primitive LLM] works in which they cannot see further information on UI, but you are in the backtracking process so you should utilize further information observed from subsequent UI to help correct possible errors.
+Specifically, you should analyze the [Latest Action] and the [Successive Page] information to determine the extent of error on fulfilling the task, and then output the punishment coefficient to it.
 Follow the steps below and think step by step:
-a. Understand the information given and synthize;
-b, Think step by step about the scoring result, try to identify error causes on the LATEST ACTION and give Punishment Coefficient from 0-10;
+a. Understand the information given and synthize, especially [Latest Action] and its subsequent result [Successive Page];
+b, Think step by step about the scoring result by [Evaluation Module], try to identify error causes on the LATEST ACTION and give [Punishment Coefficient] from 1-10, where 1 means no error and 10 means totally wrong;
 Finally, output a JSON format like this example:
 {
     "punishment":
