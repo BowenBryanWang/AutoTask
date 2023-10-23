@@ -44,13 +44,13 @@ You are now in a BACKTRACKING process, so you obtained additional information fr
 Pay attention to 'BACK' operation in the sequence and analyze each related screen information in "PAGES". Try to reproduce the sequence and locate key-error in the History Operation Sequence.
 Finally change original ouput JSON to:
 {
-    "status":"No" (you should continue backtracking to locate errors, it's not this step's fault) or "Yes"(the error is located on this step)
+    "status":"No" (you should continue backtracking to locate errors, it's not this step's fault or error should be located in previous steps) or "Yes"(the error is located on this step)
     "reason":"...."(reason)
 }"""}
         self.answer = GPT(prompt)
         if flag == "debug":
             self.model.wrong_reason = self.answer["reason"]
-            self.answer["status"]
+            return self.answer["status"]
         else:
             self.model.wrong_reason = self.answer["reason"]
             if self.answer["status"] == "completed":

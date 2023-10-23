@@ -56,18 +56,25 @@ class Evaluate():
             if key.startswith('id_'):
                 idx = int(key[len('id_'):]) - 1
                 scores[idx] = rating
-        self.original_score = copy.deepcopy(self.score)
-        self.score, self.reason = np.array(
-            scores) / 10, ["unknown"] * len(scores)
+        if self.score != []:
+            indices = [index for index, value in enumerate(
+                self.weights) if value != 1.0]
+            if indices:
+                for i, s in enumerate(scores):
+                    if i not in indices:
+                        self.score[i] = s
+            else:
+                self.score = np.array(scores) / 10
+        else:
+            self.score = np.array(scores) / 10
+
         self.score = (self.score * np.array(self.weights)
                       ).tolist() if self.weights != [] else self.score
+        self.original_score = copy.deepcopy(self.score)
         if all(value < 0.2 for value in self.score):
             return "wrong"
-
-        self.model.candidate_str = [item for index, item in enumerate(self.model.screen.semantic_info_list) if index in [
-            i for i, score in enumerate(self.score) if score > 3.0] and "id=" in item]
         if self.weights == []:
-            self.weights = [1] * len(self.score)
+            self.weights = [1.0] * len(self.score)
         self.score = np.exp(self.score) / np.sum(np.exp(self.score))
         print(self.score)
         print(self.weights)

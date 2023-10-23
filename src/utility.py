@@ -385,9 +385,9 @@ Example:
     "id_1": 9.53, "id_2": 9.71, "id_3": 3.20
 }
 Think step by step and output your reasoning process:
-Step 1: what has been done;
-Step 2: summary the elements on the current UI and decide what should be done next. Possible operations: click, edit (text input)
-Step 2: Output a JSON object with scores. 
+Step 1: what has been done,especially pay attention to those steps which is wrong and caused navigate back if any;
+Step 2: summary the elements on the current UI and decide what should be done next. Possible operations: click, edit (text input),especially pay attention to those steps which is wrong and caused navigate back if any;
+Step 3: Output a JSON object with scores. 
 """
         },
         {
