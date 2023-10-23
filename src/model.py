@@ -63,7 +63,7 @@ class Model:
         def wrapper(self, *args, **kwargs):
             print("ACTION_TRACE", kwargs.get("ACTION_TRACE"))
             print("flag", kwargs.get("flag"))
-            if self.prev_model is not None:
+            if self.prev_model is not None and kwargs.get("flag") != "debug":
                 with open("./src/KB/pagejump/pagejump.csv", "r", encoding="utf-8") as f:
                     reader = csv.reader(f, delimiter=',')
                     prev_info = process_string(
@@ -87,29 +87,17 @@ class Model:
                             prev_para,
                             current_info,
                         ])
-
-            if self.prev_model is not None:
-                # with open("./src/KB/pagejump.csv", "r", encoding="utf-8") as f:
-                #     reader = csv.reader(f)
-                #     prev_info = process_string(
-                #         self.prev_model.screen.semantic_info_str)
-                #     prev_path = process_string(
-                #         self.prev_model.current_path[-1])
-                #     flag = any(row[0] == prev_info and row[1]
-                #                == prev_path for row in reader)
-
-                # if not flag:
-                #     with open("./src/KB/pagejump.csv", "a", newline='', encoding="utf-8") as f:
-                #         writer = csv.writer(f)
-                #         writer.writerow([
-                #             prev_info,
-                #             prev_path,
-                #             process_string(self.screen.semantic_info_str),
-                #             self.page_description
-                #         ])
                 if kwargs.get("flag") != "debug":
                     status = self.prev_model.decide_module.decide(
-                        self.screen, kwargs.get("ACTION_TRACE"))
+                        new_screen=self.screen, ACTION_TRACE=kwargs.get("ACTION_TRACE"))
+                    if status == "wrong":
+                        print("wrong: feedback started")
+                        return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}, "wrong"
+                    elif status == "completed":
+                        return None, "completed"
+                else:
+                    status = self.prev_model.decide_module.decide(
+                        new_screen=self.screen, ACTION_TRACE=kwargs.get("ACTION_TRACE"), flag="debug")
                     if status == "wrong":
                         print("wrong: feedback started")
                         return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}, "wrong"

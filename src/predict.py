@@ -24,8 +24,8 @@ class Predict():
         def wrapper(self, *args, **kwargs):
             result = func(self, *args, **kwargs)
             self.model.log_json["@Page_description"] = self.model.page_description
-            self.model.log_json["@Similar_tasks"] = [j+":"+"=>".join(
-                k) for j, k in zip(self.model.similar_tasks, self.model.similar_traces)]
+            self.model.log_json["@Similar_tasks"] = [j+":" +
+                                                     k for j, k in zip(self.model.similar_tasks, self.model.similar_traces)]
             self.model.log_json["@Module"].append({
                 "Name": "Predict",
                 "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
