@@ -43,7 +43,7 @@ class Decide:
 
     def extract_knowledge(self, ACTION_TRACE=None):
         with open("./src/KB/task/task.csv", "a", encoding="utf-8") as f:
-            writer = csv.writer(f)
+            writer = csv.writer(f, delimiter=',')
             writer.writerow([self.model.task, ACTION_TRACE["ACTION"]])
         response = GPT(Knowledge_prompt(
             TASK=self.model.task, ACTION_TRACE=ACTION_TRACE))

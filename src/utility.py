@@ -31,7 +31,7 @@ def cache_decorator(function):
 
 @cache_decorator
 def get_vectors_from_csv(csv_file: str, cache_file: str, field: str) -> Tuple[Any, List[Any]]:
-    df = pd.read_csv(csv_file)
+    df = pd.read_csv(csv_file, delimiter=',')
     database_texts = df[field].tolist()
     vectors = [nlp(text).vector for text in database_texts]
     return df, vectors  # Return the entire DataFrame

@@ -4,7 +4,7 @@ import argparse
 import shutil
 import threading
 from flask import Response, jsonify
-from typing import Union
+from typing import Any, Union
 from flask import Flask, request
 from src.model import Model
 
@@ -37,13 +37,12 @@ TASK = ""
 MODE = ""
 STATUS = "stop"
 INDEX = 0
-COMPUTATIONAL_GRAPH = []
-GRAPH_ACTION = []
+COMPUTATIONAL_GRAPH: List[Any] = []
+GRAPH_ACTION: List[Any] = []
 ACTION_TRACE = {
     "ACTION": [],
     "ACTION_DESC": [],
     "TRACE": [],
-    "TRACE_DESC": [],
 }
 
 force_load_count = 0
@@ -107,8 +106,8 @@ def demo() -> Union[str, Response]:
         elif work_status == "Execute":
             ACTION_TRACE["ACTION"].append(model.log_json["@Action"])
             ACTION_TRACE["ACTION_DESC"].append("NEXT")
-            ACTION_TRACE["TRACE"].append(model.candidate_str)
-            ACTION_TRACE["TRACE_DESC"].append(model.page_description)
+            ACTION_TRACE["TRACE"].append(
+                model.screen.page_root.generate_all_text())
             if MODE == "normal":
                 STATUS = "start"
             elif MODE == "preserve":
@@ -134,9 +133,8 @@ def demo() -> Union[str, Response]:
             COMPUTATIONAL_GRAPH[INDEX].wrong_reason)
         ACTION_TRACE["ACTION"].append("Click on navigate back due to error")
         ACTION_TRACE["ACTION_DESC"].append("BACK")
-        ACTION_TRACE["TRACE"].append(COMPUTATIONAL_GRAPH[INDEX].candidate_str)
-        ACTION_TRACE["TRACE_DESC"].append(
-            COMPUTATIONAL_GRAPH[INDEX].page_description)
+        ACTION_TRACE["TRACE"].append(
+            COMPUTATIONAL_GRAPH[INDEX].page_root.generate_all_text())
         if res is not None:
             COMPUTATIONAL_GRAPH = COMPUTATIONAL_GRAPH[:INDEX+1]
             result, work_status = COMPUTATIONAL_GRAPH[INDEX].work(
@@ -154,9 +152,7 @@ def demo() -> Union[str, Response]:
                 ACTION_TRACE["ACTION_DESC"].append(
                     "Retry after error detection")
                 ACTION_TRACE["TRACE"].append(
-                    COMPUTATIONAL_GRAPH[INDEX].candidate_str)
-                ACTION_TRACE["TRACE_DESC"].append(
-                    COMPUTATIONAL_GRAPH[INDEX].page_description)
+                    COMPUTATIONAL_GRAPH[INDEX].page_root.generate_all_text())
                 if MODE == "normal":
                     STATUS = "start"
                 elif MODE == "preserve":

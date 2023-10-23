@@ -65,7 +65,7 @@ class Model:
             print("flag", kwargs.get("flag"))
             if self.prev_model is not None:
                 with open("./src/KB/pagejump/pagejump.csv", "r", encoding="utf-8") as f:
-                    reader = csv.reader(f)
+                    reader = csv.reader(f, delimiter=',')
                     prev_info = process_string(
                         self.prev_model.screen.page_root.generate_all_text())
                     prev_path = process_string(self.prev_model.node_selected)
@@ -79,7 +79,7 @@ class Model:
                                == prev_path for row in reader)
                 if not flag:
                     with open("./src/KB/pagejump/pagejump.csv", "a", newline='', encoding="utf-8") as f:
-                        writer = csv.writer(f)
+                        writer = csv.writer(f, delimiter=',')
                         writer.writerow([
                             prev_info,
                             prev_path,
