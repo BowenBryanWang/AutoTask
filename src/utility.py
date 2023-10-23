@@ -386,7 +386,7 @@ Example:
 }
 Think step by step and output your reasoning process: 
 Step 1: what has been done,especially pay attention to those steps which is wrong and caused navigate back if any;
-Step 2: summary the elements on the current UI and decide what should be done next. Possible operations: click, edit (text input),especially pay attention to those steps which is wrong and caused navigate back if any;
+Step 2: summary the elements on the current UI and decide what should be done next. Possible operations: click, edit (text input); "scroll" is NOT supported. Pay attention to those steps which is wrong and caused navigate back if any;
 Step 3: Output a JSON object with scores. 
 """
         },

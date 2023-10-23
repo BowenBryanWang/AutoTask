@@ -109,8 +109,8 @@ class Model:
     @decide_before_and_log
     def work(self, ACTION_TRACE=None, flag="normal"):
         self.predict_module.predict(ACTION_TRACE)
-
-        if self.evaluate_module.evaluate(ACTION_TRACE) == "wrong":
+        eval_res = self.evaluate_module.evaluate(ACTION_TRACE)
+        if isinstance(eval_res, str) and eval_res == "wrong":
             print("wrong: feedback started")
             return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}, "wrong"
         return self.execute()
