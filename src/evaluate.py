@@ -48,6 +48,7 @@ class Evaluate():
                                             self.model.similar_traces, self.model.predicted_step, self.model.screen.semantic_info_list, self.model.predict_module.comp_json, knowledge))
 
         # self.score, self.reason = np.array(resp["score"])/10, resp["reason"]
+        self.next_step = resp.get("next_steps")
         scores = [1.0 for x in self.model.screen.semantic_info_list if 'id=' in x]
         for key, rating in resp.items():
             if key.startswith('id_'):
@@ -73,7 +74,7 @@ class Evaluate():
             lambda x: "id="+str(top_index+1) in x, self.model.screen.semantic_info_list))[0]
         if 'editable' in self.model.node_selected and 'ineditable' not in self.model.node_selected:
             response = GPT(plan_prompt(self.model.task,
-                                       self.model.page_description, self.model.node_selected))
+                                       self.model.page_description, self.model.node_selected, self.next_step))
             self.model.node_selected_action, self.model.node_selected_text = response.get(
                 "action"), response.get("text")
         else:
