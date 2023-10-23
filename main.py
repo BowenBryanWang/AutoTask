@@ -215,7 +215,7 @@ def keyboard_listener():
 
 
 if __name__ == "__main__":
-    default_cmd = 'enable find my device'
+    default_cmd = 'turn on Web & App Activity in Google'
 
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")

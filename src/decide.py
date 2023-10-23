@@ -37,18 +37,20 @@ class Decide:
         prompt = decide_prompt(
             self.model.task, ACTION_TRACE, new_screen.semantic_info, knowledge)
         if flag == "debug":
-            prompt.append(
-                {"role": "user", "content": """You are now in a BACKTRACKING process, so you obtained additional information from subsequent operation steps and then backtrack to locate errors in History Operation Sequence.
+            prompt[0] = {"role": "system",
+                         "content": """
+You are a professor with in-depth knowledge of User Interface (UI) tasks. You are assigned a specific UI task, a history operation sequence, and the current UI (which is the result of the operation sequence).
+You are now in a BACKTRACKING process, so you obtained additional information from subsequent operation steps and then backtrack to locate errors in History Operation Sequence.
 Pay attention to 'BACK' operation in the sequence and analyze each related screen information in "PAGES". Try to reproduce the sequence and locate key-error in the History Operation Sequence.
 Finally change original ouput JSON to:
 {
-    "status":"No" (you should continue backtracking to locate errors, it's not this step's fault) or "Yes"(the error is located on this step)
+    "status":"No" (you should continue backtracking to locate errors, it's not this step's fault or error should be located in previous steps) or "Yes"(the error is located on this step)
     "reason":"...."(reason)
-}"""})
+}"""}
         self.answer = GPT(prompt)
         if flag == "debug":
             self.model.wrong_reason = self.answer["reason"]
-            self.answer["status"]
+            return self.answer["status"]
         else:
             self.model.wrong_reason = self.answer["reason"]
             if self.answer["status"] == "completed":
