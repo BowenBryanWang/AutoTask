@@ -39,17 +39,22 @@ class Decide:
         if flag == "debug":
             prompt.append(
                 {"role": "user", "content": """You are now in a BACKTRACKING process, so you obtained additional information from subsequent operation steps and then backtrack to locate errors in History Operation Sequence.
-Pay attention to 'BACK' operation in the sequence and analyze each related screen information in "TRACE". Try to locate key-error in the History Operation Sequence.
-Finally change ouput JSON to:
+Pay attention to 'BACK' operation in the sequence and analyze each related screen information in "TRACE". Try to reproduce the sequence and locate key-error in the History Operation Sequence.
+Finally change original ouput JSON to:
 {
-    "status":"No" (you should continue backtracking to locate errors, it's not this step's fault)
+    "status":"No" (you should continue backtracking to locate errors, it's not this step's fault) or "Yes"(the error is located on this step)
+    "reason":"...."(reason)
 }"""})
         self.answer = GPT(prompt)
-        self.model.wrong_reason = self.answer["reason"]
-        if self.answer["status"] == "completed":
-            self.extract_knowledge(
-                ACTION_TRACE=ACTION_TRACE)
-        return self.answer["status"]
+        if flag == "debug":
+            self.model.wrong_reason = self.answer["reason"]
+            self.answer["status"]
+        else:
+            self.model.wrong_reason = self.answer["reason"]
+            if self.answer["status"] == "completed":
+                self.extract_knowledge(
+                    ACTION_TRACE=ACTION_TRACE)
+            return self.answer["status"]
 
     def extract_knowledge(self, ACTION_TRACE=None):
         with open("./src/KB/task/task.csv", "a", encoding="utf-8") as f:
