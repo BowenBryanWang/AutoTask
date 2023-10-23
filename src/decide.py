@@ -4,6 +4,7 @@ import openai
 import os
 
 from src.utility import GPT, Knowledge_prompt, decide_prompt
+from page.init import Screen
 
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
@@ -30,11 +31,20 @@ class Decide:
         return wrapper
 
     @log_decorator
-    def decide(self, new_screen, ACTION_TRACE):
+    def decide(self, new_screen: Screen, ACTION_TRACE: dict, flag: str):
         task, knowledge = self.model.Decision_KB.find_experiences(
             query=[self.model.task, self.model.screen.page_description])
-        self.answer = GPT(decide_prompt(
-            self.model.task, ACTION_TRACE, new_screen.semantic_info, knowledge))
+        prompt = decide_prompt(
+            self.model.task, ACTION_TRACE, new_screen.semantic_info, knowledge)
+        if flag == "debug":
+            prompt.append(
+                {"role": "user", "content": """You are now in a BACKTRACKING process, so you obtained additional information from subsequent operation steps and then backtrack to locate errors in History Operation Sequence.
+Pay attention to 'BACK' operation in the sequence and analyze each related screen information in "TRACE". Try to locate key-error in the History Operation Sequence.
+Finally change ouput JSON to:
+{
+    "status":"No" (you should continue backtracking to locate errors, it's not this step's fault)
+}"""})
+        self.answer = GPT(prompt)
         self.model.wrong_reason = self.answer["reason"]
         if self.answer["status"] == "completed":
             self.extract_knowledge(
@@ -43,7 +53,7 @@ class Decide:
 
     def extract_knowledge(self, ACTION_TRACE=None):
         with open("./src/KB/task/task.csv", "a", encoding="utf-8") as f:
-            writer = csv.writer(f)
+            writer = csv.writer(f, delimiter=',')
             writer.writerow([self.model.task, ACTION_TRACE["ACTION"]])
         response = GPT(Knowledge_prompt(
             TASK=self.model.task, ACTION_TRACE=ACTION_TRACE))
@@ -62,6 +72,6 @@ class Decide:
 
     def write_knowledge_to_csv(self, file_path, knowledge_list):
         with open(file_path, "a", newline='', encoding="utf-8") as f:
-            writer = csv.writer(f)
+            writer = csv.writer(f, delimiter=',')
             for knowledge in knowledge_list:
                 writer.writerow([self.model.task, knowledge])

@@ -24,8 +24,8 @@ class Predict():
         def wrapper(self, *args, **kwargs):
             result = func(self, *args, **kwargs)
             self.model.log_json["@Page_description"] = self.model.page_description
-            self.model.log_json["@Similar_tasks"] = [j+":"+"=>".join(
-                k) for j, k in zip(self.model.similar_tasks, self.model.similar_traces)]
+            self.model.log_json["@Similar_tasks"] = [j+":" +
+                                                     k for j, k in zip(self.model.similar_tasks, self.model.similar_traces)]
             self.model.log_json["@Module"].append({
                 "Name": "Predict",
                 "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
@@ -63,9 +63,9 @@ class Predict():
         for index, r in enumerate(results):
             if r != "Not found":
                 self.next_comp[index] = {
-                    "description": '', "comp": r["Dest"]}
+                    "description": "", "comp": r["Dest"]}
                 self.comp_json[SEMANTIC_INFO[index]] = {
-                    "description": '', "comp": r["Dest"]}
+                    "description": "", "comp": r["Dest"]}
                 predict_node[index] = "None"
         indexs = [i for i, x in enumerate(predict_node) if x == "None"]
         predict_prompt = list(filter(lambda x: not any(

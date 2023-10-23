@@ -4,7 +4,7 @@ import argparse
 import shutil
 import threading
 from flask import Response, jsonify
-from typing import Union
+from typing import Any, Union
 from flask import Flask, request
 from src.model import Model
 
@@ -37,13 +37,12 @@ TASK = ""
 MODE = ""
 STATUS = "stop"
 INDEX = 0
-COMPUTATIONAL_GRAPH = []
-GRAPH_ACTION = []
+COMPUTATIONAL_GRAPH: List[Any] = []
+GRAPH_ACTION: List[Any] = []
 ACTION_TRACE = {
     "ACTION": [],
     "ACTION_DESC": [],
     "TRACE": [],
-    "TRACE_DESC": [],
 }
 
 force_load_count = 0
@@ -78,6 +77,15 @@ def wait_and_load_decorator(function):
     return wrapped_function
 
 
+def coverage(text1, text2):
+    words1 = set(text1.split())
+    words2 = set(text2.split())
+
+    common_words = words1.intersection(words2)
+
+    return len(common_words) / max(len(words1), len(words2))
+
+
 @app.route('/demo', methods=['POST'])
 @wait_and_load_decorator
 def demo() -> Union[str, Response]:
@@ -107,8 +115,8 @@ def demo() -> Union[str, Response]:
         elif work_status == "Execute":
             ACTION_TRACE["ACTION"].append(model.log_json["@Action"])
             ACTION_TRACE["ACTION_DESC"].append("NEXT")
-            ACTION_TRACE["TRACE"].append(model.candidate_str)
-            ACTION_TRACE["TRACE_DESC"].append(model.page_description)
+            ACTION_TRACE["TRACE"].append(
+                model.screen.page_root.generate_all_text())
             if MODE == "normal":
                 STATUS = "start"
             elif MODE == "preserve":
@@ -124,7 +132,7 @@ def demo() -> Union[str, Response]:
     if STATUS == "backtracking":
         all_text_uploaded = screen.page_root.generate_all_text()
         for index, step in [x for x in enumerate(COMPUTATIONAL_GRAPH[:-1])][::-1]:
-            if step.screen.page_root.generate_all_text() == all_text_uploaded:
+            if coverage(step.screen.page_root.generate_all_text(), all_text_uploaded) >= 0.98:
                 if index == INDEX-1:
                     break
                 else:
@@ -134,9 +142,8 @@ def demo() -> Union[str, Response]:
             COMPUTATIONAL_GRAPH[INDEX].wrong_reason)
         ACTION_TRACE["ACTION"].append("Click on navigate back due to error")
         ACTION_TRACE["ACTION_DESC"].append("BACK")
-        ACTION_TRACE["TRACE"].append(COMPUTATIONAL_GRAPH[INDEX].candidate_str)
-        ACTION_TRACE["TRACE_DESC"].append(
-            COMPUTATIONAL_GRAPH[INDEX].page_description)
+        ACTION_TRACE["TRACE"].append(
+            COMPUTATIONAL_GRAPH[INDEX].page_root.generate_all_text())
         if res is not None:
             COMPUTATIONAL_GRAPH = COMPUTATIONAL_GRAPH[:INDEX+1]
             result, work_status = COMPUTATIONAL_GRAPH[INDEX].work(
@@ -154,9 +161,7 @@ def demo() -> Union[str, Response]:
                 ACTION_TRACE["ACTION_DESC"].append(
                     "Retry after error detection")
                 ACTION_TRACE["TRACE"].append(
-                    COMPUTATIONAL_GRAPH[INDEX].candidate_str)
-                ACTION_TRACE["TRACE_DESC"].append(
-                    COMPUTATIONAL_GRAPH[INDEX].page_description)
+                    COMPUTATIONAL_GRAPH[INDEX].page_root.generate_all_text())
                 if MODE == "normal":
                     STATUS = "start"
                 elif MODE == "preserve":
@@ -211,7 +216,7 @@ def keyboard_listener():
 
 if __name__ == "__main__":
     default_cmd = 'Turn on gesture navigation'
-    
+
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")
     parser.add_argument("--task", type=str, help="Specify the TASK parameter",

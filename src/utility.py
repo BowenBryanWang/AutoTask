@@ -31,7 +31,7 @@ def cache_decorator(function):
 
 @cache_decorator
 def get_vectors_from_csv(csv_file: str, cache_file: str, field: str) -> Tuple[Any, List[Any]]:
-    df = pd.read_csv(csv_file)
+    df = pd.read_csv(csv_file, delimiter=',')
     database_texts = df[field].tolist()
     vectors = [nlp(text).vector for text in database_texts]
     return df, vectors  # Return the entire DataFrame
@@ -454,9 +454,9 @@ Top Candidate:{}""".format(task, page_description, node_selected)
 
 
 def decide_prompt(task, ACTION_TRACE, semantic_info, Knowledge):
-    return [{
-            "role": "system",
-            "content": """You are a professor with in-depth knowledge of User Interface (UI) tasks. You are assigned a specific UI task, a history operation sequence, and the current UI (which is the result of the operation sequence).
+    prompt = [{
+        "role": "system",
+        "content": """You are a professor with in-depth knowledge of User Interface (UI) tasks. You are assigned a specific UI task, a history operation sequence, and the current UI (which is the result of the operation sequence).
 Your task is to evaluate if the action trace aligns with the assigned task and if the current UI is related to the UI task. You should categorize the operation sequence as:
 1,completed: After the last action and based on the newest UI screen, the user's task is completed;
 2,wrong: After the last action and based on the newest UI screen, the operation sequence is not correct and the current UI is not related to the UI task;
@@ -469,22 +469,24 @@ Step 3:Output a JSON object structured like:
     "status": "completed" or "wrong" or "go on", 
     "reason": reason for the decision
 }."""
-            },
-            {
-            "role": "user",
+    },
+        {
+        "role": "user",
             "content": """Task:{}
 Operation sequence:{}
 Latest UI Page:{}
 ([] means it's empty in the latest page and cannot go on)
 """.format(task, ACTION_TRACE, semantic_info)
-    },
-        {
-        "role": "user",
+    }]
+    if Knowledge:
+        prompt.append({
+            "role": "user",
             "content": """Knowledge:
 {}
 These are knowledge accumulated form previous task execution iterations, you should think step by step about how these would guide you to the correct answer.
 """.format(Knowledge)
-    }]
+        })
+    return prompt
 
 
 def Knowledge_prompt(TASK, ACTION_TRACE):
