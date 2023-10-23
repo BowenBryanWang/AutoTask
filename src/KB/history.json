@@ -1,0 +1,123 @@
+[
+    {
+        "Previous Actions": [
+            {
+                "action_type": "click",
+                "idx": 5
+            },
+            {
+                "action_type": "click",
+                "idx": 4
+            },
+            {
+                "action_type": "click",
+                "idx": 1
+            }
+        ],
+        "Screen": [
+            "<div id=1 class='' > SMS preference\n    <p> T-Mobile </p> </div>\n",
+            "<p class='android:id/summary' > T-Mobile </p>\n",
+            "<p class='android:id/title' > SMS preference </p>\n",
+            "<div id=2 class='' > Calls preference\n    <p> T-Mobile </p> </div>\n",
+            "<p class='android:id/summary' > T-Mobile </p>\n",
+            "<p class='android:id/title' > Calls preference </p>\n",
+            "<p class='com.android.settings:id/cycle_left_time' > 22 days left </p>\n",
+            "<p class='com.android.settings:id/data_limits' > 2.00 GB data warning </p>\n",
+            "<p class='android:id/text2' > 2.00 GB </p>\n",
+            "<p class='android:id/text1' > 0 B </p>\n",
+            "<p class='com.android.settings:id/data_usage_view' > 2.86 MB used </p>\n",
+            "<button id=3 class='' > Use SIM </button>\n",
+            "<div id=4 class='com.android.settings:id/main_switch_bar' > Use SIM </div>\n",
+            "<switch id=5 class='android:id/switch_widget' clickable> On </switch>\n",
+            "<p class='com.android.settings:id/switch_text' > Use SIM </p>\n",
+            "<div id=6 class='com.android.settings:id/edit_sim_name' description='SIM name & color'>  </div>\n",
+            "<div id=7 class='' description='Navigate up'>  </div>\n"
+        ],
+        "Instruction": "View data usage of 'T-mobile' on this phone",
+        "Answer": {
+            "action_type": "report_answer",
+            "text": "2.86 MB used"
+        }
+    },
+    {
+        "Previous Actions": [],
+        "Screen": [
+            "<div id=1 class='' >  </div>\n",
+            "<div id=2 class='' > Notifications\n    <p> Notification history, conversations </p> </div>\n",
+            "<p class='android:id/summary' > Notification history, conversations </p>\n",
+            "<p class='android:id/title' > Notifications </p>\n",
+            "<div id=3 class='' > Apps\n    <p> Assistant, recent apps, default apps </p> </div>\n",
+            "<p class='android:id/summary' > Assistant, recent apps, default apps </p>\n",
+            "<p class='android:id/title' > Apps </p>\n",
+            "<div id=4 class='' > Connected devices\n    <p> Bluetooth, pairing </p> </div>\n",
+            "<p class='android:id/summary' > Bluetooth, pairing </p>\n",
+            "<p class='android:id/title' > Connected devices </p>\n",
+            "<div id=5 class='' > Network & internet\n    <p> Mobile, Wi\u2011Fi, hotspot </p> </div>\n",
+            "<p class='android:id/summary' > Mobile, Wi\u2011Fi, hotspot </p>\n",
+            "<p class='android:id/title' > Network & internet </p>\n",
+            "<div id=6 class='com.android.settings:id/search_action_bar' > Search settings </div>\n",
+            "<p class='com.android.settings:id/search_action_bar_title' > Search settings </p>\n",
+            "<p class='com.android.settings:id/homepage_title' > Settings </p>\n",
+            "<button id=7 class='com.android.settings:id/account_avatar' description='Profile picture, double tap to open Google Account'>  </button>\n"
+        ],
+        "Instruction": "View data usage of 'T-mobile' on this phone",
+        "Answer": {
+            "action_type": "click",
+            "idx": 5
+        }
+    },
+    {
+        "Previous Actions": [],
+        "Screen": [
+            "<div id=1 class='' >  </div>\n",
+            "<div id=2 class='' > Notifications\n    <p> Notification history, conversations </p> </div>\n",
+            "<p class='android:id/summary' > Notification history, conversations </p>\n",
+            "<p class='android:id/title' > Notifications </p>\n",
+            "<div id=3 class='' > Apps\n    <p> Assistant, recent apps, default apps </p> </div>\n",
+            "<p class='android:id/summary' > Assistant, recent apps, default apps </p>\n",
+            "<p class='android:id/title' > Apps </p>\n",
+            "<div id=4 class='' > Connected devices\n    <p> Bluetooth, pairing </p> </div>\n",
+            "<p class='android:id/summary' > Bluetooth, pairing </p>\n",
+            "<p class='android:id/title' > Connected devices </p>\n",
+            "<div id=5 class='' > Network & internet\n    <p> Mobile, Wi\u2011Fi, hotspot </p> </div>\n",
+            "<p class='android:id/summary' > Mobile, Wi\u2011Fi, hotspot </p>\n",
+            "<p class='android:id/title' > Network & internet </p>\n",
+            "<div id=6 class='com.android.settings:id/search_action_bar' > Search settings </div>\n",
+            "<p class='com.android.settings:id/search_action_bar_title' > Search settings </p>\n",
+            "<p class='com.android.settings:id/homepage_title' > Settings </p>\n",
+            "<button id=7 class='com.android.settings:id/account_avatar' description='Profile picture, double tap to open Google Account'>  </button>\n"
+        ],
+        "Instruction": "View data usage of 'T-mobile' on this phone",
+        "Answer": {
+            "action_type": "click",
+            "idx": 5
+        }
+    },
+    {
+        "Previous Actions": [],
+        "Screen": [
+            "<div id=1 class='' >  </div>\n",
+            "<div id=2 class='' > Notifications\n    <p> Notification history, conversations </p> </div>\n",
+            "<p class='android:id/summary' > Notification history, conversations </p>\n",
+            "<p class='android:id/title' > Notifications </p>\n",
+            "<div id=3 class='' > Apps\n    <p> Assistant, recent apps, default apps </p> </div>\n",
+            "<p class='android:id/summary' > Assistant, recent apps, default apps </p>\n",
+            "<p class='android:id/title' > Apps </p>\n",
+            "<div id=4 class='' > Connected devices\n    <p> Bluetooth, pairing </p> </div>\n",
+            "<p class='android:id/summary' > Bluetooth, pairing </p>\n",
+            "<p class='android:id/title' > Connected devices </p>\n",
+            "<div id=5 class='' > Network & internet\n    <p> Mobile, Wi\u2011Fi, hotspot </p> </div>\n",
+            "<p class='android:id/summary' > Mobile, Wi\u2011Fi, hotspot </p>\n",
+            "<p class='android:id/title' > Network & internet </p>\n",
+            "<div id=6 class='com.android.settings:id/search_action_bar' > Search settings </div>\n",
+            "<p class='com.android.settings:id/search_action_bar_title' > Search settings </p>\n",
+            "<p class='com.android.settings:id/homepage_title' > Settings </p>\n",
+            "<button id=7 class='com.android.settings:id/account_avatar' description='Profile picture, double tap to open Google Account'>  </button>\n"
+        ],
+        "Instruction": "View data usage of 'T-mobile' on this phone",
+        "Answer": {
+            "action_type": "click",
+            "idx": 5
+        }
+    }
+]
