@@ -87,7 +87,6 @@ class Model:
                             prev_para,
                             current_info,
                         ])
-
                 if kwargs.get("flag") != "debug":
                     status = self.prev_model.decide_module.decide(
                         new_screen=self.screen, ACTION_TRACE=kwargs.get("ACTION_TRACE"), flag="normal")
