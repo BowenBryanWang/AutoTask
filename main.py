@@ -204,7 +204,7 @@ def keyboard_listener():
 
 
 if __name__ == "__main__":
-    default_cmd = 'show me the security details of the email to 潘立航'
+    default_cmd = 'Turn on gesture navigation'
     
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")

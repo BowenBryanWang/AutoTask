@@ -356,8 +356,9 @@ def Task_UI_grounding_prompt(task, current_path_str, similar_tasks, similar_trac
             "role": "system",
             "content": """You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
 Your job is to
-(1) summary what has been done and what should be done next.
-(2) choose the next UI element to be operated considering the user task, the history operation sequence, and the current UI. You should rate the available UI elements on the current page. For each option, provide a confidence rating from 1.00-10.00, where 1.00 indicates 'definitely no' and 10.00 indicates 'most likely'. The element with the largest rating will be choosen as the next element to be operated. Your score should be accurate to two decimal places and must be distinctive.
+(1) summary what has been done;
+(2) decide what should be done next according to the elements on the current UI;
+(3) choose the next UI element to be operated considering the user task, the history operation sequence, and the current UI. You should rate the available UI elements on the current page. For each option, provide a confidence rating from 1.00-10.00, where 1.00 indicates 'definitely no' and 10.00 indicates 'most likely'. The element with the largest rating will be choosen as the next element to be operated. Your score should be accurate to two decimal places.
 The structure of the output should be: {
     "finished_steps": [...],
     "next_steps": [...],
@@ -368,8 +369,9 @@ Example:
     "next_steps": ["Edit('hi')", "Click('Send')"]
     "id_1": 9.53, "id_2": 9.71, "id_3": 3.20
 }
-Follow steps below:
-Step 1: Think step by step about what has been done and what should be done next.
+Think step by step and output your reasoning process:
+Step 1: what has been done;
+Step 2: summary the elements on the current UI and decide what should be done next;
 Step 2: Output a JSON object with scores. 
 """
         },
@@ -384,8 +386,7 @@ Current UI:
 '''
 Successive results of current UI:
 {}
-REMEMBER always give Back buttons like "Navigate up" the score of 1.0, they are not allowed to perform.
-NOTE that your scoring should be diverse between all of them, avoid giving same scores to some of them in case of identication.
+REMEMBER always assign Back buttons like "Navigate up" the score of 1.0, they are not allowed to perform.
 """.format(
                 task,
                 current_path_str,
