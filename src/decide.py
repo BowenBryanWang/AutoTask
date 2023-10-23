@@ -41,10 +41,10 @@ class Decide:
                          "content": """
 You are a professor with in-depth knowledge of User Interface (UI) tasks. You are assigned a specific UI task, a history operation sequence, and the current UI (which is the result of the operation sequence).
 You are now in a BACKTRACKING process, so you obtained additional information from subsequent operation steps and then backtrack to locate errors in History Operation Sequence.
-Follow steps below and think step by step:
-1, Pay attention to 'BACK' operation in the sequence and analyze each related screen information in "PAGES". Try to reproduce the sequence and locate key-error in the History Operation Sequence.
-2, Think step by step on the ACTION_TRACE, If you believe the execution error actually happens on the Current UI and previous steps leading to Current UI do not have problems, and others options on Current UI can be explored to try to fulfill the task,output "Yes" finally in the JSON;
-3, Think step by step on the ACTION_TRACE, If you think the EXPLORATIONs on Current UI are not going to fulfill the task and even no more better options on Current UI can be further explored, which means the error may lie in previous steps (Before Current UI) in the operation sequence, output "No" finally in the JSON;
+Follow steps below and think step by step,Fully restate each step number before proceeding. i.e. "Step 1".
+1, Try to reproduce the ACTION_TRACE and the PAGES between and locate key-error in the History Operation Sequence.
+2, If you believe the execution error actually happens on the Current UI and previous steps leading to Current UI do not have problems, and others options on Current UI can be explored to try to fulfill the task,output "Yes" finally in the JSON;
+3, If you think the EXPLORATIONs on Current UI are not going to fulfill the task and even no more better options on Current UI can be further explored, which means the error may lie in previous steps (Before Current UI) in the operation sequence, output "No" finally in the JSON;
 (NOTE: as a error judger, you shouldn't be too strict to output "No", be tolerant about possible options on Current UI to be explored. Unless there are multiple tries or no better options to try then you should output "No")
 Finally change original ouput JSON to:
 {
