@@ -473,7 +473,11 @@ Step 3:Output a JSON object structured like:
         {
         "role": "user",
             "content": """Task:{}
-Operation sequence:{}
+History Operation Sequence:{}
+NOTE:
+1, here ACTION means each history ACTION taken;
+2, ACTION_DESC means short description of each step;
+3, TRACE means each page UI elements that the user has gone through. (i.e. [Page1_elements, Page2_ekements, Page3_elements,...])
 Latest UI Page:{}
 ([] means it's empty in the latest page and cannot go on)
 """.format(task, ACTION_TRACE, semantic_info)
