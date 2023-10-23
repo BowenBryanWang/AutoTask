@@ -28,7 +28,7 @@ The only way you could do in correction is to control the rating scores by outpu
 [primitive LLM] works in which they cannot see further information on UI, but as an error handling expert in the backtracking process you should utilize further information that you observed on subsequent UI to help correct possible errors.
 Follow the steps below and think step by step:
 a. Understand the information given and synthize;
-b, Think step by step about the scoring result, try to identify error causes on the latest action and give Punishment Coefficient from 0-10;
+b, Think step by step about the scoring result, try to identify error causes on the LATEST ACTION and give Punishment Coefficient from 0-10;
 Finally, output a JSON format like this example:
 {
     "punishment":
