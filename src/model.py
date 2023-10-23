@@ -89,7 +89,7 @@ class Model:
                         ])
                 if kwargs.get("flag") != "debug":
                     status = self.prev_model.decide_module.decide(
-                        new_screen=self.screen, ACTION_TRACE=kwargs.get("ACTION_TRACE"))
+                        new_screen=self.screen, ACTION_TRACE=kwargs.get("ACTION_TRACE"), flag="normal")
                     if status == "wrong":
                         print("wrong: feedback started")
                         return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}, "wrong"
