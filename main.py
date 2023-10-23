@@ -215,7 +215,7 @@ def keyboard_listener():
 
 
 if __name__ == "__main__":
-    default_cmd = 'enable quickly open camera'
+    default_cmd = 'turn on Web & App Activity in Discover'
 
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")

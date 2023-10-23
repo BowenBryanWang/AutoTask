@@ -90,7 +90,7 @@ Finally, output a JSON format like this example:
             "role": "user",
             "content": """
                 Modules: {}
-                """.format(self.info["@Module"])
+                """.format(self.info["@Module"][1])
         })
         response = GPT(self.prompt)
         p_score = response.get("punishment")

@@ -1,3 +1,4 @@
+import copy
 import json
 import os
 import numpy as np
@@ -24,7 +25,7 @@ class Evaluate():
                 "Name": "Evaluate",
                 "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
                 "Output": {key: item for key, item in zip(list(
-                    filter(lambda x: "id=" in x, self.model.screen.semantic_info_list)), self.score)},
+                    filter(lambda x: "id=" in x, self.model.screen.semantic_info_list)), self.original_score)},
             })
 
             with open("logs/log{}.json".format(self.model.index), "w", encoding="utf-8") as f:
@@ -54,6 +55,7 @@ class Evaluate():
             if key.startswith('id_'):
                 idx = int(key[len('id_'):]) - 1
                 scores[idx] = rating
+        self.original_score = copy.deepcopy(self.score)
         self.score, self.reason = np.array(
             scores) / 10, ["unknown"] * len(scores)
 
