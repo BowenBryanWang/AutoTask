@@ -38,7 +38,8 @@ class Evaluate():
 
     @log_decorator
     def evaluate(self, ACTION_TRACE):
-        self.score_comp(ACTION_TRACE)
+        if self.score_comp(ACTION_TRACE) == "wrong":
+            return "wrong"
         self.select_top_one()
         return self.score
 
@@ -58,6 +59,10 @@ class Evaluate():
         self.original_score = copy.deepcopy(self.score)
         self.score, self.reason = np.array(
             scores) / 10, ["unknown"] * len(scores)
+        self.score = (self.score * np.array(self.weights)
+                      ).tolist() if self.weights != [] else self.score
+        if all(value < 0.2 for value in self.score):
+            return "wrong"
 
         self.model.candidate_str = [item for index, item in enumerate(self.model.screen.semantic_info_list) if index in [
             i for i, score in enumerate(self.score) if score > 3.0] and "id=" in item]
@@ -66,8 +71,7 @@ class Evaluate():
         self.score = np.exp(self.score) / np.sum(np.exp(self.score))
         print(self.score)
         print(self.weights)
-        self.score = (self.score * np.array(self.weights)
-                      ).tolist() if self.weights != [] else self.score
+
         print(self.score)
 
     def select_top_one(self):
