@@ -37,20 +37,11 @@ class Decide:
         prompt = decide_prompt(
             self.model.task, ACTION_TRACE, new_screen.semantic_info, knowledge)
         if flag == "debug":
-            prompt[0] = {"role": "system",
-                         "content": """
-You are a professor with in-depth knowledge of User Interface (UI) tasks. You are assigned a specific UI task, a history operation sequence, and the current UI (which is the result of the operation sequence).
-You are now in a BACKTRACKING process, so you obtained additional information from subsequent operation steps and then backtrack to locate errors in History Operation Sequence.
-Follow steps below and think step by step,Fully restate each step number before proceeding. i.e. "Step 1".
-1, Try to reproduce the ACTION_TRACE and the PAGES between and locate key-error in the History Operation Sequence.
-2, If you believe the execution error actually happens on the Current UI and previous steps leading to Current UI do not have problems, and others options on Current UI can be explored to try to fulfill the task,output "Yes" finally in the JSON;
-3, If you think the EXPLORATIONs on Current UI are not going to fulfill the task and even no more better options on Current UI can be further explored, which means the error may lie in previous steps (Before Current UI) in the operation sequence, output "No" finally in the JSON;
-(NOTE: as a error judger, you shouldn't be too strict to output "No", be tolerant about possible options on Current UI to be explored. Unless there are multiple tries or no better options to try then you should output "No")
-Finally change original ouput JSON to:
-{
-    "status":"No" or "Yes"
-    "reason":"...."(reason)
-}"""}
+            prompt.append({"role": "user",
+                           "content": """请注意以下特殊的额外信息：
+现在你处于回溯纠错阶段，这意味着在ACTION_TRACE当中最后若干步骤执行后因不符合任务要求导致被回溯才到达此页面，作为决策模块，你需要判断是否继续在当前UI上进行探索，如果是，请输出status为“go on”；如果不是（即无法继续，需要继续往前回溯），请输出“wrong”。
+为此，请仔细分析ACTION_TRACE中的每步操作，和每步操作进入的新页面的信息，特别是回溯导致的信息，判断在该页面上是否继续探索。
+"""})
         self.answer = GPT(prompt)
         if flag == "debug":
             self.model.wrong_reason = self.answer["reason"]

@@ -215,7 +215,7 @@ def keyboard_listener():
 
 
 if __name__ == "__main__":
-    default_cmd = 'Turn on gesture navigation'
+    default_cmd = 'turn on Web & App Activity in Google app'
 
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")
