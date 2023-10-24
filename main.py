@@ -108,7 +108,8 @@ def demo() -> Union[str, Response]:
         ACTION_TRACE["PAGES"].append(
             model.screen.page_root.generate_all_text())
         print("work")
-        result, work_status = model.work(ACTION_TRACE=process_ACTION_TRACE(ACTION_TRACE))
+        result, work_status = model.work(
+            ACTION_TRACE=process_ACTION_TRACE(ACTION_TRACE))
         model.final_result = result
         if work_status == "wrong":
             if MODE == "normal":
