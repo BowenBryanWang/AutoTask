@@ -1,5 +1,5 @@
 import time
-from utility import openai
+import openai
 import os, pickle
 import traceback
 from typing import List
