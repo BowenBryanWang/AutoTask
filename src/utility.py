@@ -472,8 +472,9 @@ Your task is to evaluate if the operation sequence and the current UI can furthe
 3,go on: After the Latest action and the subsequent newest UI screen, the Last Action is on the correct track, which means the agent can continue to perform further operations (excluding navigating back) to complete the task. Further Actions should be taken on the current (may also be the subsequent pages) UI page.
 Use the following steps to respond. Fully restate each step number before proceeding. i.e. "Step 1".
 Step 1:Reason step-by-step about the the history ACTIONs (especially the last action leading to the Current UI)and UI TASK. Whether Last Action can contribute to fulfill the user's task IN THE LONG RUN?
-Step 2:Reason step-by-step about whether LATEST UI PAGE can further lead to the UI task fulfillment IN THE LONG RUN. Can any element on screen be operated next to lead to the fulfillment of the task? (NOTE: element with specific function related to the task and element with GENERAL proposes both can be explored)
-Step 3:Synthesize the above thoughts and output a conclusion on the STATUS as a JSON object structured like: 
+Step 2:Reason step-by-step about whether LATEST UI PAGE can further lead to the UI task fulfillment IN THE LONG RUN. Can any element on screen be operated next to lead to the fulfillment of the task?
+Step 3:Reason step-by-step about whether there are any elements with GENERAL proposes that are worthy being explored. If any, you should also choose "go on" and explore them.
+Step 4:Synthesize the above thoughts and output a conclusion on the STATUS as a JSON object structured like: 
 {
     "next ui element": if the value of the status is "go on", please also output the next ui element to be operated. The status should not be "go on" if none element in the UI page can be the next.
     "status": "completed" or "wrong" or "go on". Attention that only when "next ui element" refers to a valid element on the screen can you choose "go on"
