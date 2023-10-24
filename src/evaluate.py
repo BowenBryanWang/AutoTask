@@ -47,7 +47,7 @@ class Evaluate():
         task, knowledge = self.model.Selection_KB.find_experiences(
             query=[self.model.task, self.model.screen.page_description])
         resp = GPT(Task_UI_grounding_prompt(self.model.task, [ACTION_TRACE[key]
-                                                              for key in ACTION_TRACE.keys() if "ACTION" in key], self.model.similar_tasks,
+                                                              for key in ACTION_TRACE.keys() if "Action" in key], self.model.similar_tasks,
                                             self.model.similar_traces, self.model.predicted_step, self.model.screen.semantic_info_list, self.model.predict_module.comp_json_simplified, knowledge))
 
         # self.score, self.reason = np.array(resp["score"])/10, resp["reason"]
