@@ -267,7 +267,7 @@ Think step by step and then output the predictions in a JSON formated like:
             "content": """
                     User task: {}
                     Similar examples: {}
-                    """.format(task, [j+":"+"=>".join(k) for j, k in zip(similar_tasks, similar_traces)])
+                    """.format(task, [j+":"+k for j, k in zip(similar_tasks, similar_traces)])
         },
         {
             "role": "user",
@@ -408,7 +408,7 @@ REMEMBER always assign Back buttons like "Navigate up" the score of 1.0, they ar
 """.format(
                 task,
                 current_path_str,
-                [j+":"+"=>".join(k) for j, k in zip(
+                [j+":"+k for j, k in zip(
                     similar_tasks, similar_traces)],
                 "".join(semantic_info_list),
                 next_comp
