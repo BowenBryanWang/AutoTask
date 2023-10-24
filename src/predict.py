@@ -81,15 +81,14 @@ class Predict():
                 self.comp_json[SEMANTIC_INFO[index]] = value
 
         sem_list = copy.deepcopy(self.model.screen.semantic_info_list)
-        temp = [add_value_to_html_tag(key, value["description"]) if value != [
-        ] else key for key, value in self.comp_json.items()]
+        temp = [add_value_to_html_tag(key, value["description"]) if value != 'Unknown' else key for key, value in self.comp_json.items()]
         for i in range(len(sem_list)):
             if "id=" in sem_list[i]:
                 sem_list[i] = temp[int(
                     sem_list[i].split("id=")[1].split(" ")[0])-1]
         self.model.extended_info = add_son_to_father(
             sem_list, self.model.screen.trans_relation)
-        self.model.comp_json_simplified = {"id="+str(index+1): item for index,(key,item) in enumerate(self.model.comp_json.items())}
+        self.comp_json_simplified = {"id="+str(index+1): item for index,(key,item) in enumerate(self.comp_json.items())}
 
     @ log_decorator
     def predict(self, ACTION_TRACE=None):
