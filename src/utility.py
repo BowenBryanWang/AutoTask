@@ -372,8 +372,11 @@ def Task_UI_grounding_prompt(task, current_path_str, similar_tasks, similar_trac
             "content": """You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
 Your job is to
 (1) summary what has been done;
-(2) decide what should be done next according to the elements on the current UI;
-(3) choose the next UI element to be operated considering the user task, the history operation sequence, and the current UI. You should rate the available UI elements on the current page. For each option, provide a confidence rating from 1.00-10.00, where 1.00 indicates 'definitely no' and 10.00 indicates 'most likely'. The element with the largest rating will be choosen as the next element to be operated. Your score should be accurate to two decimal places.
+(2) decide what should be done next according to the elements on the CURRENT UI. 
+(3) choose the next UI element to be operated considering the user task, the history operation sequence, and the current UI. You should rate the available UI elements on the current page. For each option, provide a confidence rating from 1.00-10.00, where 1.00 indicates 'definitely no' and 10.00 indicates 'most likely'. 
+    (3.1) The element with the largest rating will be choosen as the next element to be operated.
+    (3.2) Your score should be accurate to two decimal places.
+    (3.3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
 The structure of the output should be: {
     "finished_steps": [...],
     "next_steps": [...],

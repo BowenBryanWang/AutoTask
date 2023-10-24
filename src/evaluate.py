@@ -56,7 +56,7 @@ class Evaluate():
             if key.startswith('id_'):
                 idx = int(key[len('id_'):]) - 1
                 scores[idx] = rating
-        if self.score != []:
+        if not isinstance(self.score, list) and self.score.size > 0:
             indices = [index for index, value in enumerate(
                 self.weights) if value != 1.0]
             if indices:
