@@ -219,7 +219,7 @@ def keyboard_listener():
 
 
 if __name__ == "__main__":
-    default_cmd = 'enable phone call & SMS for the user named Alice'
+    default_cmd = 'enable phone call & SMS for the system user named Alice'
 
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")
