@@ -57,17 +57,17 @@ class Evaluate():
             if key.startswith('id_'):
                 idx = int(key[len('id_'):]) - 1
                 scores[idx] = rating
-        if not isinstance(self.score, list) and self.score.size > 0:
-            indices = [index for index, value in enumerate(
-                self.weights) if value != 1.0]
-            if indices:
-                for i, s in enumerate(scores):
-                    if i not in indices:
-                        self.score[i] = s
-            else:
-                self.score = np.array(scores) / 10
-        else:
-            self.score = np.array(scores) / 10
+        # if not isinstance(self.score, list) and self.score.size > 0:
+        #     indices = [index for index, value in enumerate(
+        #         self.weights) if value != 1.0]
+        #     if indices:
+        #         for i, s in enumerate(scores):
+        #             if i not in indices:
+        #                 self.score[i] = s
+        #     else:
+        #         self.score = np.array(scores) / 10
+        # else:
+        self.score = np.array(scores) / 10
 
         self.score = (self.score * np.array(self.weights)
                       ).tolist() if self.weights != [] else self.score

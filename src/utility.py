@@ -468,11 +468,11 @@ def decide_prompt(task, ACTION_TRACE, semantic_info, Knowledge):
 Your task is to evaluate if the action trace aligns with the assigned task and if the current UI is related to the UI task. You should categorize the operation sequence as:
 1,completed: After the Latest action the subsequent newest UI screen, the user's task is completed;
 2,wrong: After the Latest action the subsequent newest UI screen, the history operation sequence is not correct and the current UI is not related to the UI task. You should choose "wrong" if you think navigating back is necessary to finish the task.
-3,go on: After the Latest action the subsequent newest UI screen, the history operation sequence is on the correct track, which means the agent can continue to perform further operations (excluding navigating back) to complete the task. Further Actions should be taken on the current (may also be the subsequent pages) UI page.
+3,go on: After the Latest action the subsequent newest UI screen, the History Operation Sequence is on the correct track, which means the agent can continue to perform further operations (excluding navigating back) to complete the task. Further Actions should be taken on the current (may also be the subsequent pages) UI page.
 Use the following steps to respond to user inputs. Fully restate each step number before proceeding. i.e. "Step 1".
 Step 1:Reason step-by-step about the relationship of the history ACTION sequence and UI task. Whether the sequence helps fulfill the user's task semantically?
 Step 2:Reason step-by-step about whether the latest ACTION and subsequent UI SCREEN are relevant to the UI task. Is there any element on screen that is related with the task and you think it should be operated next?
-Step 3:Output a JSON object structured like: 
+Step 3:Synthesize the above output a conclusion on the STATUS as a JSON object structured like: 
 {
     "next ui element": if the value of the status is "go on", please also output the next ui element to be operated. The status should not be "go on" if none element in the UI page can be the next.
     "status": "completed" or "wrong" or "go on". Attention that only when "next ui element" refers to a valid element on the screen can you choose "go on"
