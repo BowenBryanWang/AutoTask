@@ -35,7 +35,7 @@ class Decide:
         task, knowledge = self.model.Decision_KB.find_experiences(
             query=[self.model.task, self.model.screen.page_description])
         prompt = decide_prompt(
-            self.model.task, ACTION_TRACE, new_screen.semantic_info, knowledge)
+            self.model.task, self.model.prev_model.current_action, ACTION_TRACE, new_screen.semantic_info, knowledge)
         if flag == "debug":
             prompt.append({"role": "user",
                            "content": """请注意以下特殊的额外信息：
@@ -57,7 +57,7 @@ class Decide:
         with open("./src/KB/task/task.csv", "a", encoding="utf-8") as f:
             writer = csv.writer(f, delimiter=',')
             writer.writerow([self.model.task, [ACTION_TRACE[key]
-                            for key in ACTION_TRACE.keys() if "ACTION" in key]])
+                            for key in ACTION_TRACE.keys() if "Action" in key]])
         response = GPT(Knowledge_prompt(
             TASK=self.model.task, ACTION_TRACE=ACTION_TRACE))
         selection_knowledge, decision_knowledge, error_knowledge = response.get(
