@@ -39,6 +39,7 @@ class Evaluate():
     @log_decorator
     def evaluate(self, ACTION_TRACE):
         if self.score_comp(ACTION_TRACE) == "wrong":
+            self.model.currecnt_action = "Back"
             return "wrong"
         self.select_top_one()
         return self.score
