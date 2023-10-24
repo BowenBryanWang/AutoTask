@@ -405,7 +405,7 @@ REMEMBER always assign Back buttons like "Navigate up" the score of 1.0, they ar
 """.format(
                 task,
                 current_path_str,
-                [j+":"+"=>".join(k) for j, k in zip(
+                [j+":"+k for j, k in zip(
                     similar_tasks, similar_traces)],
                 "".join(semantic_info_list),
                 next_comp
