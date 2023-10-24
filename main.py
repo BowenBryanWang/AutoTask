@@ -15,6 +15,8 @@ import logging
 
 import click
 
+from src.utility import process_ACTION_TRACE
+
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
@@ -104,9 +106,10 @@ def demo() -> Union[str, Response]:
                       prev_model=COMPUTATIONAL_GRAPH[-1] if COMPUTATIONAL_GRAPH != [] else None, index=INDEX)
         COMPUTATIONAL_GRAPH.append(model)
         ACTION_TRACE["PAGES"].append(
-            model.screen.page_root.generate_all_text())
+            model.screen.page_root.generate_all_text().split("-"))
         print("work")
-        result, work_status = model.work(ACTION_TRACE=ACTION_TRACE)
+        result, work_status = model.work(
+            ACTION_TRACE=process_ACTION_TRACE(ACTION_TRACE))
         model.final_result = result
         if work_status == "wrong":
             if MODE == "normal":
@@ -142,14 +145,14 @@ def demo() -> Union[str, Response]:
         res, act = COMPUTATIONAL_GRAPH[INDEX].feedback_module.feedback(
             COMPUTATIONAL_GRAPH[INDEX].wrong_reason)
         ACTION_TRACE["PAGES"].append(
-            COMPUTATIONAL_GRAPH[INDEX].screen.page_root.generate_all_text())
+            COMPUTATIONAL_GRAPH[INDEX].screen.page_root.generate_all_text().split("-"))
         ACTION_TRACE["ACTION"].append("Click on navigate back due to error")
         ACTION_TRACE["ACTION_DESC"].append("BACK")
 
         if res is not None:
             COMPUTATIONAL_GRAPH = COMPUTATIONAL_GRAPH[:INDEX+1]
             result, work_status = COMPUTATIONAL_GRAPH[INDEX].work(
-                ACTION_TRACE=ACTION_TRACE, flag="debug")
+                ACTION_TRACE=process_ACTION_TRACE(ACTION_TRACE), flag="debug")
             COMPUTATIONAL_GRAPH[INDEX].final_result = result
             if work_status == "wrong":
                 if MODE == "normal":

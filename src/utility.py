@@ -371,12 +371,14 @@ def Task_UI_grounding_prompt(task, current_path_str, similar_tasks, similar_trac
             "role": "system",
             "content": """You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
 Your job is to
-(1) summary what has been done;
-(2) decide what should be done next according to the elements on the CURRENT UI. 
-(3) choose the next UI element to be operated considering the user task, the history operation sequence, and the current UI. You should rate the available UI elements on the current page. For each option, provide a confidence rating from 1.00-10.00, where 1.00 indicates 'definitely no' and 10.00 indicates 'most likely'. 
-    (3.1) The element with the largest rating will be choosen as the next element to be operated.
-    (3.2) Your score should be accurate to two decimal places.
-    (3.3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
+(1) summary what has been done according to the History Operation Sequecnce;
+(2) decide what general direction should we go next according to the relationship of elements on the CURRENT UI and USER TASK. 
+(3) think step by step on the Succesive Results of each UI options, which represents the subsequent items after operating on them. They can indicate the ground-truth operation results which is rather important to fulfilling User Task
+(4) choose the next UI element to be operated considering the user task, the history operation sequence, and the current UI. You should rate the available UI elements on the current page. 
+    (4.1) The element with the largest rating will be choosen as the next element to be operated.
+    (4.2) Your score should be accurate to two decimal places.
+    (4.3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
+For each option, provide a confidence rating from 1.00-10.00, based on the relation of each option to the task, where 1.00 is the lowest tier indicating complete irrelevance and may lead to errors, 3.00 is the second tier indicating minor relevance, 5.00 is the medium tier indicating neutrality, 7.00 indicates higher relevance, possibly a candidate, and 10.00 indicates the most likely to be chosen and executed.
 The structure of the output should be: {
     "finished_steps": [...],
     "next_steps": [...],
@@ -385,7 +387,7 @@ Example:
 {
     "finished_steps": ["Click('Alice')"]
     "next_steps": ["Edit('hi')", "Click('Send')"]
-    "id_1": 9.53, "id_2": 9.71, "id_3": 3.20
+    "id_1": 5.53, "id_2": 9.71, "id_3": 3.20
 }
 Think step by step and output your reasoning process: 
 Step 1: what has been done,especially pay attention to those steps which is wrong and caused navigate back if any;
