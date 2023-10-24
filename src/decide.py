@@ -35,7 +35,7 @@ class Decide:
         task, knowledge = self.model.Decision_KB.find_experiences(
             query=[self.model.task, self.model.screen.page_description])
         prompt = decide_prompt(
-            self.model.task, self.model.prev_model.current_action, ACTION_TRACE, new_screen.semantic_info, knowledge)
+            self.model.task, self.model.prev_model.current_action if self.model.prev_model else "", ACTION_TRACE, new_screen.semantic_info, knowledge)
         if flag == "debug":
             prompt.append({"role": "user",
                            "content": """请注意以下特殊的额外信息：
