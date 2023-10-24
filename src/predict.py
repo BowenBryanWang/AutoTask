@@ -54,7 +54,7 @@ class Predict():
         SEMANTIC_STR = self.model.screen.page_root.generate_all_text()
         self.current_comp = SEMANTIC_INFO
         self.next_comp = [""]*len(SEMANTIC_INFO)
-        self.comp_json = dict.fromkeys(SEMANTIC_INFO, [])
+        self.comp_json = dict.fromkeys(SEMANTIC_INFO, "Unknown")
         predict_node = copy.deepcopy(SEMANTIC_INFO)
         queries = [[process_string(SEMANTIC_STR), process_string(SEMANTIC_INFO[i])]
                    for i in range(len(SEMANTIC_INFO))]
@@ -89,6 +89,7 @@ class Predict():
                     sem_list[i].split("id=")[1].split(" ")[0])-1]
         self.model.extended_info = add_son_to_father(
             sem_list, self.model.screen.trans_relation)
+        self.model.comp_json_simplified = {"id="+str(index+1): item for index,(key,item) in enumerate(self.model.comp_json.items())}
 
     @ log_decorator
     def predict(self, ACTION_TRACE=None):
