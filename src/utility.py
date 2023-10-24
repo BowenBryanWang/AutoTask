@@ -583,6 +583,6 @@ def process_ACTION_TRACE(ACTION_TRACE):
     for i in range(len(pages)):
         result_dict[f'Page_{i}'] = pages[i]
         if i < len(actions):  # Ensure we don't go out of bounds
-            result_dict[f'Act_{i}_to_{i + 1}'] = actions[i]
+            result_dict[f'Action_{i}_to_{i + 1}'] = actions[i]
 
     return result_dict
