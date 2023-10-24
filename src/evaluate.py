@@ -3,6 +3,7 @@ import json
 import os
 import numpy as np
 import openai
+from src.embedding import sort_by_similarity
 from src.utility import GPT, Task_UI_grounding_prompt, get_top_combined_similarities, plan_prompt, process_action_info
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
@@ -47,9 +48,13 @@ class Evaluate():
     def score_comp(self, ACTION_TRACE):
         task, knowledge = self.model.Selection_KB.find_experiences(
             query=[self.model.task, self.model.screen.page_description])
-        resp = GPT(Task_UI_grounding_prompt(self.model.task, [ACTION_TRACE[key]
-                                                              for key in ACTION_TRACE.keys() if "Action" in key], self.model.similar_tasks,
-                                            self.model.similar_traces, self.model.predicted_step, self.model.screen.semantic_info_list, self.model.predict_module.comp_json_simplified, knowledge))
+        prompt = Task_UI_grounding_prompt(self.model.task, [ACTION_TRACE[key]
+                                                            for key in ACTION_TRACE.keys() if "Action" in key], self.model.similar_tasks,
+                                          self.model.similar_traces, self.model.predicted_step, self.model.screen.semantic_info_list, self.model.predict_module.comp_json_simplified, knowledge)
+        similarity = sort_by_similarity(
+            prompt[0]["content"]+prompt[1]["content"], self.model.screen.semantic_info_list)
+        similarity = np.array([x[1] for x in similarity])
+        resp = GPT(prompt)
 
         # self.score, self.reason = np.array(resp["score"])/10, resp["reason"]
         self.next_step = resp.get("next_steps")
@@ -68,7 +73,7 @@ class Evaluate():
         #     else:
         #         self.score = np.array(scores) / 10
         # else:
-        self.score = np.array(scores) / 10
+        self.score = (np.array(scores)+similarity) / 10
 
         self.score = (self.score * np.array(self.weights)
                       ).tolist() if self.weights != [] else self.score
