@@ -106,7 +106,7 @@ def demo() -> Union[str, Response]:
                       prev_model=COMPUTATIONAL_GRAPH[-1] if COMPUTATIONAL_GRAPH != [] else None, index=INDEX)
         COMPUTATIONAL_GRAPH.append(model)
         ACTION_TRACE["PAGES"].append(
-            model.screen.page_root.generate_all_text())
+            model.screen.page_root.generate_all_text().split("-"))
         print("work")
         result, work_status = model.work(
             ACTION_TRACE=process_ACTION_TRACE(ACTION_TRACE))
@@ -145,7 +145,7 @@ def demo() -> Union[str, Response]:
         res, act = COMPUTATIONAL_GRAPH[INDEX].feedback_module.feedback(
             COMPUTATIONAL_GRAPH[INDEX].wrong_reason)
         ACTION_TRACE["PAGES"].append(
-            COMPUTATIONAL_GRAPH[INDEX].screen.page_root.generate_all_text())
+            COMPUTATIONAL_GRAPH[INDEX].screen.page_root.generate_all_text().split("-"))
         ACTION_TRACE["ACTION"].append("Click on navigate back due to error")
         ACTION_TRACE["ACTION_DESC"].append("BACK")
 
