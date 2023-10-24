@@ -484,9 +484,8 @@ Step 3:Synthesize the above output a conclusion on the STATUS as a JSON object s
             "content": """Task:{}
 History Operation Sequence:{}
 NOTE in this dict format:
-1, Here "ACTION" means each history ACTION taken;
-2, "ACTION_DESC" means short description of each step;
-3, "PAGES" means each page UI elements that the user has gone through. (i.e. [Page1_elements, Page2_ekements, Page3_elements,...])
+1, Here "Page_X"  means each page UI elements that the user has gone through.
+2, Here "Action_x_to_y"  means the action which operated on x and leads to y.
 Latest UI Page:{}
 ([] means it's empty in the latest page and cannot go on)
 """.format(task, ACTION_TRACE, semantic_info)
