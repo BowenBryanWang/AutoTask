@@ -305,7 +305,7 @@ class UINode:
                 q.put(child_node)
             if crt_node.text is not None and len(crt_node.text) > 0:
                 res.append(crt_node.text)
-        return res
+        return "-".join(res)
 
 
 class PageInstance:
