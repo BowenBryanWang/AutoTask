@@ -191,7 +191,7 @@ class UINode:
         if self.clickable:
             prob *= 2
         else:
-            prob *= 0.5
+            prob *= 0.1
         if self.executable:
             prob *= 1.5
         else:
@@ -208,7 +208,7 @@ class UINode:
         if self.editable:
             prob *= 1.5
         if self.node_class == "android.widget.EditText":
-            prob *= 1.5
+            prob *= 2
         if self.parent and len(self.parent.children) > 6:
             prob *= 2
         elif self.parent and len(self.parent.children) > 3:
