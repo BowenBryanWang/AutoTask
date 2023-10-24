@@ -572,3 +572,16 @@ def add_son_to_father(l: list, relation: list[tuple]) -> list:
 
 def decouple_HTML(h: str) -> str:
     l = h.split(" ")[1:]
+
+
+def process_ACTION_TRACE(ACTION_TRACE):
+    actions = ACTION_TRACE["ACTION"]
+    pages = ACTION_TRACE["PAGES"]
+    result_dict = {}
+
+    for i in range(len(pages)):
+        result_dict[f'Page_{i}'] = pages[i]
+        if i < len(actions):  # Ensure we don't go out of bounds
+            result_dict[f'Act_{i}_to_{i + 1}'] = actions[i]
+
+    return result_dict
