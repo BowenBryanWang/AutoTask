@@ -1,17 +1,27 @@
 
 import copy
 
+from page.WindowStructure import UINode
+
 
 def mask(s):
     return s
 
 
-def transfer_2_html(semantic_nodes, relation: list[tuple]):
+def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
     html_components = []
     real_comp = []
 
     for node in semantic_nodes:
-        if (node.node_class == "android.widget.TextView" or ".TextView" in node.node_class) and not node.clickable:
+        if node.scrollable:
+            temp = node.generate_all_semantic_info()
+            html_element = "<scroll id={} resource_id='{}' class={} > </scroll>\n".format(
+                len(real_comp)+1,
+                mask(node.resource_id),
+                node.node_class)
+            html_components.append(html_element)
+            real_comp.append(html_element)
+        elif (node.node_class == "android.widget.TextView" or ".TextView" in node.node_class) and not node.clickable:
             temp = node.generate_all_semantic_info()
             html_element = "<p class='{}' {} > {} </p>\n".format(
                 mask(node.resource_id),

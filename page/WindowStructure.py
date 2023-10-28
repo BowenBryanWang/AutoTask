@@ -195,8 +195,9 @@ class UINode:
         if self.executable:
             prob *= 1.5
         else:
-            # print("not executable")
             prob *= 0.5
+        if self.scrollable and self.focusable:
+            prob *= 10000
         if self.has_semantic_info():
             prob *= 1.5
         else:
@@ -250,8 +251,6 @@ class UINode:
             return 0
 
     def get_all_semantic_nodes(self):
-        # 此函数的作用是获取当前页面中所有的有语义的节点
-        # 从根节点开始
 
         stack = [self]
         res = {"nodes": [], "info": []}

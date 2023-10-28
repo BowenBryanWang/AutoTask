@@ -95,7 +95,7 @@ def demo() -> Union[str, Response]:
         STATUS = "running"
         model = Model(screen=screen, description=TASK,
                       prev_model=COMPUTATIONAL_GRAPH[-1] if COMPUTATIONAL_GRAPH != [] else None, index=INDEX)
-        if model.screen.generate_all_text() == COMPUTATIONAL_GRAPH[-1].generate_all_text():
+        if len(COMPUTATIONAL_GRAPH) >= 1 and model.screen.page_root.generate_all_text() == COMPUTATIONAL_GRAPH[-1].screen.page_root.generate_all_text():
             if MODE == "normal":
                 STATUS = "backtracking"
             elif MODE == "preserve":
@@ -176,7 +176,6 @@ def demo() -> Union[str, Response]:
             else:
                 return Response("Task failed.")
         else:
-
             print("------------------------back--------------------------")
             return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}
     return Response("0")

@@ -75,10 +75,10 @@ class Evaluate():
         similarity = sort_by_similarity(
             """You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
 Your job is to choose the next UI element to be operated considering the user task, the history operation sequence, and the current UI. You should rate the available UI elements on the current page.
-Task: "enable phone call & SMS for the user named Alice".
+Task: {}.
 History operation sequence: {}.
 Current UI:{}
-Please output the next element to be operated.""".format([ACTION_TRACE[key] for key in ACTION_TRACE.keys() if "Action" in key], list(
+Please output the next element to be operated.""".format(self.model.task, [ACTION_TRACE[key] for key in ACTION_TRACE.keys() if "Action" in key], list(
                 filter(lambda x: "id=" in x, self.model.screen.semantic_info_list))), list(
                 filter(lambda x: "id=" in x, self.model.screen.semantic_info_list)))
         similarity = np.array([x[1] for x in similarity])
