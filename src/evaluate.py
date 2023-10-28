@@ -61,7 +61,7 @@ class Evaluate():
                     node = temp.node_selected_id
                     node = list(filter(lambda x: "id=" in x,
                                 self.model.screen.semantic_info_list))[node-1]
-                    self.prompt.append({"role": "user", "content": """NOTE: Current UI was once visited in the history operation sequence, and at that time it chose to operate on {}. To avoid infinite cycling operation, give punishment to this element when you score it in this step""".foramt(node)})
+                    self.prompt.append({"role": "user", "content": """NOTE: Current UI was once visited in the history operation sequence, and at that time it chose to operate on {}. To avoid infinite cycling operation, give punishment to this element when you score it in this step""".format(node)})
 
     def score_comp(self, ACTION_TRACE):
         task, knowledge = self.model.Selection_KB.find_experiences(

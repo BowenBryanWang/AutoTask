@@ -1,3 +1,4 @@
+import copy
 import openai
 
 import json
@@ -401,10 +402,12 @@ Step 4: Synthesize the above output a conclusion and output a JSON object with s
             "content": """Task: "{}".
 History operation sequence: {}.
 Examples:{}
-Current UI:
+
+Current UI screen:
 '''HTML
 {}
 '''
+NOTE: <scroll /> element means there is a list and you can interact with it by scrolling forward.
 Successive results of current UI:
 {}
 REMEMBER always assign Back buttons like "Navigate up" the score of 1.0, they are not allowed to perform.
@@ -584,7 +587,7 @@ def decouple_HTML(h: str) -> str:
 def process_ACTION_TRACE(ACTION_TRACE):
     actions = ACTION_TRACE["ACTION"]
     pages = ACTION_TRACE["PAGES"]
-    result_dict = {"ACTION_DESC": ACTION_TRACE["ACTION_DESC"]}
+    result_dict = copy.deepcopy(ACTION_TRACE)
 
     for i in range(len(pages)):
         result_dict[f'Page_{i}'] = pages[i]
@@ -595,8 +598,12 @@ def process_ACTION_TRACE(ACTION_TRACE):
 
 
 def coverage(text1, text2):
-    words1 = set(text1.split())
-    words2 = set(text2.split())
+    if isinstance(text1, str):
+        words1 = set(text1.split())
+        words2 = set(text2.split())
+    elif isinstance(text1, list):
+        words1 = set(text1)
+        words2 = set(text2)
 
     common_words = words1.intersection(words2)
 

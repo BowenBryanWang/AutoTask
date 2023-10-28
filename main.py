@@ -215,7 +215,7 @@ def keyboard_listener():
 
 
 if __name__ == "__main__":
-    default_cmd = 'delete browsing data in the chrome app'
+    default_cmd = "Change theme of Google Chrome to 'Light'"
 
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")

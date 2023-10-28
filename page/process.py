@@ -15,9 +15,8 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
     for node in semantic_nodes:
         if node.scrollable:
             temp = node.generate_all_semantic_info()
-            html_element = "<scroll id={} resource_id='{}' class={} > </scroll>\n".format(
+            html_element = "<scroll id={} class={} > </scroll>\n".format(
                 len(real_comp)+1,
-                mask(node.resource_id),
                 node.node_class)
             html_components.append(html_element)
             real_comp.append(html_element)
