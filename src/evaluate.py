@@ -20,6 +20,7 @@ class Evaluate():
     def log_decorator(func):
         def wrapper(self, *args, **kwargs):
             result = func(self, *args, **kwargs)
+
             self.model.log_json["@Previous_Step"] = self.model.current_path_str
             self.model.log_json["@Action"] = self.model.current_action if self.model.current_action else ""
             self.model.log_json["@Module"].append({
@@ -28,12 +29,12 @@ class Evaluate():
                 "Output": {key: item for key, item in zip(list(
                     filter(lambda x: "id=" in x, self.model.screen.semantic_info_list)), self.original_score)},
             })
-
             with open("logs/log{}.json".format(self.model.index), "w", encoding="utf-8") as f:
                 json.dump(self.model.log_json, f, indent=4)
-            print("node_selected", self.model.node_selected)
-            print("node_selected_id", self.model.node_selected_id)
-            print(self.model.final_node.generate_all_semantic_info())
+            if result != "wrong":
+                print("node_selected", self.model.node_selected)
+                print("node_selected_id", self.model.node_selected_id)
+                print(self.model.final_node.generate_all_semantic_info())
             return result
         return wrapper
 
@@ -61,9 +62,9 @@ class Evaluate():
         task, knowledge = self.model.Selection_KB.find_experiences(
             query=[self.model.task, self.model.screen.page_description])
 
-        prompt = Task_UI_grounding_prompt(self.model.task, [ACTION_TRACE[key]
-                                                            for key in ACTION_TRACE.keys() if "Action" in key], self.model.similar_tasks,
-                                          self.model.similar_traces, self.model.predicted_step, self.model.screen.semantic_info_list, self.model.predict_module.comp_json_simplified, knowledge)
+        self.prompt = Task_UI_grounding_prompt(self.model.task, [ACTION_TRACE[key]
+                                                                 for key in ACTION_TRACE.keys() if "Action" in key], self.model.similar_tasks,
+                                               self.model.similar_traces, self.model.predicted_step, self.model.screen.semantic_info_list, self.model.predict_module.comp_json_simplified, knowledge)
         similarity = sort_by_similarity(
             """You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
 Your job is to choose the next UI element to be operated considering the user task, the history operation sequence, and the current UI. You should rate the available UI elements on the current page.
@@ -74,7 +75,7 @@ Please output the next element to be operated.""".format([ACTION_TRACE[key] for 
                 filter(lambda x: "id=" in x, self.model.screen.semantic_info_list))), list(
                 filter(lambda x: "id=" in x, self.model.screen.semantic_info_list)))
         similarity = np.array([x[1] for x in similarity])
-        resp = GPT(prompt)
+        resp = GPT(self.prompt)
 
         # self.score, self.reason = np.array(resp["score"])/10, resp["reason"]
         self.next_step = resp.get("next_steps")
