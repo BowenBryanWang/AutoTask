@@ -125,6 +125,9 @@ Please output the next element to be operated.""".format(self.model.task, [ACTIO
                                        self.model.page_description, self.model.node_selected, self.next_step))
             self.model.node_selected_action, self.model.node_selected_text = response.get(
                 "action"), response.get("text")
+        elif 'scroll' in self.model.node_selected:
+            self.model.node_selected_action, self.model.node_selected_text = (
+                'scroll_forward', None)
         else:
             self.model.node_selected_action, self.model.node_selected_text = (
                 'click', None)

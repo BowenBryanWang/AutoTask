@@ -537,6 +537,8 @@ Be smart and insightful, think step by step, finally,summarize them into a json 
 def process_action_info(action, params, node):
     if action == "click":
         return "Click on {}".format(node)
+    elif action == "scroll_forward":
+        return "Scroll forward on {}".format(node)
     elif action == "edit":
         return "Edit {} with {}".format(node, params)
 
