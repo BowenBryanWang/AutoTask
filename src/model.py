@@ -91,6 +91,8 @@ class Model:
                     new_screen=self.screen, ACTION_TRACE=kwargs.get("ACTION_TRACE"), flag="normal")
                 if status == "wrong":
                     print("wrong: feedback started")
+                    if self.prev_model.node_selected_action == "scroll_forward":
+                        return generate_perform("scroll_backward", absolute_id=self.prev_model.final_node.absolute_id)
                     return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}, "wrong"
                 elif status == "completed":
                     return None, "completed"
@@ -126,5 +128,10 @@ class Model:
         elif self.node_selected_action == "edit":
             perform = generate_perform(
                 "text", text=self.node_selected_text, absolute_id=node.absolute_id)
+            print(perform)
+            return perform, "Execute"
+        elif self.node_selected_action == "scroll_forward":
+            perform = generate_perform(
+                "scroll_forward", absolute_id=node.absolute_id)
             print(perform)
             return perform, "Execute"
