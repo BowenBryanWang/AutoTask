@@ -584,7 +584,7 @@ def decouple_HTML(h: str) -> str:
 def process_ACTION_TRACE(ACTION_TRACE):
     actions = ACTION_TRACE["ACTION"]
     pages = ACTION_TRACE["PAGES"]
-    result_dict = {}
+    result_dict = {"ACTION_DESC": ACTION_TRACE["ACTION_DESC"]}
 
     for i in range(len(pages)):
         result_dict[f'Page_{i}'] = pages[i]

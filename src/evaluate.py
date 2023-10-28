@@ -47,7 +47,7 @@ class Evaluate():
         return self.score
 
     def handle_cycle(self, curpage, ACTION_TRACE):
-        if ACTION_TRACE["ACTION_DESC"][-1] == "BACK":
+        if ACTION_TRACE["ACTION_DESC"] and len(ACTION_TRACE["ACTION_DESC"]) > 0 and ACTION_TRACE["ACTION_DESC"][-1] == "BACK":
             return
         for page in ACTION_TRACE["PAGES"]:
             if coverage(page, curpage) >= 0.95:
