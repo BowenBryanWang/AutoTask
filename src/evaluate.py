@@ -59,6 +59,9 @@ class Evaluate():
                     temp = temp.prev_model if temp.prev_model else temp
                 if temp:
                     node = temp.node_selected_id
+                    node = list(filter(lambda x: "id=" in x,
+                                self.model.screen.semantic_info_list))[node-1]
+                    self.prompt.append({"role": "user", "content": """NOTE: Current UI was once visited in the history operation sequence, and at that time it chose to operate on {}. To avoid infinite cycling operation, give punishment to this element when you score it in this step""".foramt(node)})
 
     def score_comp(self, ACTION_TRACE):
         task, knowledge = self.model.Selection_KB.find_experiences(
@@ -67,6 +70,8 @@ class Evaluate():
         self.prompt = Task_UI_grounding_prompt(self.model.task, [ACTION_TRACE[key]
                                                                  for key in ACTION_TRACE.keys() if "Action" in key], self.model.similar_tasks,
                                                self.model.similar_traces, self.model.predicted_step, self.model.screen.semantic_info_list, self.model.predict_module.comp_json_simplified, knowledge)
+        self.handle_cycle(curpage=self.model.screen.page_root.generate_all_text().split(
+            "-"), ACTION_TRACE=ACTION_TRACE)
         similarity = sort_by_similarity(
             """You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
 Your job is to choose the next UI element to be operated considering the user task, the history operation sequence, and the current UI. You should rate the available UI elements on the current page.
