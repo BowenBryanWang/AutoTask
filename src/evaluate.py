@@ -40,13 +40,22 @@ class Evaluate():
     @log_decorator
     def evaluate(self, ACTION_TRACE):
         if self.score_comp(ACTION_TRACE) == "wrong":
-            self.model.currecnt_action = "Back"
+            self.model.current_action = "Back"
             return "wrong"
         self.select_top_one()
         return self.score
 
     def handle_cycle(self, curpage, ACTION_TRACE):
-        pass
+        if ACTION_TRACE["ACTION_DESC"][-1] == "BACK":
+            return
+        for page in ACTION_TRACE["PAGES"]:
+            if coverage(page, curpage) >= 0.95:
+                index = ACTION_TRACE["PAGES"].index(page)
+                index_now = len(ACTION_TRACE["PAGES"])-1
+                step = index_now-index
+                temp = self.model
+                for i in range(step):
+                    temp = temp.prev_model if temp.prev_model else temp
 
     def score_comp(self, ACTION_TRACE):
         task, knowledge = self.model.Selection_KB.find_experiences(
@@ -89,15 +98,15 @@ Please output the next element to be operated.""".format([ACTION_TRACE[key] for 
         self.score = (self.score * np.array(self.weights)
                       ).tolist() if self.weights != [] else self.score
         self.original_score = copy.deepcopy(self.score)
-        if all(value < 0.2 for value in self.score) and self.model.prev_model:
-            return "wrong"
+
         if self.weights == []:
             self.weights = [1.0] * len(self.score)
         self.score = np.exp(self.score) / np.sum(np.exp(self.score))
         print(self.score)
         print(self.weights)
-
         print(self.score)
+        if all(value < 0.2 for value in self.original_score) and self.model.prev_model:
+            return "wrong"
 
     def select_top_one(self):
         top_index = np.argmax(self.score)
