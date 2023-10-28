@@ -82,11 +82,14 @@ def wait_and_load_decorator(function):
 @app.route('/demo', methods=['POST'])
 @wait_and_load_decorator
 def demo() -> Union[str, Response]:
-    global TASK, STATUS, INDEX, COMPUTATIONAL_GRAPH, GRAPH_ACTION
+    global TASK, STATUS, INDEX, COMPUTATIONAL_GRAPH, GRAPH_ACTION, force_load_count, auto_load
     if listener_global is not None:
         listener_global.stop()
     screen = Screen(INDEX)
     screen.update(request=request.form)
+    force_load_count = 0
+    auto_load = False
+    
     while screen.semantic_info_list == []:
         return Response("0")
     print("INDEX", INDEX)
