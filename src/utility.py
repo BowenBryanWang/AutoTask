@@ -590,3 +590,12 @@ def process_ACTION_TRACE(ACTION_TRACE):
             result_dict[f'Action_{i}_to_{i + 1}'] = actions[i]
 
     return result_dict
+
+
+def coverage(text1, text2):
+    words1 = set(text1.split())
+    words2 = set(text2.split())
+
+    common_words = words1.intersection(words2)
+
+    return len(common_words) / max(len(words1), len(words2))

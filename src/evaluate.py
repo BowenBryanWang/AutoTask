@@ -4,7 +4,7 @@ import os
 import numpy as np
 import openai
 from src.embedding import sort_by_similarity
-from src.utility import GPT, Task_UI_grounding_prompt, get_top_combined_similarities, plan_prompt, process_action_info
+from src.utility import GPT, Task_UI_grounding_prompt, coverage, get_top_combined_similarities, plan_prompt, process_action_info
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
 
@@ -21,7 +21,7 @@ class Evaluate():
         def wrapper(self, *args, **kwargs):
             result = func(self, *args, **kwargs)
             self.model.log_json["@Previous_Step"] = self.model.current_path_str
-            self.model.log_json["@Action"] = self.model.current_action
+            self.model.log_json["@Action"] = self.model.current_action if self.model.current_action else ""
             self.model.log_json["@Module"].append({
                 "Name": "Evaluate",
                 "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
@@ -45,16 +45,19 @@ class Evaluate():
         self.select_top_one()
         return self.score
 
+    def handle_cycle(self, curpage, ACTION_TRACE):
+        pass
+
     def score_comp(self, ACTION_TRACE):
         task, knowledge = self.model.Selection_KB.find_experiences(
             query=[self.model.task, self.model.screen.page_description])
+
         prompt = Task_UI_grounding_prompt(self.model.task, [ACTION_TRACE[key]
                                                             for key in ACTION_TRACE.keys() if "Action" in key], self.model.similar_tasks,
                                           self.model.similar_traces, self.model.predicted_step, self.model.screen.semantic_info_list, self.model.predict_module.comp_json_simplified, knowledge)
         similarity = sort_by_similarity(
             """You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
 Your job is to choose the next UI element to be operated considering the user task, the history operation sequence, and the current UI. You should rate the available UI elements on the current page.
-
 Task: "enable phone call & SMS for the user named Alice".
 History operation sequence: {}.
 Current UI:{}

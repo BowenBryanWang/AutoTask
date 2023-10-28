@@ -15,7 +15,7 @@ import logging
 
 import click
 
-from src.utility import process_ACTION_TRACE
+from src.utility import process_ACTION_TRACE, coverage
 
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
@@ -77,15 +77,6 @@ def wait_and_load_decorator(function):
             auto_load = True
         return result
     return wrapped_function
-
-
-def coverage(text1, text2):
-    words1 = set(text1.split())
-    words2 = set(text2.split())
-
-    common_words = words1.intersection(words2)
-
-    return len(common_words) / max(len(words1), len(words2))
 
 
 @app.route('/demo', methods=['POST'])
@@ -219,7 +210,7 @@ def keyboard_listener():
 
 
 if __name__ == "__main__":
-    default_cmd = 'enable phone call & SMS for the system user named Alice'
+    default_cmd = 'delete browsing data in the chrome app'
 
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")
