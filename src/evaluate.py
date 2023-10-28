@@ -31,7 +31,7 @@ class Evaluate():
             })
             with open("logs/log{}.json".format(self.model.index), "w", encoding="utf-8") as f:
                 json.dump(self.model.log_json, f, indent=4)
-            if result != "wrong":
+            if not isinstance(result, str):
                 print("node_selected", self.model.node_selected)
                 print("node_selected_id", self.model.node_selected_id)
                 print(self.model.final_node.generate_all_semantic_info())
@@ -57,6 +57,8 @@ class Evaluate():
                 temp = self.model
                 for i in range(step):
                     temp = temp.prev_model if temp.prev_model else temp
+                if temp:
+                    node = temp.node_selected_id
 
     def score_comp(self, ACTION_TRACE):
         task, knowledge = self.model.Selection_KB.find_experiences(
