@@ -109,9 +109,7 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
     my_list = copy.deepcopy(html_components)
     print(my_list)
     trans_relation = []
-    for father, son in relation:
-        index_father = semantic_nodes.index(father)
-        index_son = semantic_nodes.index(son)
+    for index_father, index_son in relation:
         trans_relation.append((index_father, index_son))
         last_index = html_components[index_father].rfind(" </")
         if last_index != -1 and not html_components[index_son].startswith("<p"):
@@ -119,7 +117,6 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
                 html_components[index_son] + " </" + \
                 html_components[index_father][last_index + 3:]
     for father, son in relation:
-        index_son = semantic_nodes.index(son)
-        html_components[index_son] = ""
+        html_components[son] = ""
     html_components = [i for i in html_components if i != ""]
     return html_components, my_list, trans_relation
