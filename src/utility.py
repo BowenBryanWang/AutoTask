@@ -374,11 +374,12 @@ def Task_UI_grounding_prompt(task, current_path_str, similar_tasks, similar_trac
 Your job is to
 (1) summary what has been done according to the History Operation Sequecnce;
 (2) decide what general direction should we go next according to the relationship of elements on the CURRENT UI and USER TASK. 
-(3) think step by step on the Succesive Results of each UI options, which represents the subsequent items after operating on them. They can indicate the ground-truth operation results which is rather important to fulfilling User Task
+(3) think step by step on the SUCCESSIVE Results of each UI options, which represents the subsequent items after operating on them. They can indicate the ground-truth operation results which is rather important to fulfilling User Task
 (4) choose the next UI element to be operated considering the user task, the history operation sequence, and the current UI. You should rate the available UI elements on the current page. 
     (4.1) The element with the largest rating will be choosen as the next element to be operated.
     (4.2) Your score should be accurate to two decimal places.
     (4.3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
+    (4.4) <scroll /> element means there is a list and you can interact with it by scrolling forward. If you think none of the elements can be the next to be operated, you can also try giving <scroll/> a chance.
 For each option, provide a confidence rating from 1.00-10.00, based on the relation of each option to the task, where 1.00 is the lowest tier indicating complete irrelevance and may lead to errors, 3.00 is the second tier indicating minor relevance, 5.00 is the medium tier indicating neutrality, 7.00 indicates higher relevance, possibly a candidate, and 10.00 indicates the most likely to be chosen and executed.
 The structure of the output should be: {
     "finished_steps": [...],
@@ -407,7 +408,6 @@ Current UI screen:
 '''HTML
 {}
 '''
-NOTE: <scroll /> element means there is a list and you can interact with it by scrolling forward.
 Successive results of current UI:
 {}
 REMEMBER always assign Back buttons like "Navigate up" the score of 1.0, they are not allowed to perform.
