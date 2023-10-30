@@ -31,7 +31,7 @@ listener_global = None
 def heat_beat():
     global force_load_count, auto_load
     if auto_load:
-        force_load_count += (2.0 / 20.0)  # 前端每1秒发送一次，预计等待10秒
+        force_load_count += (2.0 / 10.0)  # 前端每1秒发送一次，预计等待10秒
     force_load = force_load_count >= 2
     if force_load:
         force_load_count = 0.0
@@ -92,10 +92,21 @@ def demo() -> Union[str, Response]:
 
         ACTION_TRACE.append(result)
 
-        return generate_perform()
+        if result["action_type"] == "text":
+            STATUS = "finish"
+            #TODO: load next task
+            return generate_perform(action_type="text", text=result["text"])
+        else:
+            node = screen.semantic_nodes["nodes"][find_node_idx(result["idx"], screen.semantic_info_list)]
+            return generate_perform(action_type=result["action_type"], x=node.center[0], y=node.center[1], absolute_id=node.absolute_id)
     else:
-        return generate_perform()
+        return Response("0")
 
+def find_node_idx(id, info_list):
+    for index, node_info in enumerate(info_list):
+        if "id={}".format(id) in node_info:
+            return index
+    return -1
 
 
 def paper_provided_prompt_1(task, current_ui):
@@ -116,7 +127,7 @@ Available Actions:
 {"action_type": "scroll", "direction": "down"}
 {"action_type": "scroll", "direction": "left"}
 {"action_type": "scroll", "direction": "right"}
-{"action_type": "report_answer", "text": <answer_to_the_instruction>}
+{"action_type": "text", "text": <answer_to_the_instruction>}
 """
         },
         {
@@ -126,7 +137,7 @@ Available Actions:
 Screen: {}
 Instruction: {}
 Think step by step, and output JSON format with property name enclosed in double quotes. 
-When found the answer or finished the task, use "report_answer" to report the answer or to end the task.
+When found the answer or finished the task, use "text" to report the answer or to end the task.
 Answer:
 """.format(current_ui, task)
         }
@@ -151,7 +162,7 @@ Available Actions:
 {"action_type": "scroll", "direction": "down"}
 {"action_type": "scroll", "direction": "left"}
 {"action_type": "scroll", "direction": "right"}
-{"action_type": "report_answer", "text": <answer_to_the_instruction>}
+{"action_type": "text", "text": <answer_to_the_instruction>}
 """
     })
     
