@@ -92,10 +92,10 @@ def demo() -> Union[str, Response]:
 
         ACTION_TRACE.append(result)
 
-        if result["action_type"] == "text":
-            STATUS = "finish"
+        if result["action_type"] == "report_answer":
+            STATUS = "stop"
             #TODO: load next task
-            return generate_perform(action_type="text", text=result["text"])
+            return generate_perform(action_type="report_answer", text=result["text"])
         else:
             node = screen.semantic_nodes["nodes"][find_node_idx(result["idx"], screen.semantic_info_list)]
             return generate_perform(action_type=result["action_type"], x=node.center[0], y=node.center[1], absolute_id=node.absolute_id)
@@ -127,7 +127,7 @@ Available Actions:
 {"action_type": "scroll", "direction": "down"}
 {"action_type": "scroll", "direction": "left"}
 {"action_type": "scroll", "direction": "right"}
-{"action_type": "text", "text": <answer_to_the_instruction>}
+{"action_type": "report_answer", "text": <answer_to_the_instruction>}
 """
         },
         {
@@ -137,7 +137,7 @@ Available Actions:
 Screen: {}
 Instruction: {}
 Think step by step, and output JSON format with property name enclosed in double quotes. 
-When found the answer or finished the task, use "text" to report the answer or to end the task.
+When found the answer or finished the task, use "report_answer" to report the answer or to end the task.
 Answer:
 """.format(current_ui, task)
         }
@@ -162,7 +162,7 @@ Available Actions:
 {"action_type": "scroll", "direction": "down"}
 {"action_type": "scroll", "direction": "left"}
 {"action_type": "scroll", "direction": "right"}
-{"action_type": "text", "text": <answer_to_the_instruction>}
+{"action_type": "report_answer", "text": <answer_to_the_instruction>}
 """
     })
     
