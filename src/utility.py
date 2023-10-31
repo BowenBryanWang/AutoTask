@@ -395,7 +395,7 @@ Think step by step and output your reasoning process:
 Step 1: what has been done,especially pay attention to those steps which is wrong and caused navigate back if any;
 Step 2: think step by step on the Succesive Results of each UI options (if the results exist. Note that sometimes the UI is not fully explored and the results are unknown. However, the element may still be the next to be operated), which represents the subsequent items after operating on them. They can indicate the ground-truth operation results which is rather important to fulfilling User Task
 Step 3: decide what should be done next. Possible operations: click, edit (text input), scroll. Pay attention to those steps which is wrong and caused navigate back if any;
-Step 4: Synthesize the above output a conclusion and output a JSON object with scores. 
+Step 4: Synthesize the above output, output a JSON object with scores. 
 """
         },
         {

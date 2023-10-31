@@ -120,6 +120,8 @@ Please output the next element to be operated.""".format(self.model.task, [ACTIO
         top_index = np.argmax(self.score)
         self.model.node_selected = list(filter(
             lambda x: "id="+str(top_index+1) in x, self.model.screen.semantic_info_list))[0]
+        self.model.node_selected_warp = list(filter(
+            lambda x: "id="+str(top_index+1) in x, self.model.screen.semantic_info))[0]  # 包围后的完整的node字符串描述
         if 'editable' in self.model.node_selected and 'ineditable' not in self.model.node_selected:
             response = GPT(plan_prompt(self.model.task,
                                        self.model.page_description, self.model.node_selected, self.next_step))

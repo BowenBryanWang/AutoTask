@@ -1,4 +1,5 @@
 import json
+from src.embedding import sort_by_similarity
 from src.utility import UI_grounding_prompt_only_summary, add_son_to_father, add_value_to_html_tag, get_top_combined_similarities_group, process_string
 import copy
 import random
@@ -47,17 +48,15 @@ class Predict():
 
     def UI_grounding(self):
         SEMANTIC_INFO = list(
-            filter(lambda x: "id=" in x, self.model.screen.semantic_info_list))
-        # SEMANTIC_NODES= [self.model.screen.semantic_nodes["nodes"][index] for index in [
-        #     self.model.screen.semantic_info_list.index(k) for k in SEMANTIC_INFO]]
-
+            filter(lambda x: "id=" in x, self.model.screen.semantic_info))
         SEMANTIC_STR = self.model.screen.page_root.generate_all_text()
+
         self.current_comp = SEMANTIC_INFO
         self.next_comp = [""]*len(SEMANTIC_INFO)
         self.comp_json = dict.fromkeys(SEMANTIC_INFO, "Unknown")
         predict_node = copy.deepcopy(SEMANTIC_INFO)
-        queries = [[process_string(SEMANTIC_STR), process_string(SEMANTIC_INFO[i])]
-                   for i in range(len(SEMANTIC_INFO))]
+        queries = [[process_string(SEMANTIC_STR), process_string(
+            SEMANTIC_INFO[i])] for i in range(len(SEMANTIC_INFO))]
         results = get_top_combined_similarities_group(queries=queries, csv_file=os.path.join(
             os.path.dirname(__file__), 'KB/pagejump/pagejump.csv'), k=1, fields=["Origin", "Edge"])
         for index, r in enumerate(results):
@@ -69,7 +68,7 @@ class Predict():
                 predict_node[index] = "None"
         indexs = [i for i, x in enumerate(predict_node) if x == "None"]
         predict_prompt = list(filter(lambda x: not any(
-            [str(index+1) in x for index in indexs]), self.model.screen.semantic_info_list))
+            [str(index+1) in x for index in indexs]), self.model.screen.semantic_info))
         response_text = GPT(UI_grounding_prompt_only_summary(predict_prompt))
         self.model.page_description = response_text["Page"]
         self.model.current_path.append("Page:"+self.model.page_description)
@@ -79,16 +78,8 @@ class Predict():
                     list(filter(lambda x: "id="+key.split("_")[1] in x, SEMANTIC_INFO))[0])
                 self.next_comp[index] = value
                 self.comp_json[SEMANTIC_INFO[index]] = value
-
-        sem_list = copy.deepcopy(self.model.screen.semantic_info_list)
-        temp = [add_value_to_html_tag(key, value["description"]) if value != 'Unknown' else key for key, value in self.comp_json.items()]
-        for i in range(len(sem_list)):
-            if "id=" in sem_list[i]:
-                sem_list[i] = temp[int(
-                    sem_list[i].split("id=")[1].split(" ")[0])-1]
-        self.model.extended_info = add_son_to_father(
-            sem_list, self.model.screen.trans_relation)
-        self.comp_json_simplified = {"id="+str(index+1): item for index,(key,item) in enumerate(self.comp_json.items())}
+        self.comp_json_simplified = {
+            "id="+str(index+1): item for index, (key, item) in enumerate(self.comp_json.items())}
 
     @ log_decorator
     def predict(self, ACTION_TRACE=None):

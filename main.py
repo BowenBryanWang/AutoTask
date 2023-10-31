@@ -6,6 +6,7 @@ import threading
 from flask import Response, jsonify
 from typing import Any, Union
 from flask import Flask, request
+from src.embedding import sort_by_similarity
 from src.model import Model
 
 from page.init import Screen
@@ -50,6 +51,7 @@ ACTION_TRACE = {
 force_load_count = 0
 auto_load = False
 listener_global = None
+long_term_UI_knowledge = []
 
 
 @app.route('/heart_beat', methods=['POST'])
@@ -82,22 +84,21 @@ def wait_and_load_decorator(function):
 @app.route('/demo', methods=['POST'])
 @wait_and_load_decorator
 def demo() -> Union[str, Response]:
-    global TASK, STATUS, INDEX, COMPUTATIONAL_GRAPH, GRAPH_ACTION, force_load_count, auto_load
+    global TASK, STATUS, INDEX, COMPUTATIONAL_GRAPH, GRAPH_ACTION, force_load_count, auto_load, long_term_UI_knowledge
     if listener_global is not None:
         listener_global.stop()
     screen = Screen(INDEX)
     screen.update(request=request.form)
     force_load_count = 0
     auto_load = False
-    
+
     while screen.semantic_info_list == []:
         return Response("0")
     print("INDEX", INDEX)
-    # return {'node_id': 1, 'trail': '[0,0]', 'action_type': 'text', 'text': 'tsinghua', 'ori_absolute_id': 'android.widget.FrameLayout|0;android.widget.LinearLayout|0;android.widget.FrameLayout|0;android.widget.LinearLayout|0;android.widget.FrameLayout|0;android.view.ViewGroup|0;android.view.ViewGroup|1;android.widget.FrameLayout|0;android.widget.FrameLayout|0;android.widget.LinearLayout|0;android.widget.FrameLayout|0;android.widget.LinearLayout|0;android.widget.FrameLayout|0;android.widget.LinearLayout|0;android.widget.EditText'}
     if STATUS == "start":
         STATUS = "running"
         model = Model(screen=screen, description=TASK,
-                      prev_model=COMPUTATIONAL_GRAPH[-1] if COMPUTATIONAL_GRAPH != [] else None, index=INDEX)
+                      prev_model=COMPUTATIONAL_GRAPH[-1] if COMPUTATIONAL_GRAPH != [] else None, index=INDEX, long_term_UI_knowledge=long_term_UI_knowledge)
         if len(COMPUTATIONAL_GRAPH) >= 1 and model.screen.page_root.generate_all_text() == COMPUTATIONAL_GRAPH[-1].screen.page_root.generate_all_text():
             if MODE == "normal":
                 STATUS = "backtracking"
@@ -217,8 +218,23 @@ def keyboard_listener():
         listener.join()
 
 
+def retrivel_long_term_UI_knowledge(Task):
+    global long_term_UI_knowledge
+    with open(os.path.join(os.path.dirname(__file__), "src/KB/pagejump/pagejump_long.json"), 'r', encoding="utf-8") as f:
+        js = json.loads(f.read())
+        key_components = js.keys()
+        query = "The user's task is to "+Task + \
+            ". Which componnets is most relevant?"
+        result = sort_by_similarity(query, key_components)
+        result = sorted(result, key=lambda x: x[1], reverse=True)
+        result = list(filter(lambda x: x[1] > 0.80, result))
+        keys = list(map(lambda x: x[0], result))
+        answer = list(map(lambda x: js[x], keys))
+        long_term_UI_knowledge = answer
+
+
 if __name__ == "__main__":
-    default_cmd = "Change theme of Google Chrome to 'Light'"
+    default_cmd = "Find my phone's MAC address"
 
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")
@@ -229,6 +245,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     TASK = args.task
+    retrivel_long_term_UI_knowledge(TASK)
     MODE = args.mode
 
     keyboard_thread = threading.Thread(target=keyboard_listener)

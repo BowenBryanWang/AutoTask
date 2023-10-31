@@ -1,6 +1,8 @@
 
 import copy
 import csv
+import json
+import os
 from typing import Optional
 
 import pandas as pd
@@ -18,11 +20,11 @@ from src.predict import Predict
 
 class Model:
 
-    def __init__(self, screen: Optional[Screen] = None, description: str = "", prev_model=None, index=0):
-        self.index: int = index
+    def __init__(self, screen: Optional[Screen] = None, description: str = "", prev_model=None, index=0, long_term_UI_knowledge=[]):
+        self.index: int = index  # Index of current Model
         if screen is not None:
-            self.screen = screen
-        self.task: str = description
+            self.screen: Screen = screen  # Current Screen
+        self.task: str = description  # User's Task
         self.candidate: list[int] = []
         self.candidate_str: list[str] = []
         self.candidate_action: list[str] = [None]*5
@@ -59,34 +61,55 @@ class Model:
     def current_path_str(self):
         return " -> ".join(self.current_path)
 
+    def save_short_term_UI_knowledge(self):
+        with open("./src/KB/pagejump/pagejump.csv", "r", encoding="utf-8") as f:
+            reader = csv.reader(f, delimiter=',')
+            prev_info = process_string(
+                self.prev_model.screen.page_root.generate_all_text())
+            prev_path = process_string(self.prev_model.node_selected_warp)
+            prev_act = process_string(
+                self.prev_model.node_selected_action)
+            prev_para = process_string(
+                self.prev_model.node_selected_text)
+            current_info = process_string(
+                self.screen.page_root.generate_all_text()),
+            flag = any(row[0] == prev_info and row[1]
+                       == prev_path for row in reader)
+        if not flag:
+            with open("./src/KB/pagejump/pagejump.csv", "a", newline='', encoding="utf-8") as f:
+                writer = csv.writer(f, delimiter=',')
+                writer.writerow([
+                    prev_info,
+                    prev_path,
+                    prev_act,
+                    prev_para,
+                    current_info,
+                ])
+
+    def save_long_term_UI_knowledge(self):
+        node_list = []
+        m = self.prev_model
+        while m:
+            node_list.append(m.node_selected_warp)
+            m = m.prev_model
+        node_list = node_list[::-1]
+        if not os.path.exists(os.path.join(os.path.dirname(__file__), "KB/pagejump/pagejump_long.json")):
+            os.mkdir(os.path.join(os.path.dirname(__file__),
+                     "KB/pagejump/pagejump_long.json"))
+        with open(os.path.join(os.path.dirname(__file__), "KB/pagejump/pagejump_long.json"), 'r+', encoding="utf-8") as f:
+            js = json.loads(f.read())
+        with open(os.path.join(os.path.dirname(__file__), "KB/pagejump/pagejump_long.json"), 'w', encoding="utf-8") as f:
+            for node in self.screen.semantic_info:
+                js[node] = node_list + [node]
+            json.dump(js, f, indent=4)
+
     def decide_before_and_log(func):
         def wrapper(self, *args, **kwargs):
             print("ACTION_TRACE", kwargs.get("ACTION_TRACE"))
             print("flag", kwargs.get("flag"))
             if self.prev_model is not None and kwargs.get("flag") != "debug":
-                with open("./src/KB/pagejump/pagejump.csv", "r", encoding="utf-8") as f:
-                    reader = csv.reader(f, delimiter=',')
-                    prev_info = process_string(
-                        self.prev_model.screen.page_root.generate_all_text())
-                    prev_path = process_string(self.prev_model.node_selected)
-                    prev_act = process_string(
-                        self.prev_model.node_selected_action)
-                    prev_para = process_string(
-                        self.prev_model.node_selected_text)
-                    current_info = process_string(
-                        self.screen.page_root.generate_all_text()),
-                    flag = any(row[0] == prev_info and row[1]
-                               == prev_path for row in reader)
-                if not flag:
-                    with open("./src/KB/pagejump/pagejump.csv", "a", newline='', encoding="utf-8") as f:
-                        writer = csv.writer(f, delimiter=',')
-                        writer.writerow([
-                            prev_info,
-                            prev_path,
-                            prev_act,
-                            prev_para,
-                            current_info,
-                        ])
+                self.save_short_term_UI_knowledge()
+                self.save_long_term_UI_knowledge()
                 status = self.prev_model.decide_module.decide(
                     new_screen=self.screen, ACTION_TRACE=kwargs.get("ACTION_TRACE"), flag="normal")
                 if status == "wrong":
