@@ -1,3 +1,4 @@
+import re
 import copy
 import openai
 
@@ -332,7 +333,7 @@ def UI_grounding_prompt_only_summary(predict_node):
     return [
         {
             "role": "system",
-            "content": """You are an expert in User Interface (UI) automation. Your task is to describe the current page. You are given a list of UI components and their attributes. 
+            "content": """You are an expert in User Interface (UI) automation. Your task is to describe the current page. You are given a list of UI components and their attributes.
 1. Reason step-by-step about the short one-sentence description of the current page.
 2. Output the predictions in a JSON formated like:
 {
@@ -365,67 +366,46 @@ def UI_grounding_prompt_only_summary(predict_node):
     ]
 
 
-def Task_UI_grounding_prompt(task, current_path_str, similar_tasks, similar_traces, predicted_step, semantic_info_list, next_comp, Knowledge):
+def Task_UI_grounding_prompt(task, current_path_str, similar_tasks, similar_traces, predicted_step, semantic_info_list, next_comp, Knowledge, UI_long_term_knowledge):
+    content = {}
+    content["Task"] = task
+    content["History operation sequence"] = current_path_str
+    content["Current UI screen"] = "".join(semantic_info_list)
+    content["Successive results"] = next_comp
+    if Knowledge:
+        content["Knowledge"] = Knowledge
+    if UI_long_term_knowledge:
+        content["possible paths to UI target"] = UI_long_term_knowledge
 
-    return [
+    p = [
         {
             "role": "system",
             "content": """You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
-Your job is to
-(1) summary what has been done according to the History Operation Sequecnce;
-(2) decide what general direction should we go next according to the relationship of elements on the CURRENT UI and USER TASK. 
-(3) think step by step on the SUCCESSIVE Results of each UI options, which represents the subsequent items after operating on them. They can indicate the ground-truth operation results which is rather important to fulfilling User Task
-(4) choose the next UI element to be operated considering the user task, the history operation sequence, and the current UI. You should rate the available UI elements on the current page. 
-    (4.1) The element with the largest rating will be choosen as the next element to be operated.
-    (4.2) Your score should be accurate to two decimal places.
-    (4.3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
-    (4.4) <scroll /> element means there is a list and you can interact with it by scrolling forward. If you think none of the elements can be the next to be operated, you can also try giving <scroll/> a chance.
+Your job is to rate the available UI elements on the current page.
+Note that:
+    (1) The element with the highest score will be choosen as the next element to be operated.
+    (2) Your score should be accurate to two decimal places.
+    (3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
+    (4) <scroll /> element means there is a list and you can interact with it by scrolling forward. If you think none of the elements can be the next to be operated, you can also try giving <scroll/> a chance.
 For each option, provide a confidence rating from 1.00-10.00, based on the relation of each option to the task, where 1.00 is the lowest tier indicating complete irrelevance and may lead to errors, 3.00 is the second tier indicating minor relevance, 5.00 is the medium tier indicating neutrality, 7.00 indicates higher relevance, possibly a candidate, and 10.00 indicates the most likely to be chosen and executed.
 The structure of the output should be: {
-    "finished_steps": [...],
-    "next_steps": [...],
     "id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value and iterate over all possible values), and "<rating>" denotes its rating.
 Example:
 {
-    "finished_steps": ["Click('Alice')"]
-    "next_steps": ["Edit('hi')", "Click('Send')"]
     "id_1": 5.53, "id_2": 9.71, "id_3": 3.20
 }
-Think step by step and output your reasoning process: 
-Step 1: what has been done,especially pay attention to those steps which is wrong and caused navigate back if any;
-Step 2: think step by step on the Succesive Results of each UI options (if the results exist. Note that sometimes the UI is not fully explored and the results are unknown. However, the element may still be the next to be operated), which represents the subsequent items after operating on them. They can indicate the ground-truth operation results which is rather important to fulfilling User Task
+Think step by step and output your reasoning process:
+Step 1: think about ["History operation sequence"],what has been done,especially pay attention to those steps which is wrong and caused navigate back if any;
+Step 2: think step by step on the ["Succesive Results"] of each UI options GIVEN by user, which represents the subsequent items after operating on them, and the ["possible paths to UI target"] GIVEN by user, which was suggested by expert knowledge;
 Step 3: decide what should be done next. Possible operations: click, edit (text input), scroll. Pay attention to those steps which is wrong and caused navigate back if any;
-Step 4: Synthesize the above output, output a JSON object with scores. 
+Step 4: Synthesize the above output to output a JSON object with scores.
 """
         },
         {
             "role": "user",
-            "content": """Task: "{}".
-History operation sequence: {}.
-Examples:{}
-
-Current UI screen:
-'''HTML
-{}
-'''
-Successive results of current UI:
-{}
-REMEMBER always assign Back buttons like "Navigate up" the score of 1.0, they are not allowed to perform.
-""".format(
-                task,
-                current_path_str,
-                [j+":"+k for j, k in zip(
-                    similar_tasks, similar_traces)],
-                "".join(semantic_info_list),
-                next_comp
-            )
-        }, {
-            "role": "user",
-            "content": """Knowledge:
-{}
-These are knowledge accumulated form previous task execution iterations, you should think step by step about how these would guide you to score each components.
-""".format(Knowledge)
+            "content": json.dumps(content)
         }]
+    return p
 
 
 def plan_prompt(task, page_description, node_selected, next_step):
@@ -443,7 +423,8 @@ def plan_prompt(task, page_description, node_selected, next_step):
             "content":
                 f"""You are an AI assistant specialized in UI Automation. Now you have successfully obtained the top UI component that are most likely to operate with based on user's intent. Now, you need to determine the action to be performed on it.
 There {'are' if len(action_desc) > 1 else 'is'} {len(action_desc)} main type{'s' if len(action_desc) > 1 else ''} of action{'s' if len(action_desc) > 1 else ''}:
-{newline.join([f'{idx+1}. {content}' for idx, content in enumerate(action_desc)])}
+{newline.join([f'{idx+1}. {content}' for idx,
+              content in enumerate(action_desc)])}
 For the top component, analyze the possible action to be taken and, if it involves an editing action, provide the corresponding text parameter as well.
 Reason step by step to provide the actions and text parameters for it based on the user's intent and the context of the current screen.
 Output a JSON object structured like
@@ -476,8 +457,9 @@ Your task is to evaluate if the operation sequence and the current UI can furthe
 Use the following steps to respond. Fully restate each step number before proceeding. i.e. "Step 1".
 Step 1:Reason step-by-step about the the history ACTIONs (especially the last action leading to the Current UI)and UI TASK. Whether Last Action can contribute to fulfill the user's task IN THE LONG RUN?
 Step 2:Reason step-by-step about whether LATEST UI PAGE can further lead to the UI task fulfillment IN THE LONG RUN. Can any element on screen be operated next to lead to the fulfillment of the task?
+    A kind note: if you find <scroll /> elements, it means that you can try to scroll forward to explore more elements on the screen. so you can also choose "go on" if you think there are elements worthy being explored.
 Step 3:Reason step-by-step about whether there are any elements with GENERAL proposes that are worthy being explored. If any, you should also choose "go on" and explore them.
-Step 4:Synthesize the above thoughts and output a conclusion on the STATUS as a JSON object structured like: 
+Step 4:Synthesize the above thoughts and output a conclusion on the STATUS as a JSON object structured like:
 {
     "next ui element": if the value of the status is "go on", please also output the next ui element to be operated. The status should not be "go on" if none element in the UI page can be the next.
     "status": "completed" or "wrong" or "go on". Attention that only when "next ui element" refers to a valid element on the screen can you choose "go on"
@@ -608,3 +590,25 @@ def coverage(text1, text2):
     common_words = words1.intersection(words2)
 
     return len(common_words) / max(len(words1), len(words2))
+
+
+def simplify_ui_element(html_str):
+    # 移除id属性
+    html_str = re.sub(r'\sid=[\'"]?\w+[\'"]?', '', html_str)
+
+    # 移除空属性
+    html_str = re.sub(r'\s\w+=(\'\'|\"\")', '', html_str)
+
+    # 移除HTML标签
+    html_str = re.sub(r'</?\w+\s*', '', html_str)
+
+    # 提取属性值
+    html_str = re.sub(r'\w+=', '', html_str)
+
+    # 移除结尾的 '>'
+    html_str = re.sub(r'>', '', html_str)
+
+    # 压缩多余空格
+    html_str = re.sub(r'\s+', ' ', html_str).strip()
+
+    return html_str

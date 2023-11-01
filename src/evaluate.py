@@ -3,8 +3,9 @@ import json
 import os
 import numpy as np
 import openai
+from Graph import Edge
 from src.embedding import sort_by_similarity
-from src.utility import GPT, Task_UI_grounding_prompt, coverage, get_top_combined_similarities, plan_prompt, process_action_info
+from src.utility import GPT, Task_UI_grounding_prompt, coverage, get_top_combined_similarities, plan_prompt, process_action_info, simplify_ui_element
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
 
@@ -49,7 +50,7 @@ class Evaluate():
     def handle_cycle(self, curpage, ACTION_TRACE):
         if ACTION_TRACE["ACTION_DESC"] and len(ACTION_TRACE["ACTION_DESC"]) > 0 and ACTION_TRACE["ACTION_DESC"][-1] == "BACK":
             return
-        for page in ACTION_TRACE["PAGES"]:
+        for page in ACTION_TRACE["PAGES"][:-1]:
             if coverage(page, curpage) >= 0.95:
                 index = ACTION_TRACE["PAGES"].index(page)
                 index_now = len(ACTION_TRACE["PAGES"])-1
@@ -69,7 +70,7 @@ class Evaluate():
 
         self.prompt = Task_UI_grounding_prompt(self.model.task, [ACTION_TRACE[key]
                                                                  for key in ACTION_TRACE.keys() if "Action" in key], self.model.similar_tasks,
-                                               self.model.similar_traces, self.model.predicted_step, self.model.screen.semantic_info, self.model.predict_module.comp_json_simplified, knowledge)
+                                               self.model.similar_traces, self.model.predicted_step, self.model.screen.semantic_info, self.model.predict_module.comp_json_simplified, knowledge, self.model.long_term_UI_knowledge)
         self.handle_cycle(curpage=self.model.screen.page_root.generate_all_text().split(
             "-"), ACTION_TRACE=ACTION_TRACE)
         similarity = sort_by_similarity(
@@ -136,10 +137,12 @@ Please output the next element to be operated.""".format(self.model.task, [ACTIO
         self.model.node_selected_id = int(
             self.model.node_selected.split("id=")[1].split(" ")[0])
         self.model.current_action = process_action_info(
-            self.model.node_selected_action, self.model.node_selected_text, self.model.node_selected)
+            self.model.node_selected_action, self.model.node_selected_text, simplify_ui_element(self.model.node_selected))
         self.model.current_path.append(self.model.current_action)
         self.model.final_node = self.model.screen.semantic_nodes["nodes"][self.model.screen.semantic_info_list.index(
             self.model.node_selected)]
+        self.model.edge_in_graph = Edge(
+            self.model.node_selected_action, self.model.node_selected_text, simplify_ui_element(self.model.node_selected))
 
     def update_weights(self, weights):
         w = [0]*len(list(

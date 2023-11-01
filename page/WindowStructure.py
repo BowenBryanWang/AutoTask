@@ -186,6 +186,8 @@ class UINode:
 
     def is_selected(self):
         prob = 1
+        if self.resource_id == "com.android.settings:id/search_action_bar" or self.text == "Search settings":
+            return 0
         # 如果节点的面积大于页面面积的0.4，给予惩罚
         if self.area > 1080*2310*0.4:
             prob *= 0.5
@@ -221,6 +223,7 @@ class UINode:
             prob *= 0.5
         if self.checkable:
             return 1
+
         if prob >= 1:
             # if self.clickable:
             #     if self.depth >= 16:

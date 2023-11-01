@@ -6,6 +6,7 @@ import threading
 from flask import Response, jsonify
 from typing import Any, Union
 from flask import Flask, request
+from Graph import UINavigationGraph
 from src.embedding import sort_by_similarity
 from src.model import Model
 
@@ -47,6 +48,7 @@ ACTION_TRACE = {
     "ACTION_DESC": [],
     "PAGES": [],
 }
+Graph = UINavigationGraph("Graph.pkl")
 
 force_load_count = 0
 auto_load = False
@@ -84,7 +86,7 @@ def wait_and_load_decorator(function):
 @app.route('/demo', methods=['POST'])
 @wait_and_load_decorator
 def demo() -> Union[str, Response]:
-    global TASK, STATUS, INDEX, COMPUTATIONAL_GRAPH, GRAPH_ACTION, force_load_count, auto_load, long_term_UI_knowledge
+    global TASK, STATUS, INDEX, COMPUTATIONAL_GRAPH, GRAPH_ACTION, force_load_count, auto_load, long_term_UI_knowledge, Graph
     if listener_global is not None:
         listener_global.stop()
     screen = Screen(INDEX)
@@ -99,6 +101,8 @@ def demo() -> Union[str, Response]:
         STATUS = "running"
         model = Model(screen=screen, description=TASK,
                       prev_model=COMPUTATIONAL_GRAPH[-1] if COMPUTATIONAL_GRAPH != [] else None, index=INDEX, long_term_UI_knowledge=long_term_UI_knowledge)
+        model.refer_node = Graph.add_node(model.node_in_graph)
+
         if len(COMPUTATIONAL_GRAPH) >= 1 and model.screen.page_root.generate_all_text() == COMPUTATIONAL_GRAPH[-1].screen.page_root.generate_all_text():
             if MODE == "normal":
                 STATUS = "backtracking"
@@ -106,9 +110,12 @@ def demo() -> Union[str, Response]:
                 STATUS = "running"
             return COMPUTATIONAL_GRAPH[-1].final_result
         COMPUTATIONAL_GRAPH.append(model)
+        if model.prev_model is not None:
+            if ACTION_TRACE["ACTION_DESC"][-1] != "BACK":
+                Graph.add_edge(model.prev_model.node_in_graph,
+                               model.node_in_graph, model.prev_model.edge_in_graph)
         ACTION_TRACE["PAGES"].append(
             model.screen.page_root.generate_all_text().split("-"))
-        print("work")
         result, work_status = model.work(
             ACTION_TRACE=process_ACTION_TRACE(ACTION_TRACE))
         model.final_result = result
@@ -121,7 +128,6 @@ def demo() -> Union[str, Response]:
         elif work_status == "Execute":
             ACTION_TRACE["ACTION"].append(model.log_json["@Action"])
             ACTION_TRACE["ACTION_DESC"].append("NEXT")
-
             if MODE == "normal":
                 STATUS = "start"
             elif MODE == "preserve":
@@ -247,6 +253,7 @@ if __name__ == "__main__":
     TASK = args.task
     retrivel_long_term_UI_knowledge(TASK)
     MODE = args.mode
+    Graph.load_from_pickle("Graph.pkl")
 
     keyboard_thread = threading.Thread(target=keyboard_listener)
     keyboard_thread.daemon = True

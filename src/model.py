@@ -6,6 +6,7 @@ import os
 from typing import Optional
 
 import pandas as pd
+from Graph import Node
 
 
 from src.utility import generate_perform, process_string
@@ -20,10 +21,15 @@ from src.predict import Predict
 
 class Model:
 
+    def cal_diff(self):
+        if self.prev_model is None:
+            return
+
     def __init__(self, screen: Optional[Screen] = None, description: str = "", prev_model=None, index=0, long_term_UI_knowledge=[]):
         self.index: int = index  # Index of current Model
         if screen is not None:
             self.screen: Screen = screen  # Current Screen
+
         self.task: str = description  # User's Task
         self.candidate: list[int] = []
         self.candidate_str: list[str] = []
@@ -55,6 +61,9 @@ class Model:
         self.evaluate_module = Evaluate(self)
         self.decide_module = Decide(self)
         self.feedback_module = Feedback(self)
+        self.long_term_UI_knowledge = long_term_UI_knowledge
+        self.cal_diff()
+        self.node_in_graph: Node = Node(self.screen)
         print("________________INITIAL_DONE________________")
 
     @property
@@ -90,7 +99,7 @@ class Model:
         node_list = []
         m = self.prev_model
         while m:
-            node_list.append(m.node_selected_warp)
+            node_list.append(m.node_selected)
             m = m.prev_model
         node_list = node_list[::-1]
         if not os.path.exists(os.path.join(os.path.dirname(__file__), "KB/pagejump/pagejump_long.json")):
@@ -99,7 +108,7 @@ class Model:
         with open(os.path.join(os.path.dirname(__file__), "KB/pagejump/pagejump_long.json"), 'r+', encoding="utf-8") as f:
             js = json.loads(f.read())
         with open(os.path.join(os.path.dirname(__file__), "KB/pagejump/pagejump_long.json"), 'w', encoding="utf-8") as f:
-            for node in self.screen.semantic_info:
+            for node in self.screen.semantic_info_list:
                 js[node] = node_list + [node]
             json.dump(js, f, indent=4)
 

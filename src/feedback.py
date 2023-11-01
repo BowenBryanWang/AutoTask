@@ -65,12 +65,6 @@ Finally, output a JSON format like this example:
         self.prompt.append({
             "role": "user",
             "content": """
-                Page description: {}
-                """.format(self.info["@Page_description"])
-        })
-        self.prompt.append({
-            "role": "user",
-            "content": """
                 Previous Steps: {}
                 """.format(self.info["@Previous_Step"])
         })

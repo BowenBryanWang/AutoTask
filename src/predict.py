@@ -1,6 +1,6 @@
 import json
 from src.embedding import sort_by_similarity
-from src.utility import UI_grounding_prompt_only_summary, add_son_to_father, add_value_to_html_tag, get_top_combined_similarities_group, process_string
+from src.utility import UI_grounding_prompt_only_summary, add_son_to_father, add_value_to_html_tag, get_top_combined_similarities_group, process_string, simplify_ui_element
 import copy
 import random
 import os
@@ -24,7 +24,6 @@ class Predict():
     def log_decorator(func):
         def wrapper(self, *args, **kwargs):
             result = func(self, *args, **kwargs)
-            self.model.log_json["@Page_description"] = self.model.page_description
             self.model.log_json["@Similar_tasks"] = [j+":" +
                                                      k for j, k in zip(self.model.similar_tasks, self.model.similar_traces)]
             self.model.log_json["@Module"].append({
@@ -48,38 +47,26 @@ class Predict():
 
     def UI_grounding(self):
         SEMANTIC_INFO = list(
-            filter(lambda x: "id=" in x, self.model.screen.semantic_info))
-        SEMANTIC_STR = self.model.screen.page_root.generate_all_text()
-
+            filter(lambda x: "id=" in x, self.model.screen.semantic_info_list))
         self.current_comp = SEMANTIC_INFO
         self.next_comp = [""]*len(SEMANTIC_INFO)
         self.comp_json = dict.fromkeys(SEMANTIC_INFO, "Unknown")
-        predict_node = copy.deepcopy(SEMANTIC_INFO)
-        queries = [[process_string(SEMANTIC_STR), process_string(
-            SEMANTIC_INFO[i])] for i in range(len(SEMANTIC_INFO))]
-        results = get_top_combined_similarities_group(queries=queries, csv_file=os.path.join(
-            os.path.dirname(__file__), 'KB/pagejump/pagejump.csv'), k=1, fields=["Origin", "Edge"])
-        for index, r in enumerate(results):
-            if r != "Not found":
-                self.next_comp[index] = {
-                    "description": "", "comp": r["Dest"]}
-                self.comp_json[SEMANTIC_INFO[index]] = {
-                    "description": "", "comp": r["Dest"]}
-                predict_node[index] = "None"
-        indexs = [i for i, x in enumerate(predict_node) if x == "None"]
-        predict_prompt = list(filter(lambda x: not any(
-            [str(index+1) in x for index in indexs]), self.model.screen.semantic_info))
-        response_text = GPT(UI_grounding_prompt_only_summary(predict_prompt))
-        self.model.page_description = response_text["Page"]
-        self.model.current_path.append("Page:"+self.model.page_description)
-        for key, value in response_text.items():
-            if key.startswith("id_"):
-                index = SEMANTIC_INFO.index(
-                    list(filter(lambda x: "id="+key.split("_")[1] in x, SEMANTIC_INFO))[0])
-                self.next_comp[index] = value
-                self.comp_json[SEMANTIC_INFO[index]] = value
+
+        node = self.model.refer_node
+        graph = node.graph
+        edges = graph.find_neighbour_edges(node)
+        edges_node = list(map(lambda x: x.node, edges))
+        for i, e in enumerate(SEMANTIC_INFO):
+            if simplify_ui_element(e) in edges_node:
+                index = edges_node.index(simplify_ui_element(e))
+                target_node = edges[index]._to
+                self.comp_json[SEMANTIC_INFO[i]] = target_node.elements
         self.comp_json_simplified = {
-            "id="+str(index+1): item for index, (key, item) in enumerate(self.comp_json.items())}
+            key: item
+            for index, (key, item) in enumerate(self.comp_json.items())
+            if item != "Unknown"
+        }
+        print("comp_json", self.comp_json)
 
     @ log_decorator
     def predict(self, ACTION_TRACE=None):
