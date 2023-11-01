@@ -5,8 +5,8 @@ import traceback
 from typing import List
 import numpy as np
 
-if os.path.exists('ebd.pickle'):
-    with open('ebd.pickle', 'rb') as f:
+if os.path.exists('./cache/ebd.pickle'):
+    with open('./cache/ebd.pickle', 'rb') as f:
         cache = pickle.load(f)
 else:
     cache = {}
@@ -30,7 +30,7 @@ def cal_embedding(text, model_name='text-embedding-ada-002'):
 
         for idx, d in enumerate(result['data']):
             cache[to_call_text[idx]] = d['embedding']
-        with open('ebd.pickle', 'wb') as f:
+        with open('./cache/ebd.pickle', 'wb') as f:
             pickle.dump(cache, f)
     return [cache[x] for x in text]
 
@@ -46,7 +46,10 @@ def sort_by_similarity(q: str, a_list: List[str]):
 
     extend_a = [(a, cal_similarity(q_ebd, a_ebd)) for a, a_ebd in zip(a_list, a_ebds)]
     return extend_a
-
+def cal_similarity_one(q:str, a:str):
+    q_ebd = cal_embedding(q)
+    a_ebd = cal_embedding(a)
+    return cal_similarity(q_ebd, a_ebd)
 if __name__ == '__main__':
     q = '''
 system:

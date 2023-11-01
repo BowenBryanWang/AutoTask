@@ -3,9 +3,8 @@ from matplotlib import pyplot as plt
 import networkx as nx
 import pickle
 
-from src.embedding import sort_by_similarity
-
-from src.utility import simplify_ui_element
+from src.embedding import cal_similarity_one, sort_by_similarity
+from src.utility import process_action_info, simplify_ui_element
 
 
 class Node:
@@ -13,7 +12,7 @@ class Node:
         self.graph = g
         self.screen = screen
         self.elements = list(
-            map(simplify_ui_element, screen.semantic_info_list))
+            map(simplify_ui_element, screen.semantic_info_half_warp))
 
     def __eq__(self, o: object) -> bool:
         return self.elements == o.elements
@@ -105,9 +104,16 @@ class UINavigationGraph:
         找到从source到End的最短路径。
         :param source: 起始节点
         :param End: 终止节点
-        :return: 最短路径
+        :return: 最短路径的操作序列
         """
-        return nx.shortest_path(self.graph, source, End)
+        path = nx.shortest_path(self.graph, source, End)
+        edges = []
+        for i in range(len(path) - 1):
+            node_from = path[i]
+            node_to = path[i + 1]
+            edge = self.graph.get_edge_data(node_from, node_to)['edge']
+            edges.append(edge)
+        return list(map(lambda x: process_action_info(x.action, x.text, x.node), edges))
 
     def find_neighbour_nodes(self, node: Node) -> list:
         """
@@ -142,16 +148,32 @@ class UINavigationGraph:
         """
         return self.graph.nodes
 
-    def find_target_UI(self, query):
-        """
-        通过query找到目标UI。
-        :param query: 查询
-        :return: 目标UI
-        """
-        nodes = self.get_all_nodes()
-        for node in nodes:
-            if node.query(query) != []:
-                return node.result
+    def find_target_UI(self, query, similarity_threshold=0.80):
+        # 创建一个列表，包含每个节点的元素及其对应的节点
+        if self.graph.number_of_nodes() <= 1:
+            return [], []
+        element_node_pairs = [(element, node, cal_similarity_one(query, element))
+                              for node in self.get_all_nodes() for element in node.elements]
+
+        # 使用similarity对元素进行相似度排序
+
+        sorted_elements = sorted(
+            element_node_pairs, key=lambda x: x[2], reverse=True)
+
+        # 筛选出相似度超过阈值的元素及其对应的节点
+        filtered_pairs = list(
+            filter(lambda x: x[2] > similarity_threshold, sorted_elements))
+
+        # 使用字典来聚合结果
+        aggregated_results = {}
+        for element, node, score in filtered_pairs:
+            if node not in aggregated_results:
+                aggregated_results[node] = [element]
+            else:
+                aggregated_results[node].append(element)
+
+        # 返回聚合后的结果
+        return aggregated_results.keys(), aggregated_results.values()
 
     def save_to_pickle(self):
         """

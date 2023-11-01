@@ -9,7 +9,7 @@ def mask(s):
 
 
 def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
-    html_components = []
+    semantic_info_all_warp = []
     real_comp = []
 
     for node in semantic_nodes:
@@ -18,7 +18,7 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
             html_element = "<scroll id={} class={} > </scroll>\n".format(
                 len(real_comp)+1,
                 node.node_class)
-            html_components.append(html_element)
+            semantic_info_all_warp.append(html_element)
             real_comp.append(html_element)
         elif (node.node_class == "android.widget.TextView" or ".TextView" in node.node_class) and not node.clickable:
             temp = node.generate_all_semantic_info()
@@ -27,7 +27,7 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
                 "description='"+",".join(temp["content-desc"])+"'" if ",".join(
                     temp["content-desc"]) != "" else "",
                 "".join(temp["text"]) if temp["text"] == temp["Major_text"] else temp["Major_text"][0] + "\n    " + "".join(["<p> " + i + " </p>\n    " for i in temp["text"][1:]])[:-5])
-            html_components.append(html_element)
+            semantic_info_all_warp.append(html_element)
         elif "LinearLayout" in node.node_class:
             temp = node.generate_all_semantic_info()
             html_element = "<div id={} class='{}' {} > {} </div>\n".format(
@@ -36,7 +36,7 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
                 "description='"+",".join(temp["content-desc"])+"'" if ",".join(
                     temp["content-desc"]) != "" else "",
                 "".join(temp["text"]) if temp["text"] == temp["Major_text"] else temp["Major_text"][0] + "\n    " + "".join(["<p> " + i + " </p>\n    " for i in temp["text"][1:]])[:-5])
-            html_components.append(html_element)
+            semantic_info_all_warp.append(html_element)
             real_comp.append(html_element)
         elif "ImageView" in node.node_class or "RelativeLayout" in node.node_class or "FrameLayout" in node.node_class:
             temp = node.generate_all_semantic_info()
@@ -50,7 +50,7 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
                 "\n    " +
                 "".join(["<p> " + i + " </p>\n    " for i in temp["text"][1:]])[:-5]
             )
-            html_components.append(html_element)
+            semantic_info_all_warp.append(html_element)
             real_comp.append(html_element)
         elif "Switch" in node.node_class:
             html_element = "<switch id={} class='{}' clickable > {} </switch>\n".format(
@@ -58,7 +58,7 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
                 mask(node.resource_id),
                 "On" if node.checked else "Off",
             )
-            html_components.append(html_element)
+            semantic_info_all_warp.append(html_element)
             real_comp.append(html_element)
         elif "CheckedTextView" in node.node_class or "CheckBox" in node.node_class:
             html_element = "<checkbox id={} class='{}' {} > {} </checkbox>\n".format(
@@ -68,7 +68,7 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
                 "On" if node.checked else "Off",
 
             )
-            html_components.append(html_element)
+            semantic_info_all_warp.append(html_element)
             real_comp.append(html_element)
         elif "EditText" in node.node_class or "AutoCompleteTextView" in node.node_class:
             temp = node.generate_all_semantic_info()
@@ -88,7 +88,7 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
                         temp["content-desc"]) != "" else "",
                     "enabled" if node.enabled else "Not enabled",
                     "".join(temp["text"]) if temp["text"] == temp["Major_text"] else temp["Major_text"][0] + "\n    " + "".join(["<p> " + i + " </p>\n    " for i in temp["text"][1:]])[:-5])
-            html_components.append(html_element)
+            semantic_info_all_warp.append(html_element)
             real_comp.append(html_element)
         else:
             temp = node.generate_all_semantic_info()
@@ -102,20 +102,30 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
                 "" if not node.checkable else (
                     'checked' if node.checked else 'not_checked'),
                 "".join(temp["text"]) if temp["text"] == temp["Major_text"] else temp["Major_text"][0] + "\n    " + "".join(["<p> " + i + " </p>\n    " for i in temp["text"][1:]])[:-5])
-            html_components.append(html_element)
+            semantic_info_all_warp.append(html_element)
             real_comp.append(html_element)
 
-    my_list = copy.deepcopy(html_components)
-    print(my_list)
+    semantic_info_no_warp = copy.deepcopy(semantic_info_all_warp)
+    semantic_info_half_warp = copy.deepcopy(semantic_info_all_warp)
+    print(semantic_info_no_warp)
     trans_relation = []
     for index_father, index_son in relation:
         trans_relation.append((index_father, index_son))
-        last_index = html_components[index_father].rfind(" </")
-        if last_index != -1 and not html_components[index_son].startswith("<p"):
-            html_components[index_father] = html_components[index_father][:last_index] + "\n    " + \
-                html_components[index_son] + " </" + \
-                html_components[index_father][last_index + 3:]
+        last_index = semantic_info_all_warp[index_father].rfind(" </")
+        if last_index != -1 and not semantic_info_all_warp[index_son].startswith("<p"):
+            semantic_info_all_warp[index_father] = semantic_info_all_warp[index_father][:last_index] + "\n    " + \
+                semantic_info_all_warp[index_son] + " </" + \
+                semantic_info_all_warp[index_father][last_index + 3:]
+        if last_index != -1 and not semantic_info_half_warp[index_son].startswith("<p") and not semantic_info_half_warp[index_father].startswith("<scroll"):
+            semantic_info_half_warp[index_father] = semantic_info_half_warp[index_father][:last_index] + "\n    " + \
+                semantic_info_half_warp[index_son] + " </" + \
+                semantic_info_half_warp[index_father][last_index + 3:]
     for father, son in relation:
-        html_components[son] = ""
-    html_components = [i for i in html_components if i != ""]
-    return html_components, my_list, trans_relation
+        semantic_info_all_warp[son] = ""
+        if semantic_info_half_warp[father].startswith("<scroll"):
+            continue
+        else:
+            semantic_info_half_warp[son] = ""
+    semantic_info_all_warp = [i for i in semantic_info_all_warp if i != ""]
+    semantic_info_half_warp = [i for i in semantic_info_half_warp if i != ""]
+    return semantic_info_all_warp, semantic_info_half_warp, semantic_info_no_warp, trans_relation

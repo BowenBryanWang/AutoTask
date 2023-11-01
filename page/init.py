@@ -14,7 +14,6 @@ from page.WindowStructure import PageInstance
 from page.process import transfer_2_html
 
 
-
 class Screen:
     """
     Represents a screen for UI analysis.
@@ -27,10 +26,11 @@ class Screen:
         if 'node' in root:
             if isinstance(root['node'], dict):
                 root['node'] = [root['node']]
-            root['node'] = [Screen.process_layout(x) for x in root['node'] if ('@visible' not in x or x['@visible'])]
-        
+            root['node'] = [Screen.process_layout(x) for x in root['node'] if (
+                '@visible' not in x or x['@visible'])]
+
         return root
-    
+
     @staticmethod
     def process_frag_overlap(node, rect_exist=None):
         overlapped = False
@@ -42,7 +42,7 @@ class Screen:
                     overlapped = True
         if overlapped:
             node['@visible'] = False
-        
+
         if 'node' not in node:
             node['node'] = []
         if isinstance(node['node'], dict):
@@ -52,9 +52,10 @@ class Screen:
             crt_rect_exist = set()
             if rect_exist is not None:
                 crt_rect_exist.update(rect_exist)
-            
+
             for sub_node in node['node'][::-1]:
-                crt_rect_exist.add(Screen.process_frag_overlap(sub_node, crt_rect_exist))
+                crt_rect_exist.add(Screen.process_frag_overlap(
+                    sub_node, crt_rect_exist))
         else:
             for sub_node in node['node']:
                 Screen.process_frag_overlap(sub_node, rect_exist)
@@ -93,7 +94,8 @@ class Screen:
             print("Layout depredicted")
             return "error:"
         self.layout = request['layout']
-        self.imgdata = base64.b64decode(self.screenshot) if self.screenshot is not None else None
+        self.imgdata = base64.b64decode(
+            self.screenshot) if self.screenshot is not None else None
         self.page_instance = PageInstance()
         layout_json = json.loads(self.layout)
         # Screen.process_frag_overlap(layout_json)
@@ -103,7 +105,7 @@ class Screen:
         print("all_text", self.page_root.generate_all_text())
         self.semantic_nodes, relation = self.page_root.get_all_semantic_nodes()
 
-        self.semantic_info, self.semantic_info_list, self.trans_relation = transfer_2_html(
+        self.semantic_info, self.semantic_info_half_warp, self.semantic_info_list, self.trans_relation = transfer_2_html(
             self.semantic_nodes["nodes"], relation)
 
         self.semantic_info_str = "".join(self.semantic_info)

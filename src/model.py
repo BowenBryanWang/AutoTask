@@ -9,7 +9,7 @@ import pandas as pd
 from Graph import Node
 
 
-from src.utility import generate_perform, process_string
+from src.utility import generate_perform, process_string, simplify_ui_element
 
 from .knowledge import Decision_KB, Error_KB, PageJump_KB, Selection_KB, Task_KB
 from src.decide import Decide
@@ -22,10 +22,19 @@ from src.predict import Predict
 class Model:
 
     def cal_diff(self):
+        return
         if self.prev_model is None:
             return
+        else:
+            new_elements = list(
+                filter(lambda x: x not in self.prev_model.screen.semantic_info_list, self.screen.semantic_info_list))
+            new_elements_index = [self.simplified_semantic_info_list.index(
+                x) for x in new_elements]
+            if new_elements_index != []:
+                self.screen.semantic_info_list = [
+                    self.screen.semantic_info_list[x] for x in new_elements_index]
 
-    def __init__(self, screen: Optional[Screen] = None, description: str = "", prev_model=None, index=0, long_term_UI_knowledge=[]):
+    def __init__(self, screen: Optional[Screen] = None, description: str = "", prev_model=None, index=0):
         self.index: int = index  # Index of current Model
         if screen is not None:
             self.screen: Screen = screen  # Current Screen
@@ -61,7 +70,9 @@ class Model:
         self.evaluate_module = Evaluate(self)
         self.decide_module = Decide(self)
         self.feedback_module = Feedback(self)
-        self.long_term_UI_knowledge = long_term_UI_knowledge
+        self.long_term_UI_knowledge = None
+        self.simplified_semantic_info_list = list(
+            map(lambda x: simplify_ui_element(x), self.screen.semantic_info_list))
         self.cal_diff()
         self.node_in_graph: Node = Node(self.screen)
         print("________________INITIAL_DONE________________")

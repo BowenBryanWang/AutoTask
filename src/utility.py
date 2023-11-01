@@ -165,7 +165,7 @@ def persist_to_file(file_name, use_cache=True):
     return decorator
 
 
-@persist_to_file("Cache.pickle")
+@persist_to_file("./cache/gpt_cache.pickle")
 def chat(prompt):
     print('connecting to gpt')
     response = openai.ChatCompletion.create(
@@ -245,6 +245,10 @@ def process_action_info(action, params, node):
         return "Action: Click on {}".format(node)
     elif action == "edit":
         return "Action: Edit {} with {}".format(node, params)
+    elif action == "scroll_forward":
+        return "Action: Scroll forward"
+    elif action == "scroll_backward":
+        return "Action: Scroll backward"
 
 
 def task_grounding_prompt(task, similar_tasks, similar_traces, previous_action, current_ui):
@@ -386,8 +390,8 @@ Note that:
     (1) The element with the highest score will be choosen as the next element to be operated.
     (2) Your score should be accurate to two decimal places.
     (3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
-    (4) <scroll /> element means there is a list and you can interact with it by scrolling forward. If you think none of the elements can be the next to be operated, you can also try giving <scroll/> a chance.
-For each option, provide a confidence rating from 1.00-10.00, based on the relation of each option to the task, where 1.00 is the lowest tier indicating complete irrelevance and may lead to errors, 3.00 is the second tier indicating minor relevance, 5.00 is the medium tier indicating neutrality, 7.00 indicates higher relevance, possibly a candidate, and 10.00 indicates the most likely to be chosen and executed.
+    (4) <scroll /> element means there is a list and you can interact with it by scrolling forward. If you want to explore more, you can also try giving <scroll/> a relatively high scorat.
+For each option, provide a confidence rating from 1.00-10.00, based on the relation of each option to the task, where 1.00 is the lowest tier indicating complete irrelevance and may lead to errors, 2.00-4.00 is the second tier indicating minor relevance, 4.00-6.00 is the medium tier indicating neutrality, 6.00-8.00 indicates higher relevance, possibly a candidate, and 10.00 indicates the most likely to be chosen and executed.
 The structure of the output should be: {
     "id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value and iterate over all possible values), and "<rating>" denotes its rating.
 Example:

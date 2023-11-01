@@ -45,7 +45,7 @@ class Predict():
         # self.model.predicted_step = result["result"]
         # print("predicted_step", self.model.predicted_step)
 
-    def UI_grounding(self):
+    def one_step_UI_grounding(self):
         SEMANTIC_INFO = list(
             filter(lambda x: "id=" in x, self.model.screen.semantic_info_list))
         self.current_comp = SEMANTIC_INFO
@@ -66,18 +66,28 @@ class Predict():
             for index, (key, item) in enumerate(self.comp_json.items())
             if item != "Unknown"
         }
-        print("comp_json", self.comp_json)
+
+    def multi_step_UI_grounding(self):
+        if self.model.prev_model is not None:
+            self.model.long_term_UI_knowledge = self.model.prev_model.long_term_UI_knowledge
+        else:
+            node = self.model.refer_node
+            graph = node.graph
+            target_UI, target_content = graph.find_target_UI(
+                query=self.model.task)
+            if target_UI != [] and target_content != []:
+                target_UI_path = [graph.find_shortest_road_to(
+                    node, target) for target in target_UI]
+                self.model.long_term_UI_knowledge = dict(
+                    zip([" ".join(sublist) for sublist in target_content], target_UI_path))
+            else:
+                self.model.long_term_UI_knowledge = None
+
+    def UI_grounding(self):
+        self.one_step_UI_grounding()
+        self.multi_step_UI_grounding()
 
     @ log_decorator
     def predict(self, ACTION_TRACE=None):
         self.Task_grounding(ACTION_TRACE)
         self.UI_grounding()
-
-    def query(self, page, node):
-        res = self.pagejump_KB.find_next_page(page, node)
-        if res != []:
-            res = res[0].split("\\n")
-            res = [re.sub(r'id=\d+', '', s) for s in res]
-            return res
-        else:
-            return None
