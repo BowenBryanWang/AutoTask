@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 import networkx as nx
 import pickle
 
-from src.embedding import cal_similarity_one, sort_by_similarity
+from src.embedding import cal_similarity_one, sort_by_similarity, cal_embedding
 from src.utility import process_action_info, simplify_ui_element
 
 
@@ -152,6 +152,10 @@ class UINavigationGraph:
         # 创建一个列表，包含每个节点的元素及其对应的节点
         if self.graph.number_of_nodes() <= 1:
             return [], []
+        
+        text_to_ebd = [query, *[element for node in self.get_all_nodes() for element in node.elements]]
+        cal_embedding(text_to_ebd)
+
         element_node_pairs = [(element, node, cal_similarity_one(query, element))
                               for node in self.get_all_nodes() for element in node.elements]
 

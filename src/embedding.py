@@ -5,6 +5,7 @@ import traceback
 from typing import List
 import numpy as np
 
+
 if os.path.exists('./cache/ebd.pickle'):
     with open('./cache/ebd.pickle', 'rb') as f:
         cache = pickle.load(f)
@@ -16,6 +17,7 @@ def cal_embedding(text, model_name='text-embedding-ada-002'):
     if type(text) == str:
         return cal_embedding([text], model_name)[0]
     to_call_text = [x for x in text if x not in cache]
+    
     if len(to_call_text) > 0:
         while True:
             try:

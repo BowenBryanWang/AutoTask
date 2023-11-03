@@ -114,10 +114,10 @@ class Model:
             m = m.prev_model
         node_list = node_list[::-1]
         if not os.path.exists(os.path.join(os.path.dirname(__file__), "KB/pagejump/pagejump_long.json")):
-            os.mkdir(os.path.join(os.path.dirname(__file__),
-                     "KB/pagejump/pagejump_long.json"))
-        with open(os.path.join(os.path.dirname(__file__), "KB/pagejump/pagejump_long.json"), 'r+', encoding="utf-8") as f:
-            js = json.loads(f.read())
+            js = {}
+        else:
+            with open(os.path.join(os.path.dirname(__file__), "KB/pagejump/pagejump_long.json"), 'r+', encoding="utf-8") as f:
+                js = json.load(f)
         with open(os.path.join(os.path.dirname(__file__), "KB/pagejump/pagejump_long.json"), 'w', encoding="utf-8") as f:
             for node in self.screen.semantic_info_list:
                 js[node] = node_list + [node]

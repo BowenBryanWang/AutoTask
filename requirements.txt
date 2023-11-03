@@ -11,3 +11,5 @@ tiktoken
 faiss-cpu
 pynput
 pandas
+matplotlib
+networkx

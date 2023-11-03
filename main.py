@@ -59,7 +59,7 @@ listener_global = None
 def heat_beat():
     global force_load_count, auto_load
     if auto_load:
-        force_load_count += (2.0 / 10.0)  # 前端每1秒发送一次，预计等待10秒
+        force_load_count += (2.0 / 5.0)  # 前端每1秒发送一次，预计等待10秒
     force_load = force_load_count >= 2
     if force_load:
         force_load_count = 0
@@ -224,7 +224,7 @@ def keyboard_listener():
 
 
 if __name__ == "__main__":
-    default_cmd = "Find my phone's IP address"
+    default_cmd = "Find my phone's MAC address"
 
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")

@@ -186,7 +186,11 @@ class UINode:
 
     def is_selected(self):
         prob = 1
-        if self.resource_id == "com.android.settings:id/search_action_bar" or self.text == "Search settings":
+        if self.resource_id == "com.android.settings:id/search_action_bar" or self.text == "Search settings" or self.content_desc == "Search settings":
+            # disable search
+            return 0
+        if self.parent is not None and 'action_bar' in self.parent.resource_id and self.content_desc == 'Back':
+            # disable back
             return 0
         # 如果节点的面积大于页面面积的0.4，给予惩罚
         if self.area > 1080*2310*0.4:
