@@ -200,6 +200,14 @@ class UINavigationGraph:
         else:
             print("No such file.")
 
+    def merge_from_another_pickle(self, file_path_another):
+        """
+        从另外一个文件加载并merge到该文件中
+        """
+        if os.path.exists(file_path_another):
+            with open(file_path_another, "rb") as f:
+                graph_anthor = pickle.load(f)
+
     def visualize(self):
         """
         可视化图。

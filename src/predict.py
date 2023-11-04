@@ -15,8 +15,8 @@ openai.api_key = os.getenv('OPENAI_API_KEY')
 
 class Predict():
 
-    def __init__(self, model, pagejump):
-        self.pagejump_KB = pagejump
+    def __init__(self, model):
+
         self.model = model
         self.modified_result = None
         self.insert_prompt = None

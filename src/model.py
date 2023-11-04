@@ -73,7 +73,7 @@ class Model:
         self.Selection_KB = Selection_KB()
         self.similar_tasks, self.similar_traces = self.Task_KB.find_most_similar_tasks(
             self.task)
-        self.predict_module = Predict(self, self.PageJump_KB)
+        self.predict_module = Predict(self)
         self.evaluate_module = Evaluate(self)
         self.decide_module = Decide(self)
         self.feedback_module = Feedback(self)

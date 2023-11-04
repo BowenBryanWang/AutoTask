@@ -48,7 +48,7 @@ ACTION_TRACE = {
     "ACTION_DESC": [],
     "PAGES": [],
 }
-Graph = UINavigationGraph("./cache/Graph.pkl")
+Graph = UINavigationGraph()
 
 force_load_count = 0
 auto_load = False
@@ -93,7 +93,7 @@ def demo() -> Union[str, Response]:
     force_load_count = 0
     auto_load = False
 
-    while screen.semantic_info_list == []:
+    while screen.semantic_info_no_warp == []:
         return Response("0")
     print("INDEX", INDEX)
     if STATUS == "start":
@@ -224,7 +224,7 @@ def keyboard_listener():
 
 
 if __name__ == "__main__":
-    default_cmd = "Find my phone's MAC address"
+    default_cmd = "Find my phone's IP address"
 
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")
@@ -232,11 +232,18 @@ if __name__ == "__main__":
                         default=default_cmd)
     parser.add_argument("--mode", type=str, choices=["normal", "preserve"],
                         default="normal", help="Specify the mode: 'normal' or 'preserve'")
+    parser.add_argument("--load", type=bool, choices=[True, False],
+                        default=False, help="determine whether to load UI graph")
     args = parser.parse_args()
 
     TASK = args.task
     MODE = args.mode
-    Graph.load_from_pickle("cache/Graph.pkl")
+    LOAD = args.load
+    if LOAD:
+        Graph.load_from_pickle("cache/Graph.pkl")
+    else:
+        Graph = UINavigationGraph(
+            "./cache/Graph_"+TASK.replace(" ", "_")+".pkl")
 
     keyboard_thread = threading.Thread(target=keyboard_listener)
     keyboard_thread.daemon = True
