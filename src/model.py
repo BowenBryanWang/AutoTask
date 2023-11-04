@@ -34,8 +34,8 @@ class Model:
                 filter(lambda x: x not in self.prev_model.screen.semantic_info_half_warp, self.screen.semantic_info_half_warp))
             old_elements = list(
                 filter(lambda x: x in self.prev_model.screen.semantic_info_half_warp, self.screen.semantic_info_half_warp))
-            # if len(new_elements) / len(self.screen.semantic_info_half_warp) > 0.8:
-            #     return
+            if len(new_elements) / len(self.screen.semantic_info_half_warp) > 0.8:
+                return
             new_elements_index = [self.screen.semantic_info_half_warp.index(
                 x) for x in new_elements]
             for i in new_elements_index:
