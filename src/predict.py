@@ -68,20 +68,17 @@ class Predict():
         }
 
     def multi_step_UI_grounding(self):
-        if self.model.prev_model is not None:
-            self.model.long_term_UI_knowledge = self.model.prev_model.long_term_UI_knowledge
+        node = self.model.refer_node
+        graph = node.graph
+        target_UI, target_content = graph.find_target_UI(
+            query=self.model.task)
+        if target_UI != [] and target_content != []:
+            target_UI_path = [graph.find_shortest_road_to(
+                node, target) for target in target_UI]
+            self.model.long_term_UI_knowledge = dict(
+                zip([" ".join(sublist) for sublist in target_content], target_UI_path))
         else:
-            node = self.model.refer_node
-            graph = node.graph
-            target_UI, target_content = graph.find_target_UI(
-                query=self.model.task)
-            if target_UI != [] and target_content != []:
-                target_UI_path = [graph.find_shortest_road_to(
-                    node, target) for target in target_UI]
-                self.model.long_term_UI_knowledge = dict(
-                    zip([" ".join(sublist) for sublist in target_content], target_UI_path))
-            else:
-                self.model.long_term_UI_knowledge = None
+            self.model.long_term_UI_knowledge = None
 
     def UI_grounding(self):
         self.one_step_UI_grounding()
