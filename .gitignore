@@ -14,3 +14,6 @@ Shots/
 .vscode/
 page/data/
 src/KB/
+cache/
+expr/
+result.csv
