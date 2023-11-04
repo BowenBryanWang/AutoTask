@@ -206,7 +206,7 @@ def persist_to_file(file_name, use_cache=True):
                     os.makedirs(store_path)
 
                 store_path = os.path.join(
-                    store_path, f"{args.get('tag')}{'cache' if cache_used else ''}.txt")
+                    store_path, f"{int(time.time() * 1000)}{args.get('tag')}{'cache' if cache_used else ''}.txt")
                 with open(store_path, 'w', encoding="utf-8") as f:
                     f.write(
                         '\n'.join([f'{x["role"]}:\n{x["content"]}\n' for x in args['prompt']]))
