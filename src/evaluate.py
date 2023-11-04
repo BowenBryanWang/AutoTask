@@ -1,11 +1,16 @@
+
+from Graph import Edge
+from src.utility import sort_by_similarity
+from src.utility import GPT, Task_UI_grounding_prompt, coverage, get_top_combined_similarities, plan_prompt, process_action_info, simplify_ui_element
 import copy
 import json
 import os
 import numpy as np
 import openai
-from Graph import Edge
-from src.utility import sort_by_similarity
-from src.utility import GPT, Task_UI_grounding_prompt, coverage, get_top_combined_similarities, plan_prompt, process_action_info, simplify_ui_element
+import sys
+sys.path.append('..')
+
+
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
 
@@ -27,10 +32,10 @@ class Evaluate():
             self.model.log_json["@Module"].append({
                 "Name": "Evaluate",
                 "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
-                "Score": {key: item for key, item in zip(self.model.screen.semantic_info_no_warp_with_id, self.original_score)},
+                "Score": {key: item for key, item in zip(self.model.screen.semantic_info_no_warp_with_id, self.score)},
                 "Punishment coefficient": self.weights
             })
-            with open("logs/log{}.json".format(self.model.index), "w", encoding="utf-8") as f:
+            with open("logs/log{}.json".format(self.model.index+1), "w", encoding="utf-8") as f:
                 json.dump(self.model.log_json, f, indent=4)
             return result
         return wrapper
@@ -65,7 +70,7 @@ class Evaluate():
 
         self.prompt = Task_UI_grounding_prompt(self.model.task, [ACTION_TRACE[key]
                                                                  for key in ACTION_TRACE.keys() if "Action" in key], self.model.similar_tasks,
-                                               self.model.similar_traces, self.model.predicted_step, self.model.screen.semantic_info_all_warp, self.model.predict_module.comp_json_simplified, knowledge, self.model.long_term_UI_knowledge)
+                                               self.model.similar_traces, self.model.screen.semantic_info_all_warp, self.model.predict_module.comp_json_simplified, knowledge, self.model.long_term_UI_knowledge)
         self.handle_cycle(curpage=self.model.screen.page_root.generate_all_text().split(
             "-"), ACTION_TRACE=ACTION_TRACE)
         similarity = sort_by_similarity(
@@ -74,9 +79,9 @@ Your job is to choose the next UI element to be operated considering the user ta
 Task: {}.
 History operation sequence: {}.
 Current UI:{}
-Please output the next element to be operated.""".format(self.model.task, [ACTION_TRACE[key] for key in ACTION_TRACE.keys() if "Action" in key], self.model.screen.semantic_info_no_warp_with_id))
+Please output the next element to be operated.""".format(self.model.task, [ACTION_TRACE[key] for key in ACTION_TRACE.keys() if "Action" in key], self.model.screen.semantic_info_no_warp_with_id), self.model.screen.semantic_info_no_warp_with_id)
         similarity = np.array([x[1] for x in similarity])
-        resp = GPT(self.prompt)
+        resp = GPT(self.prompt, tag="evaluate"+str(self.model.index+1))
         scores = [1.0]*len(self.model.screen.semantic_info_no_warp_with_id)
         for key, rating in resp.items():
             if key.startswith('id_'):
@@ -107,7 +112,7 @@ Please output the next element to be operated.""".format(self.model.task, [ACTIO
             lambda x: "id="+str(top_index+1) in x, self.model.screen.semantic_info_half_warp))[0]  # 包围后的完整的node字符串描述
         if 'editable' in self.model.node_selected and 'ineditable' not in self.model.node_selected:
             response = GPT(plan_prompt(self.model.task,
-                                       self.model.page_description, self.model.node_selected, self.next_step))
+                                       self.model.page_description, self.model.node_selected, self.next_step), tag="plan"+str(self.model.index+1))
             self.model.node_selected_action, self.model.node_selected_text = response.get(
                 "action"), response.get("text")
         elif 'scroll' in self.model.node_selected:

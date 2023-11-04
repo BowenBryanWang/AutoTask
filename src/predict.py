@@ -27,7 +27,7 @@ class Predict():
             })
             if not os.path.exists("logs"):
                 os.mkdir("logs")
-                with open("logs/log{}.json".format(self.model.index), "w", encoding="utf-8") as f:
+                with open("logs/log{}.json".format(self.model.index+1), "w", encoding="utf-8") as f:
                     json.dump(self.model.log_json, f, indent=4)
             return result
         return wrapper

@@ -206,7 +206,7 @@ def persist_to_file(file_name, use_cache=True):
                     os.makedirs(store_path)
 
                 store_path = os.path.join(
-                    store_path, f"{int(time.time() * 1000)}{'cache' if cache_used else ''}.txt")
+                    store_path, f"{args.get('tag')}{'cache' if cache_used else ''}.txt")
                 with open(store_path, 'w', encoding="utf-8") as f:
                     f.write(
                         '\n'.join([f'{x["role"]}:\n{x["content"]}\n' for x in args['prompt']]))
@@ -219,7 +219,7 @@ def persist_to_file(file_name, use_cache=True):
 
 
 @persist_to_file("./cache/gpt_cache.pickle")
-def chat(prompt):
+def chat(prompt, tag):
     print('connecting to gpt')
     response = openai.ChatCompletion.create(
         model='gpt-4',
@@ -262,10 +262,10 @@ def extract_json(input_string):
     return json_strings
 
 
-def GPT(prompt, auto_correct_when_json_error=True):
+def GPT(prompt, auto_correct_when_json_error=True, tag=None):
     while True:
         try:
-            result = chat(prompt=prompt)
+            result = chat(prompt=prompt, tag=tag)
             jsons = extract_json(result)
             json_res = jsons[-1]  # 只处理最后一个json
             if not auto_correct_when_json_error:
@@ -423,7 +423,7 @@ def UI_grounding_prompt_only_summary(predict_node):
     ]
 
 
-def Task_UI_grounding_prompt(task, current_path_str, similar_tasks, similar_traces, predicted_step, semantic_info_list, next_comp, Knowledge, UI_long_term_knowledge):
+def Task_UI_grounding_prompt(task, current_path_str, similar_tasks, similar_traces, semantic_info_list, next_comp, Knowledge, UI_long_term_knowledge):
     content = {}
     content["Task"] = task
     content["History operation sequence"] = current_path_str

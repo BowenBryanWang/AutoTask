@@ -113,8 +113,8 @@ class Screen:
         self.semantic_info_str = "".join(self.semantic_info)
 
         with open('./page/data/page{}.txt'.format(self.cnt), 'w', encoding="utf-8") as fp:
-            fp.write("".join(self.semantic_info))
-        print("semantic_info", self.semantic_info_str)
+            fp.write("".join(self.semantic_info_all_warp))
+        print("semantic_info", self.semantic_info_all_warp)
         end_time = time.time()
         self.upload_time = end_time  # 记录本次上传的时间
         print("upload_time", self.upload_time)

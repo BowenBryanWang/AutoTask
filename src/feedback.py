@@ -14,8 +14,8 @@ class Feedback:
         self.model = model
 
     def feedback(self, reason):
-        with open("logs/log{}.json".format(self.model.index), "r", encoding="utf-8") as f:
-            print("· log{} Read".format(self.model.index))
+        with open("logs/log{}.json".format(self.model.index+1), "r", encoding="utf-8") as f:
+            print("· log{} Read".format(self.model.index+1))
             print(self.model.log_json)
             self.info: dict = json.loads(f.read())
         self.prompt = [
@@ -53,12 +53,6 @@ Finally, output a JSON format like this example:
         self.prompt.append({
             "role": "user",
             "content": """
-                Similar Tasks: {}
-                """.format(self.info["@Similar_tasks"])
-        })
-        self.prompt.append({
-            "role": "user",
-            "content": """
                 Page components: {}
                 """.format(self.info["@Page_components"])
         })
@@ -66,13 +60,13 @@ Finally, output a JSON format like this example:
             "role": "user",
             "content": """
                 Previous Steps: {}
-                """.format(self.info["@Previous_Step"])
+                """.format(self.info["@History_operation"])
         })
         self.prompt.append({
             "role": "user",
             "content": """
                 Action on this steo: {}
-                """.format(self.info["@Action"])
+                """.format(self.info["@Current_Action"])
         })
         self.prompt.append({
             "role": "user",
@@ -86,7 +80,7 @@ Finally, output a JSON format like this example:
                 Modules: {}
                 """.format(self.info["@Module"][1])
         })
-        response = GPT(self.prompt)
+        response = GPT(self.prompt, tag="feedback"+str(self.model.index))
         p_score = response.get("punishment")
         self.model.evaluate_module.update_weights(p_score)
         return "yes", "yes"

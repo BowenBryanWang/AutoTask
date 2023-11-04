@@ -125,7 +125,7 @@ def demo() -> Union[str, Response]:
                 STATUS = "running"
             return result
         elif work_status == "Execute":
-            ACTION_TRACE["ACTION"].append(model.log_json["@Action"])
+            ACTION_TRACE["ACTION"].append(model.log_json["@Current_Action"])
             ACTION_TRACE["ACTION_DESC"].append("NEXT")
             if MODE == "normal":
                 STATUS = "start"
@@ -168,7 +168,7 @@ def demo() -> Union[str, Response]:
                 return result
             elif work_status == "Execute":
                 ACTION_TRACE["ACTION"].append(
-                    COMPUTATIONAL_GRAPH[INDEX].log_json["@Action"])
+                    COMPUTATIONAL_GRAPH[INDEX].log_json["@Current_Action"])
                 ACTION_TRACE["ACTION_DESC"].append(
                     "Retry after error detection")
 
@@ -199,6 +199,7 @@ def save_to_file(task_name):
         os.makedirs("./Shots/{}".format(task_name))
         shutil.move("./logs", "./Shots/{}".format(task_name))
         shutil.move("./Page/data", "./Shots/{}".format(task_name))
+        shutil.move("./src/gpt_res", "./Shots/{}".format(task_name))
 
 
 def on_key_release(key):
@@ -224,7 +225,7 @@ def keyboard_listener():
 
 
 if __name__ == "__main__":
-    default_cmd = "Find my phone's IP address"
+    default_cmd = "View my phone's Wi-Fi MAC Address"
 
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")
