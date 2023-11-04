@@ -68,7 +68,7 @@ Finally, output a JSON format like this example:
                 Action on this step: {}
                 """.format(self.info["@Current_Action"])
         })
-        if self.info["@Successive_Page"]:
+        if "@Successive_Page" in self.info.keys():
             self.prompt.append({
                 "role": "user",
                 "content": """
