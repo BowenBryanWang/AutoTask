@@ -224,7 +224,7 @@ def keyboard_listener():
 
 
 if __name__ == "__main__":
-    default_cmd = "enable quickly open camera"
+    default_cmd = "Find MAC address"
 
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")
