@@ -47,7 +47,7 @@ class Predict():
 
     def one_step_UI_grounding(self):
         SEMANTIC_INFO = list(
-            filter(lambda x: "id=" in x, self.model.screen.semantic_info_list))
+            filter(lambda x: "id=" in x, self.model.screen.semantic_info_no_warp))
         self.current_comp = SEMANTIC_INFO
         self.next_comp = [""]*len(SEMANTIC_INFO)
         self.comp_json = dict.fromkeys(SEMANTIC_INFO, "Unknown")

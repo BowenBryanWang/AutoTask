@@ -615,4 +615,4 @@ def simplify_ui_element(html_str):
     # 压缩多余空格
     html_str = re.sub(r'\s+', ' ', html_str).strip()
 
-    return html_str
+    return html_str if html_str != "" else " "

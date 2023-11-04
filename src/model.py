@@ -21,18 +21,26 @@ from src.predict import Predict
 
 class Model:
 
+    def update_infos(self, s):
+        for k in self.screen.semantic_info_all_warp:
+            if s in k:
+                k = k.replace(s, s+" --New")
+
     def cal_diff(self):
-        return
         if self.prev_model is None:
             return
         else:
             new_elements = list(
-                filter(lambda x: x not in self.prev_model.screen.semantic_info_list, self.screen.semantic_info_list))
-            new_elements_index = [self.simplified_semantic_info_list.index(
+                filter(lambda x: x not in self.prev_model.screen.semantic_info_half_warp, self.screen.semantic_info_half_warp))
+            old_elements = list(
+                filter(lambda x: x in self.prev_model.screen.semantic_info_half_warp, self.screen.semantic_info_half_warp))
+            # if len(new_elements) / len(self.screen.semantic_info_half_warp) > 0.8:
+            #     return
+            new_elements_index = [self.screen.semantic_info_half_warp.index(
                 x) for x in new_elements]
-            if new_elements_index != []:
-                self.screen.semantic_info_list = [
-                    self.screen.semantic_info_list[x] for x in new_elements_index]
+            for i in new_elements_index:
+                self.update_infos(self.screen.semantic_info_half_warp[i])
+            self.screen.semantic_diff = new_elements_index
 
     def __init__(self, screen: Optional[Screen] = None, description: str = "", prev_model=None, index=0):
         self.index: int = index  # Index of current Model
@@ -71,8 +79,8 @@ class Model:
         self.decide_module = Decide(self)
         self.feedback_module = Feedback(self)
         self.long_term_UI_knowledge = None
-        self.simplified_semantic_info_list = list(
-            map(lambda x: simplify_ui_element(x), self.screen.semantic_info_list))
+        self.simplified_semantic_info_no_warp = list(
+            map(lambda x: simplify_ui_element(x), self.screen.semantic_info_no_warp))
         self.cal_diff()
         self.node_in_graph: Node = Node(self.screen)
         print("________________INITIAL_DONE________________")
@@ -114,12 +122,12 @@ class Model:
             m = m.prev_model
         node_list = node_list[::-1]
         if not os.path.exists(os.path.join(os.path.dirname(__file__), "KB/pagejump/pagejump_long.json")):
-            js = {}
-        else:
-            with open(os.path.join(os.path.dirname(__file__), "KB/pagejump/pagejump_long.json"), 'r+', encoding="utf-8") as f:
-                js = json.load(f)
+            os.mkdir(os.path.join(os.path.dirname(__file__),
+                     "KB/pagejump/pagejump_long.json"))
+        with open(os.path.join(os.path.dirname(__file__), "KB/pagejump/pagejump_long.json"), 'r+', encoding="utf-8") as f:
+            js = json.loads(f.read())
         with open(os.path.join(os.path.dirname(__file__), "KB/pagejump/pagejump_long.json"), 'w', encoding="utf-8") as f:
-            for node in self.screen.semantic_info_list:
+            for node in self.screen.semantic_info_no_warp:
                 js[node] = node_list + [node]
             json.dump(js, f, indent=4)
 
@@ -146,7 +154,7 @@ class Model:
                     print("wrong: feedback started")
                     return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}, "wrong"
             self.log_json["@User_intent"] = self.task
-            self.log_json["@Page_components"] = self.screen.semantic_info_list
+            self.log_json["@Page_components"] = self.screen.semantic_info_no_warp
             self.log_json["@Module"] = []
             return func(self, *args, **kwargs)
         return wrapper

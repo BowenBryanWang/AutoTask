@@ -105,7 +105,7 @@ class Screen:
         print("all_text", self.page_root.generate_all_text())
         self.semantic_nodes, relation = self.page_root.get_all_semantic_nodes()
 
-        self.semantic_info, self.semantic_info_half_warp, self.semantic_info_list, self.trans_relation = transfer_2_html(
+        self.semantic_info_all_warp, self.semantic_info_half_warp, self.semantic_info_no_warp, self.trans_relation = transfer_2_html(
             self.semantic_nodes["nodes"], relation)
 
         self.semantic_info_str = "".join(self.semantic_info)

@@ -28,7 +28,7 @@ class Evaluate():
                 "Name": "Evaluate",
                 "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
                 "Output": {key: item for key, item in zip(list(
-                    filter(lambda x: "id=" in x, self.model.screen.semantic_info_list)), self.original_score)},
+                    filter(lambda x: "id=" in x, self.model.screen.semantic_info_no_warp)), self.original_score)},
             })
             with open("logs/log{}.json".format(self.model.index), "w", encoding="utf-8") as f:
                 json.dump(self.model.log_json, f, indent=4)
@@ -61,7 +61,7 @@ class Evaluate():
                 if temp:
                     node = temp.node_selected_id
                     node = list(filter(lambda x: "id=" in x,
-                                self.model.screen.semantic_info_list))[node-1]
+                                self.model.screen.semantic_info_no_warp))[node-1]
                     self.prompt.append({"role": "user", "content": """NOTE: Current UI was once visited in the history operation sequence, and at that time it chose to operate on {}. To avoid infinite cycling operation, give punishment to this element when you score it in this step""".format(node)})
 
     def score_comp(self, ACTION_TRACE):
@@ -70,7 +70,7 @@ class Evaluate():
 
         self.prompt = Task_UI_grounding_prompt(self.model.task, [ACTION_TRACE[key]
                                                                  for key in ACTION_TRACE.keys() if "Action" in key], self.model.similar_tasks,
-                                               self.model.similar_traces, self.model.predicted_step, self.model.screen.semantic_info, self.model.predict_module.comp_json_simplified, knowledge, self.model.long_term_UI_knowledge)
+                                               self.model.similar_traces, self.model.predicted_step, self.model.screen.semantic_info_all_warp, self.model.predict_module.comp_json_simplified, knowledge, self.model.long_term_UI_knowledge)
         self.handle_cycle(curpage=self.model.screen.page_root.generate_all_text().split(
             "-"), ACTION_TRACE=ACTION_TRACE)
         similarity = sort_by_similarity(
@@ -80,14 +80,15 @@ Task: {}.
 History operation sequence: {}.
 Current UI:{}
 Please output the next element to be operated.""".format(self.model.task, [ACTION_TRACE[key] for key in ACTION_TRACE.keys() if "Action" in key], list(
-                filter(lambda x: "id=" in x, self.model.screen.semantic_info_list))), list(
-                filter(lambda x: "id=" in x, self.model.screen.semantic_info_list)))
+                filter(lambda x: "id=" in x, self.model.screen.semantic_info_no_warp))), list(
+                filter(lambda x: "id=" in x, self.model.screen.semantic_info_no_warp)))
         similarity = np.array([x[1] for x in similarity])
         resp = GPT(self.prompt)
 
         # self.score, self.reason = np.array(resp["score"])/10, resp["reason"]
         self.next_step = resp.get("next_steps")
-        scores = [1.0 for x in self.model.screen.semantic_info_list if 'id=' in x]
+        scores = [
+            1.0 for x in self.model.screen.semantic_info_no_warp if 'id=' in x]
         for key, rating in resp.items():
             if key.startswith('id_'):
                 idx = int(key[len('id_'):]) - 1
@@ -120,9 +121,9 @@ Please output the next element to be operated.""".format(self.model.task, [ACTIO
     def select_top_one(self):
         top_index = np.argmax(self.score)
         self.model.node_selected = list(filter(
-            lambda x: "id="+str(top_index+1) in x, self.model.screen.semantic_info_list))[0]
+            lambda x: "id="+str(top_index+1) in x, self.model.screen.semantic_info_no_warp))[0]
         self.model.node_selected_warp = list(filter(
-            lambda x: "id="+str(top_index+1) in x, self.model.screen.semantic_info))[0]  # 包围后的完整的node字符串描述
+            lambda x: "id="+str(top_index+1) in x, self.model.screen.semantic_info_half_warp))[0]  # 包围后的完整的node字符串描述
         if 'editable' in self.model.node_selected and 'ineditable' not in self.model.node_selected:
             response = GPT(plan_prompt(self.model.task,
                                        self.model.page_description, self.model.node_selected, self.next_step))
@@ -139,14 +140,14 @@ Please output the next element to be operated.""".format(self.model.task, [ACTIO
         self.model.current_action = process_action_info(
             self.model.node_selected_action, self.model.node_selected_text, simplify_ui_element(self.model.node_selected))
         self.model.current_path.append(self.model.current_action)
-        self.model.final_node = self.model.screen.semantic_nodes["nodes"][self.model.screen.semantic_info_list.index(
+        self.model.final_node = self.model.screen.semantic_nodes["nodes"][self.model.screen.semantic_info_no_warp.index(
             self.model.node_selected)]
         self.model.edge_in_graph = Edge(
             self.model.node_selected_action, self.model.node_selected_text, simplify_ui_element(self.model.node_selected))
 
     def update_weights(self, weights):
         w = [0]*len(list(
-            filter(lambda x: "id=" in x, self.model.screen.semantic_info_list)))
+            filter(lambda x: "id=" in x, self.model.screen.semantic_info_no_warp)))
         for key, item in weights.items():
             if key.startswith("id_"):
                 index = int(key.split("_")[1]) - 1
