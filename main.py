@@ -108,7 +108,7 @@ def demo() -> Union[str, Response]:
                                model.node_in_graph, model.prev_model.edge_in_graph)
         ACTION_TRACE["PAGES"].append(
             model.screen.page_root.generate_all_text().split("-"))
-        if len(COMPUTATIONAL_GRAPH) > 1 and model.screen.page_root.generate_all_text() == COMPUTATIONAL_GRAPH[-2].screen.page_root.generate_all_text():
+        if len(COMPUTATIONAL_GRAPH) > 1 and model.screen.semantic_info_all_warp == COMPUTATIONAL_GRAPH[-2].screen.semantic_info_all_warp:
             if MODE == "normal":
                 STATUS = "backtracking"
             elif MODE == "preserve":
@@ -224,7 +224,7 @@ def keyboard_listener():
 
 
 if __name__ == "__main__":
-    default_cmd = "View my Wi-Fi MAC Address"
+    default_cmd = "enable quickly open camera"
 
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")
