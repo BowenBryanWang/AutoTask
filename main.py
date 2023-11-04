@@ -40,6 +40,7 @@ app = Flask(__name__)
 TASK = ""
 MODE = ""
 STATUS = "stop"
+STATUS_SAME = False
 INDEX = 0
 COMPUTATIONAL_GRAPH: List[Any] = []
 GRAPH_ACTION: List[Any] = []
@@ -85,7 +86,7 @@ def wait_and_load_decorator(function):
 @app.route('/demo', methods=['POST'])
 @wait_and_load_decorator
 def demo() -> Union[str, Response]:
-    global TASK, STATUS, INDEX, COMPUTATIONAL_GRAPH, GRAPH_ACTION, force_load_count, auto_load, Graph
+    global TASK, STATUS, INDEX, COMPUTATIONAL_GRAPH, GRAPH_ACTION, force_load_count, auto_load, Graph, STATUS_SAME
     if listener_global is not None:
         listener_global.stop()
     screen = Screen(INDEX)
@@ -110,6 +111,7 @@ def demo() -> Union[str, Response]:
             model.screen.page_root.generate_all_text().split("-"))
         if len(COMPUTATIONAL_GRAPH) > 1 and model.screen.semantic_info_all_warp == COMPUTATIONAL_GRAPH[-2].screen.semantic_info_all_warp:
             if MODE == "normal":
+                STATUS_SAME = True
                 STATUS = "backtracking"
             elif MODE == "preserve":
                 STATUS = "running"
@@ -149,10 +151,17 @@ def demo() -> Union[str, Response]:
         INDEX -= 1
         res, act = COMPUTATIONAL_GRAPH[INDEX].feedback_module.feedback(
             COMPUTATIONAL_GRAPH[INDEX].wrong_reason)
-        ACTION_TRACE["PAGES"].append(
-            COMPUTATIONAL_GRAPH[INDEX].screen.page_root.generate_all_text().split("-"))
-        ACTION_TRACE["ACTION"].append("Click on navigate back due to error")
-        ACTION_TRACE["ACTION_DESC"].append("BACK")
+        if STATUS_SAME:
+            ACTION_TRACE["PAGES"].append(
+                "SAME page as last one")
+            ACTION_TRACE["ACTION"].append("上步操作没有响应，因此是错误的")
+            ACTION_TRACE["ACTION_DESC"].append("BACK")
+            STATUS_SAME = False
+        else:
+            ACTION_TRACE["PAGES"].append(
+                COMPUTATIONAL_GRAPH[INDEX].screen.page_root.generate_all_text().split("-"))
+            ACTION_TRACE["ACTION"].append("Navigate back due to error")
+            ACTION_TRACE["ACTION_DESC"].append("BACK")
 
         if res is not None:
             COMPUTATIONAL_GRAPH = COMPUTATIONAL_GRAPH[:INDEX+1]
@@ -170,7 +179,6 @@ def demo() -> Union[str, Response]:
                     COMPUTATIONAL_GRAPH[INDEX].log_json["@Current_Action"])
                 ACTION_TRACE["ACTION_DESC"].append(
                     "Retry after error detection")
-
                 if MODE == "normal":
                     STATUS = "start"
                 elif MODE == "preserve":
@@ -224,7 +232,7 @@ def keyboard_listener():
 
 
 if __name__ == "__main__":
-    default_cmd = "enable quickly open camera"
+    default_cmd = "enable quickly open camera function in setting"
 
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")

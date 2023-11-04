@@ -123,7 +123,7 @@ Please output the next element to be operated.""".format(self.model.task, [ACTIO
                 'click', None)
         self.model.node_selected_id = top_index+1
         self.model.current_action = process_action_info(
-            self.model.node_selected_action, self.model.node_selected_text, simplify_ui_element(self.model.node_selected))
+            self.model.node_selected_action, self.model.node_selected_text, simplify_ui_element(self.model.node_selected_warp))
         self.model.current_path.append(self.model.current_action)
         self.model.final_node = self.model.screen.semantic_nodes["nodes"][self.model.screen.semantic_info_no_warp.index(
             self.model.node_selected)]
