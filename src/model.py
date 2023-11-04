@@ -83,6 +83,7 @@ class Model:
             map(lambda x: simplify_ui_element(x), self.screen.semantic_info_no_warp))
         self.cal_diff()
         self.node_in_graph: Node = Node(self.screen)
+        self.wrong_reason: str = ""
         print("________________INITIAL_DONE________________")
 
     @property
