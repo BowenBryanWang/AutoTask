@@ -65,15 +65,21 @@ Finally, output a JSON format like this example:
         self.prompt.append({
             "role": "user",
             "content": """
-                Action on this steo: {}
+                Action on this step: {}
                 """.format(self.info["@Current_Action"])
         })
-        self.prompt.append({
-            "role": "user",
-            "content": """
-                Latest Page: {}
-                """.format(self.info["@Successive_Page"])
-        })
+        if self.info["@Successive_Page"]:
+            self.prompt.append({
+                "role": "user",
+                "content": """
+                    Latest Page: {}
+                    """.format(self.info["@Successive_Page"])
+            })
+        else:
+            self.prompt.append({
+                "role": "user",
+                "content": "Latest Page is the same as last one! Last action did not cause any changes so it's wrong"
+            })
         self.prompt.append({
             "role": "user",
             "content": """
