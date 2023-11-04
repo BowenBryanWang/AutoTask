@@ -107,6 +107,8 @@ class Screen:
 
         self.semantic_info_all_warp, self.semantic_info_half_warp, self.semantic_info_no_warp, self.trans_relation = transfer_2_html(
             self.semantic_nodes["nodes"], relation)
+        self.semantic_info_no_warp_with_id = list(
+            filter(lambda x: "id=" in x, self.semantic_info_no_warp))
 
         self.semantic_info_str = "".join(self.semantic_info)
 

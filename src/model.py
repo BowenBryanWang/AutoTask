@@ -6,7 +6,7 @@ import os
 from typing import Optional
 
 import pandas as pd
-from Graph import Node
+from Graph import Edge, Node
 
 
 from src.utility import generate_perform, process_string, simplify_ui_element
@@ -42,28 +42,25 @@ class Model:
                 self.update_infos(self.screen.semantic_info_half_warp[i])
             self.screen.semantic_diff = new_elements_index
 
-    def __init__(self, screen: Optional[Screen] = None, description: str = "", prev_model=None, index=0):
+    def __init__(self, screen: Screen = None, description: str = "", prev_model=None, index: int = 0, LOAD=False):
+        self.load: str = LOAD
         self.index: int = index  # Index of current Model
         if screen is not None:
             self.screen: Screen = screen  # Current Screen
 
         self.task: str = description  # User's Task
-        self.candidate: list[int] = []
-        self.candidate_str: list[str] = []
-        self.candidate_action: list[str] = [None]*5
-        self.candidate_text: list[str | None] = [None]*5
-        self.node_selected = None
-        self.node_selected_id: int = 0
-        self.current_path: list[str] = []
+        self.node_selected: str = None  # HTML format of the top UI element selected
+        self.node_selected_id: int = 0  # id of the top UI element selected
+        self.current_action: str = ""  # the lastest action of this model
         self.log_json: dict = {}
 
         self.prev_model = prev_model
         if prev_model is not None:
-            self.prev_model = prev_model
             prev_model.next_model = self
-            self.current_path = copy.deepcopy(self.prev_model.current_path)
+            self.current_path: list[str] = copy.deepcopy(
+                self.prev_model.current_path)
         else:
-            self.current_path = [self.screen.page_description]
+            self.current_path: list[str] = [self.screen.page_description]
 
         self.next_model = None
 
@@ -82,6 +79,7 @@ class Model:
             map(lambda x: simplify_ui_element(x), self.screen.semantic_info_no_warp))
         self.cal_diff()
         self.node_in_graph: Node = Node(self.screen)
+        self.edge_in_graph: Edge = None
         self.wrong_reason: str = ""
         print("________________INITIAL_DONE________________")
 
@@ -89,55 +87,11 @@ class Model:
     def current_path_str(self):
         return " -> ".join(self.current_path)
 
-    def save_short_term_UI_knowledge(self):
-        with open("./src/KB/pagejump/pagejump.csv", "r", encoding="utf-8") as f:
-            reader = csv.reader(f, delimiter=',')
-            prev_info = process_string(
-                self.prev_model.screen.page_root.generate_all_text())
-            prev_path = process_string(self.prev_model.node_selected_warp)
-            prev_act = process_string(
-                self.prev_model.node_selected_action)
-            prev_para = process_string(
-                self.prev_model.node_selected_text)
-            current_info = process_string(
-                self.screen.page_root.generate_all_text()),
-            flag = any(row[0] == prev_info and row[1]
-                       == prev_path for row in reader)
-        if not flag:
-            with open("./src/KB/pagejump/pagejump.csv", "a", newline='', encoding="utf-8") as f:
-                writer = csv.writer(f, delimiter=',')
-                writer.writerow([
-                    prev_info,
-                    prev_path,
-                    prev_act,
-                    prev_para,
-                    current_info,
-                ])
-
-    def save_long_term_UI_knowledge(self):
-        node_list = []
-        m = self.prev_model
-        while m:
-            node_list.append(m.node_selected)
-            m = m.prev_model
-        node_list = node_list[::-1]
-        if not os.path.exists(os.path.join(os.path.dirname(__file__), "KB/pagejump/pagejump_long.json")):
-            os.mkdir(os.path.join(os.path.dirname(__file__),
-                     "KB/pagejump/pagejump_long.json"))
-        with open(os.path.join(os.path.dirname(__file__), "KB/pagejump/pagejump_long.json"), 'r+', encoding="utf-8") as f:
-            js = json.loads(f.read())
-        with open(os.path.join(os.path.dirname(__file__), "KB/pagejump/pagejump_long.json"), 'w', encoding="utf-8") as f:
-            for node in self.screen.semantic_info_no_warp:
-                js[node] = node_list + [node]
-            json.dump(js, f, indent=4)
-
     def decide_before_and_log(func):
         def wrapper(self, *args, **kwargs):
             print("ACTION_TRACE", kwargs.get("ACTION_TRACE"))
             print("flag", kwargs.get("flag"))
             if self.prev_model is not None and kwargs.get("flag") != "debug":
-                self.save_short_term_UI_knowledge()
-                self.save_long_term_UI_knowledge()
                 status = self.prev_model.decide_module.decide(
                     new_screen=self.screen, ACTION_TRACE=kwargs.get("ACTION_TRACE"), flag="normal")
                 if status == "wrong":
@@ -152,9 +106,11 @@ class Model:
                     new_screen=self.screen, ACTION_TRACE=kwargs.get("ACTION_TRACE"), flag="debug")
                 if status == "wrong":
                     print("wrong: feedback started")
+                    if self.prev_model.node_selected_action == "scroll_forward":
+                        return generate_perform("scroll_backward", absolute_id=self.prev_model.final_node.absolute_id)
                     return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}, "wrong"
             self.log_json["@User_intent"] = self.task
-            self.log_json["@Page_components"] = self.screen.semantic_info_no_warp
+            self.log_json["@Page_components"] = self.screen.semantic_info_all_warp
             self.log_json["@Module"] = []
             return func(self, *args, **kwargs)
         return wrapper

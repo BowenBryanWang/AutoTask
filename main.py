@@ -48,7 +48,7 @@ ACTION_TRACE = {
     "ACTION_DESC": [],
     "PAGES": [],
 }
-Graph = UINavigationGraph()
+Graph = None
 
 force_load_count = 0
 auto_load = False
@@ -99,7 +99,7 @@ def demo() -> Union[str, Response]:
     if STATUS == "start":
         STATUS = "running"
         model = Model(screen=screen, description=TASK,
-                      prev_model=COMPUTATIONAL_GRAPH[-1] if COMPUTATIONAL_GRAPH != [] else None, index=INDEX)
+                      prev_model=COMPUTATIONAL_GRAPH[-1] if COMPUTATIONAL_GRAPH != [] else None, index=INDEX, LOAD=LOAD)
         model.refer_node = Graph.add_node(model.node_in_graph)
 
         if len(COMPUTATIONAL_GRAPH) >= 1 and model.screen.page_root.generate_all_text() == COMPUTATIONAL_GRAPH[-1].screen.page_root.generate_all_text():

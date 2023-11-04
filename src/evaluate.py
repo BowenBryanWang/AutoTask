@@ -27,22 +27,17 @@ class Evaluate():
             self.model.log_json["@Module"].append({
                 "Name": "Evaluate",
                 "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
-                "Output": {key: item for key, item in zip(list(
-                    filter(lambda x: "id=" in x, self.model.screen.semantic_info_no_warp)), self.original_score)},
+                "Score": {key: item for key, item in zip(self.model.screen.semantic_info_no_warp_with_id, self.original_score)},
             })
             with open("logs/log{}.json".format(self.model.index), "w", encoding="utf-8") as f:
                 json.dump(self.model.log_json, f, indent=4)
-            if not isinstance(result, str):
-                print("node_selected", self.model.node_selected)
-                print("node_selected_id", self.model.node_selected_id)
-                print(self.model.final_node.generate_all_semantic_info())
             return result
         return wrapper
 
     @log_decorator
     def evaluate(self, ACTION_TRACE):
         if self.score_comp(ACTION_TRACE) == "wrong":
-            self.model.current_action = "Back"
+            self.model.current_action = "Back due to low scoring"
             return "wrong"
         self.select_top_one()
         return self.score
@@ -60,8 +55,7 @@ class Evaluate():
                     temp = temp.prev_model if temp.prev_model else temp
                 if temp:
                     node = temp.node_selected_id
-                    node = list(filter(lambda x: "id=" in x,
-                                self.model.screen.semantic_info_no_warp))[node-1]
+                    node = self.model.screen.semantic_info_no_warp_with_id[node-1]
                     self.prompt.append({"role": "user", "content": """NOTE: Current UI was once visited in the history operation sequence, and at that time it chose to operate on {}. To avoid infinite cycling operation, give punishment to this element when you score it in this step""".format(node)})
 
     def score_comp(self, ACTION_TRACE):
@@ -79,16 +73,10 @@ Your job is to choose the next UI element to be operated considering the user ta
 Task: {}.
 History operation sequence: {}.
 Current UI:{}
-Please output the next element to be operated.""".format(self.model.task, [ACTION_TRACE[key] for key in ACTION_TRACE.keys() if "Action" in key], list(
-                filter(lambda x: "id=" in x, self.model.screen.semantic_info_no_warp))), list(
-                filter(lambda x: "id=" in x, self.model.screen.semantic_info_no_warp)))
+Please output the next element to be operated.""".format(self.model.task, [ACTION_TRACE[key] for key in ACTION_TRACE.keys() if "Action" in key], self.model.screen.semantic_info_no_warp_with_id))
         similarity = np.array([x[1] for x in similarity])
         resp = GPT(self.prompt)
-
-        # self.score, self.reason = np.array(resp["score"])/10, resp["reason"]
-        self.next_step = resp.get("next_steps")
-        scores = [
-            1.0 for x in self.model.screen.semantic_info_no_warp if 'id=' in x]
+        scores = [1.0]*len(self.model.screen.semantic_info_no_warp_with_id)
         for key, rating in resp.items():
             if key.startswith('id_'):
                 idx = int(key[len('id_'):]) - 1
@@ -103,25 +91,17 @@ Please output the next element to be operated.""".format(self.model.task, [ACTIO
         #     else:
         #         self.score = np.array(scores) / 10
         # else:
-        self.score = (np.array(scores)+similarity) / 10
-
-        self.score = (self.score * np.array(self.weights)
-                      ).tolist() if self.weights != [] else self.score
-        self.original_score = copy.deepcopy(self.score)
-
+        self.score = np.array(scores)+similarity
         if self.weights == []:
             self.weights = [1.0] * len(self.score)
-        self.score = np.exp(self.score) / np.sum(np.exp(self.score))
-        print(self.score)
-        print(self.weights)
-        print(self.score)
-        if all(value < 0.2 for value in self.original_score) and self.model.prev_model:
+        if all(value < 2.0 for value in self.score) and self.model.prev_model:
             return "wrong"
+        self.score = (self.score * np.array(self.weights)
+                      ).tolist() if self.weights != [] else self.score
 
     def select_top_one(self):
         top_index = np.argmax(self.score)
-        self.model.node_selected = list(filter(
-            lambda x: "id="+str(top_index+1) in x, self.model.screen.semantic_info_no_warp))[0]
+        self.model.node_selected = self.model.screen.semantic_info_no_warp_with_id[top_index]
         self.model.node_selected_warp = list(filter(
             lambda x: "id="+str(top_index+1) in x, self.model.screen.semantic_info_half_warp))[0]  # 包围后的完整的node字符串描述
         if 'editable' in self.model.node_selected and 'ineditable' not in self.model.node_selected:
@@ -135,8 +115,7 @@ Please output the next element to be operated.""".format(self.model.task, [ACTIO
         else:
             self.model.node_selected_action, self.model.node_selected_text = (
                 'click', None)
-        self.model.node_selected_id = int(
-            self.model.node_selected.split("id=")[1].split(" ")[0])
+        self.model.node_selected_id = top_index+1
         self.model.current_action = process_action_info(
             self.model.node_selected_action, self.model.node_selected_text, simplify_ui_element(self.model.node_selected))
         self.model.current_path.append(self.model.current_action)
@@ -146,8 +125,7 @@ Please output the next element to be operated.""".format(self.model.task, [ACTIO
             self.model.node_selected_action, self.model.node_selected_text, simplify_ui_element(self.model.node_selected))
 
     def update_weights(self, weights):
-        w = [0]*len(list(
-            filter(lambda x: "id=" in x, self.model.screen.semantic_info_no_warp)))
+        w = [0]*len(self.model.screen.semantic_info_no_warp_with_id)
         for key, item in weights.items():
             if key.startswith("id_"):
                 index = int(key.split("_")[1]) - 1
