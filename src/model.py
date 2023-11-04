@@ -11,7 +11,7 @@ from Graph import Node
 
 from src.utility import generate_perform, process_string, simplify_ui_element
 
-from .knowledge import Decision_KB, Error_KB, PageJump_KB, Selection_KB, Task_KB
+from .knowledge import Decision_KB, Error_KB, Selection_KB, Task_KB
 from src.decide import Decide
 from src.evaluate import Evaluate
 from src.feedback import Feedback
@@ -67,7 +67,6 @@ class Model:
 
         self.next_model = None
 
-        self.PageJump_KB = PageJump_KB(None)
         self.Task_KB = Task_KB()
         self.Error_KB = Error_KB()
         self.Decision_KB = Decision_KB()

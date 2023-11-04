@@ -499,11 +499,12 @@ def Knowledge_prompt(TASK, ACTION_TRACE):
         {
             "role": "system",
             "content": """You are an active learner in User Interface (UI) automation. Your task is to learn and summarize UI automation pieces of knowledge from completed User Task and Action Trace.
-You are given the User's Task and an actual action trace of it. Use the following steps to think:
-1, Try to reproduce the ACTION_TRACE while keeping an eye on each page and analyzing each steps' insights provided. Reason step by step on the insights of the relationship between TASK and ACTION-TRACE from a higher level and generate SOFT knowledge of connecting them, it could be hints, experiences, or shortcuts.
+You are given the User's Task and a log of ACTION_TRACE, which describes the user behavior in detail. Use the following steps to think:
+1, Reproduce the ACTION_TRACE step by step, focusing on each page and analyzing if each step has expectedly leading to the right page. Reason step by step on the insights of the relationship between TASK and ACTION-TRACE from a higher level and generate SOFT knowledge of connecting them, it could be hints, experiences, or more.
     1.1, Specificly, think step by step on what kind of SOFT knowledge can be extracted from them to guide better action-selection, which means how an AI agent choose correct next-step when exploring in the UI.(i.e. "In settings page, network functions would be more related to 'Newwork' button"......)
     1.2, Then think step by step on what kind of SOFT knowledge can be extracted from them to guide better status-decision, which means how an AI agent decide the status of task execution, either finished or in-the-process or wrong. (i.e. "If a switch button is clicked from off to on, that would imply that the completion of 'Turn on XXX' task")
-2, Follow the action trace to reproduce the execution process, focusing on the error backtracking process (that is, when the traces go wrong and then navigate back to correct). Think step by step about each backtrack, analyze if they are essential, and summarize error knowledge from them; it could be notices, traps, or other formats. ("i.e. ,"XXX means a possible wrong exection when YYY, you should be aware of ZZZ")
+2, Follow the action trace to reproduce the execution process, focusing on the error backtracking process if any (that is, when the traces go wrong and then navigate back to correct). Think step by step about each backtrack and summarize error knowledge from them; it could be notices, traps, or other formats.
+3, While summarizing knowledge, you should also output corresponding action id with the knowledge. That is, where you found the knowledge.
 """
         }, {
             "role": "user",
@@ -515,9 +516,9 @@ Be smart and insightful, think step by step, finally,summarize them into a json 
             "role": "user",
             "content": """'''HTML
 {
-    "selection":[](organize as a list if have)
-    "decision"[](organize as a list if have)
-    "error-handling":[](organize as a list if have)
+    "selection":[{"knowledge":"","index":"Action_x_to_y"}](organize as a list if have)
+    "decision"[{"knowledge":"","index":"Action_x_to_y"}](organize as a list if have)
+    "error-handling":[{"knowledge":"","index":"Action_x_to_y"}](organize as a list if have)
 }'''"""
         }
     ]

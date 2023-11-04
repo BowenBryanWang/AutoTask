@@ -57,7 +57,7 @@ class Decide:
         with open("./src/KB/task/task.csv", "a", encoding="utf-8") as f:
             writer = csv.writer(f, delimiter=',')
             writer.writerow([self.model.task, [ACTION_TRACE[key]
-                            for key in ACTION_TRACE.keys() if "Action" in key]])
+                            for key in ACTION_TRACE.keys() if "Action_" in key]])
         response = GPT(Knowledge_prompt(
             TASK=self.model.task, ACTION_TRACE=ACTION_TRACE))
         selection_knowledge, decision_knowledge, error_knowledge = response.get(
