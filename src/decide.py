@@ -23,7 +23,7 @@ class Decide:
                 "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
                 "Output": self.answer
             })
-            self.model.log_json["@Successive_Page"] = self.model.next_model.screen.semantic_info_str
+            self.model.log_json["@Successive_Page"] = self.model.next_model.screen.semantic_info_all_warp
 
             with open("logs/log{}.json".format(self.model.index), "w", encoding="utf-8") as f:
                 json.dump(self.model.log_json, f, indent=4)
@@ -49,8 +49,8 @@ class Decide:
         else:
             self.model.wrong_reason = self.answer["reason"]
             if self.answer["status"] == "completed":
-                self.extract_knowledge(
-                    ACTION_TRACE=ACTION_TRACE)
+                if self.model.load:
+                    self.extract_knowledge(ACTION_TRACE=ACTION_TRACE)
             return self.answer["status"]
 
     def extract_knowledge(self, ACTION_TRACE=None):

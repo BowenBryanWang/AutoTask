@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 import networkx as nx
 import pickle
 
-from src.embedding import cal_similarity_one, sort_by_similarity, cal_embedding
+from src.utility import cal_similarity_one, sort_by_similarity, cal_embedding
 from src.utility import process_action_info, simplify_ui_element
 
 

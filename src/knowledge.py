@@ -1,11 +1,5 @@
-import copy
-import json
 import os
-from langchain import FAISS
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.vectorstores import FAISS
-from langchain.document_loaders.csv_loader import CSVLoader
-import openai
+
 
 from src.utility import get_top_combined_similarities, get_top_similarities
 

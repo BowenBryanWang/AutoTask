@@ -7,7 +7,7 @@ from flask import Response, jsonify
 from typing import Any, Union
 from flask import Flask, request
 from Graph import UINavigationGraph
-from src.embedding import sort_by_similarity
+from src.utility import sort_by_similarity
 from src.model import Model
 
 from page.init import Screen

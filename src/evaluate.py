@@ -4,7 +4,7 @@ import os
 import numpy as np
 import openai
 from Graph import Edge
-from src.embedding import sort_by_similarity
+from src.utility import sort_by_similarity
 from src.utility import GPT, Task_UI_grounding_prompt, coverage, get_top_combined_similarities, plan_prompt, process_action_info, simplify_ui_element
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
@@ -22,12 +22,13 @@ class Evaluate():
         def wrapper(self, *args, **kwargs):
             result = func(self, *args, **kwargs)
 
-            self.model.log_json["@Previous_Step"] = self.model.current_path_str
-            self.model.log_json["@Action"] = self.model.current_action if self.model.current_action else ""
+            self.model.log_json["@History_operation"] = self.model.current_path_str
+            self.model.log_json["@Current_Action"] = self.model.current_action if self.model.current_action else ""
             self.model.log_json["@Module"].append({
                 "Name": "Evaluate",
                 "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
                 "Score": {key: item for key, item in zip(self.model.screen.semantic_info_no_warp_with_id, self.original_score)},
+                "Punishment coefficient": self.weights
             })
             with open("logs/log{}.json".format(self.model.index), "w", encoding="utf-8") as f:
                 json.dump(self.model.log_json, f, indent=4)
@@ -37,7 +38,7 @@ class Evaluate():
     @log_decorator
     def evaluate(self, ACTION_TRACE):
         if self.score_comp(ACTION_TRACE) == "wrong":
-            self.model.current_action = "Back due to low scoring"
+            self.model.current_action = "Back due to overall low scoring"
             return "wrong"
         self.select_top_one()
         return self.score
