@@ -102,19 +102,18 @@ def demo() -> Union[str, Response]:
                       prev_model=COMPUTATIONAL_GRAPH[-1] if COMPUTATIONAL_GRAPH != [] else None, index=INDEX, LOAD=LOAD)
         model.refer_node = Graph.add_node(model.node_in_graph)
         COMPUTATIONAL_GRAPH.append(model)
-
         if model.prev_model is not None:
             if ACTION_TRACE["ACTION_DESC"][-1] != "BACK":
                 Graph.add_edge(model.prev_model.node_in_graph,
                                model.node_in_graph, model.prev_model.edge_in_graph)
         ACTION_TRACE["PAGES"].append(
             model.screen.page_root.generate_all_text().split("-"))
-        if len(COMPUTATIONAL_GRAPH) >= 1 and model.screen.page_root.generate_all_text() == COMPUTATIONAL_GRAPH[-1].screen.page_root.generate_all_text():
+        if len(COMPUTATIONAL_GRAPH) > 1 and model.screen.page_root.generate_all_text() == COMPUTATIONAL_GRAPH[-2].screen.page_root.generate_all_text():
             if MODE == "normal":
                 STATUS = "backtracking"
             elif MODE == "preserve":
                 STATUS = "running"
-            return model.prev_model.final_result
+            return Response("0")
         result, work_status = model.work(
             ACTION_TRACE=process_ACTION_TRACE(ACTION_TRACE))
         model.final_result = result
