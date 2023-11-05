@@ -91,7 +91,7 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
         else:
             temp = node.generate_all_semantic_info()
             print(temp)
-            html_element = "<div id='{}' class='{}' {} {} {} > {} </div>\n".format(
+            html_element = "<div id={} class='{}' {} {} {} > {} </div>\n".format(
                 len(real_comp)+1,
                 mask(node.resource_id),
                 "description='" +
