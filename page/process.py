@@ -70,12 +70,13 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
         elif "EditText" in node.node_class or "AutoCompleteTextView" in node.node_class:
             temp = node.generate_all_semantic_info()
             if node.editable:
-                html_element = "<input id={} class='{}' {} {} editable >  </input>\n".format(
+                html_element = "<input id={} class='{}' {} {} editable > {} </input>\n".format(
                     len(real_comp)+1,
                     mask(node.resource_id),
                     "description='"+",".join(temp["content-desc"])+"'" if ",".join(
                         temp["content-desc"]) != "" else "",
                     "enabled" if node.enabled else "Not enabled",
+                    node.text
                 )
             else:
                 html_element = "<button id={} class='{}' {} {} clickable ineditable >  </button>\n".format(
@@ -90,7 +91,7 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
         else:
             temp = node.generate_all_semantic_info()
             print(temp)
-            html_element = "<div id='{}' class='{}' {} {} {} > {} </div>\n".format(
+            html_element = "<div id={} class='{}' {} {} {} > {} </div>\n".format(
                 len(real_comp)+1,
                 mask(node.resource_id),
                 "description='" +
