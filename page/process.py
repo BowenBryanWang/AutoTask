@@ -90,14 +90,19 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
         else:
             temp = node.generate_all_semantic_info()
             print(temp)
-            html_element = "<div id={} class='{}' {} {} {} >  </div>\n".format(
+            html_element = "<div id='{}' class='{}' {} {} {} > {} </div>\n".format(
                 len(real_comp)+1,
                 mask(node.resource_id),
-                "description='"+",".join(temp["content-desc"])+"'" if ",".join(
-                    temp["content-desc"]) != "" else "",
+                "description='" +
+                ",".join(temp["content-desc"]) +
+                "'" if ",".join(temp["content-desc"]) != "" else "",
                 "enabled" if node.enabled else "not_enabled",
                 "" if not node.checkable else (
                     'checked' if node.checked else 'not_checked'),
+                "".join(temp["text"]) if temp["text"] == temp["Major_text"] else temp["Major_text"][0] +
+                "\n    " +
+                "".join(["<p> " + i + " </p>\n    " for i in temp["text"]
+                        [1:]])[:-5] if node.children == [] else ""
             )
             semantic_info_all_warp.append(html_element)
             real_comp.append(html_element)
