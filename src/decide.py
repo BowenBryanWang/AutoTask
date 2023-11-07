@@ -31,10 +31,8 @@ class Decide:
 
     @log_decorator
     def decide(self, new_screen: Screen, ACTION_TRACE: dict, flag: str):
-        task, knowledge = self.model.Decision_KB.find_experiences(
-            query=[self.model.task, self.model.screen.page_description])
         prompt = decide_prompt(
-            self.model.task, self.model.prev_model.current_action if self.model.prev_model else "", ACTION_TRACE, new_screen.semantic_info_all_warp, knowledge)
+            self.model.task, self.model.prev_model.current_action if self.model.prev_model else "", ACTION_TRACE, new_screen.semantic_info_all_warp, self.model.decision_knowledge)
         if flag == "debug":
             prompt.append({"role": "user",
                            "content": """请注意以下特殊的额外信息：
@@ -50,32 +48,4 @@ class Decide:
             if self.answer["status"] == "completed":
                 with open("logs/final.json", "w", encoding="utf-8") as f:
                     json.dump(ACTION_TRACE, f, indent=4)
-                if self.model.load:
-                    self.extract_knowledge(ACTION_TRACE=ACTION_TRACE)
             return self.answer["status"]
-
-    def extract_knowledge(self, ACTION_TRACE=None):
-        with open("./src/KB/task/task.csv", "a", encoding="utf-8") as f:
-            writer = csv.writer(f, delimiter=',')
-            writer.writerow([self.model.task, [ACTION_TRACE[key]
-                            for key in ACTION_TRACE.keys() if "Action_" in key]])
-        response = GPT(Knowledge_prompt(
-            TASK=self.model.task, ACTION_TRACE=ACTION_TRACE), tag="knowledge")
-        selection_knowledge, decision_knowledge, error_knowledge = response.get(
-            "selection"), response.get("decision"), response.get("error-handling")
-        selection_path = os.path.join(os.path.dirname(
-            __file__), "KB/selection/selection.csv")
-        decision_path = os.path.join(os.path.dirname(
-            __file__), "KB/decision/decision.csv")
-        error_path = os.path.join(
-            os.path.dirname(__file__), "KB/error/error.csv")
-
-        self.write_knowledge_to_csv(selection_path, selection_knowledge)
-        self.write_knowledge_to_csv(decision_path, decision_knowledge)
-        self.write_knowledge_to_csv(error_path, error_knowledge)
-
-    def write_knowledge_to_csv(self, file_path, knowledge_list):
-        with open(file_path, "a", newline='', encoding="utf-8") as f:
-            writer = csv.writer(f, delimiter=',')
-            for knowledge in knowledge_list:
-                writer.writerow([self.model.task, knowledge])

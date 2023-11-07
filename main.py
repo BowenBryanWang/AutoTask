@@ -1,4 +1,5 @@
 import json
+import pickle
 from pynput import keyboard
 import argparse
 import shutil
@@ -17,7 +18,7 @@ import logging
 
 import click
 
-from src.utility import process_ACTION_TRACE, coverage
+from src.utility import process_ACTION_TRACE, coverage, simplify_ui_element_id, simplify_ui_element
 
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
@@ -65,6 +66,7 @@ def heat_beat():
     if force_load:
         force_load_count = 0
         auto_load = False
+        print("send force_load")
     return jsonify({
         "state": 'success',
         "force_load": force_load
@@ -79,8 +81,18 @@ def wait_and_load_decorator(function):
         result = function(*args, **kwargs)
         if isinstance(result, dict) and 'action_type' in result:
             auto_load = True
+        else:
+            print("not auto load")
         return result
     return wrapped_function
+
+
+def save_to_pickle():
+    global COMPUTATIONAL_GRAPH, TASK, Graph
+    pickle_path = os.path.join(
+        os.path.dirname(__file__), "../cache/MODEL_"+TASK.replace(" ", "_"))
+    with open(pickle_path, "wb") as f:
+        pickle.dump(COMPUTATIONAL_GRAPH, f)
 
 
 @app.route('/demo', methods=['POST'])
@@ -108,14 +120,15 @@ def demo() -> Union[str, Response]:
                 Graph.add_edge(model.prev_model.node_in_graph,
                                model.node_in_graph, model.prev_model.edge_in_graph)
         ACTION_TRACE["PAGES"].append(
-            model.screen.page_root.generate_all_text().split("-"))
+            list(
+                map(simplify_ui_element, model.screen.semantic_info_half_warp)))
         if len(COMPUTATIONAL_GRAPH) > 1 and model.screen.semantic_info_all_warp == COMPUTATIONAL_GRAPH[-2].screen.semantic_info_all_warp:
             if MODE == "normal":
                 STATUS_SAME = True
                 STATUS = "backtracking"
             elif MODE == "preserve":
                 STATUS = "running"
-            return Response("0")
+            return {"node_id": 1, "trail": "[0,0]", "action_type": ""}
         result, work_status = model.work(
             ACTION_TRACE=process_ACTION_TRACE(ACTION_TRACE))
         model.final_result = result
@@ -158,8 +171,8 @@ def demo() -> Union[str, Response]:
             ACTION_TRACE["ACTION_DESC"].append("BACK")
             STATUS_SAME = False
         else:
-            ACTION_TRACE["PAGES"].append(
-                COMPUTATIONAL_GRAPH[INDEX].screen.page_root.generate_all_text().split("-"))
+            ACTION_TRACE["PAGES"].append(list(map(
+                simplify_ui_element, COMPUTATIONAL_GRAPH[INDEX].screen.semantic_info_half_warp)))
             ACTION_TRACE["ACTION"].append("Navigate back due to error")
             ACTION_TRACE["ACTION_DESC"].append("BACK")
 
@@ -207,6 +220,7 @@ def save_to_file(task_name):
         shutil.move("./logs", "./Shots/{}".format(task_name))
         shutil.move("./Page/data", "./Shots/{}".format(task_name))
         shutil.move("./src/gpt_res", "./Shots/{}".format(task_name))
+    save_to_pickle()
 
 
 def on_key_release(key):

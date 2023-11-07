@@ -1,4 +1,5 @@
 import json
+from src.knowledge import retrivel_knowledge
 
 from src.utility import simplify_ui_element, simplify_ui_element_id
 import os

@@ -65,12 +65,9 @@ class Evaluate():
                     self.prompt.append({"role": "user", "content": """NOTE: Current UI was once visited in the history operation sequence, and at that time it chose to operate on {}. To avoid infinite cycling operation, give punishment to this element when you score it in this step""".format(node)})
 
     def score_comp(self, ACTION_TRACE):
-        task, knowledge = self.model.Selection_KB.find_experiences(
-            query=[self.model.task, self.model.screen.page_description])
 
         self.prompt = Task_UI_grounding_prompt(self.model.task, [ACTION_TRACE[key]
-                                                                 for key in ACTION_TRACE.keys() if "Action" in key], self.model.similar_tasks,
-                                               self.model.similar_traces, self.model.screen.semantic_info_all_warp, self.model.predict_module.comp_json_simplified, knowledge, self.model.long_term_UI_knowledge, hint=self.model.prev_model.decide_module.answer if self.model.prev_model is not None else None)
+                                                                 for key in ACTION_TRACE.keys() if "Action" in key], self.model.screen.semantic_info_all_warp, self.model.predict_module.comp_json_simplified, self.model.evaluation_knowledge, self.model.long_term_UI_knowledge, hint=self.model.prev_model.decide_module.answer if self.model.prev_model is not None else None)
         self.handle_cycle(curpage=self.model.screen.page_root.generate_all_text().split(
             "-"), ACTION_TRACE=ACTION_TRACE)
         similarity = sort_by_similarity(

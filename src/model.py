@@ -3,6 +3,7 @@ import copy
 import csv
 import json
 import os
+import pickle
 from typing import Optional
 
 import pandas as pd
@@ -11,7 +12,7 @@ from Graph import Edge, Node
 
 from src.utility import generate_perform, process_string, simplify_ui_element
 
-from .knowledge import Decision_KB, Error_KB, Selection_KB, Task_KB
+from .knowledge import Decision_KB, Error_KB, Selection_KB, Task_KB, retrivel_knowledge
 from src.decide import Decide
 from src.evaluate import Evaluate
 from src.feedback import Feedback
@@ -43,7 +44,7 @@ class Model:
             self.screen.semantic_diff = new_elements_index
 
     def __init__(self, screen: Screen = None, description: str = "", prev_model=None, index: int = 0, LOAD=False):
-        self.load: str = LOAD
+        self.load: bool = LOAD
         self.index: int = index  # Index of current Model
         if screen is not None:
             self.screen: Screen = screen  # Current Screen
@@ -117,6 +118,13 @@ class Model:
 
     @decide_before_and_log
     def work(self, ACTION_TRACE=None, flag="normal"):
+        if self.load:
+            self.prediction_knowledge = retrivel_knowledge(self.model.task, "prediction", list(
+                map(simplify_ui_element, self.model.screen.semantic_info_half_warp)))
+            self.evaluation_knowledge = retrivel_knowledge(self.model.task, "selection", list(
+                map(simplify_ui_element, self.model.screen.semantic_info_half_warp)))
+            self.decision_knowledge = retrivel_knowledge(self.model.task, "decision", list(
+                map(simplify_ui_element, self.model.screen.semantic_info_half_warp)))
         self.predict_module.predict(ACTION_TRACE)
         eval_res = self.evaluate_module.evaluate(ACTION_TRACE)
         if isinstance(eval_res, str) and eval_res == "wrong":
