@@ -1,6 +1,6 @@
 import json
 
-from src.utility import simplify_ui_element
+from src.utility import simplify_ui_element, simplify_ui_element_id
 import os
 
 import openai
@@ -36,21 +36,20 @@ class Predict():
         SEMANTIC_INFO = list(
             filter(lambda x: "id=" in x, self.model.screen.semantic_info_no_warp))
         self.current_comp = SEMANTIC_INFO
-        self.next_comp = [""]*len(SEMANTIC_INFO)
-        self.comp_json = dict.fromkeys(SEMANTIC_INFO, "Unknown")
+        self.next_comp = ["Unknown"]*len(SEMANTIC_INFO)
 
         node = self.model.refer_node
         graph = node.graph
         edges = graph.find_neighbour_edges(node)
         edges_node = list(map(lambda x: x.node, edges))
         for i, e in enumerate(SEMANTIC_INFO):
-            if simplify_ui_element(e) in edges_node:
-                index = edges_node.index(simplify_ui_element(e))
+            if simplify_ui_element_id(e) in edges_node:
+                index = edges_node.index(simplify_ui_element_id(e))
                 target_node = edges[index]._to
-                self.comp_json[SEMANTIC_INFO[i]] = target_node.elements
+                self.next_comp[i] = target_node.elements
         self.comp_json_simplified = {
             "id="+str(index+1): item
-            for index, (key, item) in enumerate(self.comp_json.items())
+            for index, item in enumerate(self.next_comp)
             if item != "Unknown"
         }
 

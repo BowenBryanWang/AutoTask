@@ -91,7 +91,7 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
         else:
             temp = node.generate_all_semantic_info()
             print(temp)
-            html_element = "<div id={} class='{}' {} {} {} > {} </div>\n".format(
+            html_element = "<div id={}ii class='{}' {} {} {} > {} </div>\n".format(
                 len(real_comp)+1,
                 mask(node.resource_id),
                 "description='" +
@@ -136,13 +136,18 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
         trans_relation.append((index_father, index_son))
         last_index = semantic_info_all_warp[index_father].rfind(" </")
         if last_index != -1:
-            semantic_info_all_warp[index_father] = semantic_info_all_warp[index_father][:last_index] + "    " + \
+            semantic_info_all_warp[index_father] = semantic_info_all_warp[index_father][:last_index] + "\n    " + \
                 semantic_info_all_warp[index_son] + " </" + \
                 semantic_info_all_warp[index_father][last_index + 3:]
+
         if last_index != -1 and not semantic_info_half_warp[index_father].startswith("<scroll"):
-            semantic_info_half_warp[index_father] = semantic_info_half_warp[index_father][:last_index] + "    " + \
+            semantic_info_half_warp[index_father] = semantic_info_half_warp[index_father][:last_index] + "\n    " + \
                 semantic_info_half_warp[index_son] + " </" + \
                 semantic_info_half_warp[index_father][last_index + 3:]
+            semantic_info_no_warp[index_father] = semantic_info_no_warp[index_father][:last_index] + "\n    " + \
+                semantic_info_no_warp[index_son] + " </" + \
+                semantic_info_no_warp[index_father][last_index + 3:]
+
     for father, son in relation:
         semantic_info_all_warp[son] = ""
         if semantic_info_half_warp[father].startswith("<scroll"):

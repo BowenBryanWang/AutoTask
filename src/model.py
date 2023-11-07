@@ -107,7 +107,7 @@ class Model:
                 if status == "wrong":
                     print("wrong: feedback started")
                     if self.prev_model.node_selected_action == "scroll_forward":
-                        return generate_perform("scroll_backward", absolute_id=self.prev_model.final_node.absolute_id)
+                        return generate_perform("scroll_backward", absolute_id=self.prev_model.final_node.absolute_id), "wrong"
                     return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}, "wrong"
             self.log_json["@User_intent"] = self.task
             self.log_json["@Page_components"] = self.screen.semantic_info_all_warp
