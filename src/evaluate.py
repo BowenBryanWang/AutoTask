@@ -33,7 +33,8 @@ class Evaluate():
                 "Name": "Evaluate",
                 "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
                 "Score": {key: item for key, item in zip(self.model.screen.semantic_info_no_warp_with_id, self.score)},
-                "Punishment coefficient": self.weights
+                "Punishment coefficient": self.weights,
+                "GPT answer": self.resp
             })
             with open("logs/log{}.json".format(self.model.index+1), "w", encoding="utf-8") as f:
                 json.dump(self.model.log_json, f, indent=4)
@@ -78,9 +79,9 @@ History operation sequence: {}.
 Current UI:{}
 Please output the next element to be operated.""".format(self.model.task, [ACTION_TRACE[key] for key in ACTION_TRACE.keys() if "Action" in key], self.model.screen.semantic_info_no_warp_with_id), self.model.screen.semantic_info_no_warp_with_id)
         similarity = np.array([x[1] for x in similarity])
-        resp = GPT(self.prompt, tag="evaluate"+str(self.model.index+1))
+        self.resp = GPT(self.prompt, tag="evaluate"+str(self.model.index+1))
         scores = [1.0]*len(self.model.screen.semantic_info_no_warp_with_id)
-        for key, rating in resp.items():
+        for key, rating in self.resp.items():
             if key.startswith('id_'):
                 idx = int(key[len('id_'):]) - 1
                 scores[idx] = rating

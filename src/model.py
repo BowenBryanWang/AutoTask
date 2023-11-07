@@ -92,6 +92,17 @@ class Model:
         def wrapper(self, *args, **kwargs):
             print("ACTION_TRACE", kwargs.get("ACTION_TRACE"))
             print("flag", kwargs.get("flag"))
+            if self.load:
+                self.prediction_knowledge = retrivel_knowledge(self.model.task, "prediction", list(
+                    map(simplify_ui_element, self.model.screen.semantic_info_half_warp)))
+                self.evaluation_knowledge = retrivel_knowledge(self.model.task, "selection", list(
+                    map(simplify_ui_element, self.model.screen.semantic_info_half_warp)))
+                self.decision_knowledge = retrivel_knowledge(self.model.task, "decision", list(
+                    map(simplify_ui_element, self.model.screen.semantic_info_half_warp)))
+            else:
+                self.prediction_knowledge = None
+                self.evaluation_knowledge = None
+                self.decision_knowledge = None
             if self.prev_model is not None and kwargs.get("flag") != "debug":
                 status = self.prev_model.decide_module.decide(
                     new_screen=self.screen, ACTION_TRACE=kwargs.get("ACTION_TRACE"), flag="normal")
@@ -118,13 +129,7 @@ class Model:
 
     @decide_before_and_log
     def work(self, ACTION_TRACE=None, flag="normal"):
-        if self.load:
-            self.prediction_knowledge = retrivel_knowledge(self.model.task, "prediction", list(
-                map(simplify_ui_element, self.model.screen.semantic_info_half_warp)))
-            self.evaluation_knowledge = retrivel_knowledge(self.model.task, "selection", list(
-                map(simplify_ui_element, self.model.screen.semantic_info_half_warp)))
-            self.decision_knowledge = retrivel_knowledge(self.model.task, "decision", list(
-                map(simplify_ui_element, self.model.screen.semantic_info_half_warp)))
+
         self.predict_module.predict(ACTION_TRACE)
         eval_res = self.evaluate_module.evaluate(ACTION_TRACE)
         if isinstance(eval_res, str) and eval_res == "wrong":

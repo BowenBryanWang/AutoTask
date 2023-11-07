@@ -87,14 +87,6 @@ def wait_and_load_decorator(function):
     return wrapped_function
 
 
-def save_to_pickle():
-    global COMPUTATIONAL_GRAPH, TASK, Graph
-    pickle_path = os.path.join(
-        os.path.dirname(__file__), "../cache/MODEL_"+TASK.replace(" ", "_"))
-    with open(pickle_path, "wb") as f:
-        pickle.dump(COMPUTATIONAL_GRAPH, f)
-
-
 @app.route('/demo', methods=['POST'])
 @wait_and_load_decorator
 def demo() -> Union[str, Response]:
@@ -220,7 +212,6 @@ def save_to_file(task_name):
         shutil.move("./logs", "./Shots/{}".format(task_name))
         shutil.move("./Page/data", "./Shots/{}".format(task_name))
         shutil.move("./src/gpt_res", "./Shots/{}".format(task_name))
-    save_to_pickle()
 
 
 def on_key_release(key):
@@ -246,7 +237,7 @@ def keyboard_listener():
 
 
 if __name__ == "__main__":
-    default_cmd = "enable quickly open camera function in setting"
+    default_cmd = "Disable the schedule for the battery saver mode on the phone."
 
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")

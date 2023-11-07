@@ -4,7 +4,7 @@ import os
 import pickle
 
 
-from utility import GPT, Knowledge_prompt, get_top_combined_similarities, get_top_similarities, sort_by_similarity
+from src.utility import GPT, Knowledge_prompt, get_top_combined_similarities, get_top_similarities, sort_by_similarity
 
 OPENAI_KEY = os.getenv('OPENAI_API_KEY')
 
@@ -184,4 +184,4 @@ def retrivel_knowledge(task, type, page):
     return knowledge
 
 
-extract_batch_knowledge()
+# extract_batch_knowledge()
