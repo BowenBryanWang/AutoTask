@@ -468,7 +468,7 @@ Step 4: Synthesize the above output to output a JSON object with scores.
     return p
 
 
-def plan_prompt(task, suggestion, page, node_selected):
+def plan_prompt(task,  page, node_selected, suggestion):
     action_names = ['click']
     action_desc = ['clicking on a component (no text parameter needed)']
     if 'editable' in node_selected and 'ineditable' not in node_selected:
@@ -520,6 +520,8 @@ Step 1:Reason step-by-step about the the history ACTIONs (especially the last ac
 Step 2:Reason step-by-step about whether LATEST UI PAGE can further lead to the UI task fulfillment IN THE LONG RUN. Can any element on screen be operated next to lead to the fulfillment of the task?
 Step 3:Reason step-by-step about whether there are any elements with GENERAL proposes that are worthy being explored. If any, you should also choose "go on" and explore them. A kind note: if you find <scroll /> elements, it means that you can try to scroll forward to explore more elements on the screen. so you can also choose "go on" if you think there are elements worthy being explored.
 Step 4:Synthesize the above thoughts and output a conclusion on the STATUS as a JSON object structured like:
+Hint:
+1, if the history operation sequence actually indicates the completion, should consider "completed", i.e. Last step clicking OK may lead to completion
 {
     "next ui element": if the value of the status is "go on", please also output the next ui element to be operated. The status should not be "go on" if none element in the UI page can be the next.
     "status": "completed" or "wrong" or "go on". Attention that only when "next ui element" refers to a valid element on the screen can you choose "go on"
