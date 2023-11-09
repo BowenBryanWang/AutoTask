@@ -93,12 +93,12 @@ class Model:
             print("ACTION_TRACE", kwargs.get("ACTION_TRACE"))
             print("flag", kwargs.get("flag"))
             if self.load:
-                self.prediction_knowledge = retrivel_knowledge(self.model.task, "prediction", list(
-                    map(simplify_ui_element, self.model.screen.semantic_info_half_warp)))
-                self.evaluation_knowledge = retrivel_knowledge(self.model.task, "selection", list(
-                    map(simplify_ui_element, self.model.screen.semantic_info_half_warp)))
-                self.decision_knowledge = retrivel_knowledge(self.model.task, "decision", list(
-                    map(simplify_ui_element, self.model.screen.semantic_info_half_warp)))
+                self.prediction_knowledge = retrivel_knowledge(self.task, "prediction", list(
+                    map(simplify_ui_element, self.screen.semantic_info_half_warp)))
+                self.evaluation_knowledge = retrivel_knowledge(self.task, "selection", list(
+                    map(simplify_ui_element, self.screen.semantic_info_half_warp)))
+                self.decision_knowledge = retrivel_knowledge(self.task, "decision", list(
+                    map(simplify_ui_element, self.screen.semantic_info_half_warp)))
             else:
                 self.prediction_knowledge = None
                 self.evaluation_knowledge = None

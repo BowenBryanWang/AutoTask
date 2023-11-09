@@ -203,7 +203,7 @@ class UINode:
             prob *= 1.5
         else:
             prob *= 0.5
-        if self.scrollable and self.focusable:
+        if self.scrollable and (self.focusable or self.enabled):
             prob *= 10000
         if self.has_semantic_info():
             prob *= 1.5

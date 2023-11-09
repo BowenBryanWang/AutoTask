@@ -222,7 +222,7 @@ def persist_to_file(file_name, use_cache=True):
 def chat(prompt, tag):
     print('connecting to gpt')
     response = openai.ChatCompletion.create(
-        model='gpt-4-1106-preview',
+        model='gpt-4',
         messages=prompt,
         temperature=0.5,
         stream=True  # this time, we set stream=True
@@ -443,7 +443,7 @@ def Task_UI_grounding_prompt(task, current_path_str, semantic_info_list, next_co
             "content": """You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
 Your job is to rate the available UI elements on the current page.
 Note that:
-    (1) The element with the highest score will be choosen as the next element to be operated.
+    (1) The element with the highest score will be choosen as the next element to be operated. If you have more than one top scoring option in your scoring, it's a good idea to highlight the score of one of the most likely candidates to avoid confusion.
     (2) Your score should be accurate to two decimal places.
     (3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
     (4) <scroll /> element means there is a list and you can interact with it by scrolling forward. If you want to explore more, you can also try giving <scroll/> a relatively high scorat. The score of the <scroll /> should always be higher than that of those appearantly unrelated with the task.
@@ -468,7 +468,7 @@ Step 4: Synthesize the above output to output a JSON object with scores.
     return p
 
 
-def plan_prompt(task, node_selected):
+def plan_prompt(task, page, node_selected):
     action_names = ['click']
     action_desc = ['clicking on a component (no text parameter needed)']
     if 'editable' in node_selected and 'ineditable' not in node_selected:
@@ -498,9 +498,9 @@ Output a JSON object structured like
             "role": "user",
             "content": """
                 Task: {},
+Page Components:{}
 Top Candidate:{}
-
-,""".format(task, node_selected)
+,""".format(task, page, node_selected)
         }
     ]
 
@@ -577,8 +577,8 @@ Use the following steps to think:
     2,1: Replicate Error_pieces and observe each new page that is accessed by incorrect operation due to selection, and analyse the gap with the ground-truth summarised in the first step;
     2,2: Summarise the reasons why this part of Error_pieces is wrong, is it due to the lack of relevant UI experience in the [Prediction] phase? Or is it due to an error in the scoring or reasoning of the AI agent during [Selection]? Or is it due to a simple [decision-making] error?
         2.2.1: If an error is caused by the lack of UI knowledge, it means that the error in this step is caused by the AI agent's lack of UI knowledge in the [Prediction] stage, i.e., it doesn't know what will be caused by clicking this button; if the error is caused by the error in selection, it means that there is a problem with the AI agent's analysis and scoring, and it is that the agent itself is not competent enough If the error is due to an error in [Decision], it means that the agent don't know how to decide the task status as wrong or right.
-    2.3:After thinking about the reasons for the mistakes, summarise the inspiring knowledge contained therein, noting that this part of the knowledge will be injected into the other AI agent for the subsequent execution of the UI task.
-    2.4:Bind the knowledge to the page, i.e., the page on which this knowledge is found, so that it can help the other AI agent to better choose the correct action in the subsequent execution of the task. Bind the type of knowledge, is it the knowledge of [Prediction], [Execution] or [Decision] stage?
+    2.3: After thinking about the reasons for the mistakes, summarise the inspiring knowledge contained therein, noting that this part of the knowledge will be injected into the other AI agent for the subsequent execution of the UI task.
+    2.4: Bind the knowledge to the page, i.e., the page on which this knowledge is found, so that it can help the other AI agent to better choose the correct action in the subsequent execution of the task. Bind the type of knowledge, is it the knowledge of [Prediction], [Execution] or [Decision] stage?
 3, if you feel that there is valuable knowledge throughout the execution of the task, you can also summarise it;
 4, summarise and output as a json file in the following format:
 '''HTML
@@ -596,8 +596,7 @@ a, You should generate inspiring and high-level and concrete knowledge that is r
                 "if agent enters into a page with no relevant pages, should recognize wrong and navigate back"(already known by the agent)
                 "When the task is to change an application setting such as a theme, prioritize selecting the 'Settings' option from the menu."(too meaningless and not valuable, the agent already known)
                 "When task is XXX, A should be clicked rather than B" (too specific and not valuable, not generalizable)
-"""
-        }, {
+"""}, {
             "role": "user",
             "content": json.dumps(content, indent=4)
         },

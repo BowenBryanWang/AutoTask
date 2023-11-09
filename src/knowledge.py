@@ -74,7 +74,7 @@ class Selection_KB(KnowledgeBase):
 
 
 def extract_knowledge(task):
-    Log_path = "./Shots/"+task.replace(" ", "_")+"/logs"
+    Log_path = "../Shots/"+task.replace(" ", "_")+"/logs"
 
     def is_json_log(file_name):
         return file_name.startswith('log') and file_name.endswith('.json')
@@ -87,6 +87,10 @@ def extract_knowledge(task):
         return
     with open(os.path.join(Log_path, "final.json"), 'r', encoding="utf-8") as f:
         ACTION_TRACE = json.load(f)
+
+    with open(os.path.join(os.path.dirname(__file__), "KB/task/task.csv"), "a", newline='', encoding="utf-8") as f:
+        writer = csv.writer(f, delimiter=',')
+        writer.writerow([task, ACTION_TRACE["ACTION"]])
     if "BACK" not in ACTION_TRACE["ACTION_DESC"]:
         return
     l = process_sequences(
@@ -143,15 +147,14 @@ def process_sequences(pages, action, action_desc):
     for sequence in back_sequences:
         start = sequence[0]
         end = sequence[-1]+1
-        prev_pages = pages[max(0, start - len(sequence))
-                               :min(len(pages), end-len(sequence)+1)]
+        prev_pages = pages[max(0, start - len(sequence))                           :min(len(pages), end-len(sequence)+1)]
         actions = action[start - len(sequence):end-len(sequence)]
         l.append((prev_pages, actions))
     return l
 
 
 def extract_batch_knowledge():
-    for task in os.listdir("./Shots"):
+    for task in os.listdir("../Shots"):
         extract_knowledge(task)
 
 
@@ -171,16 +174,20 @@ def retrivel_knowledge(task, type, page):
         tasks = []
         knowledge = []
         index = []
+        next(f)
         reader = csv.reader(f, delimiter=',')
         for row in reader:
-            tasks.append(row[0])
+            tasks.append(row[0]+":"+row[1])
             knowledge.append(row[1])
             index.append(row[2])
-    res_task = sort_by_similarity(task, tasks)
+    res_task = sort_by_similarity(
+        "which knowledge can be used to fulfill the task?"+task, tasks)
     res_page = sort_by_similarity(page, index)
-    res = sorted([(i[0], knowledge[tasks.index(i[0])], j[0], i[1]*j[1]) for i in res_task for j in res_page],
-                 key=lambda x: x[1], reverse=True)[0]
-    knowledge = res[1]
+    res = sorted([(i[0], knowledge[tasks.index(i[0])], j[0], i[1]*j[1].mean()) for i in res_task for j in res_page if i[1]*j[1].mean() > 0.75],
+                 key=lambda x: x[1], reverse=True)
+    knowledge = []
+    for i in res:
+        knowledge.append(i[1])
     return knowledge
 
 

@@ -253,6 +253,7 @@ if __name__ == "__main__":
     MODE = args.mode
     LOAD = args.load
     if LOAD:
+        Graph = UINavigationGraph("./cache/Graph.pkl")
         Graph.load_from_pickle("cache/Graph.pkl")
     else:
         Graph = UINavigationGraph(
