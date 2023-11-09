@@ -158,7 +158,7 @@ def demo() -> Union[str, Response]:
             COMPUTATIONAL_GRAPH[INDEX].wrong_reason)
         if STATUS_SAME:
             ACTION_TRACE["PAGES"].append(
-                "SAME page as last one")
+                ["SAME page as last one"])
             ACTION_TRACE["ACTION"].append("上步操作没有响应，因此是错误的")
             ACTION_TRACE["ACTION_DESC"].append("BACK")
             STATUS_SAME = False

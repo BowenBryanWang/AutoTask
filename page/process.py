@@ -38,7 +38,7 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
             )
             semantic_info_all_warp.append(html_element)
             real_comp.append(html_element)
-        elif "ImageView" in node.node_class or "RelativeLayout" in node.node_class or "FrameLayout" in node.node_class or "Button" in node.node_class:
+        elif "ImageView" in node.node_class or "RelativeLayout" in node.node_class or "FrameLayout" in node.node_class or "android.widget.Button" in node.node_class:
             temp = node.generate_all_semantic_info()
             print(temp)
             html_element = "<button id={} class='{}' {} > {} </button>\n".format(

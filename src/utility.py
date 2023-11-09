@@ -668,10 +668,10 @@ def process_ACTION_TRACE(ACTION_TRACE):
 
 
 def coverage(text1, text2):
-    if isinstance(text1, str):
+    if isinstance(text1, str) and isinstance(text2, str):
         words1 = set(text1.split())
         words2 = set(text2.split())
-    elif isinstance(text1, list):
+    elif isinstance(text1, list) and isinstance(text2, list):
         words1 = set(text1)
         words2 = set(text2)
 
