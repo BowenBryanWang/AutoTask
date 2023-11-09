@@ -468,7 +468,7 @@ Step 4: Synthesize the above output to output a JSON object with scores.
     return p
 
 
-def plan_prompt(task, page, node_selected):
+def plan_prompt(task, suggestion, page, node_selected):
     action_names = ['click']
     action_desc = ['clicking on a component (no text parameter needed)']
     if 'editable' in node_selected and 'ineditable' not in node_selected:
@@ -485,8 +485,9 @@ def plan_prompt(task, page, node_selected):
 There {'are' if len(action_desc) > 1 else 'is'} {len(action_desc)} main type{'s' if len(action_desc) > 1 else ''} of action{'s' if len(action_desc) > 1 else ''}:
 {newline.join([f'{idx+1}. {content}' for idx,
               content in enumerate(action_desc)])}
-For the top component, analyze the possible action to be taken and, if it involves an editing action, provide the corresponding text parameter as well.
+For the top component and the overall page, analyze the possible action to be taken and, if it involves an editing action, provide the corresponding text parameter as well.
 Reason step by step to provide the actions and text parameters for it based on the user's intent and the context of the current screen.
+Consider the suggestion from the selector
 Output a JSON object structured like
 {{
     "action": the action to be taken, {' or '.join(action_names)},
@@ -500,7 +501,8 @@ Output a JSON object structured like
                 Task: {},
 Page Components:{}
 Top Candidate:{}
-,""".format(task, page, node_selected)
+Suggestion from selector:{}
+,""".format(task, page, node_selected, suggestion)
         }
     ]
 
