@@ -222,7 +222,7 @@ def persist_to_file(file_name, use_cache=True):
 def chat(prompt, tag):
     print('connecting to gpt')
     response = openai.ChatCompletion.create(
-        model='gpt-4',
+        model='gpt-4-1106-preview',
         messages=prompt,
         temperature=0.5,
         stream=True  # this time, we set stream=True
