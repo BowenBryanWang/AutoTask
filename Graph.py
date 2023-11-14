@@ -1,3 +1,4 @@
+import copy
 import os
 import random
 from matplotlib import pyplot as plt
@@ -33,7 +34,7 @@ class Node:
         #     print("__eq__", coverage(" ".join(self.elements), " ".join(o.elements)))
         #     print(self.elements, o.elements)
         #     print("\n")
-        return coverage(" ".join(self.elements), " ".join(o.elements)) >= 0.85
+        return coverage(" ".join(self.elements), " ".join(o.elements)) >= 0.8
 
     def __hash__(self):
         if self is None:
@@ -266,7 +267,7 @@ class UINavigationGraph:
         plt.show()
 
     def merge_from_random(self, task_name="", k=1):
-        self = UINavigationGraph("cache/random/Graph_"+str(k)+".pkl")
+        g = UINavigationGraph("cache/random/Graph_"+str(k)+".pkl")
         cache_list = os.listdir("cache")
         cache_list = [l for l in cache_list if l !=
                       "Graph_"+task_name.replace(" ", "_")]
@@ -275,6 +276,8 @@ class UINavigationGraph:
         for file in cache_list[:int(len(cache_list)*k*10//10)]:
             if file.startswith("Graph_"):
                 print(file)
-                self.merge_from_another_pickle(os.path.join("cache", file))
-        self.save_to_pickle()
-        print(self.graph.number_of_nodes())
+                g.merge_from_another_pickle(os.path.join("cache", file))
+        g.save_to_pickle()
+        print(g.graph.number_of_nodes())
+        self.graph = copy.deepcopy(g.graph)
+        self.file_path = copy.deepcopy(g.file_path)
