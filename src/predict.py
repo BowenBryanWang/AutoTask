@@ -1,7 +1,7 @@
 import json
 from src.knowledge import retrivel_knowledge
 
-from src.utility import cal_similarity_one, simplify_ui_element, simplify_ui_element_id, sort_by_similarity, sort_by_similarity_score
+from src.utility import cal_similarity, cal_similarity_one, simplify_ui_element, simplify_ui_element_id, sort_by_similarity, sort_by_similarity_score, sort_by_similarity_with_index
 import os
 
 import openai
@@ -45,15 +45,21 @@ class Predict():
         edges_node = list(map(lambda x: x.node, edges))
         for i, e in enumerate(SEMANTIC_INFO):
             sims = sort_by_similarity_score(e, edges_node)
-            if sims and max(sims) > 0.85:
+            if sims and max(sims) > 0.97:
                 index = sims.index(max(sims))
                 target_node = edges[index]._to
                 self.next_comp[i] = target_node.elements
             else:
                 continue
+        self.next_comp = [(index, item) for index, item in enumerate(
+            self.next_comp) if item != "Unknown"]
+        sims = sort_by_similarity_with_index(
+            self.model.task, [" ".join(x[1]) for x in self.next_comp], [x[0] for x in self.next_comp])
+        sims = sorted(sims, key=lambda x: x[2], reverse=True)[:3]
+        sims = sorted(sims, key=lambda x: x[0])
         self.comp_json_simplified = {
             "id="+str(index+1): item
-            for index, item in enumerate(self.next_comp)
+            for index, item, score in sims
             if item != "Unknown"
         }
 
@@ -61,7 +67,7 @@ class Predict():
         node = self.model.refer_node
         graph = node.graph
         target_UI, target_content = graph.find_target_UI(
-            query=self.model.task)
+            query="Which component may be relevant to this UI task? :"+self.model.task, refer_node=self.model.refer_node)
         if target_UI != [] and target_content != []:
             target_UI_path = []
             for target in target_UI:

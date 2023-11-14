@@ -63,6 +63,15 @@ def sort_by_similarity(q: str, a_list: List[str]):
     return extend_a
 
 
+def sort_by_similarity_with_index(q: str, a_list: List[str], index_list: List[int]):
+    q_ebd = cal_embedding(q)
+    a_ebds = cal_embedding(a_list)
+
+    extend_a = [(index+1, a, cal_similarity(q_ebd, a_ebd))
+                for index, a, a_ebd in zip(index_list, a_list, a_ebds)]
+    return extend_a
+
+
 def sort_by_similarity_score(q: str, a_list: List[str]):
     q_ebd = cal_embedding(q)
     a_ebds = cal_embedding(a_list)

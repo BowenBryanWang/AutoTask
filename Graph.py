@@ -178,20 +178,27 @@ class UINavigationGraph:
         """
         return self.graph.nodes
 
-    def find_target_UI(self, query, similarity_threshold=0.80):
+    def get_all_children_successcor_nodes(self, node: Node):
+        """
+        获取所有从node出发能够到达的后继节点
+        :param node: 节点
+        :return: 后继节点
+        """
+        return nx.descendants(self.graph, node)
+
+    def find_target_UI(self, query, refer_node=None, similarity_threshold=0.80):
         # 创建一个列表，包含每个节点的元素及其对应的节点
         if self.graph.number_of_nodes() <= 1:
             return [], []
 
-        text_to_ebd = [query, *[element for node in self.get_all_nodes()
-                                for element in node.elements]]
-        cal_embedding(text_to_ebd)
-
         element_node_pairs = [(element, node, cal_similarity_one(query, element))
                               for node in self.get_all_nodes() for element in node.elements]
 
-        # 使用similarity对元素进行相似度排序
+        unique_pairs = {}
+        for element, node, similarity in element_node_pairs:
+            unique_pairs[element] = (element, node, similarity)
 
+        element_node_pairs = list(unique_pairs.values())
         sorted_elements = sorted(
             element_node_pairs, key=lambda x: x[2], reverse=True)
 

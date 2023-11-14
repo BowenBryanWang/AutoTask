@@ -263,7 +263,7 @@ def keyboard_listener():
 
 
 if __name__ == "__main__":
-    default_cmd = "Customize the notifications to block when the Do Not Disturb mode is turned on."
+    default_cmd = "Add guest user Bob"
 
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")
@@ -290,6 +290,7 @@ if __name__ == "__main__":
         print("Not Loading")
         Graph = UINavigationGraph(
             "./cache/Graph_"+TASK.replace(" ", "_")+".pkl")
+
     keyboard_thread = threading.Thread(target=keyboard_listener)
     keyboard_thread.daemon = True
     keyboard_thread.start()
