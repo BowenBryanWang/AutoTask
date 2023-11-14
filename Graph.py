@@ -191,6 +191,10 @@ class UINavigationGraph:
         if self.graph.number_of_nodes() <= 1:
             return [], []
 
+        text_to_ebd = [query, *[element for node in self.get_all_children_successcor_nodes(refer_node)
+                                for element in node.elements]]
+        cal_embedding(text_to_ebd)
+
         element_node_pairs = [(element, node, cal_similarity_one(query, element))
                               for node in self.get_all_nodes() for element in node.elements]
 
