@@ -108,7 +108,7 @@ def demo() -> Union[str, Response]:
                       prev_model=COMPUTATIONAL_GRAPH[-1] if COMPUTATIONAL_GRAPH != [] else None, index=INDEX, LOAD=LOAD, Graph=Graph, PER=PER)
         model.refer_node = Graph.add_node(model.node_in_graph)
         COMPUTATIONAL_GRAPH.append(model)
-        if len(COMPUTATIONAL_GRAPH) > 10:
+        if len(COMPUTATIONAL_GRAPH) > 15:
             print("_____________THE TASK FAILED_____________")
             save_to_file(TASK)
             STATUS = "stop"
