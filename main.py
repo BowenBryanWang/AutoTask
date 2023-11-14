@@ -108,6 +108,11 @@ def demo() -> Union[str, Response]:
                       prev_model=COMPUTATIONAL_GRAPH[-1] if COMPUTATIONAL_GRAPH != [] else None, index=INDEX, LOAD=LOAD, Graph=Graph, PER=PER)
         model.refer_node = Graph.add_node(model.node_in_graph)
         COMPUTATIONAL_GRAPH.append(model)
+        if len(COMPUTATIONAL_GRAPH) > 10:
+            print("_____________THE TASK FAILED_____________")
+            save_to_file(TASK)
+            STATUS = "stop"
+            return Response("Task Failed")
         if model.prev_model is not None:
             if ACTION_TRACE["ACTION_DESC"][-1] != "BACK":
                 Graph.add_edge(model.prev_model.node_in_graph,
