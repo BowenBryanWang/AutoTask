@@ -11,6 +11,7 @@ page/__pycache__/
 page/static/
 src/__pycache__
 Shots/
+Shots_arxiv/
 .vscode/
 page/data/
 src/KB/

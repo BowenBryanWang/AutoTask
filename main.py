@@ -263,7 +263,7 @@ def keyboard_listener():
 
 
 if __name__ == "__main__":
-    default_cmd = "Enable Wifi hotspot"
+    default_cmd = "Customize the notifications to block when the Do Not Disturb mode is turned on."
 
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")
@@ -272,8 +272,8 @@ if __name__ == "__main__":
     parser.add_argument("--mode", type=str, choices=["normal", "preserve"],
                         default="normal", help="Specify the mode: 'normal' or 'preserve'")
     parser.add_argument("--load", type=bool, choices=[True, False],
-                        default=False, help="determine whether to load UI graph")
-    parser.add_argument("--percentage", type=float, default=0, choices=[0.2, 0.4, 0.6, 0.8, 1],
+                        default=True, help="determine whether to load UI graph")
+    parser.add_argument("--percentage", type=float, default=1, choices=[0.2, 0.4, 0.6, 0.8, 1],
                         help="determine the percentage to load knowledge")
     args = parser.parse_args()
 
@@ -290,7 +290,6 @@ if __name__ == "__main__":
         print("Not Loading")
         Graph = UINavigationGraph(
             "./cache/Graph_"+TASK.replace(" ", "_")+".pkl")
-
     keyboard_thread = threading.Thread(target=keyboard_listener)
     keyboard_thread.daemon = True
     keyboard_thread.start()

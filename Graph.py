@@ -271,7 +271,8 @@ class UINavigationGraph:
         cache_list = [l for l in cache_list if l !=
                       "Graph_"+task_name.replace(" ", "_")]
         random.shuffle(cache_list)
-        for file in cache_list[:len(cache_list)*k*10//10]:
+
+        for file in cache_list[:int(len(cache_list)*k*10//10)]:
             if file.startswith("Graph_"):
                 print(file)
                 self.merge_from_another_pickle(os.path.join("cache", file))
