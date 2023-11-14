@@ -2,6 +2,7 @@ import csv
 import json
 import os
 import pickle
+import random
 
 
 from src.utility import GPT, Knowledge_prompt, get_top_combined_similarities, get_top_similarities, sort_by_similarity
@@ -151,7 +152,7 @@ def process_sequences(pages, action, action_desc):
     for sequence in back_sequences:
         start = sequence[0]
         end = sequence[-1]+1
-        prev_pages = pages[max(0, start - len(sequence))                           :min(len(pages), end-len(sequence)+1)]
+        prev_pages = pages[max(0, start - len(sequence)):min(len(pages), end-len(sequence)+1)]
         actions = action[start - len(sequence):end-len(sequence)]
         l.append((prev_pages, actions))
     return l
@@ -176,16 +177,22 @@ def retrivel_knowledge(task, type, page, PER):
             __file__), "KB/decision/decision.csv")
     else:
         return None
-    with open(file_path, "r", newline='', encoding="utf-8") as f:
-        tasks = []
-        knowledge = []
-        index = []
-        next(f)
-        reader = csv.reader(f, delimiter=',')
-        for row in reader[:PER*len(reader)]:
-            tasks.append(row[0]+":"+row[1])
-            knowledge.append(row[1])
-            index.append(row[2])
+    with open(file_path, 'r', newline='', encoding='utf-8') as f:
+        reader = csv.reader(f)
+        data = list(reader)
+
+    num_rows = len(data)
+    num_sample = int(num_rows * PER)
+
+    sampled_rows = random.sample(data, num_sample)
+
+    tasks = []
+    knowledge = []
+    index = []
+    for row in sampled_rows:
+        tasks.append(row[0]+":"+row[1])
+        knowledge.append(row[1])
+        index.append(row[2])
     res_task = sort_by_similarity(
         "which knowledge can be used to fulfill the task?"+task, tasks)
     res_page = sort_by_similarity(page, index)

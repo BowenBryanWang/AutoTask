@@ -257,7 +257,7 @@ if __name__ == "__main__":
     LOAD = args.load
     PER = args.percentage
     if LOAD:
-        Graph = UINavigationGraph()
+        Graph = UINavigationGraph("cache/random/Graph_"+str(PER)+".pkl")
         Graph.merge_from_random(k=PER)
     else:
         Graph = UINavigationGraph(
