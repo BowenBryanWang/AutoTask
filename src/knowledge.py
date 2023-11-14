@@ -7,6 +7,7 @@ import pickle
 from src.utility import GPT, Knowledge_prompt, get_top_combined_similarities, get_top_similarities, sort_by_similarity
 
 OPENAI_KEY = os.getenv('OPENAI_API_KEY')
+COUNT = 0
 
 
 class KnowledgeBase:
@@ -74,6 +75,7 @@ class Selection_KB(KnowledgeBase):
 
 
 def extract_knowledge(task):
+    global COUNT
     Log_path = "../Shots/"+task.replace(" ", "_")+"/logs"
 
     def is_json_log(file_name):
@@ -93,6 +95,8 @@ def extract_knowledge(task):
         writer.writerow([task, ACTION_TRACE["ACTION"]])
     if "BACK" not in ACTION_TRACE["ACTION_DESC"]:
         return
+    COUNT += 1
+    print("COUNT", COUNT)
     l = process_sequences(
         ACTION_TRACE["PAGES"], ACTION_TRACE["ACTION"], ACTION_TRACE["ACTION_DESC"])
     resp = GPT(Knowledge_prompt(task, ACTION_TRACE, json_data, l))
@@ -155,10 +159,12 @@ def process_sequences(pages, action, action_desc):
 
 def extract_batch_knowledge():
     for task in os.listdir("../Shots"):
+        if task == ".DS_Store":
+            continue
         extract_knowledge(task)
 
 
-def retrivel_knowledge(task, type, page):
+def retrivel_knowledge(task, type, page, PER):
     if type == "prediction":
         file_path = os.path.join(os.path.dirname(
             __file__), "KB/prediction/prediction.csv")
@@ -176,7 +182,7 @@ def retrivel_knowledge(task, type, page):
         index = []
         next(f)
         reader = csv.reader(f, delimiter=',')
-        for row in reader:
+        for row in reader[:PER*len(reader)]:
             tasks.append(row[0]+":"+row[1])
             knowledge.append(row[1])
             index.append(row[2])
@@ -191,4 +197,36 @@ def retrivel_knowledge(task, type, page):
     return knowledge
 
 
-# extract_batch_knowledge()
+def detect_log():
+    for task in os.listdir("../Shots"):
+        if task == ".DS_Store":
+            continue
+        Log_path = "../Shots/"+task.replace(" ", "_")+"/logs"
+        if not os.path.exists(os.path.join(Log_path, "final.json")):
+            print(task)
+            Back_steps = 0
+            All_steps = len(os.listdir(Log_path))
+            Ground_truth = len(os.listdir(Log_path))-2*Back_steps
+            with open(os.path.join(os.path.dirname(__file__), "task.csv"), "a", newline='', encoding="utf-8") as f:
+                writer = csv.writer(f, delimiter=',')
+                writer.writerow([task, Back_steps, All_steps,
+                                Ground_truth, 2*Back_steps/All_steps])
+            print("No final.json")
+            continue
+        with open(os.path.join(Log_path, "final.json"), 'r', encoding="utf-8") as f:
+            ACTION_TRACE = json.load(f)
+
+        print("BACK steps count:", ACTION_TRACE["ACTION_DESC"].count("BACK"))
+        print("All steps count:", len(ACTION_TRACE["ACTION_DESC"]))
+        print("Ground truth count:", len(
+            ACTION_TRACE["ACTION_DESC"])-2*ACTION_TRACE["ACTION_DESC"].count("BACK"))
+
+        with open(os.path.join(os.path.dirname(__file__), "task.csv"), "a", newline='', encoding="utf-8") as f:
+            writer = csv.writer(f, delimiter=',')
+            writer.writerow([task, ACTION_TRACE["ACTION_DESC"].count("BACK"), len(
+                ACTION_TRACE["ACTION_DESC"]), len(ACTION_TRACE["ACTION_DESC"])-2*ACTION_TRACE["ACTION_DESC"].count("BACK"), 2*ACTION_TRACE["ACTION_DESC"].count("BACK")/len(ACTION_TRACE["ACTION_DESC"])])
+
+
+if __name__ == "__main__":
+    from utility import GPT, Knowledge_prompt, get_top_combined_similarities, get_top_similarities, sort_by_similarity
+    extract_batch_knowledge()

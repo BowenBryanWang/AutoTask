@@ -1,7 +1,7 @@
 import json
 from src.knowledge import retrivel_knowledge
 
-from src.utility import simplify_ui_element, simplify_ui_element_id
+from src.utility import cal_similarity_one, simplify_ui_element, simplify_ui_element_id, sort_by_similarity, sort_by_similarity_score
 import os
 
 import openai
@@ -44,10 +44,13 @@ class Predict():
         edges = graph.find_neighbour_edges(node)
         edges_node = list(map(lambda x: x.node, edges))
         for i, e in enumerate(SEMANTIC_INFO):
-            if simplify_ui_element_id(e) in edges_node:
-                index = edges_node.index(simplify_ui_element_id(e))
+            sims = sort_by_similarity_score(e, edges_node)
+            if sims and max(sims) > 0.85:
+                index = sims.index(max(sims))
                 target_node = edges[index]._to
                 self.next_comp[i] = target_node.elements
+            else:
+                continue
         self.comp_json_simplified = {
             "id="+str(index+1): item
             for index, item in enumerate(self.next_comp)
@@ -60,8 +63,11 @@ class Predict():
         target_UI, target_content = graph.find_target_UI(
             query=self.model.task)
         if target_UI != [] and target_content != []:
-            target_UI_path = [graph.find_shortest_road_to(
-                node, target) for target in target_UI]
+            target_UI_path = []
+            for target in target_UI:
+                path = graph.find_shortest_road_to(node, target)
+                if path is not None:
+                    target_UI_path.append(path)
             self.model.long_term_UI_knowledge = dict(
                 zip([" ".join(sublist) for sublist in target_content], target_UI_path))
         else:

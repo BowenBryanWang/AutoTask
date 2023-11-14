@@ -1,10 +1,24 @@
 import os
+import random
 from matplotlib import pyplot as plt
 import networkx as nx
 import pickle
 
 from src.utility import cal_similarity_one, sort_by_similarity, cal_embedding
 from src.utility import process_action_info, simplify_ui_element
+
+
+def coverage(text1, text2):
+    if isinstance(text1, str) and isinstance(text2, str):
+        words1 = set(text1.split())
+        words2 = set(text2.split())
+    elif isinstance(text1, list) and isinstance(text2, list):
+        words1 = set(text1)
+        words2 = set(text2)
+
+    common_words = words1.intersection(words2)
+
+    return len(common_words) / max(len(words1), len(words2))
 
 
 class Node:
@@ -15,9 +29,15 @@ class Node:
             map(simplify_ui_element, screen.semantic_info_half_warp))
 
     def __eq__(self, o: object) -> bool:
-        return self.elements == o.elements
+        # if coverage(" ".join(self.elements), " ".join(o.elements)) >= 0.85:
+        #     print("__eq__", coverage(" ".join(self.elements), " ".join(o.elements)))
+        #     print(self.elements, o.elements)
+        #     print("\n")
+        return coverage(" ".join(self.elements), " ".join(o.elements)) >= 0.85
 
     def __hash__(self):
+        if self is None:
+            return hash(tuple([]))
         return hash(tuple(self.elements))
 
     def query(self, query):
@@ -36,17 +56,18 @@ class Edge:
         self.node = node
 
     def __eq__(self, __value: object) -> bool:
-        return self.action == __value.action
+        return self.node == __value.node
 
     def __hash__(self) -> int:
-        return hash(self.action)
+        return hash(self.node)
 
 
 class UINavigationGraph:
     def __init__(self, file_path=None):
         self.graph = nx.DiGraph()
-        self.file_path = os.path.join(
-            os.path.dirname(__file__), file_path)
+        if file_path:
+            self.file_path = os.path.join(
+                os.path.dirname(__file__), file_path)
 
     def is_null(self):
         return self.graph.number_of_nodes() == 0
@@ -106,7 +127,10 @@ class UINavigationGraph:
         :param End: 终止节点
         :return: 最短路径的操作序列
         """
-        path = nx.shortest_path(self.graph, source, End)
+        try:
+            path = nx.shortest_path(self.graph, source, End)
+        except:
+            return None
         edges = []
         for i in range(len(path) - 1):
             node_from = path[i]
@@ -129,7 +153,11 @@ class UINavigationGraph:
         :param node: 节点
         :return: 邻居边
         """
-        edges = self.graph.out_edges(node, data=True)
+        edges = []
+        for u, v, data in self.graph.edges(data=True):
+            if u == node:
+                edges.append((u, v, data))
+
         return [data['edge'] for _, _, data in edges]
 
     def find_edge_from_node(self, node: Node, edge: Edge):
@@ -140,6 +168,7 @@ class UINavigationGraph:
         for e in edges:
             if e == edge:
                 return e
+        return None
 
     def get_all_nodes(self):
         """
@@ -167,7 +196,7 @@ class UINavigationGraph:
 
         # 筛选出相似度超过阈值的元素及其对应的节点
         filtered_pairs = list(
-            filter(lambda x: x[2] > similarity_threshold, sorted_elements))
+            filter(lambda x: x[2] > similarity_threshold, sorted_elements))[:5]
 
         # 使用字典来聚合结果
         aggregated_results = {}
@@ -202,24 +231,28 @@ class UINavigationGraph:
 
     def merge_from_another_pickle(self, file_path_another: str):
         if os.path.exists(file_path_another):
-            with open(file_path_another, "rb") as f:
-                graph_another = pickle.load(f)
+            graph_another = UINavigationGraph()
+            graph_another.load_from_pickle(file_path_another)
 
-        for node in graph_another.nodes():
-            if not self.graph.has_node(node):
-                self.graph.add_node(node)
+        # 创建一个映射表，以跟踪合并后的节点
+        node_mapping = {}
 
-        for u, v, data in graph_another.edges(data=True):
-            has_u = self.graph.has_node(u)
-            has_v = self.graph.has_node(v)
-            has_edge = self.graph.has_edge(u, v)
-            if has_edge:
-                continue
-            if not has_u:
-                self.graph.add_node(u)
-            if not has_v:
-                self.graph.add_node(v)
-            self.graph.add_edge(u, v)
+        # 检查并合并相似节点
+        for node in graph_another.get_all_nodes():
+            ans = self.add_node(node)
+            node_mapping[node] = ans
+
+        # 添加或合并边
+        for u, v, data in graph_another.graph.edges(data=True):
+            u_mapped = node_mapping[u]
+            v_mapped = node_mapping[v]
+
+            self.add_edge(u_mapped, v_mapped, Edge=data['edge'])
+
+    def find_similar_node(self, node):
+        for n in self.graph.nodes():
+            if n == node:
+                return n
 
     def merge_from_other_pickles(self, file_path_others: list[str]):
         for file_path in file_path_others:
@@ -227,7 +260,18 @@ class UINavigationGraph:
 
     def visualize(self):
         """
-        可视化图。
+        可视化图。每个label显示节点的元素。
         """
         nx.draw(self.graph, with_labels=True)
         plt.show()
+
+    def merge_from_random(self, k=1):
+        self = UINavigationGraph("cache/random/Graph_"+str(k)+".pkl")
+        cache_list = os.listdir("cache")
+        random.shuffle(cache_list)
+        for file in cache_list[:len(cache_list)*k*10//10]:
+            if file.startswith("Graph_"):
+                print(file)
+                self.merge_from_another_pickle(os.path.join("cache", file))
+        self.save_to_pickle()
+        print(self.graph.number_of_nodes())

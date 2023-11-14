@@ -40,6 +40,7 @@ app = Flask(__name__)
 
 TASK = ""
 MODE = ""
+PER = 0
 STATUS = "stop"
 STATUS_SAME = False
 INDEX = 0
@@ -104,7 +105,7 @@ def demo() -> Union[str, Response]:
     if STATUS == "start":
         STATUS = "running"
         model = Model(screen=screen, description=TASK,
-                      prev_model=COMPUTATIONAL_GRAPH[-1] if COMPUTATIONAL_GRAPH != [] else None, index=INDEX, LOAD=LOAD)
+                      prev_model=COMPUTATIONAL_GRAPH[-1] if COMPUTATIONAL_GRAPH != [] else None, index=INDEX, LOAD=LOAD, Graph=Graph, PER=PER)
         model.refer_node = Graph.add_node(model.node_in_graph)
         COMPUTATIONAL_GRAPH.append(model)
         if model.prev_model is not None:
@@ -237,7 +238,7 @@ def keyboard_listener():
 
 
 if __name__ == "__main__":
-    default_cmd = "Disable the schedule for the battery saver mode on the phone."
+    default_cmd = "Enable Wifi hotspot"
 
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")
@@ -246,15 +247,18 @@ if __name__ == "__main__":
     parser.add_argument("--mode", type=str, choices=["normal", "preserve"],
                         default="normal", help="Specify the mode: 'normal' or 'preserve'")
     parser.add_argument("--load", type=bool, choices=[True, False],
-                        default=False, help="determine whether to load UI graph")
+                        default=True, help="determine whether to load UI graph")
+    parser.add_argument("--percentage", type=float, default=1, choices=[0.25, 0.5, 0.75, 1],
+                        help="determine the percentage to load knowledge")
     args = parser.parse_args()
 
     TASK = args.task
     MODE = args.mode
     LOAD = args.load
+    PER = args.percentage
     if LOAD:
-        Graph = UINavigationGraph("./cache/Graph.pkl")
-        Graph.load_from_pickle("cache/Graph.pkl")
+        Graph = UINavigationGraph()
+        Graph.merge_from_random(k=PER)
     else:
         Graph = UINavigationGraph(
             "./cache/Graph_"+TASK.replace(" ", "_")+".pkl")

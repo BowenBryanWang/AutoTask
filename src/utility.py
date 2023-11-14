@@ -63,6 +63,15 @@ def sort_by_similarity(q: str, a_list: List[str]):
     return extend_a
 
 
+def sort_by_similarity_score(q: str, a_list: List[str]):
+    q_ebd = cal_embedding(q)
+    a_ebds = cal_embedding(a_list)
+
+    extend_a = [cal_similarity(q_ebd, a_ebd)
+                for a_ebd in a_ebds]
+    return extend_a
+
+
 def cal_similarity_one(q: str, a: str):
     q_ebd = cal_embedding(q)
     a_ebd = cal_embedding(a)
@@ -459,6 +468,8 @@ Step 1: think about ["History operation sequence"],what has been done,especially
 Step 2: think step by step on the ["Succesive Results"] of each UI options GIVEN by user, which represents the subsequent items after operating on them, and the ["possible paths to UI target"] GIVEN by user, which was suggested by expert knowledge;
 Step 3: decide what should be done next. Possible operations: click, edit (text input), scroll. Pay attention to those steps which is wrong and caused navigate back if any;
 Step 4: Synthesize the above output to output a JSON object with scores.
+
+Strictly output a format like "id_1": 3.00, do not tamper with it to make it look like "scroll_1": 3.00, etc., it must start with id_.
 """
         },
         {

@@ -43,7 +43,7 @@ class Model:
                 self.update_infos(self.screen.semantic_info_half_warp[i])
             self.screen.semantic_diff = new_elements_index
 
-    def __init__(self, screen: Screen = None, description: str = "", prev_model=None, index: int = 0, LOAD=False):
+    def __init__(self, screen: Screen = None, description: str = "", prev_model=None, index: int = 0, LOAD=False, Graph=None, PER=0):
         self.load: bool = LOAD
         self.index: int = index  # Index of current Model
         if screen is not None:
@@ -79,9 +79,10 @@ class Model:
         self.simplified_semantic_info_no_warp = list(
             map(lambda x: simplify_ui_element(x), self.screen.semantic_info_no_warp))
         self.cal_diff()
-        self.node_in_graph: Node = Node(self.screen)
+        self.node_in_graph: Node = Node(self.screen, Graph)
         self.edge_in_graph: Edge = None
         self.wrong_reason: str = ""
+        self.PER = PER
         print("________________INITIAL_DONE________________")
 
     @property
@@ -94,11 +95,11 @@ class Model:
             print("flag", kwargs.get("flag"))
             if self.load:
                 self.prediction_knowledge = retrivel_knowledge(self.task, "prediction", list(
-                    map(simplify_ui_element, self.screen.semantic_info_half_warp)))
+                    map(simplify_ui_element, self.screen.semantic_info_half_warp)), PER=self.PER)
                 self.evaluation_knowledge = retrivel_knowledge(self.task, "selection", list(
-                    map(simplify_ui_element, self.screen.semantic_info_half_warp)))
+                    map(simplify_ui_element, self.screen.semantic_info_half_warp)), PER=self.PER)
                 self.decision_knowledge = retrivel_knowledge(self.task, "decision", list(
-                    map(simplify_ui_element, self.screen.semantic_info_half_warp)))
+                    map(simplify_ui_element, self.screen.semantic_info_half_warp)), PER=self.PER)
             else:
                 self.prediction_knowledge = None
                 self.evaluation_knowledge = None

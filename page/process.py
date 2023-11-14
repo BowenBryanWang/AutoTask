@@ -30,11 +30,13 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
             semantic_info_all_warp.append(html_element)
         elif "LinearLayout" in node.node_class:
             temp = node.generate_all_semantic_info()
-            html_element = "<div id={} class='{}' {} >  </div>\n".format(
+            html_element = "<div id={} {} {} {}>  </div>\n".format(
                 len(real_comp)+1,
-                mask(node.resource_id),
+                "class='"+mask(node.resource_id) +
+                "'" if node.resource_id != "" else "",
                 "description='"+",".join(temp["content-desc"])+"'" if ",".join(
                     temp["content-desc"]) != "" else "",
+                "clickable" if node.clickable else ""
             )
             semantic_info_all_warp.append(html_element)
             real_comp.append(html_element)
@@ -61,7 +63,7 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
             )
             semantic_info_all_warp.append(html_element)
             real_comp.append(html_element)
-        elif "CheckedTextView" in node.node_class or "CheckBox" in node.node_class:
+        elif "CheckedTextView" in node.node_class or "CheckBox" in node.node_class or "checkbox" in node.resource_id:
             html_element = "<checkbox id={} class='{}' {} > {} </checkbox>\n".format(
                 len(real_comp)+1,
                 mask(node.resource_id),
@@ -95,15 +97,17 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
         else:
             temp = node.generate_all_semantic_info()
             print(temp)
-            html_element = "<div id={} class='{}' {} {} {} > {} </div>\n".format(
+            html_element = "<div id={} {} {} {} {} {}> {} </div>\n".format(
                 len(real_comp)+1,
-                mask(node.resource_id),
+                "class='"+mask(node.resource_id) +
+                "'" if node.resource_id != "" else "",
                 "description='" +
                 ",".join(temp["content-desc"]) +
                 "'" if ",".join(temp["content-desc"]) != "" else "",
                 "enabled" if node.enabled else "not_enabled",
                 "" if not node.checkable else (
                     'checked' if node.checked else 'not_checked'),
+                "clickable" if node.clickable else "",
                 "".join(temp["text"]) if temp["text"] == temp["Major_text"] else temp["Major_text"][0] +
                 "\n    " +
                 "".join(["<p> " + i + " </p>\n    " for i in temp["text"]
