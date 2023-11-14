@@ -164,4 +164,5 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
             semantic_info_half_warp[son] = ""
     semantic_info_all_warp = [i for i in semantic_info_all_warp if i != ""]
     semantic_info_half_warp = [i for i in semantic_info_half_warp if i != ""]
+
     return semantic_info_all_warp, semantic_info_half_warp, semantic_info_no_warp, trans_relation

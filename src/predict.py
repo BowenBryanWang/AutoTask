@@ -54,11 +54,11 @@ class Predict():
         self.next_comp = [(index, item) for index, item in enumerate(
             self.next_comp) if item != "Unknown"]
         sims = sort_by_similarity_with_index(
-            self.model.task, [" ".join(x[1]) for x in self.next_comp], [x[0] for x in self.next_comp])
+            self.model.task, ["--".join(x[1]) for x in self.next_comp], [x[0] for x in self.next_comp])
         sims = sorted(sims, key=lambda x: x[2], reverse=True)[:3]
         sims = sorted(sims, key=lambda x: x[0])
         self.comp_json_simplified = {
-            "id="+str(index): item
+            "id="+str(index): item.split("--")
             for index, item, score in sims
             if item != "Unknown"
         }

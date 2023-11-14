@@ -37,7 +37,8 @@ class Decide:
             prompt.append({"role": "user",
                            "content": """请注意以下特殊的额外信息：
 现在你处于回溯纠错阶段，这意味着在ACTION_TRACE当中最后若干步骤执行后因不符合任务要求导致被回溯才到达此页面，作为决策模块，你需要判断是否继续在当前UI上进行探索，如果是，请输出status为“go on”；如果不是（即无法继续，需要继续往前回溯），请输出“wrong”。
-为此，请仔细分析ACTION_TRACE中的每步操作，和每步操作进入的新页面的信息，特别是回溯导致的信息，判断在该页面上是否继续探索。
+为此，请仔细分析ACTION_TRACE中的每步操作，和每步操作进入的新页面的信息，特别是回溯导致的信息，判断是否还需在该页面上是否继续探索。
+如果已经有多次探索+回溯，那么大概率需要输出wrong再回溯一步去寻找更早的错误。
 """})
         self.answer = GPT(prompt, tag="decide"+str(self.model.index+1))
         if flag == "debug":

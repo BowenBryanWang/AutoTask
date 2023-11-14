@@ -262,11 +262,11 @@ def extract_json(input_string):
     json_strings = []
 
     for pos, char in enumerate(input_string):
-        if char in '{[':
+        if char in '{':
             stack.append(char)
             if len(stack) == 1:
                 json_start_positions.append(pos)
-        elif char in '}]':
+        elif char in '}':
             if len(stack) == 0:
                 raise ValueError(
                     "unexpected {} at position {}".format(pos, char))

@@ -68,7 +68,7 @@ class Evaluate():
     def score_comp(self, ACTION_TRACE):
 
         self.prompt = Task_UI_grounding_prompt(self.model.task, [ACTION_TRACE[key]
-                                                                 for key in ACTION_TRACE.keys() if "Action" in key], self.model.screen.semantic_info_all_warp, self.model.predict_module.comp_json_simplified, self.model.evaluation_knowledge, self.model.long_term_UI_knowledge, hint=self.model.prev_model.decide_module.answer if self.model.prev_model is not None else None)
+                                                                 for key in ACTION_TRACE.keys() if "Action" in key], self.model.screen.semantic_info_all_warp, self.model.predict_module.comp_json_simplified, self.model.evaluation_knowledge, self.model.long_term_UI_knowledge, hint=None)
         self.handle_cycle(curpage=self.model.screen.page_root.generate_all_text().split(
             "-"), ACTION_TRACE=ACTION_TRACE)
         similarity = sort_by_similarity(

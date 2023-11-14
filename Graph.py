@@ -208,7 +208,7 @@ class UINavigationGraph:
 
         # 筛选出相似度超过阈值的元素及其对应的节点
         filtered_pairs = list(
-            filter(lambda x: x[2], sorted_elements))[:5]
+            filter(lambda x: x[2], sorted_elements))[:10]
 
         # 使用字典来聚合结果
         aggregated_results = {}
