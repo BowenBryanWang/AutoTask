@@ -236,4 +236,5 @@ def detect_log():
 
 if __name__ == "__main__":
     from utility import GPT, Knowledge_prompt, get_top_combined_similarities, get_top_similarities, sort_by_similarity
-    extract_batch_knowledge()
+    # extract_batch_knowledge()
+    detect_log()

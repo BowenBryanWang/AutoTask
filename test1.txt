@@ -1,0 +1,131 @@
+Check for security updateson the device.
+Check for Android updates on your phone.
+Change the switch access settings in the device's accessibility menu.
+Open app permissions for location setting.
+Set up exposure notifications through device settings.
+Delete exposure history in COVID-19 Exposure Notifications settings on Android device.
+Clear the cache of Chrome on your phone
+Set the hotspot to turn off automatically in the device's settings.
+Open the interrupt settings for the "Do Not Disturb" mode on an Android phone.
+Set the duration for "Do Not Disturb" mode on an Android device.
+Set up automatic "Do Not Disturb" rule on Android
+Set up a rule in the "Do Not Disturb preferences" to silence sounds during events and meetings.
+Override "Do Not Disturb" for chrome on your phone.
+Enter VPN information on the device.
+Edit VPN settings on your phone.
+Turn off the "Always-on VPN" setting in the phone's "Settings" app.
+Enable location access
+Add a Wi-Fi network on the phone.
+Sign in to the public network
+Find the EID number of the phone.
+Open the keyboard sounds and vibrations settings on your phone.
+Open the settings for emergency broadcast alerts on the phone.
+Create a custom rule for a Wi-Fi network or location in the phone's settings.
+Enable automatic song identification on the phone
+Find recently played songs.
+Enable snoozing for notifications in phone settings.
+Access the notification history in the phone's settings.
+Open the notifications settings for the lock screen on your phone.
+Turn on notification dots in the phone's settings.
+Enable notification bubbles in the phone's settings.
+Manage bubble notifications for chrome
+Configure the phone's notification settings to display sensitive content on the lock screen.
+Disable the screen saver in your phone's settings.
+Open the screen timeout settings on your phone.
+Disable auto-rotate screen in device settings
+Enable the "Power button ends call" feature in the Accessibility settings.
+Enable the "Power button ends call" option in the Accessibility settings.
+Switch backup accounts on the device.
+Manually back up data and settings on a phone
+Open the vibration settings on the device.
+Open the connection settings on your phone.
+Confirm if adaptive battery is enabled.
+Enable gesture navigation on Android 9.
+Set the screen lock on your phone.
+View a list of Google apps that can auto-sync
+Turn off auto-sync for chrome apps on your phone.
+Enable adaptive sound.
+Check for security updates.
+Open app permissions on the phone.
+Switch backup accounts on your phone.
+Change the time to take action for accessibility on the device.
+Set up driving mode.
+Open display settings on the phone.
+Access and manage mobile data plan and notification settings in the "Settings" app.
+Manually sync your Google account on your phone.
+Open the date & time settings on your phone
+Turn on Data Saver on the phone.
+Disable chrome app that came with your phone.
+Remove a Google named jack from your phone.
+Set up auto-scanning on switch access settings.
+Check if mobile data is turned on
+Check Wi-Fi connection status
+Set a data warning to receive alerts about data usage.
+Set a data limit and enable automatic data turn-off on mobile data settings.
+Add a Google account to your phone
+Change the floating accessibility button settings in the "Accessibility" menu of the "Settings" app.
+Display all notifications on the lock screen.
+Turn on the emergency location service on your phone.
+Turn the location setting on for your phone.
+Enable auto-rotate screen in the device's accessibility settings.
+Turn on usage & diagnostics.
+Turn off the "Active during calls" setting in Voice Access under the "General" section in the device's settings.
+Disable the option to install apps from unknown sources on the device.
+Enable text-to-speech output on the device.
+Install a certificate on your device.
+Connect to a WPA-enterprise Wi-Fi network on your phone.
+Disable adaptive charging to enable overnight charging.
+Delete face data.
+Turn off face unlock
+Manage app permissions for location and disable location access for chrome
+Reset a Pixel phone using the settings app and restore backed-up data.
+Sync device with Google servers for accurate date and time settings.
+Disable the option to save payment information in the autofill settings.
+Change the autofill service in the "Passwords & accounts" settings to Google.
+Disable fingerprint authentication for autofill in Google.
+Set up camera switches and assign facial gestures to actions.
+Change the gesture size to big for switch access
+Change the duration for a gesture in the accessibility settings.
+Change the direction of point scan in the accessibility settings.
+Disable the "Idle lock screen" option in the phone's settings to turn off the screen when not in use.
+Adjust the screen timeout on the phone to a shorter duration.
+Enable adaptive brightness on the phone.
+Disable keyboard sound and vibration in the phone's settings.
+Limit the battery usage of apps with high overall battery use on the phone.
+Enable the dark theme on the phone and schedule it to turn on from sunset to sunrise.
+Enable the option to open cards and passes with the power button in the settings menu.
+Compare the signal strength of different networks
+Add a Wi-Fi network named new-wifi to your device.
+Turn off switch access on Android device
+Change the touch & hold delay to short in the device's accessibility settings.
+Enable data usage during calls to use a different SIM card.
+Disable the auto-fill service for payment information.
+Change the Autofill service in the phone's settings to save info in chrome.
+Disable fingerprint authentication for auto-filling payment cards in the phone's settings.
+Add a user named jack to the device.
+Change the font size to small on your device
+Enable bold text in the device's settings
+Enable and select a color correction mode in the device's accessibility settings.
+Disable animations in the device's settings.
+Enable high contrast text in the device's settings.
+Open app permissions on the phone
+Change app permissions based on their type in the phone settings.
+Enable automatic removal of permissions for unused apps.
+Add a message to the lock screen display on the phone.
+Enable earthquake alerts in the device settings.
+Open Do Not Disturb settings to specify what should be blocked or allowed.
+Set the interruption settings for Do Not Disturb mode.
+Open the settings for hidden notifications in the "Do Not Disturb" section of the phone's settings.
+Set up Do Not Disturb to limit interruptions during events and meetings on Google Calendar.
+Display the battery percentage in the status bar on my phone.
+Check the battery life and usage on the phone.
+Configure battery saver to turn off when the phone is fully charged.
+Choose chrome to stay active with extreme battery saver
+Customize the action triggered by pressing the power and volume up buttons on your phone.
+Change the action triggered by pressing power and volume up buttons
+Change the BrailleBack settings in the Accessibility menu.
+Compare the Wi-Fi signal strength of different networks
+Compare the strength of different networks on the phone.
+Compare the strength of different networks on the phone.
+Remove all saved networks from the phone's wi-fi settings.
+Set up OpenRoaming on your device
