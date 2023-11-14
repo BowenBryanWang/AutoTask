@@ -1,6 +1,6 @@
 
 from Graph import Edge
-from src.utility import sort_by_similarity
+from src.utility import simplify_ui_element_id, sort_by_similarity
 from src.utility import GPT, Task_UI_grounding_prompt, coverage, get_top_combined_similarities, plan_prompt, process_action_info, simplify_ui_element
 import copy
 import json
@@ -33,7 +33,8 @@ class Evaluate():
                 "Name": "Evaluate",
                 "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
                 "Score": {key: item for key, item in zip(self.model.screen.semantic_info_no_warp_with_id, self.score)},
-                "Punishment coefficient": self.weights
+                "Punishment coefficient": self.weights,
+                "GPT answer": self.resp
             })
             with open("logs/log{}.json".format(self.model.index+1), "w", encoding="utf-8") as f:
                 json.dump(self.model.log_json, f, indent=4)
@@ -65,12 +66,9 @@ class Evaluate():
                     self.prompt.append({"role": "user", "content": """NOTE: Current UI was once visited in the history operation sequence, and at that time it chose to operate on {}. To avoid infinite cycling operation, give punishment to this element when you score it in this step""".format(node)})
 
     def score_comp(self, ACTION_TRACE):
-        task, knowledge = self.model.Selection_KB.find_experiences(
-            query=[self.model.task, self.model.screen.page_description])
 
         self.prompt = Task_UI_grounding_prompt(self.model.task, [ACTION_TRACE[key]
-                                                                 for key in ACTION_TRACE.keys() if "Action" in key], self.model.similar_tasks,
-                                               self.model.similar_traces, self.model.screen.semantic_info_all_warp, self.model.predict_module.comp_json_simplified, knowledge, self.model.long_term_UI_knowledge)
+                                                                 for key in ACTION_TRACE.keys() if "Action" in key], self.model.screen.semantic_info_all_warp, self.model.predict_module.comp_json_simplified, self.model.evaluation_knowledge, self.model.long_term_UI_knowledge, hint=self.model.prev_model.decide_module.answer if self.model.prev_model is not None else None)
         self.handle_cycle(curpage=self.model.screen.page_root.generate_all_text().split(
             "-"), ACTION_TRACE=ACTION_TRACE)
         similarity = sort_by_similarity(
@@ -81,22 +79,12 @@ History operation sequence: {}.
 Current UI:{}
 Please output the next element to be operated.""".format(self.model.task, [ACTION_TRACE[key] for key in ACTION_TRACE.keys() if "Action" in key], self.model.screen.semantic_info_no_warp_with_id), self.model.screen.semantic_info_no_warp_with_id)
         similarity = np.array([x[1] for x in similarity])
-        resp = GPT(self.prompt, tag="evaluate"+str(self.model.index+1))
+        self.resp = GPT(self.prompt, tag="evaluate"+str(self.model.index+1))
         scores = [1.0]*len(self.model.screen.semantic_info_no_warp_with_id)
-        for key, rating in resp.items():
+        for key, rating in self.resp.items():
             if key.startswith('id_'):
                 idx = int(key[len('id_'):]) - 1
                 scores[idx] = rating
-        # if not isinstance(self.score, list) and self.score.size > 0:
-        #     indices = [index for index, value in enumerate(
-        #         self.weights) if value != 1.0]
-        #     if indices:
-        #         for i, s in enumerate(scores):
-        #             if i not in indices:
-        #                 self.score[i] = s
-        #     else:
-        #         self.score = np.array(scores) / 10
-        # else:
         self.score = np.array(scores)+similarity
         if self.weights == []:
             self.weights = [1.0] * len(self.score)
@@ -112,7 +100,7 @@ Please output the next element to be operated.""".format(self.model.task, [ACTIO
             lambda x: "id="+str(top_index+1) in x, self.model.screen.semantic_info_half_warp))[0]  # 包围后的完整的node字符串描述
         if 'editable' in self.model.node_selected and 'ineditable' not in self.model.node_selected:
             response = GPT(plan_prompt(self.model.task,
-                                       self.model.node_selected), tag="plan"+str(self.model.index+1))
+                                       self.model.screen.semantic_info_all_warp, self.model.node_selected, self.resp), tag="plan"+str(self.model.index+1))
             self.model.node_selected_action, self.model.node_selected_text = response.get(
                 "action"), response.get("text")
         elif 'scroll' in self.model.node_selected:
@@ -128,7 +116,7 @@ Please output the next element to be operated.""".format(self.model.task, [ACTIO
         self.model.final_node = self.model.screen.semantic_nodes["nodes"][self.model.screen.semantic_info_no_warp.index(
             self.model.node_selected)]
         self.model.edge_in_graph = Edge(
-            self.model.node_selected_action, self.model.node_selected_text, simplify_ui_element(self.model.node_selected))
+            self.model.node_selected_action, self.model.node_selected_text, simplify_ui_element_id(self.model.node_selected))
 
     def update_weights(self, weights):
         w = [0]*len(self.model.screen.semantic_info_no_warp_with_id)

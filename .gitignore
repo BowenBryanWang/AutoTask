@@ -17,3 +17,4 @@ src/KB/
 cache/
 expr/
 result.csv
+tmp.*

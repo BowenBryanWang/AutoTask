@@ -3,6 +3,7 @@ import copy
 import csv
 import json
 import os
+import pickle
 from typing import Optional
 
 import pandas as pd
@@ -11,7 +12,7 @@ from Graph import Edge, Node
 
 from src.utility import generate_perform, process_string, simplify_ui_element
 
-from .knowledge import Decision_KB, Error_KB, Selection_KB, Task_KB
+from .knowledge import Decision_KB, Error_KB, Selection_KB, Task_KB, retrivel_knowledge
 from src.decide import Decide
 from src.evaluate import Evaluate
 from src.feedback import Feedback
@@ -43,7 +44,7 @@ class Model:
             self.screen.semantic_diff = new_elements_index
 
     def __init__(self, screen: Screen = None, description: str = "", prev_model=None, index: int = 0, LOAD=False):
-        self.load: str = LOAD
+        self.load: bool = LOAD
         self.index: int = index  # Index of current Model
         if screen is not None:
             self.screen: Screen = screen  # Current Screen
@@ -91,6 +92,17 @@ class Model:
         def wrapper(self, *args, **kwargs):
             print("ACTION_TRACE", kwargs.get("ACTION_TRACE"))
             print("flag", kwargs.get("flag"))
+            if self.load:
+                self.prediction_knowledge = retrivel_knowledge(self.task, "prediction", list(
+                    map(simplify_ui_element, self.screen.semantic_info_half_warp)))
+                self.evaluation_knowledge = retrivel_knowledge(self.task, "selection", list(
+                    map(simplify_ui_element, self.screen.semantic_info_half_warp)))
+                self.decision_knowledge = retrivel_knowledge(self.task, "decision", list(
+                    map(simplify_ui_element, self.screen.semantic_info_half_warp)))
+            else:
+                self.prediction_knowledge = None
+                self.evaluation_knowledge = None
+                self.decision_knowledge = None
             if self.prev_model is not None and kwargs.get("flag") != "debug":
                 status = self.prev_model.decide_module.decide(
                     new_screen=self.screen, ACTION_TRACE=kwargs.get("ACTION_TRACE"), flag="normal")
@@ -107,7 +119,7 @@ class Model:
                 if status == "wrong":
                     print("wrong: feedback started")
                     if self.prev_model.node_selected_action == "scroll_forward":
-                        return generate_perform("scroll_backward", absolute_id=self.prev_model.final_node.absolute_id)
+                        return generate_perform("scroll_backward", absolute_id=self.prev_model.final_node.absolute_id), "wrong"
                     return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}, "wrong"
             self.log_json["@User_intent"] = self.task
             self.log_json["@Page_components"] = self.screen.semantic_info_all_warp
@@ -117,6 +129,7 @@ class Model:
 
     @decide_before_and_log
     def work(self, ACTION_TRACE=None, flag="normal"):
+
         self.predict_module.predict(ACTION_TRACE)
         eval_res = self.evaluate_module.evaluate(ACTION_TRACE)
         if isinstance(eval_res, str) and eval_res == "wrong":

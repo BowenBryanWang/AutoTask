@@ -222,7 +222,7 @@ def persist_to_file(file_name, use_cache=True):
 def chat(prompt, tag):
     print('connecting to gpt')
     response = openai.ChatCompletion.create(
-        model='gpt-4',
+        model='gpt-4-1106-preview',
         messages=prompt,
         temperature=0.5,
         stream=True  # this time, we set stream=True
@@ -423,12 +423,15 @@ def UI_grounding_prompt_only_summary(predict_node):
     ]
 
 
-def Task_UI_grounding_prompt(task, current_path_str, similar_tasks, similar_traces, semantic_info_list, next_comp, Knowledge, UI_long_term_knowledge):
+def Task_UI_grounding_prompt(task, current_path_str, semantic_info_list, next_comp, Knowledge, UI_long_term_knowledge, hint):
     content = {}
     content["Task"] = task
     content["History operation sequence"] = current_path_str
     content["Current UI screen"] = "".join(semantic_info_list)
     content["Successive results"] = next_comp
+    if hint is not None and hint["status"] == "go on":
+        content["Hint"] = "Below is a hint and suggestion from another model" + \
+            json.dumps(hint)
     if Knowledge:
         content["Knowledge"] = Knowledge
     if UI_long_term_knowledge:
@@ -440,7 +443,7 @@ def Task_UI_grounding_prompt(task, current_path_str, similar_tasks, similar_trac
             "content": """You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
 Your job is to rate the available UI elements on the current page.
 Note that:
-    (1) The element with the highest score will be choosen as the next element to be operated.
+    (1) The element with the highest score will be choosen as the next element to be operated. If you have more than one top scoring option in your scoring, it's a good idea to highlight the score of one of the most likely candidates to avoid confusion.
     (2) Your score should be accurate to two decimal places.
     (3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
     (4) <scroll /> element means there is a list and you can interact with it by scrolling forward. If you want to explore more, you can also try giving <scroll/> a relatively high scorat. The score of the <scroll /> should always be higher than that of those appearantly unrelated with the task.
@@ -460,12 +463,12 @@ Step 4: Synthesize the above output to output a JSON object with scores.
         },
         {
             "role": "user",
-            "content": json.dumps(content)
+            "content": json.dumps(content, indent=4)
         }]
     return p
 
 
-def plan_prompt(task, node_selected):
+def plan_prompt(task,  page, node_selected, suggestion):
     action_names = ['click']
     action_desc = ['clicking on a component (no text parameter needed)']
     if 'editable' in node_selected and 'ineditable' not in node_selected:
@@ -482,8 +485,9 @@ def plan_prompt(task, node_selected):
 There {'are' if len(action_desc) > 1 else 'is'} {len(action_desc)} main type{'s' if len(action_desc) > 1 else ''} of action{'s' if len(action_desc) > 1 else ''}:
 {newline.join([f'{idx+1}. {content}' for idx,
               content in enumerate(action_desc)])}
-For the top component, analyze the possible action to be taken and, if it involves an editing action, provide the corresponding text parameter as well.
+For the top component and the overall page, analyze the possible action to be taken and, if it involves an editing action, provide the corresponding text parameter as well.
 Reason step by step to provide the actions and text parameters for it based on the user's intent and the context of the current screen.
+Consider the suggestion from the selector
 Output a JSON object structured like
 {{
     "action": the action to be taken, {' or '.join(action_names)},
@@ -495,9 +499,10 @@ Output a JSON object structured like
             "role": "user",
             "content": """
                 Task: {},
+Page Components:{}
 Top Candidate:{}
-
-,""".format(task, node_selected)
+Suggestion from selector:{}
+,""".format(task, page, node_selected, suggestion)
         }
     ]
 
@@ -511,11 +516,12 @@ Your task is to evaluate if the operation sequence and the current UI can furthe
 2,wrong: After the Latest action and the subsequent newest UI screen, the Last Action is not correct and the current UI cannot further lead to the UI task anymore (You should choose "wrong" if you think navigating back is necessary to finish the task).
 3,go on: After the Latest action and the subsequent newest UI screen, the Last Action is on the correct track, which means the agent can continue to perform further operations (excluding navigating back) to complete the task. Further Actions should be taken on the current (may also be the subsequent pages) UI page.
 Use the following steps to respond. Fully restate each step number before proceeding. i.e. "Step 1".
-Step 1: Reason step-by-step about the the history ACTIONs (especially the last action leading to the Current UI)and UI TASK. Whether Last Action can contribute to fulfill the user's task IN THE LONG RUN?
-Step 2: Reason step-by-step about whether LATEST UI PAGE can further lead to the UI task fulfillment IN THE LONG RUN. Can any element on screen be operated next to lead to the fulfillment of the task?
-Step 3: Reason step-by-step about whether there are any elements with GENERAL proposes that are worthy being explored. If any, you should also choose "go on" and explore them. 
-Step 4: Reason step-by-step about whether you can and you should scroll. if you find <scroll /> elements, it means that you can try to scroll forward to explore more elements on the screen. We encourage you to explore the UI by scrolling the screen, unless the current UI is quite unrelated with the task.
-Step 5: Synthesize the above thoughts and output a conclusion on the STATUS as a JSON object structured like:
+Step 1:Reason step-by-step about the the history ACTIONs (especially the last action leading to the Current UI)and UI TASK. Whether Last Action can contribute to fulfill the user's task IN THE LONG RUN?
+Step 2:Reason step-by-step about whether LATEST UI PAGE can further lead to the UI task fulfillment IN THE LONG RUN. Can any element on screen be operated next to lead to the fulfillment of the task?
+Step 3:Reason step-by-step about whether there are any elements with GENERAL proposes that are worthy being explored. If any, you should also choose "go on" and explore them. A kind note: if you find <scroll /> elements, it means that you can try to scroll forward to explore more elements on the screen. so you can also choose "go on" if you think there are elements worthy being explored.
+Step 4:Synthesize the above thoughts and output a conclusion on the STATUS as a JSON object structured like:
+Hint:
+1, if the history operation sequence actually indicates the completion, should consider "completed", i.e. Last step clicking OK may lead to completion
 {
     "next ui element": if the value of the status is "go on", please also output the next ui element to be operated. The status should not be "go on" if none element in the UI page can be the next.
     "status": "completed" or "wrong" or "go on". Attention that only when "next ui element" refers to a valid element on the screen can you choose "go on"
@@ -546,33 +552,58 @@ These are knowledge accumulated form previous task execution iterations, you sho
     return prompt
 
 
-def Knowledge_prompt(TASK, ACTION_TRACE):
+def Knowledge_prompt(TASK, ACTION_TRACE, log, l):
+    content = {}
+    content["TASK"] = TASK
+    content["ACTION_TRACE"] = ACTION_TRACE
+    content["Log"] = log
+    content["Error_pieces"] = []
+    for Page, Action in l:
+        content["Error_pieces"].append(
+            [i for j in zip(Page, Action) for i in j])
     return [
         {
             "role": "system",
             "content": """You are an active learner in User Interface (UI) automation. Your task is to learn and summarize UI automation pieces of knowledge from completed User Task and Action Trace.
-You are given the User's Task and a log of ACTION_TRACE, which describes the user behavior in detail. Use the following steps to think:
-1, Reproduce the ACTION_TRACE step by step, focusing on each page and analyzing if each step has expectedly leading to the right page. Reason step by step on the insights of the relationship between TASK and ACTION-TRACE from a higher level and generate SOFT knowledge of connecting them, it could be hints, experiences, or more.
-    1.1, Specificly, think step by step on what kind of SOFT knowledge can be extracted from them to guide better action-selection, which means how an AI agent choose correct next-step when exploring in the UI.(i.e. "In settings page, network functions would be more related to 'Newwork' button"......)
-    1.2, Then think step by step on what kind of SOFT knowledge can be extracted from them to guide better status-decision, which means how an AI agent decide the status of task execution, either finished or in-the-process or wrong. (i.e. "If a switch button is clicked from off to on, that would imply that the completion of 'Turn on XXX' task")
-2, Follow the action trace to reproduce the execution process, focusing on the error backtracking process if any (that is, when the traces go wrong and then navigate back to correct). Think step by step about each backtrack and summarize error knowledge from them; it could be notices, traps, or other formats.
-3, While summarizing knowledge, you should also output corresponding action id with the knowledge. That is, where you found the knowledge.
-"""
-        }, {
-            "role": "user",
-            "content": """TASK:{}
-ACTION TRACE:{}
-Be smart and insightful, think step by step, finally,summarize them into a json format:""".format(TASK, ACTION_TRACE)
-        },
-        {
-            "role": "user",
-            "content": """'''HTML
+You are given the User's Task and a log of ACTION_TRACE generated by another AI agent. 
+The other AI agent is an intelligent AI for UI task execution, which has a workflow of [predict-evaluate-decide], i.e., it first calculates the follow-up of each page according to the UI Pagejump database, then scores the elements on the page related to the user's task, and finally decides the status of task completion. Eventually the task is completed successfully.
+The accuracy of this AI agent needs to be improved, so your task is to analyse the work log of this AI agent to help it summarise and analyse the illuminating knowledge that may be present in each step of the process, which will be subsequently injected into the AI agent to aid better task execution!
+You are given:
 {
-    "selection":[{"knowledge":"","index":"Action_x_to_y"}](organize as a list if have)
-    "decision"[{"knowledge":"","index":"Action_x_to_y"}](organize as a list if have)
-    "error-handling":[{"knowledge":"","index":"Action_x_to_y"}](organize as a list if have)
-}'''"""
-        }
+    "TASK": "..."(User's Task),
+    "ACTION_TRACE": "..."(ACTION_TRACE),
+    "Log":[](Detailed LOG from the other AI agent),
+    "Error_pieces": [Page1,Action1-2.Page2,...](Error_pieces extracted from ACTION_TRACE, which you should deeply analyse and summarize knowledge from),
+}
+Use the following steps to think:
+1, Observe the correct part of the UI execution path of the task as described in TASK and ACTION_TRACE (excluding the error branches such as navigate back), to provide ground-truth for the subsequent analysis.
+2, Analyse the extracted Error_pieces, they are the error branches that appeared when the AI agent explored the task execution on the UI, fortunately these errors were successfully recovered by the agent's error correction session, which led to the final completion of the task. But these errors also indicate that the Agent's understanding of the task was off during execution, you need to analyse these errors and summarise the knowledge for subsequent error correction. You need:
+    2,1: Replicate Error_pieces and observe each new page that is accessed by incorrect operation due to selection, and analyse the gap with the ground-truth summarised in the first step;
+    2,2: Summarise the reasons why this part of Error_pieces is wrong, is it due to the lack of relevant UI experience in the [Prediction] phase? Or is it due to an error in the scoring or reasoning of the AI agent during [Selection]? Or is it due to a simple [decision-making] error?
+        2.2.1: If an error is caused by the lack of UI knowledge, it means that the error in this step is caused by the AI agent's lack of UI knowledge in the [Prediction] stage, i.e., it doesn't know what will be caused by clicking this button; if the error is caused by the error in selection, it means that there is a problem with the AI agent's analysis and scoring, and it is that the agent itself is not competent enough If the error is due to an error in [Decision], it means that the agent don't know how to decide the task status as wrong or right.
+    2.3: After thinking about the reasons for the mistakes, summarise the inspiring knowledge contained therein, noting that this part of the knowledge will be injected into the other AI agent for the subsequent execution of the UI task.
+    2.4: Bind the knowledge to the page, i.e., the page on which this knowledge is found, so that it can help the other AI agent to better choose the correct action in the subsequent execution of the task. Bind the type of knowledge, is it the knowledge of [Prediction], [Execution] or [Decision] stage?
+3, if you feel that there is valuable knowledge throughout the execution of the task, you can also summarise it;
+4, summarise and output as a json file in the following format:
+'''HTML
+{
+    "prediction":[{"knowledge":"","index":"Page_x"}](organize as a list if have,remove x in Page_x to indicate the page index in ACTION_TRACE["PAGES"] starting from Page_0 )
+    "selection":[{"knowledge":"","index":"Page_x"}](organize as a list if have,remove x in Page_x to indicate the page index in ACTION_TRACE["PAGES"] starting from Page_0)
+    "decision"[{"knowledge":"","index":"Page_x"}](organize as a list if have,remove x in Page_x to indicate the page index in ACTION_TRACE["PAGES"] starting from Page_0)
+}'''
+NOTE:
+a, You should generate inspiring and high-level and concrete knowledge that is relevant to the task exection and valuable for the agent to follow, don't just copy the error or generate simple and meaningless knowledge that is common knowledge or generate ambiguous knowledge that is not helpful for the agent to follow.
+    a.1:Good example: "When the user wants to add a new contact, the agent should not click the "Add" button on the main page, but should click the "Add" button on the contact page."
+                "when the user enter into a form page, it should input all the necceary information first and then click the "Submit" button to submit the form."
+    a.2:Bad example: "The agent should optimize the scoring process"(too abstract)
+                "Scroll forward to explore more elements"(already known common knowledge)
+                "if agent enters into a page with no relevant pages, should recognize wrong and navigate back"(already known by the agent)
+                "When the task is to change an application setting such as a theme, prioritize selecting the 'Settings' option from the menu."(too meaningless and not valuable, the agent already known)
+                "When task is XXX, A should be clicked rather than B" (too specific and not valuable, not generalizable)
+"""}, {
+            "role": "user",
+            "content": json.dumps(content, indent=4)
+        },
     ]
 
 
@@ -637,10 +668,10 @@ def process_ACTION_TRACE(ACTION_TRACE):
 
 
 def coverage(text1, text2):
-    if isinstance(text1, str):
+    if isinstance(text1, str) and isinstance(text2, str):
         words1 = set(text1.split())
         words2 = set(text2.split())
-    elif isinstance(text1, list):
+    elif isinstance(text1, list) and isinstance(text2, list):
         words1 = set(text1)
         words2 = set(text2)
 
@@ -667,5 +698,12 @@ def simplify_ui_element(html_str):
 
     # 压缩多余空格
     html_str = re.sub(r'\s+', ' ', html_str).strip()
+
+    return html_str if html_str != "" else " "
+
+
+def simplify_ui_element_id(html_str):
+    # 移除id属性
+    html_str = re.sub(r'\sid=[\'"]?\w+[\'"]?', '', html_str)
 
     return html_str if html_str != "" else " "

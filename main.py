@@ -1,4 +1,5 @@
 import json
+import pickle
 from pynput import keyboard
 import argparse
 import shutil
@@ -17,7 +18,7 @@ import logging
 
 import click
 
-from src.utility import process_ACTION_TRACE, coverage
+from src.utility import process_ACTION_TRACE, coverage, simplify_ui_element_id, simplify_ui_element
 
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
@@ -65,6 +66,7 @@ def heat_beat():
     if force_load:
         force_load_count = 0
         auto_load = False
+        print("send force_load")
     return jsonify({
         "state": 'success',
         "force_load": force_load
@@ -79,6 +81,8 @@ def wait_and_load_decorator(function):
         result = function(*args, **kwargs)
         if isinstance(result, dict) and 'action_type' in result:
             auto_load = True
+        else:
+            print("not auto load")
         return result
     return wrapped_function
 
@@ -108,14 +112,15 @@ def demo() -> Union[str, Response]:
                 Graph.add_edge(model.prev_model.node_in_graph,
                                model.node_in_graph, model.prev_model.edge_in_graph)
         ACTION_TRACE["PAGES"].append(
-            model.screen.page_root.generate_all_text().split("-"))
+            list(
+                map(simplify_ui_element, model.screen.semantic_info_half_warp)))
         if len(COMPUTATIONAL_GRAPH) > 1 and model.screen.semantic_info_all_warp == COMPUTATIONAL_GRAPH[-2].screen.semantic_info_all_warp:
             if MODE == "normal":
                 STATUS_SAME = True
                 STATUS = "backtracking"
             elif MODE == "preserve":
                 STATUS = "running"
-            return Response("0")
+            return {"node_id": 1, "trail": "[0,0]", "action_type": ""}
         result, work_status = model.work(
             ACTION_TRACE=process_ACTION_TRACE(ACTION_TRACE))
         model.final_result = result
@@ -153,13 +158,13 @@ def demo() -> Union[str, Response]:
             COMPUTATIONAL_GRAPH[INDEX].wrong_reason)
         if STATUS_SAME:
             ACTION_TRACE["PAGES"].append(
-                "SAME page as last one")
+                ["SAME page as last one"])
             ACTION_TRACE["ACTION"].append("上步操作没有响应，因此是错误的")
             ACTION_TRACE["ACTION_DESC"].append("BACK")
             STATUS_SAME = False
         else:
-            ACTION_TRACE["PAGES"].append(
-                COMPUTATIONAL_GRAPH[INDEX].screen.page_root.generate_all_text().split("-"))
+            ACTION_TRACE["PAGES"].append(list(map(
+                simplify_ui_element, COMPUTATIONAL_GRAPH[INDEX].screen.semantic_info_half_warp)))
             ACTION_TRACE["ACTION"].append("Navigate back due to error")
             ACTION_TRACE["ACTION_DESC"].append("BACK")
 
@@ -232,7 +237,7 @@ def keyboard_listener():
 
 
 if __name__ == "__main__":
-    default_cmd = "enable quickly open camera function in setting"
+    default_cmd = "Disable the schedule for the battery saver mode on the phone."
 
     parser = argparse.ArgumentParser(
         description="Flask app with argparse integration")
@@ -248,6 +253,7 @@ if __name__ == "__main__":
     MODE = args.mode
     LOAD = args.load
     if LOAD:
+        Graph = UINavigationGraph("./cache/Graph.pkl")
         Graph.load_from_pickle("cache/Graph.pkl")
     else:
         Graph = UINavigationGraph(
