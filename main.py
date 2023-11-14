@@ -139,6 +139,7 @@ def demo() -> Union[str, Response]:
         elif work_status == "Execute":
             ACTION_TRACE["ACTION"].append(model.log_json["@Current_Action"])
             ACTION_TRACE["ACTION_DESC"].append("NEXT")
+            copy_to_file(TASK)
             if MODE == "normal":
                 STATUS = "start"
             elif MODE == "preserve":
@@ -190,6 +191,7 @@ def demo() -> Union[str, Response]:
                     COMPUTATIONAL_GRAPH[INDEX].log_json["@Current_Action"])
                 ACTION_TRACE["ACTION_DESC"].append(
                     "Retry after error detection")
+                copy_to_file(TASK)
                 if MODE == "normal":
                     STATUS = "start"
                 elif MODE == "preserve":
@@ -206,6 +208,24 @@ def demo() -> Union[str, Response]:
             print("------------------------back--------------------------")
             return {"node_id": 1, "trail": "[0,0]", "action_type": "back"}
     return Response("0")
+
+
+def copy_to_file(task_name):
+    global ACTION_TRACE
+    with open(os.path.join(os.path.dirname(__file__), "logs/final.json"), 'w', encoding="utf-8") as f:
+        json.dump(ACTION_TRACE, f, ensure_ascii=False, indent=4)
+    task_name = task_name.replace(" ", "_").replace(":", '_')
+    if os.path.exists("./Shots/{}".format(task_name)):
+        shutil.rmtree("./Shots/{}".format(task_name))
+        shutil.copytree("./logs", "./Shots/{}/log".format(task_name))
+        shutil.copytree("./Page/data", "./Shots/{}/data".format(task_name))
+        shutil.copytree("./src/gpt_res",
+                        "./Shots/{}/gpt_res".format(task_name))
+    else:
+        shutil.copytree("./logs", "./Shots/{}/log".format(task_name))
+        shutil.copytree("./Page/data", "./Shots/{}/data".format(task_name))
+        shutil.copytree("./src/gpt_res",
+                        "./Shots/{}/gpt_res".format(task_name))
 
 
 def save_to_file(task_name):
@@ -260,11 +280,14 @@ if __name__ == "__main__":
     TASK = args.task
     MODE = args.mode
     LOAD = args.load
+    print(LOAD)
     PER = args.percentage
     if LOAD:
+        print("Loading")
         Graph = UINavigationGraph("cache/random/Graph_"+str(PER)+".pkl")
         Graph.merge_from_random(k=PER)
     else:
+        print("Not Loading")
         Graph = UINavigationGraph(
             "./cache/Graph_"+TASK.replace(" ", "_")+".pkl")
 
