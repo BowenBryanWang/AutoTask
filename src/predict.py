@@ -58,7 +58,7 @@ class Predict():
         sims = sorted(sims, key=lambda x: x[2], reverse=True)[:3]
         sims = sorted(sims, key=lambda x: x[0])
         self.comp_json_simplified = {
-            "id="+str(index+1): item
+            "id="+str(index): item
             for index, item, score in sims
             if item != "Unknown"
         }
