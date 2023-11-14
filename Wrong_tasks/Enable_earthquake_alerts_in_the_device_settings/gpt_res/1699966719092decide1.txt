@@ -1,0 +1,53 @@
+system:
+You are a professor with in-depth knowledge of User Interface (UI) tasks. You are assigned a specific UI task, a history operation sequence, and the current UI (which is the result of the last action).
+Your task is to evaluate if the operation sequence and the current UI can further lead to the user task fulfillment. You should categorize the STATUS as:
+1,completed: After the Latest action and the subsequent newest UI screen, the user's task is completed;
+2,wrong: After the Latest action and the subsequent newest UI screen, the Last Action is not correct and the current UI cannot further lead to the UI task anymore (You should choose "wrong" if you think navigating back is necessary to finish the task).
+3,go on: After the Latest action and the subsequent newest UI screen, the Last Action is on the correct track, which means the agent can continue to perform further operations (excluding navigating back) to complete the task. Further Actions should be taken on the current (may also be the subsequent pages) UI page.
+Use the following steps to respond. Fully restate each step number before proceeding. i.e. "Step 1".
+Step 1:Reason step-by-step about the the history ACTIONs (especially the last action leading to the Current UI)and UI TASK. Whether Last Action can contribute to fulfill the user's task IN THE LONG RUN?
+Step 2:Reason step-by-step about whether LATEST UI PAGE can further lead to the UI task fulfillment IN THE LONG RUN. Can any element on screen be operated next to lead to the fulfillment of the task?
+Step 3:Reason step-by-step about whether there are any elements with GENERAL proposes that are worthy being explored. If any, you should also choose "go on" and explore them. A kind note: if you find <scroll /> elements, it means that you can try to scroll forward to explore more elements on the screen. so you can also choose "go on" if you think there are elements worthy being explored.
+Step 4:Synthesize the above thoughts and output a conclusion on the STATUS as a JSON object structured like:
+Hint:
+1, if the history operation sequence actually indicates the completion, should consider "completed", i.e. Last step clicking OK may lead to completion
+{
+    "next ui element": if the value of the status is "go on", please also output the next ui element to be operated. The status should not be "go on" if none element in the UI page can be the next.
+    "status": "completed" or "wrong" or "go on". Attention that only when "next ui element" refers to a valid element on the screen can you choose "go on"
+    "reason": reason for the decision,
+}.
+
+user:
+Task:Check data usage on the device
+Last Action:
+NOTE in this History Pages and Action Dict format:
+1, Here "Page_X"  means each page UI elements that the user has gone through.
+2, Here "Action_x_to_y"  means the action which operated on x and leads to y.
+History Pages and Action Dict:{'ACTION': ["Click on clickable 'android:id/title' Network & internet 'android:id/summary' Wi‑Fi, mobile, data usage, and hotspot"], 'ACTION_DESC': ['NEXT'], 'PAGES': [['android.widget.ScrollView', "clickable 'android:id/title' Network & internet 'android:id/summary' Wi‑Fi, mobile, data usage, and hotspot", "clickable 'android:id/title' Connected devices 'android:id/summary' Bluetooth", "clickable 'android:id/title' Apps & notifications 'android:id/summary' Recent apps, default apps", "clickable 'android:id/title' Battery 'android:id/summary' 100%", "clickable 'android:id/title' Display 'android:id/summary' Wallpaper, sleep, font size", "clickable 'android:id/title' Sound 'android:id/summary' Volume, vibration, Do Not Disturb", "clickable 'android:id/title' Storage 'android:id/summary' 26% used - 5.89 GB free", "clickable 'android:id/title' Privacy 'android:id/summary' Permissions, account activity, personal data"], ['Network & internet', "'Wi‑Fi' clickable 'android:id/title' Wi‑Fi 'android:id/summary' AndroidWifi 'com.android.settings:id/switchWidget' clickable On", "clickable 'android:id/title' Mobile network 'android:id/summary' T-Mobile", "clickable 'android:id/title' Airplane mode 'android:id/switch_widget' clickable Off", "clickable 'android:id/title' Mobile plan", "clickable 'android:id/title' Hotspot & tethering 'android:id/summary' Off", "clickable 'android:id/title' Advanced 'android:id/summary' Data Saver, VPN, Private DNS"]], 'Page_0': ['android.widget.ScrollView', "clickable 'android:id/title' Network & internet 'android:id/summary' Wi‑Fi, mobile, data usage, and hotspot", "clickable 'android:id/title' Connected devices 'android:id/summary' Bluetooth", "clickable 'android:id/title' Apps & notifications 'android:id/summary' Recent apps, default apps", "clickable 'android:id/title' Battery 'android:id/summary' 100%", "clickable 'android:id/title' Display 'android:id/summary' Wallpaper, sleep, font size", "clickable 'android:id/title' Sound 'android:id/summary' Volume, vibration, Do Not Disturb", "clickable 'android:id/title' Storage 'android:id/summary' 26% used - 5.89 GB free", "clickable 'android:id/title' Privacy 'android:id/summary' Permissions, account activity, personal data"], 'Action_0_to_1': "Click on clickable 'android:id/title' Network & internet 'android:id/summary' Wi‑Fi, mobile, data usage, and hotspot", 'Page_1': ['Network & internet', "'Wi‑Fi' clickable 'android:id/title' Wi‑Fi 'android:id/summary' AndroidWifi 'com.android.settings:id/switchWidget' clickable On", "clickable 'android:id/title' Mobile network 'android:id/summary' T-Mobile", "clickable 'android:id/title' Airplane mode 'android:id/switch_widget' clickable Off", "clickable 'android:id/title' Mobile plan", "clickable 'android:id/title' Hotspot & tethering 'android:id/summary' Off", "clickable 'android:id/title' Advanced 'android:id/summary' Data Saver, VPN, Private DNS"]}
+
+Latest UI Page:["<p class=''  > Network & internet </p>\n", "<div id=1  description='Wi‑Fi' clickable> \n    <p class='android:id/title'  > Wi‑Fi </p>\n\n    <p class='android:id/summary'  > AndroidWifi </p>\n\n    <switch id=2 class='com.android.settings:id/switchWidget' clickable > On </switch>\n </div>\n", "<div id=3   clickable> \n    <p class='android:id/title'  > Mobile network </p>\n\n    <p class='android:id/summary'  > T-Mobile </p>\n </div>\n", "<div id=4   clickable> \n    <p class='android:id/title'  > Airplane mode </p>\n\n    <switch id=5 class='android:id/switch_widget' clickable > Off </switch>\n </div>\n", "<div id=6   clickable> \n    <p class='android:id/title'  > Mobile plan </p>\n </div>\n", "<div id=7   clickable> \n    <p class='android:id/title'  > Hotspot & tethering </p>\n\n    <p class='android:id/summary'  > Off </p>\n </div>\n", "<div id=8   clickable> \n    <p class='android:id/title'  > Advanced </p>\n\n    <p class='android:id/summary'  > Data Saver, VPN, Private DNS </p>\n </div>\n"]
+([] means it's empty in the latest page and cannot go on)
+
+
+===response===
+Step 1:
+The history of actions indicates that the user is trying to check data usage on the device. The last action taken was to click on the "Network & internet" setting which is relevant to the task at hand since it is a category that typically includes data usage information. This action led to the current UI, which lists various settings related to network and internet, such as "Wi-Fi," "Mobile network," "Airplane mode," "Mobile plan," "Hotspot & tethering," and "Advanced."
+
+Step 2:
+The latest UI page shows several options, but none are explicitly labeled as data usage. However, the "Mobile network" option is typically where one might find data usage information on many devices. Therefore, it is reasonable to assume that clicking on the "Mobile network" could lead to a page where data usage could be checked. Additionally, the "Advanced" option might also contain data usage information as it sometimes includes additional network-related settings.
+
+Step 3:
+There are no general-purpose elements such as a "<scroll />" element indicating that there might be more options available off-screen. However, based on the options currently visible, "Mobile network" and "Advanced" are worth exploring since they are likely to contain information related to data usage.
+
+Step 4:
+Synthesizing the information from the previous steps, the status is "go on" because there are elements on the current UI page that are relevant to the task and can be operated next to potentially lead to the fulfillment of the task. The "Mobile network" option is the most likely next step, followed by "Advanced" if the former does not provide the necessary information.
+
+The conclusion is as follows:
+
+```json
+{
+    "next ui element": "'Mobile network' or 'Advanced'",
+    "status": "go on",
+    "reason": "The 'Mobile network' and 'Advanced' options on the current UI page are likely to contain data usage information, which is necessary to complete the user's task of checking data usage on the device."
+}
+```

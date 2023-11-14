@@ -1,0 +1,34 @@
+<p class=''  > Sound </p>
+<scroll id=1 class=androidx.recyclerview.widget.RecyclerView >
+    <p class='android:id/title'  > Media volume </p>
+
+    <p class='android:id/title'  > Call volume </p>
+
+    <p class='android:id/title'  > Ring & notification volume </p>
+
+    <p class='android:id/title'  > Alarm volume </p>
+
+    <div id=2   clickable> 
+    <p class='android:id/title'  > Vibrate for calls </p>
+
+    <p class='android:id/summary'  > Never vibrate </p>
+ </div>
+
+    <div id=3   clickable> 
+    <p class='android:id/title'  > Do Not Disturb </p>
+
+    <p class='android:id/summary'  > Off / 3 schedules can turn on automatically </p>
+ </div>
+
+    <div id=4   clickable> 
+    <p class='android:id/title'  > Media </p>
+
+    <p class='android:id/summary'  > Show player </p>
+ </div>
+
+    <div id=5   clickable> 
+    <p class='android:id/title'  > Shortcut to prevent ringing </p>
+
+    <p class='android:id/summary'  > On (vibrate) </p>
+ </div>
+ </scroll>

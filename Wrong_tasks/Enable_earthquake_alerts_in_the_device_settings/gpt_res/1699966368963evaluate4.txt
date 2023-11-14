@@ -1,0 +1,71 @@
+system:
+You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
+Your job is to rate the available UI elements on the current page.
+Note that:
+    (1) The element with the highest score will be choosen as the next element to be operated. If you have more than one top scoring option in your scoring, it's a good idea to highlight the score of one of the most likely candidates to avoid confusion.
+    (2) Your score should be accurate to two decimal places.
+    (3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
+    (4) <scroll /> element means there is a list and you can interact with it by scrolling forward. If you want to explore more, you can also try giving <scroll/> a relatively high scorat. The score of the <scroll /> should always be higher than that of those appearantly unrelated with the task.
+For each option, provide a confidence rating from 1.00-10.00, based on the relation of each option to the task, where 1.00 is the lowest tier indicating complete irrelevance and may lead to errors, 2.00-4.00 is the second tier indicating minor relevance, 4.00-6.00 is the medium tier indicating neutrality, 6.00-8.00 indicates higher relevance, possibly a candidate, and 10.00 indicates the most likely to be chosen and executed.
+The structure of the output should be: {
+    "id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value and iterate over all possible values), and "<rating>" denotes its rating.
+Example:
+{
+    "id_1": 5.53, "id_2": 9.71, "id_3": 3.20
+}
+Think step by step and output your reasoning process:
+Step 1: think about ["History operation sequence"],what has been done,especially pay attention to those steps which is wrong and caused navigate back if any;
+Step 2: think step by step on the ["Succesive Results"] of each UI options GIVEN by user, which represents the subsequent items after operating on them, and the ["possible paths to UI target"] GIVEN by user, which was suggested by expert knowledge;
+Step 3: decide what should be done next. Possible operations: click, edit (text input), scroll. Pay attention to those steps which is wrong and caused navigate back if any;
+Step 4: Synthesize the above output to output a JSON object with scores.
+
+Strictly output a format like "id_1": 3.00, do not tamper with it to make it look like "scroll_1": 3.00, etc., it must start with id_.
+
+
+user:
+{
+    "Task": "Clear the cache and data in Google.",
+    "History operation sequence": [
+        "Click on clickable 'android:id/title' Apps & notifications 'android:id/summary' Recent apps, default apps",
+        "Click on 'com.android.settings:id/header_details' SEE ALL 18 APPS",
+        "Click on 'com.android.settings:id/search_app_list_menu' 'Search' enabled clickable"
+    ],
+    "Current UI screen": "<div id=1  description='Collapse' enabled  clickable>  </div>\n<input id=2 class='android:id/search_src_text'  enabled editable > Search </input>\n<div id=3  description='More options' enabled  clickable>  </div>\n<scroll id=4 class=androidx.recyclerview.widget.RecyclerView >\n    <div id=5  description='ActionRecord' clickable> \n    <p class='android:id/title'  > ActionRecord </p>\n\n    <p class='android:id/summary'  > 45.85 MB </p>\n </div>\n\n    <div id=6  description='Android Keyboard (AOSP)' clickable> \n    <p class='android:id/title'  > Android Keyboard (AOSP) </p>\n\n    <p class='android:id/summary'  > 135 kB </p>\n </div>\n\n    <div id=7  description='Android System WebView' clickable> \n    <p class='android:id/title'  > Android System WebView </p>\n\n    <p class='android:id/summary'  > 6.81 MB </p>\n </div>\n\n    <div id=8  description='Calendar' clickable> \n    <p class='android:id/title'  > Calendar </p>\n\n    <p class='android:id/summary'  > 49.15 kB </p>\n </div>\n\n    <div id=9  description='Camera' clickable> \n    <p class='android:id/title'  > Camera </p>\n </div>\n </scroll>\n",
+    "Successive results": {},
+    "Hint": "Below is a hint and suggestion from another model{\"next ui element\": \"'android:id/search_src_text' or <scroll>\", \"status\": \"go on\", \"reason\": \"The user is on the correct path and can either scroll to find the Google app or use the search function to complete the task of clearing cache and data.\"}"
+}
+
+===response===
+Step 1: Reviewing the history of operations, the user has navigated through the "Apps & notifications" settings, seen all apps, and then clicked on the search function to presumably find the Google app to clear its cache and data.
+
+Step 2: The current UI screen presents several elements:
+- A collapse button (id_1), which is likely to take the user back and is not relevant to the task at hand.
+- A search input field (id_2), which is relevant as the user may need to search for the Google app.
+- A more options button (id_3), which could provide additional functions but is not directly related to the task of finding the Google app.
+- A scrollable list of apps (id_4), which is relevant if the user prefers to manually find the Google app instead of searching.
+- Various apps listed (id_5 to id_9), none of which are the Google app the user is looking for.
+
+Based on the hint provided by another model, the user is on the correct path and can either use the search function or scroll to find the Google app.
+
+Step 3: Deciding the next step:
+- The collapse button (id_1) should be rated low as it would likely take the user away from their current task.
+- The search input field (id_2) should be rated high as it allows the user to search directly for the Google app.
+- The more options button (id_3) should be rated moderately as it may have some relevance but is not a direct action towards the task.
+- The scrollable list (id_4) should also be rated high as it is another valid method to find the Google app.
+- The listed apps (id_5 to id_9) should be rated low as none of them are the Google app.
+
+Step 4: Synthesizing the output:
+
+{
+    "id_1": 1.00,
+    "id_2": 9.50,
+    "id_3": 4.00,
+    "id_4": 9.00,
+    "id_5": 1.00,
+    "id_6": 1.00,
+    "id_7": 1.00,
+    "id_8": 1.00,
+    "id_9": 1.00
+}
+
+The search input field (id_2) and the scrollable list (id_4) are the most relevant to the task of finding and clearing the cache and data for the Google app. The search input field is slightly more likely to be used next, as it provides a direct way to find the app.

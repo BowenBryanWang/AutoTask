@@ -1,0 +1,78 @@
+system:
+You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
+Your job is to rate the available UI elements on the current page.
+Note that:
+    (1) The element with the highest score will be choosen as the next element to be operated. If you have more than one top scoring option in your scoring, it's a good idea to highlight the score of one of the most likely candidates to avoid confusion.
+    (2) Your score should be accurate to two decimal places.
+    (3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
+    (4) <scroll /> element means there is a list and you can interact with it by scrolling forward. If you want to explore more, you can also try giving <scroll/> a relatively high scorat. The score of the <scroll /> should always be higher than that of those appearantly unrelated with the task.
+For each option, provide a confidence rating from 1.00-10.00, based on the relation of each option to the task, where 1.00 is the lowest tier indicating complete irrelevance and may lead to errors, 2.00-4.00 is the second tier indicating minor relevance, 4.00-6.00 is the medium tier indicating neutrality, 6.00-8.00 indicates higher relevance, possibly a candidate, and 10.00 indicates the most likely to be chosen and executed.
+The structure of the output should be: {
+    "id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value and iterate over all possible values), and "<rating>" denotes its rating.
+Example:
+{
+    "id_1": 5.53, "id_2": 9.71, "id_3": 3.20
+}
+Think step by step and output your reasoning process:
+Step 1: think about ["History operation sequence"],what has been done,especially pay attention to those steps which is wrong and caused navigate back if any;
+Step 2: think step by step on the ["Succesive Results"] of each UI options GIVEN by user, which represents the subsequent items after operating on them, and the ["possible paths to UI target"] GIVEN by user, which was suggested by expert knowledge;
+Step 3: decide what should be done next. Possible operations: click, edit (text input), scroll. Pay attention to those steps which is wrong and caused navigate back if any;
+Step 4: Synthesize the above output to output a JSON object with scores.
+
+Strictly output a format like "id_1": 3.00, do not tamper with it to make it look like "scroll_1": 3.00, etc., it must start with id_.
+
+
+user:
+{
+    "Task": "Check the battery life and usage on the phone.",
+    "History operation sequence": [
+        "Click on clickable 'android:id/title' Battery 'android:id/summary' 100%",
+        "Scroll forward on androidx.recyclerview.widget.RecyclerView",
+        "\u4e0a\u6b65\u64cd\u4f5c\u6ca1\u6709\u54cd\u5e94\uff0c\u56e0\u6b64\u662f\u9519\u8bef\u7684",
+        "Click on clickable 'android:id/title' Battery Manager 'android:id/summary' On / Detecting when apps drain battery",
+        "Scroll forward on androidx.recyclerview.widget.RecyclerView",
+        "\u4e0a\u6b65\u64cd\u4f5c\u6ca1\u6709\u54cd\u5e94\uff0c\u56e0\u6b64\u662f\u9519\u8bef\u7684",
+        "Scroll forward on androidx.recyclerview.widget.RecyclerView",
+        "Scroll forward on androidx.recyclerview.widget.RecyclerView",
+        "\u4e0a\u6b65\u64cd\u4f5c\u6ca1\u6709\u54cd\u5e94\uff0c\u56e0\u6b64\u662f\u9519\u8bef\u7684",
+        "Click on 'More options' enabled clickable",
+        "Click on clickable 'android:id/title' Battery usage",
+        "Navigate back due to error"
+    ],
+    "Current UI screen": "<div id=1   clickable> \n    <p class='android:id/title'  > Battery usage </p>\n </div>\n",
+    "Successive results": {
+        "id=1": [
+            "Battery usage",
+            "'More options' enabled clickable",
+            "'com.android.settings:id/charge' 100%",
+            "'com.android.settings:id/label_top' 100%",
+            "'com.android.settings:id/label_middle' 50%",
+            "'com.android.settings:id/label_bottom' 0%",
+            "'com.android.settings:id/label_start' 4 days ago",
+            "'android:id/title' BATTERY USAGE SINCE FULL CHARGE",
+            "'android:id/title' Battery usage data isn\u2019t available."
+        ]
+    },
+    "Hint": "Below is a hint and suggestion from another model{\"next ui element\": \"clickable 'android:id/title' Battery usage\", \"status\": \"go on\", \"reason\": \"The only UI element available is directly related to the task, and the user has been navigated back to this point to retry accessing the battery usage information.\"}",
+    "possible paths to UI target": {
+        "Battery usage": [
+            "Click on <div   clickable> \n    <p class='android:id/title'  > Battery usage </p>\n </div>\n"
+        ],
+        "clickable 'android:id/title' Battery usage": []
+    }
+}
+
+===response===
+Step 1: Reviewing the history of operations, it appears that the user has attempted to access battery-related information multiple times, with several of those attempts resulting in no response and thus being erroneous. The user also tried to access "Battery usage" but then navigated back due to an error.
+
+Step 2: The successive results for "id=1" indicate that clicking on the "Battery usage" element should lead to a screen with detailed battery usage information, including percentages, time labels, and titles relevant to battery information tracking.
+
+Step 3: Given that the task is to check the battery life and usage on the phone, and considering the hint provided which suggests that the user should click on the "Battery usage" element to proceed, it seems clear that the next step is to interact with this UI element.
+
+Step 4: Since the "Battery usage" element is the only one available on the current UI screen and is directly related to the task at hand, it should be given the highest score. The successive results and the hint both reinforce that this element is the correct one to interact with to complete the user's task.
+
+Based on the above analysis, the JSON object with scores is as follows:
+
+{
+    "id_1": 10.00
+}

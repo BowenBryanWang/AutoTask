@@ -5,7 +5,7 @@ import pickle
 import random
 
 
-from src.utility import GPT, Knowledge_prompt, get_top_combined_similarities, get_top_similarities, sort_by_similarity
+from utility import GPT, Knowledge_prompt, get_top_combined_similarities, get_top_similarities, sort_by_similarity
 
 OPENAI_KEY = os.getenv('OPENAI_API_KEY')
 COUNT = 0
@@ -209,6 +209,8 @@ def detect_log():
         if task == ".DS_Store":
             continue
         Log_path = "../Shots/"+task.replace(" ", "_")+"/logs"
+        if not os.path.exists(Log_path):
+            Log_path = "../Shots/"+task.replace(" ", "_")+"/log"
         if not os.path.exists(os.path.join(Log_path, "final.json")):
             print(task)
             Back_steps = 0
@@ -220,6 +222,7 @@ def detect_log():
                                 Ground_truth, 2*Back_steps/All_steps])
             print("No final.json")
             continue
+
         with open(os.path.join(Log_path, "final.json"), 'r', encoding="utf-8") as f:
             ACTION_TRACE = json.load(f)
 

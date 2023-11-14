@@ -1,0 +1,80 @@
+system:
+You are an expert in UI automation and robust error handling. Your task is to critic a operation sequence produced by a [primitive LLM],following user task but inaccurate. 
+Utilizing the log files from each module of current step of the [primitive LLM], you should locate error in the final element chosen to operate on.
+[primitive LLM] works in which they cannot see further information on UI, but you are in the backtracking process so you should utilize further information observed from subsequent UI to help correct possible errors.
+Specifically, you should analyze the [Latest Action] and the [Successive Page] information to determine the extent of error on fulfilling the task, and then output the punishment coefficient to it.
+Follow the steps below and think step by step:
+a. Understand the information given and synthize, especially [Latest Action] and its subsequent result [Successive Page];
+b, Think step by step about the scoring result by [Evaluation Module], try to identify error causes on the LATEST ACTION and give [Punishment Coefficient] from 1-10, where 1 means no error and 10 means totally wrong;
+Finally, output a JSON format like this example:
+{
+    "punishment":
+    {
+        "id_x": 1,
+        ......(replace x to the element with id that you think causes the error, output your punishment coefficient from 0-10)
+    }
+}
+
+
+user:
+
+                Wrong reason: The current UI page does not contain the setting to disable app installations from unknown sources, and none of the available options seem to lead towards fulfilling the user's task. The user needs to navigate back or to a different section to find the correct setting.
+                
+
+user:
+
+                User intent: Disable the option to install apps from unknown sources on the device.
+                
+
+user:
+
+                Page components: ["<scroll id=1 class=android.widget.ScrollView >\n    <div id=2   clickable> \n    <p class='android:id/title'  > Network & internet </p>\n\n    <p class='android:id/summary'  > Wi‑Fi, mobile, data usage, and hotspot </p>\n </div>\n\n    <div id=3   clickable> \n    <p class='android:id/title'  > Connected devices </p>\n\n    <p class='android:id/summary'  > Bluetooth, Android Auto </p>\n </div>\n\n    <div id=4   clickable> \n    <p class='android:id/title'  > Apps & notifications </p>\n\n    <p class='android:id/summary'  > Recent apps, default apps </p>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Battery </p>\n\n    <p class='android:id/summary'  > 100% </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Display </p>\n\n    <p class='android:id/summary'  > Wallpaper, sleep, font size </p>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > Sound </p>\n\n    <p class='android:id/summary'  > Volume, vibration, Do Not Disturb </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 28% used - 5.77 GB free </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n </scroll>\n"]
+                
+
+user:
+
+                Previous Steps:  -> Click on clickable 'android:id/title' Privacy 'android:id/summary' Permissions, account activity, personal data
+                
+
+user:
+
+                Action on this step: Click on clickable 'android:id/title' Privacy 'android:id/summary' Permissions, account activity, personal data
+                
+
+user:
+
+                    Latest Page: ["<p class=''  > Privacy </p>\n", "<div id=1   clickable> \n    <p class='android:id/title'  > Accessibility usage </p>\n\n    <p class='android:id/summary'  > 1 app has full access to your device </p>\n </div>\n", "<div id=2   clickable> \n    <p class='android:id/title'  > Permission manager </p>\n\n    <p class='android:id/summary'  > Control app access to your data </p>\n </div>\n", "<div id=3   clickable> \n    <p class='android:id/title'  > Show passwords </p>\n\n    <p class='android:id/summary'  > Display characters briefly as you type </p>\n\n    <switch id=4 class='android:id/switch_widget' clickable > On </switch>\n </div>\n", "<div id=5   clickable> \n    <p class='android:id/title'  > Notifications on lock screen </p>\n\n    <p class='android:id/summary'  > Show all notification content </p>\n </div>\n", "<div id=6   clickable> \n    <p class='android:id/title'  > Advanced </p>\n\n    <p class='android:id/summary'  > App content, Autofill service from Google, Google location history, Activity controls, Ads, Usage & diagnostics </p>\n </div>\n"]
+                    
+
+user:
+
+                Modules: {'Name': 'Evaluate', 'Description': "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent", 'Score': {'<scroll id=1 class=android.widget.ScrollView > </scroll>\n': 2.7598791620081413, "<div id=2   clickable> \n    <p class='android:id/title'  > Network & internet </p>\n\n    <p class='android:id/summary'  > Wi‑Fi, mobile, data usage, and hotspot </p>\n </div>\n": 1.7921693708148185, "<div id=3   clickable> \n    <p class='android:id/title'  > Connected devices </p>\n\n    <p class='android:id/summary'  > Bluetooth, Android Auto </p>\n </div>\n": 1.7949140831610746, "<div id=4   clickable> \n    <p class='android:id/title'  > Apps & notifications </p>\n\n    <p class='android:id/summary'  > Recent apps, default apps </p>\n </div>\n": 7.30444091934454, "<div id=5   clickable> \n    <p class='android:id/title'  > Battery </p>\n\n    <p class='android:id/summary'  > 100% </p>\n </div>\n": 1.7872499218273437, "<div id=6   clickable> \n    <p class='android:id/title'  > Display </p>\n\n    <p class='android:id/summary'  > Wallpaper, sleep, font size </p>\n </div>\n": 1.7920226972483266, "<div id=7   clickable> \n    <p class='android:id/title'  > Sound </p>\n\n    <p class='android:id/summary'  > Volume, vibration, Do Not Disturb </p>\n </div>\n": 1.7863790179362797, "<div id=8   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 28% used - 5.77 GB free </p>\n </div>\n": 1.7746227269201598, "<div id=9   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n": 10.295316859431235}, 'Punishment coefficient': [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], 'GPT answer': {'id_1': 2.0, 'id_2': 1.0, 'id_3': 1.0, 'id_4': 6.5, 'id_5': 1.0, 'id_6': 1.0, 'id_7': 1.0, 'id_8': 1.0, 'id_9': 9.5}}
+                
+
+===response===
+Based on the information provided:
+
+1. The user's intent is to disable the option to install apps from unknown sources on the device.
+2. The [Latest Action] taken by the [primitive LLM] was to click on the "Privacy" section, which is related to permissions, account activity, and personal data.
+3. The [Successive Page] shows various options under the "Privacy" section but does not contain any settings related to installing apps from unknown sources.
+4. The [Evaluation Module] has scored the "Privacy" section the highest, indicating that it was the most likely section to contain the setting to disable app installations from unknown sources based on the primitive LLM's understanding.
+5. The [Punishment Coefficient] currently for all elements is 1.0, which means no error has been identified by the [primitive LLM].
+
+After analyzing the provided log files, it is evident that the [primitive LLM] has made an error in fulfilling the user's task. The correct section to disable app installations from unknown sources is typically found within the "Security" or "Apps & notifications" settings, not under "Privacy."
+
+Given that the "Privacy" section was incorrectly chosen and does not lead to the user's intended action, and considering the severity of the error in the context of UI automation where navigating to the correct section is crucial, the punishment coefficient should be high.
+
+However, since "Apps & notifications" could potentially contain the setting for unknown sources (depending on the device and version of the operating system), and this section appears in the components list, the error is not the maximum severity as the correct section is present but was not selected.
+
+Therefore, the punishment coefficient for the element with id_9 (Privacy section) should be high but not the maximum. I would assign a punishment coefficient of 8 to reflect this significant error but acknowledge that the correct section was present on the page.
+
+Here is the JSON output with the punishment coefficient:
+
+```json
+{
+    "punishment":
+    {
+        "id_9": 8
+    }
+}
+```

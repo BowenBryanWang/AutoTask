@@ -1,0 +1,72 @@
+system:
+You are an expert in UI automation and robust error handling. Your task is to critic a operation sequence produced by a [primitive LLM],following user task but inaccurate. 
+Utilizing the log files from each module of current step of the [primitive LLM], you should locate error in the final element chosen to operate on.
+[primitive LLM] works in which they cannot see further information on UI, but you are in the backtracking process so you should utilize further information observed from subsequent UI to help correct possible errors.
+Specifically, you should analyze the [Latest Action] and the [Successive Page] information to determine the extent of error on fulfilling the task, and then output the punishment coefficient to it.
+Follow the steps below and think step by step:
+a. Understand the information given and synthize, especially [Latest Action] and its subsequent result [Successive Page];
+b, Think step by step about the scoring result by [Evaluation Module], try to identify error causes on the LATEST ACTION and give [Punishment Coefficient] from 1-10, where 1 means no error and 10 means totally wrong;
+Finally, output a JSON format like this example:
+{
+    "punishment":
+    {
+        "id_x": 1,
+        ......(replace x to the element with id that you think causes the error, output your punishment coefficient from 0-10)
+    }
+}
+
+
+user:
+
+                Wrong reason: 
+                
+
+user:
+
+                User intent: Turn on severe threats in wireless emergency alerts on your phone
+                
+
+user:
+
+                Page components: ["<scroll id=1 class=android.widget.ScrollView >\n    <div id=2   clickable>  </div>\n\n    <div id=3   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 26% used - 5.89 GB free </p>\n </div>\n\n    <div id=4   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Location </p>\n\n    <p class='android:id/summary'  > On - 1 app has access to location </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Security </p>\n\n    <p class='android:id/summary'  > Screen lock, fingerprint </p>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > Accounts </p>\n\n    <p class='android:id/summary'  > No accounts added </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Accessibility </p>\n\n    <p class='android:id/summary'  > Screen readers, display, interaction controls </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Google </p>\n\n    <p class='android:id/summary'  > Services & preferences </p>\n </div>\n\n    <div id=10   clickable> \n    <p class='android:id/title'  > System </p>\n\n    <p class='android:id/summary'  > Languages, gestures, time, backup </p>\n </div>\n\n    <div id=11   clickable> \n    <p class='android:id/title'  > About emulated device </p>\n\n    <p class='android:id/summary'  > Android SDK built for x86 </p>\n </div>\n </scroll>\n"]
+                
+
+user:
+
+                Previous Steps:  -> Scroll forward on android.widget.ScrollView -> Scroll forward on android.widget.ScrollView -> Scroll forward on android.widget.ScrollView
+                
+
+user:
+
+                Action on this step: Scroll forward on android.widget.ScrollView
+                
+
+user:
+Latest Page is the same as last one! Last action did not cause any changes so it's wrong
+
+user:
+
+                Modules: {'Name': 'Evaluate', 'Description': "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent", 'Score': {'<scroll id=1 class=android.widget.ScrollView > </scroll>\n': 10.778750002791892, '<div id=2   clickable>  </div>\n': 1.7429752998032808, "<div id=3   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 26% used - 5.89 GB free </p>\n </div>\n": 1.771805455658907, "<div id=4   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n": 1.7929240599908602, "<div id=5   clickable> \n    <p class='android:id/title'  > Location </p>\n\n    <p class='android:id/summary'  > On - 1 app has access to location </p>\n </div>\n": 1.7896330889570273, "<div id=6   clickable> \n    <p class='android:id/title'  > Security </p>\n\n    <p class='android:id/summary'  > Screen lock, fingerprint </p>\n </div>\n": 1.794198209883079, "<div id=7   clickable> \n    <p class='android:id/title'  > Accounts </p>\n\n    <p class='android:id/summary'  > No accounts added </p>\n </div>\n": 1.774668189923835, "<div id=8   clickable> \n    <p class='android:id/title'  > Accessibility </p>\n\n    <p class='android:id/summary'  > Screen readers, display, interaction controls </p>\n </div>\n": 1.8065111222576633, "<div id=9   clickable> \n    <p class='android:id/title'  > Google </p>\n\n    <p class='android:id/summary'  > Services & preferences </p>\n </div>\n": 1.7937283019597954, "<div id=10   clickable> \n    <p class='android:id/title'  > System </p>\n\n    <p class='android:id/summary'  > Languages, gestures, time, backup </p>\n </div>\n": 1.799174143329458, "<div id=11   clickable> \n    <p class='android:id/title'  > About emulated device </p>\n\n    <p class='android:id/summary'  > Android SDK built for x86 </p>\n </div>\n": 1.769567781707935}, 'Punishment coefficient': [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], 'GPT answer': {'id_1': 10.0, 'id_2': 1.0, 'id_3': 1.0, 'id_4': 1.0, 'id_5': 1.0, 'id_6': 1.0, 'id_7': 1.0, 'id_8': 1.0, 'id_9': 1.0, 'id_10': 1.0, 'id_11': 1.0}}
+                
+
+===response===
+Given the user's intent to "Turn on severe threats in wireless emergency alerts on your phone," the primitive LLM should be navigating to the settings related to emergency alerts, which are typically found under a "Notifications," "Sounds," or "Emergency Alerts" section within the phone settings.
+
+From the log files, the latest action taken was "Scroll forward on android.widget.ScrollView," which indicates an attempt to navigate through a scrollable view. However, the log also states that the "Latest Page is the same as the last one," which means the last action did not cause any changes to the UI, suggesting that the scroll action may have reached the end of the scroll view or faced an issue that prevented further scrolling.
+
+The Evaluation Module's scoring indicates that the ScrollView (id=1) had the highest score, which is likely due to the system's attempt to navigate through the settings menu to find the relevant option for emergency alerts. However, none of the div elements (id=2 to id=11) with class 'android:id/title' seem to be directly related to emergency alerts based on their titles like "Storage," "Privacy," "Location," etc.
+
+Since the last action did not bring the user closer to the intended setting and there is no indication that the correct setting is visible on the current page, the last action can be considered incorrect.
+
+In terms of assigning a punishment coefficient, a value closer to 10 is appropriate as the action did not contribute to the task's progress and can be considered 'totally wrong' in the context of the user's intent. Therefore, the punishment coefficient for the ScrollView (id=1) should be high.
+
+Outputting the punishment coefficient in the requested JSON format:
+
+```json
+{
+    "punishment":
+    {
+        "id_1": 10
+    }
+}
+```

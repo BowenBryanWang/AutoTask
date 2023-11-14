@@ -1,0 +1,65 @@
+system:
+You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
+Your job is to rate the available UI elements on the current page.
+Note that:
+    (1) The element with the highest score will be choosen as the next element to be operated. If you have more than one top scoring option in your scoring, it's a good idea to highlight the score of one of the most likely candidates to avoid confusion.
+    (2) Your score should be accurate to two decimal places.
+    (3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
+    (4) <scroll /> element means there is a list and you can interact with it by scrolling forward. If you want to explore more, you can also try giving <scroll/> a relatively high scorat. The score of the <scroll /> should always be higher than that of those appearantly unrelated with the task.
+For each option, provide a confidence rating from 1.00-10.00, based on the relation of each option to the task, where 1.00 is the lowest tier indicating complete irrelevance and may lead to errors, 2.00-4.00 is the second tier indicating minor relevance, 4.00-6.00 is the medium tier indicating neutrality, 6.00-8.00 indicates higher relevance, possibly a candidate, and 10.00 indicates the most likely to be chosen and executed.
+The structure of the output should be: {
+    "id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value and iterate over all possible values), and "<rating>" denotes its rating.
+Example:
+{
+    "id_1": 5.53, "id_2": 9.71, "id_3": 3.20
+}
+Think step by step and output your reasoning process:
+Step 1: think about ["History operation sequence"],what has been done,especially pay attention to those steps which is wrong and caused navigate back if any;
+Step 2: think step by step on the ["Succesive Results"] of each UI options GIVEN by user, which represents the subsequent items after operating on them, and the ["possible paths to UI target"] GIVEN by user, which was suggested by expert knowledge;
+Step 3: decide what should be done next. Possible operations: click, edit (text input), scroll. Pay attention to those steps which is wrong and caused navigate back if any;
+Step 4: Synthesize the above output to output a JSON object with scores.
+
+Strictly output a format like "id_1": 3.00, do not tamper with it to make it look like "scroll_1": 3.00, etc., it must start with id_.
+
+
+user:
+{
+    "Task": "Check data usage on the device",
+    "History operation sequence": [
+        "Click on clickable 'android:id/title' Network & internet 'android:id/summary' Wi\u2011Fi, mobile, data usage, and hotspot"
+    ],
+    "Current UI screen": "<p class=''  > Network & internet </p>\n<div id=1  description='Wi\u2011Fi' clickable> \n    <p class='android:id/title'  > Wi\u2011Fi </p>\n\n    <p class='android:id/summary'  > AndroidWifi </p>\n\n    <switch id=2 class='com.android.settings:id/switchWidget' clickable > On </switch>\n </div>\n<div id=3   clickable> \n    <p class='android:id/title'  > Mobile network </p>\n\n    <p class='android:id/summary'  > T-Mobile </p>\n </div>\n<div id=4   clickable> \n    <p class='android:id/title'  > Airplane mode </p>\n\n    <switch id=5 class='android:id/switch_widget' clickable > Off </switch>\n </div>\n<div id=6   clickable> \n    <p class='android:id/title'  > Mobile plan </p>\n </div>\n<div id=7   clickable> \n    <p class='android:id/title'  > Hotspot & tethering </p>\n\n    <p class='android:id/summary'  > Off </p>\n </div>\n<div id=8   clickable> \n    <p class='android:id/title'  > Advanced </p>\n\n    <p class='android:id/summary'  > Data Saver, VPN, Private DNS </p>\n </div>\n",
+    "Successive results": {},
+    "Hint": "Below is a hint and suggestion from another model{\"next ui element\": \"'Mobile network' or 'Advanced'\", \"status\": \"go on\", \"reason\": \"The 'Mobile network' and 'Advanced' options on the current UI page are likely to contain data usage information, which is necessary to complete the user's task of checking data usage on the device.\"}"
+}
+
+===response===
+Step 1: The history shows that the user has accessed the "Network & internet" settings, which is the correct path to checking data usage.
+
+Step 2: On the current UI screen, there are several options available. We need to evaluate each one based on the task of checking data usage:
+- "Wi-Fi" (id_1) is not directly related to data usage, as it generally pertains to Wi-Fi settings and not cellular data usage.
+- "Mobile network" (id_3) is highly relevant because it typically includes settings and information about cellular data usage.
+- "Airplane mode" (id_4) is not relevant to checking data usage as it is a setting to disable all wireless communication.
+- "Mobile plan" (id_6) might be somewhat relevant, but it is generally about the user's mobile subscription and may not directly show data usage.
+- "Hotspot & tethering" (id_7) is related to data sharing but not to checking data usage.
+- "Advanced" (id_8) is potentially relevant as it could contain more detailed settings, including data usage information.
+
+Given the hint from another model, we should focus on "Mobile network" and "Advanced" as they are likely to contain the data usage information.
+
+Step 3: Decide what should be done next:
+- Clicking on "Mobile network" (id_3) should lead the user to details about their mobile network and possibly data usage.
+- Clicking on "Advanced" (id_8) could also lead the user to more detailed settings where data usage information might be found.
+
+Step 4: Synthesize the above output to output a JSON object with scores:
+- "Wi-Fi" (id_1) is not directly relevant: 2.00
+- "Mobile network" (id_3) is highly relevant: 9.50
+- "Airplane mode" (id_4) is not relevant: 1.00
+- "Mobile plan" (id_6) is somewhat relevant: 3.00
+- "Hotspot & tethering" (id_7) is not directly relevant to checking data usage: 2.00
+- "Advanced" (id_8) is potentially relevant: 8.50
+
+Given the hint and the analysis, "Mobile network" is the most likely candidate, but "Advanced" should not be dismissed and has a high relevance score as well.
+
+{
+    "id_1": 2.00, "id_3": 9.50, "id_4": 1.00, "id_6": 3.00, "id_7": 2.00, "id_8": 8.50
+}

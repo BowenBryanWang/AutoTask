@@ -1,0 +1,74 @@
+system:
+You are an expert in UI automation and robust error handling. Your task is to critic a operation sequence produced by a [primitive LLM],following user task but inaccurate. 
+Utilizing the log files from each module of current step of the [primitive LLM], you should locate error in the final element chosen to operate on.
+[primitive LLM] works in which they cannot see further information on UI, but you are in the backtracking process so you should utilize further information observed from subsequent UI to help correct possible errors.
+Specifically, you should analyze the [Latest Action] and the [Successive Page] information to determine the extent of error on fulfilling the task, and then output the punishment coefficient to it.
+Follow the steps below and think step by step:
+a. Understand the information given and synthize, especially [Latest Action] and its subsequent result [Successive Page];
+b, Think step by step about the scoring result by [Evaluation Module], try to identify error causes on the LATEST ACTION and give [Punishment Coefficient] from 1-10, where 1 means no error and 10 means totally wrong;
+Finally, output a JSON format like this example:
+{
+    "punishment":
+    {
+        "id_x": 1,
+        ......(replace x to the element with id that you think causes the error, output your punishment coefficient from 0-10)
+    }
+}
+
+
+user:
+
+                Wrong reason: The current UI page only presents options for adding email accounts and does not provide a way to add a guest user profile to the phone. The user has navigated to the wrong section of the settings for the task at hand.
+                
+
+user:
+
+                User intent: Add guest user named jack to my phone.
+                
+
+user:
+
+                Page components: ["<p class=''  > Accounts </p>\n", "<p class='android:id/title'  > ACCOUNTS FOR ADMIN </p>\n", "<div id=1   clickable> \n    <p class='android:id/title'  > kinnplh@gmail.com </p>\n\n    <p class='android:id/summary'  > Google </p>\n </div>\n", "<div id=2   clickable> \n    <p class='android:id/title'  > laixiruyun@gmail.com </p>\n\n    <p class='android:id/summary'  > Google </p>\n </div>\n", "<div id=3   clickable> \n    <p class='android:id/title'  > Add account </p>\n </div>\n", "<div id=4   clickable> \n    <p class='android:id/title'  > Automatically sync app data </p>\n\n    <p class='android:id/summary'  > Let apps refresh data automatically </p>\n\n    <switch id=5 class='android:id/switch_widget' clickable > Off </switch>\n </div>\n"]
+                
+
+user:
+
+                Previous Steps:  -> Scroll forward on android.widget.ScrollView -> Click on clickable 'android:id/title' Accounts 'android:id/summary' Google -> Click on clickable 'android:id/title' Add account
+                
+
+user:
+
+                Action on this step: Click on clickable 'android:id/title' Add account
+                
+
+user:
+
+                    Latest Page: ["<p class=''  > Add an account </p>\n", "<div id=1   clickable> \n    <p class='android:id/title'  > Exchange </p>\n </div>\n", "<div id=2   clickable> \n    <p class='android:id/title'  > Google </p>\n </div>\n", "<div id=3   clickable> \n    <p class='android:id/title'  > Personal (IMAP) </p>\n </div>\n", "<div id=4   clickable> \n    <p class='android:id/title'  > Personal (POP3) </p>\n </div>\n"]
+                    
+
+user:
+
+                Modules: {'Name': 'Evaluate', 'Description': "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent", 'Score': {"<div id=1   clickable> \n    <p class='android:id/title'  > kinnplh@gmail.com </p>\n\n    <p class='android:id/summary'  > Google </p>\n </div>\n": 1.797654219276001, "<div id=2   clickable> \n    <p class='android:id/title'  > laixiruyun@gmail.com </p>\n\n    <p class='android:id/summary'  > Google </p>\n </div>\n": 1.7997084952761266, "<div id=3   clickable> \n    <p class='android:id/title'  > Add account </p>\n </div>\n": 10.822724084828867, "<div id=4   clickable> \n    <p class='android:id/title'  > Automatically sync app data </p>\n\n    <p class='android:id/summary'  > Let apps refresh data automatically </p>\n\n    <switch id=5 class='android:id/switch_widget' clickable > Off </switch>\n </div>\n": 1.8007807122997264, "<switch id=5 class='android:id/switch_widget' clickable > Off </switch>\n": 1.7827497389950935}, 'Punishment coefficient': [1.0, 1.0, 1.0, 1.0, 1.0], 'GPT answer': {'id_1': 1.0, 'id_2': 1.0, 'id_3': 10.0, 'id_4': 1.0, 'id_5': 1.0}}
+                
+
+===response===
+Based on the information provided, the [primitive LLM] has made an error by attempting to add an email account when the user's intent is to add a guest user named Jack to the phone. The user has been incorrectly navigated to the section for adding email accounts instead of the section for managing user profiles on the device.
+
+The [Latest Action] was to click on the clickable element with the title 'Add account', which led to the [Successive Page] that only presents options for adding various types of email accounts (Exchange, Google, Personal IMAP, and Personal POP3). This does not align with the user's intent to add a guest user profile.
+
+The [Evaluation Module] gave the highest score to the element "<div id=3   clickable> \n    <p class='android:id/title'  > Add account </p>\n </div>\n" with a score of 10.822724084828867, which indicates that the module mistakenly evaluated this action as the most relevant to the user's intent.
+
+Given that the action taken does not fulfill the user's intent and has led the user further away from the correct path, the error is significant. Therefore, the [Punishment Coefficient] should reflect the severity of this error.
+
+Here is the JSON output with the punishment coefficient for the element that caused the error:
+
+```json
+{
+    "punishment":
+    {
+        "id_3": 10
+    }
+}
+```
+
+A punishment coefficient of 10 indicates that the action taken was completely incorrect in the context of the user's intent.

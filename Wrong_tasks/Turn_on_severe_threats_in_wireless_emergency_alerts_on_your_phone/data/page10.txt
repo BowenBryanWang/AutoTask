@@ -1,0 +1,4 @@
+<p class='android:id/alertTitle'  > Delete app data? </p>
+<p class='android:id/message'  > All this app's data will be deleted permanently. This includes all files, settings, accounts, databases, etc. </p>
+<button id=1 class='android:id/button2'  > CANCEL </button>
+<button id=2 class='android:id/button1'  > OK </button>

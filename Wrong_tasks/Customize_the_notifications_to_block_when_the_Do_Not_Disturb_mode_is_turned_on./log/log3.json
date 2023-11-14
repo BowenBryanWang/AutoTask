@@ -1,0 +1,68 @@
+{
+    "@User_intent": "Customize the notifications to block when the Do Not Disturb mode is turned on.",
+    "@Page_components": [
+        "<p class=''  > Do Not Disturb </p>\n",
+        "<p class=''  > Only get notified by important people and apps </p>\n",
+        "<button id=1 class='com.android.settings:id/zen_mode_settings_turn_on_button'  > Turn on now </button>\n",
+        "<p class='android:id/title'  > WHAT CAN INTERRUPT DO NOT DISTURB </p>\n",
+        "<div id=2   clickable> \n    <p class='android:id/title'  > People </p>\n\n    <p class='android:id/summary'  > Some people can interrupt </p>\n </div>\n",
+        "<div id=3   clickable> \n    <p class='android:id/title'  > Apps </p>\n\n    <p class='android:id/summary'  > Digital Wellbeing can interrupt </p>\n </div>\n",
+        "<div id=4   clickable> \n    <p class='android:id/title'  > Alarms & other interruptions </p>\n\n    <p class='android:id/summary'  > Nothing can interrupt </p>\n </div>\n",
+        "<div id=5   clickable> \n    <p class='android:id/title'  > Schedules </p>\n\n    <p class='android:id/summary'  > 3 schedules set </p>\n </div>\n",
+        "<div id=6   clickable> \n    <p class='android:id/title'  > Advanced </p>\n\n    <p class='android:id/summary'  > Duration for Quick Settings, Display options for hidden notifications </p>\n </div>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "One-step UI knowledge": {},
+            "Multi-step UI knowledge": ""
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Score": {
+                "<button id=1 class='com.android.settings:id/zen_mode_settings_turn_on_button'  > Turn on now </button>\n": 4.327340087774132,
+                "<div id=2   clickable> \n    <p class='android:id/title'  > People </p>\n\n    <p class='android:id/summary'  > Some people can interrupt </p>\n </div>\n": 6.804579159441794,
+                "<div id=3   clickable> \n    <p class='android:id/title'  > Apps </p>\n\n    <p class='android:id/summary'  > Digital Wellbeing can interrupt </p>\n </div>\n": 10.810196890345981,
+                "<div id=4   clickable> \n    <p class='android:id/title'  > Alarms & other interruptions </p>\n\n    <p class='android:id/summary'  > Nothing can interrupt </p>\n </div>\n": 6.82135112938894,
+                "<div id=5   clickable> \n    <p class='android:id/title'  > Schedules </p>\n\n    <p class='android:id/summary'  > 3 schedules set </p>\n </div>\n": 4.305043485256507,
+                "<div id=6   clickable> \n    <p class='android:id/title'  > Advanced </p>\n\n    <p class='android:id/summary'  > Duration for Quick Settings, Display options for hidden notifications </p>\n </div>\n": 6.8221602670287025
+            },
+            "Punishment coefficient": [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "GPT answer": {
+                "id_1": 3.5,
+                "id_2": 6.0,
+                "id_3": 10.0,
+                "id_4": 6.0,
+                "id_5": 3.5,
+                "id_6": 6.0
+            }
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "next ui element": "Add apps",
+                "status": "go on",
+                "reason": "The user is in the 'Apps' section where they can manage apps for Do Not Disturb mode, and the 'Add apps' element is the next step to customize notifications as required by the task."
+            }
+        }
+    ],
+    "@History_operation": " -> Click on clickable 'android:id/title' Sound 'android:id/summary' Volume, vibration, Do Not Disturb -> Click on clickable 'android:id/title' Do Not Disturb 'android:id/summary' Off / 3 schedules can turn on automatically -> Click on clickable 'android:id/title' Apps 'android:id/summary' Digital Wellbeing can interrupt",
+    "@Current_Action": "Click on clickable 'android:id/title' Apps 'android:id/summary' Digital Wellbeing can interrupt",
+    "@Successive_Page": [
+        "<p class=''  > Apps </p>\n",
+        "<p class='android:id/title'  > APPS THAT CAN INTERRUPT </p>\n",
+        "<div id=1   clickable> \n    <p class='android:id/title'  > Digital Wellbeing </p>\n\n    <p class='android:id/summary'  > Some notifications </p>\n </div>\n",
+        "<div id=2   clickable> \n    <p class='android:id/title'  > Add apps </p>\n </div>\n",
+        "<div id=3   clickable> \n    <p class='android:id/title'  > Selected people can still reach you, even if you don\u2019t allow apps to interrupt </p>\n </div>\n"
+    ]
+}

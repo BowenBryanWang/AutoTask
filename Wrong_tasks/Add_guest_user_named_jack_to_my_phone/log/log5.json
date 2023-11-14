@@ -1,0 +1,73 @@
+{
+    "@User_intent": "Reset all network settings on the phone.",
+    "@Page_components": [
+        "<p class=''  > System </p>\n",
+        "<div id=1   clickable> \n    <p class='android:id/title'  > Languages\u00a0& input </p>\n\n    <p class='android:id/summary'  > Gboard </p>\n </div>\n",
+        "<div id=2   clickable> \n    <p class='android:id/title'  > Gestures </p>\n </div>\n",
+        "<div id=3   clickable> \n    <p class='android:id/title'  > Date & time </p>\n\n    <p class='android:id/summary'  > GMT+00:00 </p>\n </div>\n",
+        "<div id=4   clickable> \n    <p class='android:id/title'  > Backup </p>\n\n    <p class='android:id/summary'  > On </p>\n </div>\n",
+        "<div id=5   clickable> \n    <p class='android:id/title'  > Reset options </p>\n\n    <p class='android:id/summary'  > Network, apps, or device can be reset </p>\n </div>\n",
+        "<div id=6   clickable> \n    <p class='android:id/title'  > Multiple users </p>\n\n    <p class='android:id/summary'  > Signed in as Admin </p>\n </div>\n",
+        "<div id=7   clickable> \n    <p class='android:id/title'  > Developer options </p>\n </div>\n",
+        "<div id=8   clickable> \n    <p class='android:id/title'  > System update </p>\n\n    <p class='android:id/summary'  > Updated to Android 11 </p>\n </div>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "One-step UI knowledge": {},
+            "Multi-step UI knowledge": ""
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Score": {
+                "<div id=1   clickable> \n    <p class='android:id/title'  > Languages\u00a0& input </p>\n\n    <p class='android:id/summary'  > Gboard </p>\n </div>\n": 2.7981270208305298,
+                "<div id=2   clickable> \n    <p class='android:id/title'  > Gestures </p>\n </div>\n": 2.7911320769532146,
+                "<div id=3   clickable> \n    <p class='android:id/title'  > Date & time </p>\n\n    <p class='android:id/summary'  > GMT+00:00 </p>\n </div>\n": 2.7677033705517973,
+                "<div id=4   clickable> \n    <p class='android:id/title'  > Backup </p>\n\n    <p class='android:id/summary'  > On </p>\n </div>\n": 2.79117466832323,
+                "<div id=5   clickable> \n    <p class='android:id/title'  > Reset options </p>\n\n    <p class='android:id/summary'  > Network, apps, or device can be reset </p>\n </div>\n": 10.844327187747323,
+                "<div id=6   clickable> \n    <p class='android:id/title'  > Multiple users </p>\n\n    <p class='android:id/summary'  > Signed in as Admin </p>\n </div>\n": 2.789024983523811,
+                "<div id=7   clickable> \n    <p class='android:id/title'  > Developer options </p>\n </div>\n": 2.806560179258322,
+                "<div id=8   clickable> \n    <p class='android:id/title'  > System update </p>\n\n    <p class='android:id/summary'  > Updated to Android 11 </p>\n </div>\n": 2.797221685178798
+            },
+            "Punishment coefficient": [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "GPT answer": {
+                "id_1": 2.0,
+                "id_2": 2.0,
+                "id_3": 2.0,
+                "id_4": 2.0,
+                "id_5": 10.0,
+                "id_6": 2.0,
+                "id_7": 2.0,
+                "id_8": 2.0
+            }
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "next ui element": "Reset Wi-Fi, mobile & Bluetooth",
+                "status": "go on",
+                "reason": "The current UI page contains the 'Reset Wi-Fi, mobile & Bluetooth' option which the user needs to select to reset all network settings, thus moving towards task fulfillment."
+            }
+        }
+    ],
+    "@History_operation": " -> Click on clickable 'android:id/title' Network & internet 'android:id/summary' Wi\u2011Fi, mobile, data usage, and hotspot -> Scroll forward on android.widget.ScrollView -> Scroll forward on android.widget.ScrollView -> Click on clickable 'android:id/title' System 'android:id/summary' Languages, gestures, time, backup -> Click on clickable 'android:id/title' Advanced 'android:id/summary' Reset options, Multiple users, Developer options, System update -> Click on clickable 'android:id/title' Reset options 'android:id/summary' Network, apps, or device can be reset",
+    "@Current_Action": "Click on clickable 'android:id/title' Reset options 'android:id/summary' Network, apps, or device can be reset",
+    "@Successive_Page": [
+        "<p class=''  > Reset options </p>\n",
+        "<div id=1   clickable> \n    <p class='android:id/title'  > Reset Wi-Fi, mobile & Bluetooth </p>\n </div>\n",
+        "<div id=2   clickable> \n    <p class='android:id/title'  > Reset app preferences </p>\n </div>\n",
+        "<div id=3   clickable> \n    <p class='android:id/title'  > Erase all data (factory reset) </p>\n </div>\n"
+    ]
+}

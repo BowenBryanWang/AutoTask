@@ -1,0 +1,74 @@
+system:
+You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
+Your job is to rate the available UI elements on the current page.
+Note that:
+    (1) The element with the highest score will be choosen as the next element to be operated. If you have more than one top scoring option in your scoring, it's a good idea to highlight the score of one of the most likely candidates to avoid confusion.
+    (2) Your score should be accurate to two decimal places.
+    (3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
+    (4) <scroll /> element means there is a list and you can interact with it by scrolling forward. If you want to explore more, you can also try giving <scroll/> a relatively high scorat. The score of the <scroll /> should always be higher than that of those appearantly unrelated with the task.
+For each option, provide a confidence rating from 1.00-10.00, based on the relation of each option to the task, where 1.00 is the lowest tier indicating complete irrelevance and may lead to errors, 2.00-4.00 is the second tier indicating minor relevance, 4.00-6.00 is the medium tier indicating neutrality, 6.00-8.00 indicates higher relevance, possibly a candidate, and 10.00 indicates the most likely to be chosen and executed.
+The structure of the output should be: {
+    "id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value and iterate over all possible values), and "<rating>" denotes its rating.
+Example:
+{
+    "id_1": 5.53, "id_2": 9.71, "id_3": 3.20
+}
+Think step by step and output your reasoning process:
+Step 1: think about ["History operation sequence"],what has been done,especially pay attention to those steps which is wrong and caused navigate back if any;
+Step 2: think step by step on the ["Succesive Results"] of each UI options GIVEN by user, which represents the subsequent items after operating on them, and the ["possible paths to UI target"] GIVEN by user, which was suggested by expert knowledge;
+Step 3: decide what should be done next. Possible operations: click, edit (text input), scroll. Pay attention to those steps which is wrong and caused navigate back if any;
+Step 4: Synthesize the above output to output a JSON object with scores.
+
+Strictly output a format like "id_1": 3.00, do not tamper with it to make it look like "scroll_1": 3.00, etc., it must start with id_.
+
+
+user:
+{
+    "Task": "Enable location permission for the Google Map service on an Android device",
+    "History operation sequence": [
+        "Click on clickable 'android:id/title' Privacy 'android:id/summary' Permissions, account activity, personal data",
+        "Click on clickable 'android:id/title' Permission manager 'android:id/summary' Control app access to your data",
+        "Click on clickable 'android:id/title' Location 'android:id/summary' 0 of 6 apps allowed",
+        "Click on 'Maps' clickable 'android:id/title' 'Maps' Maps"
+    ],
+    "Current UI screen": "<p class=''  > Location permission </p>\n<p class='com.android.permissioncontroller:id/entity_header_title'  > Maps </p>\n<p class='com.android.permissioncontroller:id/permission_message'  > LOCATION ACCESS FOR THIS APP </p>\n<div id=1 class='com.android.permissioncontroller:id/allow_always_radio_button'  enabled not_checked clickable> Allow all the time </div>\n<div id=2 class='com.android.permissioncontroller:id/allow_foreground_only_radio_button'  enabled not_checked clickable> Allow only while using the app </div>\n<div id=3 class='com.android.permissioncontroller:id/ask_radio_button'  enabled not_checked clickable> Ask every time </div>\n<div id=4 class='com.android.permissioncontroller:id/deny_radio_button'  enabled checked clickable> Deny </div>\n<div id=5 class='com.android.permissioncontroller:id/footer_link_1'  enabled  clickable> See all Maps permissions </div>\n",
+    "Successive results": {},
+    "Hint": "Below is a hint and suggestion from another model{\"next ui element\": \"com.android.permissioncontroller:id/allow_foreground_only_radio_button\", \"status\": \"go on\", \"reason\": \"The user has navigated to the correct page to enable location permissions for the Maps app, and there are actionable elements to complete the task.\"}"
+}
+
+===response===
+Step 1: The history of operations indicates that the user has successfully navigated through the settings to the specific app 'Maps' to manage its location permissions. There are no steps that indicate a wrong action that required navigating back.
+
+Step 2: The current UI screen shows options for location permission for the Maps app. There are four radio buttons with different permission levels and an additional link related to Maps permissions. The task is to enable location permission for the Google Map service on an Android device. Based on the hint provided, the user is on the correct page to perform this action.
+
+Step 3: The options available are to either allow location access all the time, only while using the app, ask every time, or deny. Since the task does not specify which type of permission to enable, the most common and user-friendly option that balances privacy and functionality is typically "Allow only while using the app". This matches the hint provided by another model, suggesting the "com.android.permissioncontroller:id/allow_foreground_only_radio_button" as the next UI element to operate.
+
+Step 4: Scoring the elements based on their relevance to the task:
+
+- "Allow all the time" provides the Maps app with location access at all times, which may be more than what is necessary for the task and could raise privacy concerns.
+- "Allow only while using the app" is the most relevant choice as it enables location access for Maps when it is in use, which is likely what the user wants.
+- "Ask every time" could be a less convenient option as it would prompt the user for permission every time the Maps app requires location access.
+- "Deny" is the opposite of the task requirement.
+- "See all Maps permissions" is less relevant to the immediate task of enabling location permissions but could be useful for users seeking more detailed permission management.
+
+Here are the ratings for the UI elements:
+
+- id_1 (Allow all the time): 6.50
+- id_2 (Allow only while using the app): 10.00
+- id_3 (Ask every time): 7.00
+- id_4 (Deny): 1.00
+- id_5 (See all Maps permissions): 3.50
+
+The highest score goes to the "Allow only while using the app" option, which is the most aligned with the user's task.
+
+JSON output:
+
+```json
+{
+    "id_1": 6.50,
+    "id_2": 10.00,
+    "id_3": 7.00,
+    "id_4": 1.00,
+    "id_5": 3.50
+}
+```

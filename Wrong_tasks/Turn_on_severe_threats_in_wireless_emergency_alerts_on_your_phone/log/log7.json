@@ -1,0 +1,70 @@
+{
+    "@User_intent": "Clear the cache and data in Google.",
+    "@Page_components": [
+        "<p class=''  > Storage </p>\n",
+        "<div id=1 class='com.android.settings:id/entity_header_content'  clickable> \n    <p class='com.android.settings:id/entity_header_title'  > Google Play services </p>\n\n    <p class='com.android.settings:id/entity_header_summary'  > 20.18.17 (040700-311416286) </p>\n </div>\n",
+        "<button id=2 class='com.android.settings:id/button1'  > CLEAR STORAGE </button>\n",
+        "<button id=3 class='com.android.settings:id/button2'  > CLEAR CACHE </button>\n",
+        "<p class='android:id/title'  > SPACE USED </p>\n",
+        "<p class='android:id/title'  > App size </p>\n",
+        "<p class='android:id/summary'  > 20.48 kB </p>\n",
+        "<p class='android:id/title'  > User data </p>\n",
+        "<p class='android:id/summary'  > 21.15 MB </p>\n",
+        "<p class='android:id/title'  > Cache </p>\n",
+        "<p class='android:id/summary'  > 360 kB </p>\n",
+        "<p class='android:id/title'  > Total </p>\n",
+        "<p class='android:id/summary'  > 21.53 MB </p>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "One-step UI knowledge": {},
+            "Multi-step UI knowledge": ""
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Score": {
+                "<div id=1 class='com.android.settings:id/entity_header_content'  clickable> \n    <p class='com.android.settings:id/entity_header_title'  > Google Play services </p>\n\n    <p class='com.android.settings:id/entity_header_summary'  > 20.18.17 (040700-311416286) </p>\n </div>\n": 1.8251838503090148,
+                "<button id=2 class='com.android.settings:id/button1'  > CLEAR STORAGE </button>\n": 10.342804921779692,
+                "<button id=3 class='com.android.settings:id/button2'  > CLEAR CACHE </button>\n": 10.857171318732014
+            },
+            "Punishment coefficient": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "GPT answer": {
+                "id_2": 9.5,
+                "id_3": 10.0
+            }
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "next ui element": "com.android.settings:id/button1",
+                "status": "go on",
+                "reason": "The cache has been successfully cleared, and the 'CLEAR STORAGE' button is available to clear user data, which is the next step in completing the task."
+            }
+        }
+    ],
+    "@History_operation": " -> Click on clickable 'android:id/title' Apps & notifications 'android:id/summary' Recent apps, default apps -> Click on 'com.android.settings:id/header_details' SEE ALL 18 APPS -> Click on 'com.android.settings:id/search_app_list_menu' 'Search' enabled clickable -> Edit 'android:id/search_src_text' enabled editable Search with Google -> Click on 'Google Play services' clickable 'android:id/title' Google Play services 'android:id/summary' 21.15 MB -> Click on clickable 'android:id/title' Storage & cache 'android:id/summary' 21.53 MB used in internal storage -> Click on 'com.android.settings:id/button2' CLEAR CACHE",
+    "@Current_Action": "Click on 'com.android.settings:id/button2' CLEAR CACHE",
+    "@Successive_Page": [
+        "<p class=''  > Storage </p>\n",
+        "<div id=1 class='com.android.settings:id/entity_header_content'  clickable> \n    <p class='com.android.settings:id/entity_header_title'  > Google Play services </p>\n\n    <p class='com.android.settings:id/entity_header_summary'  > 20.18.17 (040700-311416286) </p>\n </div>\n",
+        "<button id=2 class='com.android.settings:id/button1'  > CLEAR STORAGE </button>\n",
+        "<button id=3 class='com.android.settings:id/button2'  > CLEAR CACHE </button>\n",
+        "<p class='android:id/title'  > SPACE USED </p>\n",
+        "<p class='android:id/title'  > App size </p>\n",
+        "<p class='android:id/summary'  > 20.48 kB </p>\n",
+        "<p class='android:id/title'  > User data </p>\n",
+        "<p class='android:id/summary'  > 21.09 MB </p>\n",
+        "<p class='android:id/title'  > Cache </p>\n",
+        "<p class='android:id/summary'  > 0 B </p>\n",
+        "<p class='android:id/title'  > Total </p>\n",
+        "<p class='android:id/summary'  > 21.11 MB </p>\n"
+    ]
+}

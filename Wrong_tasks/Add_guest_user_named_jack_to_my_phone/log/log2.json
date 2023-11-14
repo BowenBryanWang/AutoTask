@@ -1,0 +1,106 @@
+{
+    "@User_intent": "Add guest user named jack to my phone.",
+    "@Page_components": [
+        "<scroll id=1 class=android.widget.ScrollView >\n    <div id=2   clickable> \n    <p class='android:id/title'  > Sound </p>\n\n    <p class='android:id/summary'  > Volume, vibration, Do Not Disturb </p>\n </div>\n\n    <div id=3   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 38% used - 4.97 GB free </p>\n </div>\n\n    <div id=4   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Location </p>\n\n    <p class='android:id/summary'  > On - 4 apps have access to location </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Security </p>\n\n    <p class='android:id/summary'  > Screen lock, fingerprint </p>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > Accounts </p>\n\n    <p class='android:id/summary'  > Google </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Accessibility </p>\n\n    <p class='android:id/summary'  > Screen readers, display, interaction controls </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Digital Wellbeing & parental controls </p>\n\n    <p class='android:id/summary'  > Screen time, app timers, bedtime schedules </p>\n </div>\n\n    <div id=10   clickable> \n    <p class='android:id/title'  > Google </p>\n\n    <p class='android:id/summary'  > Services & preferences </p>\n </div>\n\n    <div id=11   clickable> \n    <p class='android:id/title'  > System </p>\n\n    <p class='android:id/summary'  > Languages, gestures, time, backup </p>\n </div>\n\n    <div id=12   clickable>  </div>\n </scroll>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "One-step UI knowledge": {},
+            "Multi-step UI knowledge": ""
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Score": {
+                "<scroll id=1 class=android.widget.ScrollView > </scroll>\n": 8.770582479343165,
+                "<div id=2   clickable> \n    <p class='android:id/title'  > Sound </p>\n\n    <p class='android:id/summary'  > Volume, vibration, Do Not Disturb </p>\n </div>\n": 1.7825499202401505,
+                "<div id=3   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 38% used - 4.97 GB free </p>\n </div>\n": 1.7738501875247206,
+                "<div id=4   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n": 1.7924739566937244,
+                "<div id=5   clickable> \n    <p class='android:id/title'  > Location </p>\n\n    <p class='android:id/summary'  > On - 4 apps have access to location </p>\n </div>\n": 1.7871696200244345,
+                "<div id=6   clickable> \n    <p class='android:id/title'  > Security </p>\n\n    <p class='android:id/summary'  > Screen lock, fingerprint </p>\n </div>\n": 1.7909938790369948,
+                "<div id=7   clickable> \n    <p class='android:id/title'  > Accounts </p>\n\n    <p class='android:id/summary'  > Google </p>\n </div>\n": 10.29259090016925,
+                "<div id=8   clickable> \n    <p class='android:id/title'  > Accessibility </p>\n\n    <p class='android:id/summary'  > Screen readers, display, interaction controls </p>\n </div>\n": 1.8038685267726462,
+                "<div id=9   clickable> \n    <p class='android:id/title'  > Digital Wellbeing & parental controls </p>\n\n    <p class='android:id/summary'  > Screen time, app timers, bedtime schedules </p>\n </div>\n": 1.785697730796467,
+                "<div id=10   clickable> \n    <p class='android:id/title'  > Google </p>\n\n    <p class='android:id/summary'  > Services & preferences </p>\n </div>\n": 1.7974311121765238,
+                "<div id=11   clickable> \n    <p class='android:id/title'  > System </p>\n\n    <p class='android:id/summary'  > Languages, gestures, time, backup </p>\n </div>\n": 1.7949788873675423,
+                "<div id=12   clickable>  </div>\n": 1.748714347298896
+            },
+            "Punishment coefficient": [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "GPT answer": {
+                "id_1": 8.0,
+                "id_2": 1.0,
+                "id_3": 1.0,
+                "id_4": 1.0,
+                "id_5": 1.0,
+                "id_6": 1.0,
+                "id_7": 9.5,
+                "id_8": 1.0,
+                "id_9": 1.0,
+                "id_10": 1.0,
+                "id_11": 1.0,
+                "id_12": 1.0
+            }
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "next ui element": "Add account",
+                "status": "go on",
+                "reason": "The 'Add account' element on the current UI page is the next step to add a new user, which aligns with the task of adding a guest user named Jack to the phone."
+            }
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "next ui element": "Add account",
+                "status": "go on",
+                "reason": "The 'Add account' option is still available and relevant to the task of adding a guest user named Jack, suggesting that further action on this UI page could potentially lead to task fulfillment."
+            }
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "next ui element": "Add account",
+                "status": "go on",
+                "reason": "The 'Add account' option is available and relevant to the task of adding a guest user, suggesting that the user can proceed with this option to attempt to fulfill the task without needing to navigate back further."
+            }
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "next ui element": "Add account",
+                "status": "go on",
+                "reason": "The 'Add account' option is present on the current UI page, which is necessary for completing the task of adding a new guest user. Despite being in a backtracking phase, this option should be explored further."
+            }
+        }
+    ],
+    "@History_operation": " -> Scroll forward on android.widget.ScrollView -> Click on clickable 'android:id/title' Accounts 'android:id/summary' Google",
+    "@Current_Action": "Click on clickable 'android:id/title' Accounts 'android:id/summary' Google",
+    "@Successive_Page": [
+        "<p class=''  > Accounts </p>\n",
+        "<p class='android:id/title'  > ACCOUNTS FOR ADMIN </p>\n",
+        "<div id=1   clickable> \n    <p class='android:id/title'  > kinnplh@gmail.com </p>\n\n    <p class='android:id/summary'  > Google </p>\n </div>\n",
+        "<div id=2   clickable> \n    <p class='android:id/title'  > laixiruyun@gmail.com </p>\n\n    <p class='android:id/summary'  > Google </p>\n </div>\n",
+        "<div id=3   clickable> \n    <p class='android:id/title'  > Add account </p>\n </div>\n",
+        "<div id=4   clickable> \n    <p class='android:id/title'  > Automatically sync app data </p>\n\n    <p class='android:id/summary'  > Let apps refresh data automatically </p>\n\n    <switch id=5 class='android:id/switch_widget' clickable > Off </switch>\n </div>\n"
+    ]
+}

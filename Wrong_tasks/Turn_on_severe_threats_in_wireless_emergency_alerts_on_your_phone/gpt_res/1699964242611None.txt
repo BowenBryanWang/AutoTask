@@ -1,0 +1,27 @@
+system:
+the following string cannot be parsed to a dict (or list) by the built-in function eval (in Python) due to the error: invalid syntax (<string>, line 2).
+
+{
+    "id_1": 9.00,  // Clickable Wi-Fi settings with 'AndroidWifi' mentioned, highly relevant to the task.
+    "id_2": 1.00,  // Wi-Fi switch, not relevant to removing a specific network.
+    "id_3": 1.00,  // Mobile network settings, not relevant to Wi-Fi management.
+    "id_4": 1.00,  // Airplane mode settings, not relevant to Wi-Fi management.
+    "id_5": 1.00,  // Airplane mode switch, not relevant to Wi-Fi management.
+    "id_6": 1.00,  // Mobile plan settings, not relevant to Wi-Fi management.
+    "id_7": 1.00,  // Hotspot & tethering settings, not relevant to Wi-Fi management.
+    "id_8": 1.00   // Advanced settings, less likely to be relevant to the specific task of removing a saved Wi-Fi network.
+}
+
+Please correct its format error and output the correct string. Do not output anything else.
+
+===response===
+{
+    "id_1": 9.00,  # Clickable Wi-Fi settings with 'AndroidWifi' mentioned, highly relevant to the task.
+    "id_2": 1.00,  # Wi-Fi switch, not relevant to removing a specific network.
+    "id_3": 1.00,  # Mobile network settings, not relevant to Wi-Fi management.
+    "id_4": 1.00,  # Airplane mode settings, not relevant to Wi-Fi management.
+    "id_5": 1.00,  # Airplane mode switch, not relevant to Wi-Fi management.
+    "id_6": 1.00,  # Mobile plan settings, not relevant to Wi-Fi management.
+    "id_7": 1.00,  # Hotspot & tethering settings, not relevant to Wi-Fi management.
+    "id_8": 1.00   # Advanced settings, less likely to be relevant to the specific task of removing a saved Wi-Fi network.
+}

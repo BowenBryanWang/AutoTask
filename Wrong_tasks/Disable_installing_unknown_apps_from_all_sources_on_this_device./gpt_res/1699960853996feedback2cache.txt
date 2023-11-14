@@ -1,0 +1,72 @@
+system:
+You are an expert in UI automation and robust error handling. Your task is to critic a operation sequence produced by a [primitive LLM],following user task but inaccurate. 
+Utilizing the log files from each module of current step of the [primitive LLM], you should locate error in the final element chosen to operate on.
+[primitive LLM] works in which they cannot see further information on UI, but you are in the backtracking process so you should utilize further information observed from subsequent UI to help correct possible errors.
+Specifically, you should analyze the [Latest Action] and the [Successive Page] information to determine the extent of error on fulfilling the task, and then output the punishment coefficient to it.
+Follow the steps below and think step by step:
+a. Understand the information given and synthize, especially [Latest Action] and its subsequent result [Successive Page];
+b, Think step by step about the scoring result by [Evaluation Module], try to identify error causes on the LATEST ACTION and give [Punishment Coefficient] from 1-10, where 1 means no error and 10 means totally wrong;
+Finally, output a JSON format like this example:
+{
+    "punishment":
+    {
+        "id_x": 1,
+        ......(replace x to the element with id that you think causes the error, output your punishment coefficient from 0-10)
+    }
+}
+
+
+user:
+
+                Wrong reason: 
+                
+
+user:
+
+                User intent: Check Battery Usage page of you phone
+                
+
+user:
+
+                Page components: ["<p class=''  > Battery </p>\n", "<div id=1  description='More options' enabled  clickable>  </div>\n", "<scroll id=2 class=androidx.recyclerview.widget.RecyclerView >\n    <p class='com.android.settings:id/battery_percent'  > 100 % </p>\n\n    <p class='com.android.settings:id/summary1'  > Full </p>\n\n    <button id=3 class=''  > \n    <p class='android:id/title'  > Apps are running normally </p>\n\n    <p class='android:id/summary'  > Phone has typical background battery usage </p>\n </button>\n\n    <div id=4   clickable> \n    <p class='android:id/title'  > Battery Saver </p>\n\n    <p class='android:id/summary'  > Off </p>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Battery Manager </p>\n\n    <p class='android:id/summary'  > On / Detecting when apps drain battery </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Battery percentage </p>\n\n    <p class='android:id/summary'  > Show battery percentage in status bar </p>\n\n    <switch id=7 class='android:id/switch_widget' clickable > Off </switch>\n </div>\n\n    <p class='android:id/title'  > Last full charge </p>\n\n    <p class='com.android.settings:id/widget_summary'  > 4 days ago </p>\n\n    <p class='android:id/title'  > Screen usage since full charge </p>\n\n    <p class='com.android.settings:id/widget_summary'  > 2 days, 2 hr, 52 min </p>\n\n    <p class='android:id/title'  > Battery usage data is approximate and can change based on usage </p>\n </scroll>\n"]
+                
+
+user:
+
+                Previous Steps:  -> Click on clickable 'android:id/title' Battery 'android:id/summary' 100% -> Scroll forward on androidx.recyclerview.widget.RecyclerView -> Click on clickable 'android:id/title' Battery Manager 'android:id/summary' On / Detecting when apps drain battery -> Scroll forward on androidx.recyclerview.widget.RecyclerView
+                
+
+user:
+
+                Action on this step: Scroll forward on androidx.recyclerview.widget.RecyclerView
+                
+
+user:
+Latest Page is the same as last one! Last action did not cause any changes so it's wrong
+
+user:
+
+                Modules: {'Name': 'Evaluate', 'Description': "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent", 'Score': {"<div id=1  description='More options' enabled  clickable>  </div>\n": 2.7673471171986437, '<scroll id=2 class=androidx.recyclerview.widget.RecyclerView > </scroll>\n': 9.769297165286133, "<button id=3 class=''  > \n    <p class='android:id/title'  > Apps are running normally </p>\n\n    <p class='android:id/summary'  > Phone has typical background battery usage </p>\n </button>\n": 4.8310575370969815, "<div id=4   clickable> \n    <p class='android:id/title'  > Battery Saver </p>\n\n    <p class='android:id/summary'  > Off </p>\n </div>\n": 4.837223298873302, "<div id=5   clickable> \n    <p class='android:id/title'  > Battery Manager </p>\n\n    <p class='android:id/summary'  > On / Detecting when apps drain battery </p>\n </div>\n": 6.856718926210343, "<div id=6   clickable> \n    <p class='android:id/title'  > Battery percentage </p>\n\n    <p class='android:id/summary'  > Show battery percentage in status bar </p>\n\n    <switch id=7 class='android:id/switch_widget' clickable > Off </switch>\n </div>\n": 4.850263788190772, "<switch id=7 class='android:id/switch_widget' clickable > Off </switch>\n": 1.7945769918335848}, 'Punishment coefficient': [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], 'GPT answer': {'id_1': 2.0, 'id_2': 9.0, 'id_3': 4.0, 'id_4': 4.0, 'id_5': 6.0, 'id_6': 4.0}}
+                
+
+===response===
+Based on the information provided, the user's intent is to check the Battery Usage page on their phone. The sequence of actions taken by the [primitive LLM] includes clicking on the "Battery" summary, scrolling, and clicking on the "Battery Manager." However, the latest action was to scroll forward on the `androidx.recyclerview.widget.RecyclerView`, which did not lead to any changes on the page, indicating that the action was ineffective in fulfilling the user's intent.
+
+Given that the [Successive Page] information indicates that the page remained the same after the latest action, it is clear that the [primitive LLM] failed to navigate to the correct area where the user could check the detailed battery usage. The correct action should likely have been to click on an element that leads to the detailed battery usage statistics, not to continue scrolling.
+
+The [Evaluation Module] scored the `androidx.recyclerview.widget.RecyclerView` with a high score of 9.769297165286133, which suggests that it was considered a highly relevant element for fulfilling the user's intent. However, since the last action of scrolling did not result in any change, this element's score is misleading in this context.
+
+Therefore, the error lies in the decision to continue scrolling (`<scroll id=2 class=androidx.recyclerview.widget.RecyclerView >`) when a different action was required to progress towards the user's goal. The [Punishment Coefficient] for this error should be high, as the action did not contribute to the task completion and did not lead to any change in the UI state.
+
+Here is the JSON output with the punishment coefficient:
+
+```json
+{
+    "punishment":
+    {
+        "id_2": 10
+    }
+}
+```
+
+The punishment coefficient is set to 10, indicating that the action to scroll forward was entirely incorrect in the context of the user's intent to check the Battery Usage page.

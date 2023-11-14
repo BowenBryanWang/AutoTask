@@ -1,0 +1,76 @@
+system:
+You are an expert in UI automation and robust error handling. Your task is to critic a operation sequence produced by a [primitive LLM],following user task but inaccurate. 
+Utilizing the log files from each module of current step of the [primitive LLM], you should locate error in the final element chosen to operate on.
+[primitive LLM] works in which they cannot see further information on UI, but you are in the backtracking process so you should utilize further information observed from subsequent UI to help correct possible errors.
+Specifically, you should analyze the [Latest Action] and the [Successive Page] information to determine the extent of error on fulfilling the task, and then output the punishment coefficient to it.
+Follow the steps below and think step by step:
+a. Understand the information given and synthize, especially [Latest Action] and its subsequent result [Successive Page];
+b, Think step by step about the scoring result by [Evaluation Module], try to identify error causes on the LATEST ACTION and give [Punishment Coefficient] from 1-10, where 1 means no error and 10 means totally wrong;
+Finally, output a JSON format like this example:
+{
+    "punishment":
+    {
+        "id_x": 1,
+        ......(replace x to the element with id that you think causes the error, output your punishment coefficient from 0-10)
+    }
+}
+
+
+user:
+
+                Wrong reason: The current UI does not contain settings related to wireless emergency alerts, and the user is in a backtracking phase, indicating that the correct path to the desired setting was missed and needs to be re-evaluated from a previous UI state.
+                
+
+user:
+
+                User intent: Turn on severe threats in wireless emergency alerts on your phone
+                
+
+user:
+
+                Page components: ["<scroll id=1 class=android.widget.ScrollView >\n    <div id=2   clickable> \n    <p class='android:id/title'  > Network & internet </p>\n\n    <p class='android:id/summary'  > Wi‑Fi, mobile, data usage, and hotspot </p>\n </div>\n\n    <div id=3   clickable> \n    <p class='android:id/title'  > Connected devices </p>\n\n    <p class='android:id/summary'  > Bluetooth </p>\n </div>\n\n    <div id=4   clickable> \n    <p class='android:id/title'  > Apps & notifications </p>\n\n    <p class='android:id/summary'  > Recent apps, default apps </p>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Battery </p>\n\n    <p class='android:id/summary'  > 100% </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Display </p>\n\n    <p class='android:id/summary'  > Wallpaper, sleep, font size </p>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > Sound </p>\n\n    <p class='android:id/summary'  > Volume, vibration, Do Not Disturb </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 26% used - 5.89 GB free </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n </scroll>\n"]
+                
+
+user:
+
+                Previous Steps:  -> Scroll forward on android.widget.ScrollView
+                
+
+user:
+
+                Action on this step: Scroll forward on android.widget.ScrollView
+                
+
+user:
+
+                    Latest Page: ["<scroll id=1 class=android.widget.ScrollView >\n    <div id=2   clickable>  </div>\n\n    <div id=3   clickable> \n    <p class='android:id/title'  > Sound </p>\n\n    <p class='android:id/summary'  > Volume, vibration, Do Not Disturb </p>\n </div>\n\n    <div id=4   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 26% used - 5.89 GB free </p>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Location </p>\n\n    <p class='android:id/summary'  > On - 1 app has access to location </p>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > Security </p>\n\n    <p class='android:id/summary'  > Screen lock, fingerprint </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Accounts </p>\n\n    <p class='android:id/summary'  > No accounts added </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Accessibility </p>\n\n    <p class='android:id/summary'  > Screen readers, display, interaction controls </p>\n </div>\n\n    <div id=10   clickable> \n    <p class='android:id/title'  > Google </p>\n\n    <p class='android:id/summary'  > Services & preferences </p>\n </div>\n\n    <div id=11   clickable> \n    <p class='android:id/title'  > System </p>\n\n    <p class='android:id/summary'  > Languages, gestures, time, backup </p>\n </div>\n </scroll>\n"]
+                    
+
+user:
+
+                Modules: {'Name': 'Evaluate', 'Description': "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent", 'Score': {'<scroll id=1 class=android.widget.ScrollView > </scroll>\n': 8.762485295444932, "<div id=2   clickable> \n    <p class='android:id/title'  > Network & internet </p>\n\n    <p class='android:id/summary'  > Wi‑Fi, mobile, data usage, and hotspot </p>\n </div>\n": 2.7987865964766154, "<div id=3   clickable> \n    <p class='android:id/title'  > Connected devices </p>\n\n    <p class='android:id/summary'  > Bluetooth </p>\n </div>\n": 1.7965893544561389, "<div id=4   clickable> \n    <p class='android:id/title'  > Apps & notifications </p>\n\n    <p class='android:id/summary'  > Recent apps, default apps </p>\n </div>\n": 7.798716635434331, "<div id=5   clickable> \n    <p class='android:id/title'  > Battery </p>\n\n    <p class='android:id/summary'  > 100% </p>\n </div>\n": 1.7924296527853658, "<div id=6   clickable> \n    <p class='android:id/title'  > Display </p>\n\n    <p class='android:id/summary'  > Wallpaper, sleep, font size </p>\n </div>\n": 1.7888578896375633, "<div id=7   clickable> \n    <p class='android:id/title'  > Sound </p>\n\n    <p class='android:id/summary'  > Volume, vibration, Do Not Disturb </p>\n </div>\n": 5.7887924047346075, "<div id=8   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 26% used - 5.89 GB free </p>\n </div>\n": 1.774320478013356, "<div id=9   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n": 2.7934178775648264}, 'Punishment coefficient': [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], 'GPT answer': {'id_1': 8.0, 'id_2': 2.0, 'id_3': 1.0, 'id_4': 7.0, 'id_5': 1.0, 'id_6': 1.0, 'id_7': 5.0, 'id_8': 1.0, 'id_9': 2.0}}
+                
+
+===response===
+Based on the provided information, the user's intent is to "Turn on severe threats in wireless emergency alerts on your phone." The [primitive LLM] has been scrolling through the settings but has not yet located the setting related to wireless emergency alerts.
+
+The [Latest Action] was to scroll forward on the `android.widget.ScrollView`, which led to the [Successive Page] showing additional settings options such as "Location," "Security," "Accounts," "Accessibility," "Google," and "System." None of these options directly relate to wireless emergency alerts, which typically falls under a "Notifications" or "Emergency Alerts" section within the phone settings.
+
+Given that the [primitive LLM] has scrolled past sections like "Network & internet" and "Apps & notifications" without selecting them, and considering that the user is in a backtracking phase, it seems that the [primitive LLM] has missed the correct path to the desired setting. The correct setting for wireless emergency alerts is likely within one of the previously scrolled past sections, possibly under "Apps & notifications" or a similar section that was not visible in the logs.
+
+The [Evaluation Module] has assigned a high score to the `android.widget.ScrollView` (8.762485295444932), which indicates that the module believes scrolling was a correct action. However, this is not the case since the user's intent has not been met, and the correct section has not been selected.
+
+Given these observations, the error lies in the action of continuing to scroll rather than selecting the correct section to adjust the wireless emergency alerts. The punishment coefficient should reflect the severity of the error in missing the correct path.
+
+Here is the JSON output with the punishment coefficient for the latest action:
+
+```json
+{
+    "punishment":
+    {
+        "id_1": 8
+    }
+}
+```
+
+I have assigned a punishment coefficient of 8 to `id_1`, which is the ScrollView, because the error is significant — the [primitive LLM] has failed to identify the correct section and continued scrolling, which has led the user further away from completing their task.

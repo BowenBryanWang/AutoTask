@@ -1,0 +1,202 @@
+{
+    "@User_intent": "Turn on severe threats in wireless emergency alerts on your phone",
+    "@Page_components": [
+        "<scroll id=1 class=android.widget.ScrollView >\n    <div id=2   clickable>  </div>\n\n    <div id=3   clickable> \n    <p class='android:id/title'  > Sound </p>\n\n    <p class='android:id/summary'  > Volume, vibration, Do Not Disturb </p>\n </div>\n\n    <div id=4   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 26% used - 5.89 GB free </p>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Location </p>\n\n    <p class='android:id/summary'  > On - 1 app has access to location </p>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > Security </p>\n\n    <p class='android:id/summary'  > Screen lock, fingerprint </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Accounts </p>\n\n    <p class='android:id/summary'  > No accounts added </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Accessibility </p>\n\n    <p class='android:id/summary'  > Screen readers, display, interaction controls </p>\n </div>\n\n    <div id=10   clickable> \n    <p class='android:id/title'  > Google </p>\n\n    <p class='android:id/summary'  > Services & preferences </p>\n </div>\n\n    <div id=11   clickable> \n    <p class='android:id/title'  > System </p>\n\n    <p class='android:id/summary'  > Languages, gestures, time, backup </p>\n </div>\n </scroll>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "One-step UI knowledge": {
+                "id=1": [
+                    "android.widget.ScrollView",
+                    "clickable",
+                    "clickable 'android:id/title' Storage 'android:id/summary' 26% used - 5.89 GB free",
+                    "clickable 'android:id/title' Privacy 'android:id/summary' Permissions, account activity, personal data",
+                    "clickable 'android:id/title' Location 'android:id/summary' On - 1 app has access to location",
+                    "clickable 'android:id/title' Security 'android:id/summary' Screen lock, fingerprint",
+                    "clickable 'android:id/title' Accounts 'android:id/summary' No accounts added",
+                    "clickable 'android:id/title' Accessibility 'android:id/summary' Screen readers, display, interaction controls",
+                    "clickable 'android:id/title' Google 'android:id/summary' Services & preferences",
+                    "clickable 'android:id/title' System 'android:id/summary' Languages, gestures, time, backup",
+                    "clickable 'android:id/title' About emulated device 'android:id/summary' Android SDK built for x86"
+                ],
+                "id=3": [
+                    "Accessibility",
+                    "androidx.recyclerview.widget.RecyclerView",
+                    "'android:id/title' DOWNLOADED APPS",
+                    "clickable 'android:id/title' ActionRecord 'android:id/summary' On",
+                    "'android:id/title' SCREEN READERS",
+                    "'android:id/title' DISPLAY",
+                    "clickable 'android:id/title' Font size 'android:id/summary' Default",
+                    "clickable 'android:id/title' Display size 'android:id/summary' Default",
+                    "clickable 'android:id/title' Dark theme 'android:id/switch_widget' clickable Off",
+                    "clickable 'android:id/title' Magnification 'android:id/summary' Off",
+                    "clickable 'android:id/title' Large mouse pointer 'android:id/switch_widget' clickable Off",
+                    "clickable 'android:id/title' Remove animations 'android:id/switch_widget' clickable Off"
+                ],
+                "id=4": [
+                    "Accessibility",
+                    "androidx.recyclerview.widget.RecyclerView",
+                    "'android:id/title' DOWNLOADED APPS",
+                    "clickable 'android:id/title' ActionRecord 'android:id/summary' On",
+                    "'android:id/title' SCREEN READERS",
+                    "'android:id/title' DISPLAY",
+                    "clickable 'android:id/title' Font size 'android:id/summary' Default",
+                    "clickable 'android:id/title' Display size 'android:id/summary' Default",
+                    "clickable 'android:id/title' Dark theme 'android:id/switch_widget' clickable Off",
+                    "clickable 'android:id/title' Magnification 'android:id/summary' Off",
+                    "clickable 'android:id/title' Large mouse pointer 'android:id/switch_widget' clickable Off",
+                    "clickable 'android:id/title' Remove animations 'android:id/switch_widget' clickable Off"
+                ],
+                "id=5": [
+                    "Accessibility",
+                    "androidx.recyclerview.widget.RecyclerView",
+                    "'android:id/title' DOWNLOADED APPS",
+                    "clickable 'android:id/title' ActionRecord 'android:id/summary' On",
+                    "'android:id/title' SCREEN READERS",
+                    "'android:id/title' DISPLAY",
+                    "clickable 'android:id/title' Font size 'android:id/summary' Default",
+                    "clickable 'android:id/title' Display size 'android:id/summary' Default",
+                    "clickable 'android:id/title' Dark theme 'android:id/switch_widget' clickable Off",
+                    "clickable 'android:id/title' Magnification 'android:id/summary' Off",
+                    "clickable 'android:id/title' Large mouse pointer 'android:id/switch_widget' clickable Off",
+                    "clickable 'android:id/title' Remove animations 'android:id/switch_widget' clickable Off"
+                ],
+                "id=6": [
+                    "Accessibility",
+                    "androidx.recyclerview.widget.RecyclerView",
+                    "'android:id/title' DOWNLOADED APPS",
+                    "clickable 'android:id/title' ActionRecord 'android:id/summary' On",
+                    "'android:id/title' SCREEN READERS",
+                    "'android:id/title' DISPLAY",
+                    "clickable 'android:id/title' Font size 'android:id/summary' Default",
+                    "clickable 'android:id/title' Display size 'android:id/summary' Default",
+                    "clickable 'android:id/title' Dark theme 'android:id/switch_widget' clickable Off",
+                    "clickable 'android:id/title' Magnification 'android:id/summary' Off",
+                    "clickable 'android:id/title' Large mouse pointer 'android:id/switch_widget' clickable Off",
+                    "clickable 'android:id/title' Remove animations 'android:id/switch_widget' clickable Off"
+                ],
+                "id=7": [
+                    "Accessibility",
+                    "androidx.recyclerview.widget.RecyclerView",
+                    "'android:id/title' DOWNLOADED APPS",
+                    "clickable 'android:id/title' ActionRecord 'android:id/summary' On",
+                    "'android:id/title' SCREEN READERS",
+                    "'android:id/title' DISPLAY",
+                    "clickable 'android:id/title' Font size 'android:id/summary' Default",
+                    "clickable 'android:id/title' Display size 'android:id/summary' Default",
+                    "clickable 'android:id/title' Dark theme 'android:id/switch_widget' clickable Off",
+                    "clickable 'android:id/title' Magnification 'android:id/summary' Off",
+                    "clickable 'android:id/title' Large mouse pointer 'android:id/switch_widget' clickable Off",
+                    "clickable 'android:id/title' Remove animations 'android:id/switch_widget' clickable Off"
+                ],
+                "id=8": [
+                    "Accessibility",
+                    "androidx.recyclerview.widget.RecyclerView",
+                    "'android:id/title' DOWNLOADED APPS",
+                    "clickable 'android:id/title' ActionRecord 'android:id/summary' On",
+                    "'android:id/title' SCREEN READERS",
+                    "'android:id/title' DISPLAY",
+                    "clickable 'android:id/title' Font size 'android:id/summary' Default",
+                    "clickable 'android:id/title' Display size 'android:id/summary' Default",
+                    "clickable 'android:id/title' Dark theme 'android:id/switch_widget' clickable Off",
+                    "clickable 'android:id/title' Magnification 'android:id/summary' Off",
+                    "clickable 'android:id/title' Large mouse pointer 'android:id/switch_widget' clickable Off",
+                    "clickable 'android:id/title' Remove animations 'android:id/switch_widget' clickable Off"
+                ],
+                "id=9": [
+                    "Accessibility",
+                    "androidx.recyclerview.widget.RecyclerView",
+                    "'android:id/title' DOWNLOADED APPS",
+                    "clickable 'android:id/title' ActionRecord 'android:id/summary' On",
+                    "'android:id/title' SCREEN READERS",
+                    "'android:id/title' DISPLAY",
+                    "clickable 'android:id/title' Font size 'android:id/summary' Default",
+                    "clickable 'android:id/title' Display size 'android:id/summary' Default",
+                    "clickable 'android:id/title' Dark theme 'android:id/switch_widget' clickable Off",
+                    "clickable 'android:id/title' Magnification 'android:id/summary' Off",
+                    "clickable 'android:id/title' Large mouse pointer 'android:id/switch_widget' clickable Off",
+                    "clickable 'android:id/title' Remove animations 'android:id/switch_widget' clickable Off"
+                ],
+                "id=10": [
+                    "Accessibility",
+                    "androidx.recyclerview.widget.RecyclerView",
+                    "'android:id/title' DOWNLOADED APPS",
+                    "clickable 'android:id/title' ActionRecord 'android:id/summary' On",
+                    "'android:id/title' SCREEN READERS",
+                    "'android:id/title' DISPLAY",
+                    "clickable 'android:id/title' Font size 'android:id/summary' Default",
+                    "clickable 'android:id/title' Display size 'android:id/summary' Default",
+                    "clickable 'android:id/title' Dark theme 'android:id/switch_widget' clickable Off",
+                    "clickable 'android:id/title' Magnification 'android:id/summary' Off",
+                    "clickable 'android:id/title' Large mouse pointer 'android:id/switch_widget' clickable Off",
+                    "clickable 'android:id/title' Remove animations 'android:id/switch_widget' clickable Off"
+                ],
+                "id=11": [
+                    "Accessibility",
+                    "androidx.recyclerview.widget.RecyclerView",
+                    "'android:id/title' DOWNLOADED APPS",
+                    "clickable 'android:id/title' ActionRecord 'android:id/summary' On",
+                    "'android:id/title' SCREEN READERS",
+                    "'android:id/title' DISPLAY",
+                    "clickable 'android:id/title' Font size 'android:id/summary' Default",
+                    "clickable 'android:id/title' Display size 'android:id/summary' Default",
+                    "clickable 'android:id/title' Dark theme 'android:id/switch_widget' clickable Off",
+                    "clickable 'android:id/title' Magnification 'android:id/summary' Off",
+                    "clickable 'android:id/title' Large mouse pointer 'android:id/switch_widget' clickable Off",
+                    "clickable 'android:id/title' Remove animations 'android:id/switch_widget' clickable Off"
+                ]
+            },
+            "Multi-step UI knowledge": ""
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Score": {
+                "<scroll id=1 class=android.widget.ScrollView > </scroll>\n": 0.0,
+                "<div id=2   clickable>  </div>\n": 1.740205967868003,
+                "<div id=3   clickable> \n    <p class='android:id/title'  > Sound </p>\n\n    <p class='android:id/summary'  > Volume, vibration, Do Not Disturb </p>\n </div>\n": 1.775266509888175,
+                "<div id=4   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 26% used - 5.89 GB free </p>\n </div>\n": 1.7624374818844606,
+                "<div id=5   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n": 1.7841570601465135,
+                "<div id=6   clickable> \n    <p class='android:id/title'  > Location </p>\n\n    <p class='android:id/summary'  > On - 1 app has access to location </p>\n </div>\n": 1.7774609617305928,
+                "<div id=7   clickable> \n    <p class='android:id/title'  > Security </p>\n\n    <p class='android:id/summary'  > Screen lock, fingerprint </p>\n </div>\n": 1.786360798192613,
+                "<div id=8   clickable> \n    <p class='android:id/title'  > Accounts </p>\n\n    <p class='android:id/summary'  > No accounts added </p>\n </div>\n": 1.7642257834177537,
+                "<div id=9   clickable> \n    <p class='android:id/title'  > Accessibility </p>\n\n    <p class='android:id/summary'  > Screen readers, display, interaction controls </p>\n </div>\n": 1.8046095009607646,
+                "<div id=10   clickable> \n    <p class='android:id/title'  > Google </p>\n\n    <p class='android:id/summary'  > Services & preferences </p>\n </div>\n": 1.7853517268528563,
+                "<div id=11   clickable> \n    <p class='android:id/title'  > System </p>\n\n    <p class='android:id/summary'  > Languages, gestures, time, backup </p>\n </div>\n": 1.7865897457887496
+            },
+            "Punishment coefficient": [
+                0.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "GPT answer": {
+                "id_1": 10.0,
+                "id_2": 1.0,
+                "id_3": 1.0,
+                "id_4": 1.0,
+                "id_5": 1.0,
+                "id_6": 1.0,
+                "id_7": 1.0,
+                "id_8": 1.0,
+                "id_9": 1.0,
+                "id_10": 1.0,
+                "id_11": 1.0
+            }
+        }
+    ],
+    "@History_operation": " -> Scroll forward on android.widget.ScrollView -> Scroll forward on android.widget.ScrollView -> Click on clickable 'android:id/title' Accessibility 'android:id/summary' Screen readers, display, interaction controls",
+    "@Current_Action": "Click on clickable 'android:id/title' Accessibility 'android:id/summary' Screen readers, display, interaction controls",
+    "@Successive_Page": [
+        "<scroll id=1 class=android.widget.ScrollView >\n    <div id=2   clickable>  </div>\n\n    <div id=3   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 26% used - 5.89 GB free </p>\n </div>\n\n    <div id=4   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Location </p>\n\n    <p class='android:id/summary'  > On - 1 app has access to location </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Security </p>\n\n    <p class='android:id/summary'  > Screen lock, fingerprint </p>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > Accounts </p>\n\n    <p class='android:id/summary'  > No accounts added </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Accessibility </p>\n\n    <p class='android:id/summary'  > Screen readers, display, interaction controls </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Google </p>\n\n    <p class='android:id/summary'  > Services & preferences </p>\n </div>\n\n    <div id=10   clickable> \n    <p class='android:id/title'  > System </p>\n\n    <p class='android:id/summary'  > Languages, gestures, time, backup </p>\n </div>\n\n    <div id=11   clickable> \n    <p class='android:id/title'  > About emulated device </p>\n\n    <p class='android:id/summary'  > Android SDK built for x86 </p>\n </div>\n </scroll>\n"
+    ]
+}

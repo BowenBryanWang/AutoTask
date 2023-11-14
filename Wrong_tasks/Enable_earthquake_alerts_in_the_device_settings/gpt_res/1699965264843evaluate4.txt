@@ -1,0 +1,70 @@
+system:
+You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
+Your job is to rate the available UI elements on the current page.
+Note that:
+    (1) The element with the highest score will be choosen as the next element to be operated. If you have more than one top scoring option in your scoring, it's a good idea to highlight the score of one of the most likely candidates to avoid confusion.
+    (2) Your score should be accurate to two decimal places.
+    (3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
+    (4) <scroll /> element means there is a list and you can interact with it by scrolling forward. If you want to explore more, you can also try giving <scroll/> a relatively high scorat. The score of the <scroll /> should always be higher than that of those appearantly unrelated with the task.
+For each option, provide a confidence rating from 1.00-10.00, based on the relation of each option to the task, where 1.00 is the lowest tier indicating complete irrelevance and may lead to errors, 2.00-4.00 is the second tier indicating minor relevance, 4.00-6.00 is the medium tier indicating neutrality, 6.00-8.00 indicates higher relevance, possibly a candidate, and 10.00 indicates the most likely to be chosen and executed.
+The structure of the output should be: {
+    "id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value and iterate over all possible values), and "<rating>" denotes its rating.
+Example:
+{
+    "id_1": 5.53, "id_2": 9.71, "id_3": 3.20
+}
+Think step by step and output your reasoning process:
+Step 1: think about ["History operation sequence"],what has been done,especially pay attention to those steps which is wrong and caused navigate back if any;
+Step 2: think step by step on the ["Succesive Results"] of each UI options GIVEN by user, which represents the subsequent items after operating on them, and the ["possible paths to UI target"] GIVEN by user, which was suggested by expert knowledge;
+Step 3: decide what should be done next. Possible operations: click, edit (text input), scroll. Pay attention to those steps which is wrong and caused navigate back if any;
+Step 4: Synthesize the above output to output a JSON object with scores.
+
+Strictly output a format like "id_1": 3.00, do not tamper with it to make it look like "scroll_1": 3.00, etc., it must start with id_.
+
+
+user:
+{
+    "Task": "Allow emergency broadcast alerts on the phone.",
+    "History operation sequence": [
+        "Click on clickable 'android:id/title' Apps & notifications 'android:id/summary' Recent apps, default apps",
+        "Click on clickable 'android:id/title' Advanced 'android:id/summary' Permission manager, Wireless emergency alerts, Special app access",
+        "Click on clickable 'android:id/title' Wireless emergency alerts"
+    ],
+    "Current UI screen": "<div id=1  description='Navigate up' enabled  clickable>  </div>\n<p class=''  > Wireless emergency alerts </p>\n<scroll id=2 class=androidx.recyclerview.widget.RecyclerView >\n    <div id=3   clickable> \n    <p class='android:id/title'  > Allow alerts </p>\n\n    <p class='android:id/summary'  > Receive wireless emergency alert notifications </p>\n\n    <switch id=4 class='android:id/switch_widget' clickable > On </switch>\n </div>\n\n    <p class='android:id/title'  > Alerts </p>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Extreme threats </p>\n\n    <p class='android:id/summary'  > Extreme threats to life and property </p>\n\n    <switch id=6 class='android:id/switch_widget' clickable > On </switch>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > Severe threats </p>\n\n    <p class='android:id/summary'  > Severe threats to life and property </p>\n\n    <switch id=8 class='android:id/switch_widget' clickable > On </switch>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > AMBER alerts </p>\n\n    <p class='android:id/summary'  > Child abduction emergency bulletins </p>\n\n    <switch id=10 class='android:id/switch_widget' clickable > On </switch>\n </div>\n\n    <div id=11   clickable> \n    <p class='android:id/title'  > Public safety messages </p>\n\n    <p class='android:id/summary'  > Recommended actions that can save lives or property </p>\n\n    <switch id=12 class='android:id/switch_widget' clickable > On </switch>\n </div>\n\n    <div id=13   clickable> \n    <p class='android:id/title'  > State and local tests </p>\n\n    <p class='android:id/summary'  > Receive test messages from state and local authorities </p>\n\n    <switch id=14 class='android:id/switch_widget' clickable > Off </switch>\n </div>\n\n    <div id=15   clickable> \n    <p class='android:id/title'  > Emergency alert history </p>\n </div>\n </scroll>\n",
+    "Successive results": {},
+    "Hint": "Below is a hint and suggestion from another model{\"next ui element\": \"State and local tests switch\", \"status\": \"go on\", \"reason\": \"The user has enabled most emergency alerts, but the 'State and local tests' alert is turned off. The task may require enabling all alerts. Additionally, there may be more elements to explore by scrolling, which could include a save or confirm option.\"}"
+}
+
+===response===
+Step 1: The history operation sequence shows that the user has navigated through the settings to reach the "Wireless emergency alerts" section. No steps indicate that there was a wrong operation that led to a navigate back action.
+
+Step 2: On the current UI screen, the user is presented with various types of emergency alerts, all of which have their switches set to 'On', except for the "State and local tests" alert, which is set to 'Off'. The task is to "Allow emergency broadcast alerts on the phone," and it appears that most alerts are already allowed except for the "State and local tests".
+
+Step 3: Based on the hint and the task at hand, the most likely next step is to enable the "State and local tests" alert by interacting with its switch. Additionally, there might be more options available by scrolling, which could include a save or confirm option. Since the task is specifically to allow alerts and one of the switches is off, the switch for "State and local tests" should be the next UI element to operate.
+
+Step 4: The ratings for the UI elements are as follows:
+- The "Navigate up" button (id_1) is not relevant to the task as the user does not need to go back.
+- The switches for alerts that are already 'On' (ids 4, 6, 8, 10, 12) are not relevant as the task is to enable an alert that is currently 'Off'.
+- The "State and local tests" switch (id_14) is the most relevant as it is the only switch that is 'Off'.
+- The "Emergency alert history" option (id_15) might be relevant for reviewing past alerts but does not contribute to enabling alerts.
+- The <scroll/> element (id_2) could reveal additional options, but since there is a clear action to be taken, it should have a lower rating than the action that directly relates to the task.
+
+Based on these considerations, the JSON object with the scores is as follows:
+
+{
+    "id_1": 1.00,
+    "id_2": 7.00,
+    "id_3": 1.00,
+    "id_4": 1.00,
+    "id_5": 1.00,
+    "id_6": 1.00,
+    "id_7": 1.00,
+    "id_8": 1.00,
+    "id_9": 1.00,
+    "id_10": 1.00,
+    "id_11": 1.00,
+    "id_12": 1.00,
+    "id_13": 1.00,
+    "id_14": 10.00,
+    "id_15": 2.00
+}

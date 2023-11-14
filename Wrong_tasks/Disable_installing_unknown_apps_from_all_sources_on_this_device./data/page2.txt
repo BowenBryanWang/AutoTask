@@ -1,0 +1,33 @@
+<p class=''  > Apps & notifications </p>
+<p class='com.android.settings:id/header_title'  > Recently opened apps </p>
+<div id=1 class='com.android.settings:id/app1_view'  clickable> 
+    <p class='com.android.settings:id/app_title'  > ActionRecord </p>
+
+    <p class='com.android.settings:id/app_summary'  > 8 hr. ago </p>
+ </div>
+<div id=2 class='com.android.settings:id/app2_view'  clickable> 
+    <p class='com.android.settings:id/app_title'  > Chrome </p>
+
+    <p class='com.android.settings:id/app_summary'  > 20 hr. ago </p>
+ </div>
+<button id=3 class='com.android.settings:id/header_details'  > See all 24 apps </button>
+<div id=4   clickable> 
+    <p class='android:id/title'  > Conversations </p>
+
+    <p class='android:id/summary'  > No priority conversations </p>
+ </div>
+<div id=5   clickable> 
+    <p class='android:id/title'  > Notifications </p>
+
+    <p class='android:id/summary'  > Notification history, bubbles, recently sent </p>
+ </div>
+<div id=6   clickable> 
+    <p class='android:id/title'  > Screen time </p>
+
+    <p class='android:id/summary'  > 8 hr, 35 min today </p>
+ </div>
+<div id=7   clickable> 
+    <p class='android:id/title'  > Advanced </p>
+
+    <p class='android:id/summary'  > Default apps, Permission manager, Wireless emergency alerts, Special app access </p>
+ </div>

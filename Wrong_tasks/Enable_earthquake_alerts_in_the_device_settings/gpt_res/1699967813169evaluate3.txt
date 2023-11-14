@@ -1,0 +1,64 @@
+system:
+You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
+Your job is to rate the available UI elements on the current page.
+Note that:
+    (1) The element with the highest score will be choosen as the next element to be operated. If you have more than one top scoring option in your scoring, it's a good idea to highlight the score of one of the most likely candidates to avoid confusion.
+    (2) Your score should be accurate to two decimal places.
+    (3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
+    (4) <scroll /> element means there is a list and you can interact with it by scrolling forward. If you want to explore more, you can also try giving <scroll/> a relatively high scorat. The score of the <scroll /> should always be higher than that of those appearantly unrelated with the task.
+For each option, provide a confidence rating from 1.00-10.00, based on the relation of each option to the task, where 1.00 is the lowest tier indicating complete irrelevance and may lead to errors, 2.00-4.00 is the second tier indicating minor relevance, 4.00-6.00 is the medium tier indicating neutrality, 6.00-8.00 indicates higher relevance, possibly a candidate, and 10.00 indicates the most likely to be chosen and executed.
+The structure of the output should be: {
+    "id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value and iterate over all possible values), and "<rating>" denotes its rating.
+Example:
+{
+    "id_1": 5.53, "id_2": 9.71, "id_3": 3.20
+}
+Think step by step and output your reasoning process:
+Step 1: think about ["History operation sequence"],what has been done,especially pay attention to those steps which is wrong and caused navigate back if any;
+Step 2: think step by step on the ["Succesive Results"] of each UI options GIVEN by user, which represents the subsequent items after operating on them, and the ["possible paths to UI target"] GIVEN by user, which was suggested by expert knowledge;
+Step 3: decide what should be done next. Possible operations: click, edit (text input), scroll. Pay attention to those steps which is wrong and caused navigate back if any;
+Step 4: Synthesize the above output to output a JSON object with scores.
+
+Strictly output a format like "id_1": 3.00, do not tamper with it to make it look like "scroll_1": 3.00, etc., it must start with id_.
+
+
+user:
+{
+    "Task": "Enable earthquake alerts in the device settings",
+    "History operation sequence": [
+        "Scroll forward on android.widget.ScrollView",
+        "Click on clickable 'android:id/title' Location 'android:id/summary' On - 1 app has access to location"
+    ],
+    "Current UI screen": "<p class=''  > Location </p>\n<div id=1 class='com.android.settings:id/switch_bar'  clickable> \n    <p class='com.android.settings:id/switch_text'  > Use location </p>\n\n    <switch id=2 class='com.android.settings:id/switch_widget' clickable > On </switch>\n </div>\n<p class='android:id/title'  > RECENT LOCATION REQUESTS </p>\n<p class='android:id/title'  > No apps have requested location recently </p>\n<div id=3   clickable> \n    <p class='android:id/title'  > See all </p>\n </div>\n<div id=4   clickable> \n    <p class='android:id/title'  > App access to location </p>\n\n    <p class='android:id/summary'  > 1 of 6 apps has access to location </p>\n </div>\n<div id=5   clickable> \n    <p class='android:id/title'  > Wi\u2011Fi and Bluetooth scanning </p>\n\n    <p class='android:id/summary'  > Wi\u2011Fi scanning is on, Bluetooth scanning is off </p>\n </div>\n<div id=6   clickable> \n    <p class='android:id/title'  > Advanced </p>\n\n    <p class='android:id/summary'  > Emergency Location Service, Google Location Accuracy, Google Location History, Google Location Sharing </p>\n </div>\n<div id=7   clickable> \n    <p class='android:id/title'  > Location may use sources like GPS, Wi\u2011Fi, mobile networks, and sensors to help estimate your device\u2019s location. Google may collect location data periodically and use this data in an anonymous way to improve location accuracy and location-based services. </p>\n </div>\n",
+    "Successive results": {},
+    "Hint": "Below is a hint and suggestion from another model{\"next ui element\": \"Advanced\", \"status\": \"go on\", \"reason\": \"The user is in the location settings where earthquake alerts might be found, and the 'Advanced' option could contain more specific settings related to location services, including earthquake alerts. Further exploration of the 'Advanced' settings is needed to complete the user's task.\"}"
+}
+
+===response===
+Step 1: The user has scrolled through the settings and clicked on the "Location" setting, indicating that they are in the correct section for enabling location-based services such as earthquake alerts.
+
+Step 2: The current UI screen shows various options related to location settings. Since the task is to enable earthquake alerts, we need to find a setting that is specifically related to alerts or emergency services. The hint suggests that the "Advanced" option might contain more specific settings related to location services, which could include earthquake alerts.
+
+Step 3: Based on the information given and the hint provided, the "Advanced" section seems like the next logical step to explore for earthquake alert settings. The elements related to Wi-Fi and Bluetooth scanning, app access to location, and the general description of location services are less likely to directly contain the earthquake alert settings.
+
+Here are the ratings based on the relevance to the task of enabling earthquake alerts:
+
+- "Use location" switch is already on, so no action is needed there.
+- "RECENT LOCATION REQUESTS" and "No apps have requested location recently" do not seem relevant to enabling alerts.
+- "See all" under recent location requests is unlikely to lead to alert settings.
+- "App access to location" is related to which apps can use location services, not to enabling alerts.
+- "Wi-Fi and Bluetooth scanning" is related to location accuracy, not alerts.
+- "Advanced" is the most likely place to find additional settings, including possibly the earthquake alerts.
+- The long description about location sources and Google's use of data is informational and not an actionable item.
+
+Step 4: Synthesize the above output to output a JSON object with scores.
+
+{
+    "id_1": 1.00,
+    "id_2": 1.00,
+    "id_3": 1.00,
+    "id_4": 1.00,
+    "id_5": 1.00,
+    "id_6": 9.50, // "Advanced" is the most likely place to find earthquake alert settings.
+    "id_7": 1.00
+}

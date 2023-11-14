@@ -1,0 +1,49 @@
+<scroll id=1 class=android.widget.ScrollView >
+    <div id=2   clickable> 
+    <p class='android:id/title'  > Network & internet </p>
+
+    <p class='android:id/summary'  > Wi‑Fi, mobile, data usage, and hotspot </p>
+ </div>
+
+    <div id=3   clickable> 
+    <p class='android:id/title'  > Connected devices </p>
+
+    <p class='android:id/summary'  > Bluetooth </p>
+ </div>
+
+    <div id=4   clickable> 
+    <p class='android:id/title'  > Apps & notifications </p>
+
+    <p class='android:id/summary'  > Recent apps, default apps </p>
+ </div>
+
+    <div id=5   clickable> 
+    <p class='android:id/title'  > Battery </p>
+
+    <p class='android:id/summary'  > 100% </p>
+ </div>
+
+    <div id=6   clickable> 
+    <p class='android:id/title'  > Display </p>
+
+    <p class='android:id/summary'  > Wallpaper, sleep, font size </p>
+ </div>
+
+    <div id=7   clickable> 
+    <p class='android:id/title'  > Sound </p>
+
+    <p class='android:id/summary'  > Volume, vibration, Do Not Disturb </p>
+ </div>
+
+    <div id=8   clickable> 
+    <p class='android:id/title'  > Storage </p>
+
+    <p class='android:id/summary'  > 26% used - 5.89 GB free </p>
+ </div>
+
+    <div id=9   clickable> 
+    <p class='android:id/title'  > Privacy </p>
+
+    <p class='android:id/summary'  > Permissions, account activity, personal data </p>
+ </div>
+ </scroll>

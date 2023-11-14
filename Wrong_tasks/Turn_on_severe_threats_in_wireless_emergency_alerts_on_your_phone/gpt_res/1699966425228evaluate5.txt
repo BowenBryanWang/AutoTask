@@ -1,0 +1,62 @@
+system:
+You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
+Your job is to rate the available UI elements on the current page.
+Note that:
+    (1) The element with the highest score will be choosen as the next element to be operated. If you have more than one top scoring option in your scoring, it's a good idea to highlight the score of one of the most likely candidates to avoid confusion.
+    (2) Your score should be accurate to two decimal places.
+    (3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
+    (4) <scroll /> element means there is a list and you can interact with it by scrolling forward. If you want to explore more, you can also try giving <scroll/> a relatively high scorat. The score of the <scroll /> should always be higher than that of those appearantly unrelated with the task.
+For each option, provide a confidence rating from 1.00-10.00, based on the relation of each option to the task, where 1.00 is the lowest tier indicating complete irrelevance and may lead to errors, 2.00-4.00 is the second tier indicating minor relevance, 4.00-6.00 is the medium tier indicating neutrality, 6.00-8.00 indicates higher relevance, possibly a candidate, and 10.00 indicates the most likely to be chosen and executed.
+The structure of the output should be: {
+    "id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value and iterate over all possible values), and "<rating>" denotes its rating.
+Example:
+{
+    "id_1": 5.53, "id_2": 9.71, "id_3": 3.20
+}
+Think step by step and output your reasoning process:
+Step 1: think about ["History operation sequence"],what has been done,especially pay attention to those steps which is wrong and caused navigate back if any;
+Step 2: think step by step on the ["Succesive Results"] of each UI options GIVEN by user, which represents the subsequent items after operating on them, and the ["possible paths to UI target"] GIVEN by user, which was suggested by expert knowledge;
+Step 3: decide what should be done next. Possible operations: click, edit (text input), scroll. Pay attention to those steps which is wrong and caused navigate back if any;
+Step 4: Synthesize the above output to output a JSON object with scores.
+
+Strictly output a format like "id_1": 3.00, do not tamper with it to make it look like "scroll_1": 3.00, etc., it must start with id_.
+
+
+user:
+{
+    "Task": "Clear the cache and data in Google.",
+    "History operation sequence": [
+        "Click on clickable 'android:id/title' Apps & notifications 'android:id/summary' Recent apps, default apps",
+        "Click on 'com.android.settings:id/header_details' SEE ALL 18 APPS",
+        "Click on 'com.android.settings:id/search_app_list_menu' 'Search' enabled clickable",
+        "Edit 'android:id/search_src_text' enabled editable Search with Google"
+    ],
+    "Current UI screen": "<div id=1  description='Collapse' enabled  clickable>  </div>\n<input id=2 class='android:id/search_src_text'  enabled editable > Google </input>\n<button id=3 class='android:id/search_close_btn' description='Clear query' >  </button>\n<div id=4  description='More options' enabled  clickable>  </div>\n<div id=5  description='Google Play services' clickable> \n    <p class='android:id/title'  > Google Play services </p>\n\n    <p class='android:id/summary'  > 21.15 MB </p>\n </div>\n",
+    "Successive results": {},
+    "Hint": "Below is a hint and suggestion from another model{\"next ui element\": \"description='Google Play services' clickable\", \"status\": \"go on\", \"reason\": \"The user has successfully searched for Google-related services, and 'Google Play services' is listed, which may allow the user to clear cache and data upon further interaction.\"}"
+}
+
+===response===
+Step 1: The user has navigated through the settings to "Apps & notifications" and used the search functionality to find Google-related services. The last action taken was editing the search text to "Google".
+
+Step 2: The current UI screen displays the search results, which include a "Clear query" button, "Collapse" and "More options" elements, and an item for "Google Play services". There is no direct indication of the cache clearing option, but "Google Play services" seems related to the task.
+
+Step 3: Based on the hint from another model and the user's task to clear the cache and data in Google, the most likely next step is to interact with the "Google Play services" element, which could provide access to the cache and data options.
+
+Here are the confidence ratings for the UI elements:
+
+- "Collapse" (id_1) is a navigation control that would likely hide the search results or close the search bar, which is not related to clearing cache and data. Therefore, it gets a low score.
+- The search input field (id_2) has already been used to search for Google, and there's no need to edit the search query again, so it also gets a low score.
+- "Clear query" (id_3) would clear the search input but would not help in clearing the cache and data, so it gets a low score.
+- "More options" (id_4) could potentially provide additional actions but without knowing what those are, it's less likely than interacting with the "Google Play services" option, so it gets a medium score.
+- "Google Play services" (id_5) is directly mentioned in the hint and is the most relevant to the user's task, so it gets the highest score.
+
+Considering these factors, the scores are as follows:
+
+{
+    "id_1": 2.00, 
+    "id_2": 2.00, 
+    "id_3": 2.00, 
+    "id_4": 6.00, 
+    "id_5": 10.00
+}

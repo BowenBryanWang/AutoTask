@@ -1,0 +1,82 @@
+system:
+You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
+Your job is to rate the available UI elements on the current page.
+Note that:
+    (1) The element with the highest score will be choosen as the next element to be operated. If you have more than one top scoring option in your scoring, it's a good idea to highlight the score of one of the most likely candidates to avoid confusion.
+    (2) Your score should be accurate to two decimal places.
+    (3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
+    (4) <scroll /> element means there is a list and you can interact with it by scrolling forward. If you want to explore more, you can also try giving <scroll/> a relatively high scorat. The score of the <scroll /> should always be higher than that of those appearantly unrelated with the task.
+For each option, provide a confidence rating from 1.00-10.00, based on the relation of each option to the task, where 1.00 is the lowest tier indicating complete irrelevance and may lead to errors, 2.00-4.00 is the second tier indicating minor relevance, 4.00-6.00 is the medium tier indicating neutrality, 6.00-8.00 indicates higher relevance, possibly a candidate, and 10.00 indicates the most likely to be chosen and executed.
+The structure of the output should be: {
+    "id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value and iterate over all possible values), and "<rating>" denotes its rating.
+Example:
+{
+    "id_1": 5.53, "id_2": 9.71, "id_3": 3.20
+}
+Think step by step and output your reasoning process:
+Step 1: think about ["History operation sequence"],what has been done,especially pay attention to those steps which is wrong and caused navigate back if any;
+Step 2: think step by step on the ["Succesive Results"] of each UI options GIVEN by user, which represents the subsequent items after operating on them, and the ["possible paths to UI target"] GIVEN by user, which was suggested by expert knowledge;
+Step 3: decide what should be done next. Possible operations: click, edit (text input), scroll. Pay attention to those steps which is wrong and caused navigate back if any;
+Step 4: Synthesize the above output to output a JSON object with scores.
+
+Strictly output a format like "id_1": 3.00, do not tamper with it to make it look like "scroll_1": 3.00, etc., it must start with id_.
+
+
+user:
+{
+    "Task": "Turn on severe threats in wireless emergency alerts on your phone",
+    "History operation sequence": [
+        "Scroll forward on android.widget.ScrollView",
+        "Scroll forward on android.widget.ScrollView",
+        "Scroll forward on android.widget.ScrollView",
+        "\u4e0a\u6b65\u64cd\u4f5c\u6ca1\u6709\u54cd\u5e94\uff0c\u56e0\u6b64\u662f\u9519\u8bef\u7684"
+    ],
+    "Current UI screen": "<scroll id=1 class=android.widget.ScrollView >\n    <div id=2   clickable>  </div>\n\n    <div id=3   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 26% used - 5.89 GB free </p>\n </div>\n\n    <div id=4   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Location </p>\n\n    <p class='android:id/summary'  > On - 1 app has access to location </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Security </p>\n\n    <p class='android:id/summary'  > Screen lock, fingerprint </p>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > Accounts </p>\n\n    <p class='android:id/summary'  > No accounts added </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Accessibility </p>\n\n    <p class='android:id/summary'  > Screen readers, display, interaction controls </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Google </p>\n\n    <p class='android:id/summary'  > Services & preferences </p>\n </div>\n\n    <div id=10   clickable> \n    <p class='android:id/title'  > System </p>\n\n    <p class='android:id/summary'  > Languages, gestures, time, backup </p>\n </div>\n\n    <div id=11   clickable> \n    <p class='android:id/title'  > About emulated device </p>\n\n    <p class='android:id/summary'  > Android SDK built for x86 </p>\n </div>\n </scroll>\n",
+    "Successive results": {
+        "id=1": [
+            "android.widget.ScrollView",
+            "clickable",
+            "clickable 'android:id/title' Storage 'android:id/summary' 26% used - 5.89 GB free",
+            "clickable 'android:id/title' Privacy 'android:id/summary' Permissions, account activity, personal data",
+            "clickable 'android:id/title' Location 'android:id/summary' On - 1 app has access to location",
+            "clickable 'android:id/title' Security 'android:id/summary' Screen lock, fingerprint",
+            "clickable 'android:id/title' Accounts 'android:id/summary' No accounts added",
+            "clickable 'android:id/title' Accessibility 'android:id/summary' Screen readers, display, interaction controls",
+            "clickable 'android:id/title' Google 'android:id/summary' Services & preferences",
+            "clickable 'android:id/title' System 'android:id/summary' Languages, gestures, time, backup",
+            "clickable 'android:id/title' About emulated device 'android:id/summary' Android SDK built for x86"
+        ]
+    },
+    "Hint": "Below is a hint and suggestion from another model{\"next ui element\": \"<scroll id=1 class=android.widget.ScrollView>\", \"status\": \"go on\", \"reason\": \"The current UI contains a scrollable element, suggesting that there may be more options not currently visible that could include the setting to turn on severe threats in wireless emergency alerts.\"}"
+}
+
+===response===
+Step 1: Review the history operation sequence. The user has been scrolling through a ScrollView, and there was a note that the previous operation did not have a response, suggesting that it was a mistake. This means that the desired option was not found in the previous scrolling actions.
+
+Step 2: Analyze the current UI screen and successive results. None of the visible options on the current screen mention anything related to "wireless emergency alerts" or similar settings. This suggests that the correct path to the target setting has not been found yet.
+
+Step 3: Decide the next step. According to the hint provided by another model, the ScrollView may contain more options that are not currently visible. Since the task is to turn on severe threats in wireless emergency alerts and none of the currently visible options relate to this task, it is reasonable to continue scrolling to reveal more options.
+
+Step 4: Synthesize the output. Given that we need to find the correct setting and it is not currently visible, the scroll action is the most appropriate next step. The clickable div elements (id_2 to id_11) are not immediately relevant to the task at hand, so they will receive a lower score. The scroll element (id_1) will receive the highest score as it is the most likely to lead to the desired setting.
+
+The scores are as follows:
+- The <scroll id=1> is the most relevant operation because it may reveal additional settings related to wireless emergency alerts.
+- The div elements id_2 to id_11 are less relevant because they do not directly pertain to the task.
+
+Here is the JSON object with the scores:
+
+{
+    "id_1": 8.00,
+    "id_2": 2.00,
+    "id_3": 2.00,
+    "id_4": 2.00,
+    "id_5": 2.00,
+    "id_6": 2.00,
+    "id_7": 2.00,
+    "id_8": 2.00,
+    "id_9": 2.00,
+    "id_10": 2.00,
+    "id_11": 2.00
+}
+
+The scroll action (id_1) is given a high score because it is the most likely to help us find the setting to turn on severe threats in wireless emergency alerts. The other clickable elements are given a low score because they do not seem to lead to the desired setting.

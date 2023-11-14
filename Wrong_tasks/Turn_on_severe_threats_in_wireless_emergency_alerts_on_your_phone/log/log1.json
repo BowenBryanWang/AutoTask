@@ -1,0 +1,74 @@
+{
+    "@User_intent": "Turn on severe threats in wireless emergency alerts on your phone",
+    "@Page_components": [
+        "<scroll id=1 class=android.widget.ScrollView >\n    <div id=2   clickable> \n    <p class='android:id/title'  > Network & internet </p>\n\n    <p class='android:id/summary'  > Wi\u2011Fi, mobile, data usage, and hotspot </p>\n </div>\n\n    <div id=3   clickable> \n    <p class='android:id/title'  > Connected devices </p>\n\n    <p class='android:id/summary'  > Bluetooth </p>\n </div>\n\n    <div id=4   clickable> \n    <p class='android:id/title'  > Apps & notifications </p>\n\n    <p class='android:id/summary'  > Recent apps, default apps </p>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Battery </p>\n\n    <p class='android:id/summary'  > 100% </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Display </p>\n\n    <p class='android:id/summary'  > Wallpaper, sleep, font size </p>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > Sound </p>\n\n    <p class='android:id/summary'  > Volume, vibration, Do Not Disturb </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 26% used - 5.89 GB free </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n </scroll>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "One-step UI knowledge": {},
+            "Multi-step UI knowledge": ""
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Score": {
+                "<scroll id=1 class=android.widget.ScrollView > </scroll>\n": 8.762485295444932,
+                "<div id=2   clickable> \n    <p class='android:id/title'  > Network & internet </p>\n\n    <p class='android:id/summary'  > Wi\u2011Fi, mobile, data usage, and hotspot </p>\n </div>\n": 2.7987865964766154,
+                "<div id=3   clickable> \n    <p class='android:id/title'  > Connected devices </p>\n\n    <p class='android:id/summary'  > Bluetooth </p>\n </div>\n": 1.7965893544561389,
+                "<div id=4   clickable> \n    <p class='android:id/title'  > Apps & notifications </p>\n\n    <p class='android:id/summary'  > Recent apps, default apps </p>\n </div>\n": 7.798716635434331,
+                "<div id=5   clickable> \n    <p class='android:id/title'  > Battery </p>\n\n    <p class='android:id/summary'  > 100% </p>\n </div>\n": 1.7924296527853658,
+                "<div id=6   clickable> \n    <p class='android:id/title'  > Display </p>\n\n    <p class='android:id/summary'  > Wallpaper, sleep, font size </p>\n </div>\n": 1.7888578896375633,
+                "<div id=7   clickable> \n    <p class='android:id/title'  > Sound </p>\n\n    <p class='android:id/summary'  > Volume, vibration, Do Not Disturb </p>\n </div>\n": 5.7887924047346075,
+                "<div id=8   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 26% used - 5.89 GB free </p>\n </div>\n": 1.774320478013356,
+                "<div id=9   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n": 2.7934178775648264
+            },
+            "Punishment coefficient": [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "GPT answer": {
+                "id_1": 8.0,
+                "id_2": 2.0,
+                "id_3": 1.0,
+                "id_4": 7.0,
+                "id_5": 1.0,
+                "id_6": 1.0,
+                "id_7": 5.0,
+                "id_8": 1.0,
+                "id_9": 2.0
+            }
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "next ui element": "<scroll id=1 class=android.widget.ScrollView >",
+                "status": "go on",
+                "reason": "The current UI does not show the wireless emergency alerts setting, but the presence of a ScrollView suggests that there may be more options below. Scrolling further could reveal the setting needed to complete the user's task."
+            }
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "next ui element": "<scroll id=1 class=android.widget.ScrollView>",
+                "status": "go on",
+                "reason": "The current UI page includes a scrollable element that may contain additional settings, which could lead to the fulfillment of the task to turn on severe threats in wireless emergency alerts."
+            }
+        }
+    ],
+    "@History_operation": " -> Scroll forward on android.widget.ScrollView",
+    "@Current_Action": "Scroll forward on android.widget.ScrollView",
+    "@Successive_Page": [
+        "<scroll id=1 class=android.widget.ScrollView >\n    <div id=2   clickable>  </div>\n\n    <div id=3   clickable> \n    <p class='android:id/title'  > Sound </p>\n\n    <p class='android:id/summary'  > Volume, vibration, Do Not Disturb </p>\n </div>\n\n    <div id=4   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 26% used - 5.89 GB free </p>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Location </p>\n\n    <p class='android:id/summary'  > On - 1 app has access to location </p>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > Security </p>\n\n    <p class='android:id/summary'  > Screen lock, fingerprint </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Accounts </p>\n\n    <p class='android:id/summary'  > No accounts added </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Accessibility </p>\n\n    <p class='android:id/summary'  > Screen readers, display, interaction controls </p>\n </div>\n\n    <div id=10   clickable> \n    <p class='android:id/title'  > Google </p>\n\n    <p class='android:id/summary'  > Services & preferences </p>\n </div>\n\n    <div id=11   clickable> \n    <p class='android:id/title'  > System </p>\n\n    <p class='android:id/summary'  > Languages, gestures, time, backup </p>\n </div>\n </scroll>\n"
+    ]
+}

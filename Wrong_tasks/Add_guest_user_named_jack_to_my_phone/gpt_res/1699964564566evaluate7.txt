@@ -1,0 +1,60 @@
+system:
+You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
+Your job is to rate the available UI elements on the current page.
+Note that:
+    (1) The element with the highest score will be choosen as the next element to be operated. If you have more than one top scoring option in your scoring, it's a good idea to highlight the score of one of the most likely candidates to avoid confusion.
+    (2) Your score should be accurate to two decimal places.
+    (3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
+    (4) <scroll /> element means there is a list and you can interact with it by scrolling forward. If you want to explore more, you can also try giving <scroll/> a relatively high scorat. The score of the <scroll /> should always be higher than that of those appearantly unrelated with the task.
+For each option, provide a confidence rating from 1.00-10.00, based on the relation of each option to the task, where 1.00 is the lowest tier indicating complete irrelevance and may lead to errors, 2.00-4.00 is the second tier indicating minor relevance, 4.00-6.00 is the medium tier indicating neutrality, 6.00-8.00 indicates higher relevance, possibly a candidate, and 10.00 indicates the most likely to be chosen and executed.
+The structure of the output should be: {
+    "id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value and iterate over all possible values), and "<rating>" denotes its rating.
+Example:
+{
+    "id_1": 5.53, "id_2": 9.71, "id_3": 3.20
+}
+Think step by step and output your reasoning process:
+Step 1: think about ["History operation sequence"],what has been done,especially pay attention to those steps which is wrong and caused navigate back if any;
+Step 2: think step by step on the ["Succesive Results"] of each UI options GIVEN by user, which represents the subsequent items after operating on them, and the ["possible paths to UI target"] GIVEN by user, which was suggested by expert knowledge;
+Step 3: decide what should be done next. Possible operations: click, edit (text input), scroll. Pay attention to those steps which is wrong and caused navigate back if any;
+Step 4: Synthesize the above output to output a JSON object with scores.
+
+Strictly output a format like "id_1": 3.00, do not tamper with it to make it look like "scroll_1": 3.00, etc., it must start with id_.
+
+
+user:
+{
+    "Task": "Reset all network settings on the phone.",
+    "History operation sequence": [
+        "Click on clickable 'android:id/title' Network & internet 'android:id/summary' Wi\u2011Fi, mobile, data usage, and hotspot",
+        "Click on clickable 'android:id/title' Advanced 'android:id/summary' Data Saver, VPN, Private DNS",
+        "Navigate back due to error",
+        "Navigate back due to error",
+        "Scroll forward on android.widget.ScrollView",
+        "Scroll forward on android.widget.ScrollView",
+        "Click on clickable 'android:id/title' System 'android:id/summary' Languages, gestures, time, backup",
+        "Click on clickable 'android:id/title' Advanced 'android:id/summary' Reset options, Multiple users, Developer options, System update",
+        "Click on clickable 'android:id/title' Reset options 'android:id/summary' Network, apps, or device can be reset",
+        "Click on clickable 'android:id/title' Reset Wi-Fi, mobile & Bluetooth"
+    ],
+    "Current UI screen": "<p class=''  > Reset Wi-Fi, mobile & Bluetooth </p>\n<p class=''  > This will reset all network settings, including:\n\nWi\u2011Fi\nMobile data\nBluetooth </p>\n<button id=1 class='com.android.settings:id/initiate_reset_network'  > Reset settings </button>\n",
+    "Successive results": {},
+    "Hint": "Below is a hint and suggestion from another model{\"next ui element\": \"'com.android.settings:id/initiate_reset_network' Reset settings\", \"status\": \"go on\", \"reason\": \"The last action taken by the user was to navigate to the 'Reset Wi-Fi, mobile & Bluetooth' option, which is appropriate for the task of resetting all network settings. The current UI contains a 'Reset settings' button that the user can click to proceed with the reset, indicating that the task can be continued and completed from the current UI.\"}"
+}
+
+===response===
+Given the task is to "Reset all network settings on the phone," and based on the history of operations, the user has successfully navigated to the correct screen for resetting network settings. The last action taken was to click on "Reset Wi-Fi, mobile & Bluetooth," which aligns with the task.
+
+The current UI screen contains a button labeled "Reset settings," which is the appropriate action to take to reset all network settings, including Wi-Fi, Mobile data, and Bluetooth as described in the text above the button.
+
+Step 1: Review the history of operations, no incorrect steps are present in the most recent actions.
+
+Step 2: The current UI screen has only one interactive element, which is the "Reset settings" button. There are no successive results provided, but based on expert knowledge, clicking this button should lead to the initiation of the network settings reset process.
+
+Step 3: The next step should be to click on the "Reset settings" button to proceed with the task.
+
+Step 4: Since the "Reset settings" button is the only interactive element and directly corresponds to the task at hand, it will receive the highest score.
+
+{
+    "id_1": 10.00
+}

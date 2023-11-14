@@ -1,0 +1,58 @@
+system:
+You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
+Your job is to rate the available UI elements on the current page.
+Note that:
+    (1) The element with the highest score will be choosen as the next element to be operated. If you have more than one top scoring option in your scoring, it's a good idea to highlight the score of one of the most likely candidates to avoid confusion.
+    (2) Your score should be accurate to two decimal places.
+    (3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
+    (4) <scroll /> element means there is a list and you can interact with it by scrolling forward. If you want to explore more, you can also try giving <scroll/> a relatively high scorat. The score of the <scroll /> should always be higher than that of those appearantly unrelated with the task.
+For each option, provide a confidence rating from 1.00-10.00, based on the relation of each option to the task, where 1.00 is the lowest tier indicating complete irrelevance and may lead to errors, 2.00-4.00 is the second tier indicating minor relevance, 4.00-6.00 is the medium tier indicating neutrality, 6.00-8.00 indicates higher relevance, possibly a candidate, and 10.00 indicates the most likely to be chosen and executed.
+The structure of the output should be: {
+    "id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value and iterate over all possible values), and "<rating>" denotes its rating.
+Example:
+{
+    "id_1": 5.53, "id_2": 9.71, "id_3": 3.20
+}
+Think step by step and output your reasoning process:
+Step 1: think about ["History operation sequence"],what has been done,especially pay attention to those steps which is wrong and caused navigate back if any;
+Step 2: think step by step on the ["Succesive Results"] of each UI options GIVEN by user, which represents the subsequent items after operating on them, and the ["possible paths to UI target"] GIVEN by user, which was suggested by expert knowledge;
+Step 3: decide what should be done next. Possible operations: click, edit (text input), scroll. Pay attention to those steps which is wrong and caused navigate back if any;
+Step 4: Synthesize the above output to output a JSON object with scores.
+
+Strictly output a format like "id_1": 3.00, do not tamper with it to make it look like "scroll_1": 3.00, etc., it must start with id_.
+
+
+user:
+{
+    "Task": "Check Battery Usage details of my phone",
+    "History operation sequence": [
+        "Click on clickable 'android:id/title' Battery 'android:id/summary' 100%",
+        "Scroll forward on androidx.recyclerview.widget.RecyclerView",
+        "\u4e0a\u6b65\u64cd\u4f5c\u6ca1\u6709\u54cd\u5e94\uff0c\u56e0\u6b64\u662f\u9519\u8bef\u7684",
+        "Scroll forward on androidx.recyclerview.widget.RecyclerView",
+        "\u4e0a\u6b65\u64cd\u4f5c\u6ca1\u6709\u54cd\u5e94\uff0c\u56e0\u6b64\u662f\u9519\u8bef\u7684",
+        "Click on clickable 'android:id/title' Battery Manager 'android:id/summary' On / Detecting when apps drain battery",
+        "Click on clickable 'android:id/title' Battery Manager 'android:id/summary' On / Detecting when apps drain battery",
+        "Navigate back due to error",
+        "Click on 'More options' enabled clickable"
+    ],
+    "Current UI screen": "<div id=1   clickable> \n    <p class='android:id/title'  > Battery usage </p>\n </div>\n",
+    "Successive results": {},
+    "Hint": "Below is a hint and suggestion from another model{\"next ui element\": \"clickable 'android:id/title' Battery usage\", \"status\": \"go on\", \"reason\": \"The latest UI contains a clickable element directly related to the user's task of checking battery usage details, suggesting that further interaction with this element will lead to task fulfillment.\"}",
+    "possible paths to UI target": {
+        "clickable 'android:id/title' Battery usage": []
+    }
+}
+
+===response===
+Step 1: Reviewing the ["History operation sequence"], it seems the user has attempted to access battery-related information, including clicking on a battery summary and a battery manager, both of which did not yield the desired result. The user also experienced errors which led to navigation back. The user has most recently clicked on 'More options'.
+
+Step 2: The ["Current UI screen"] only presents one option, which is a clickable element titled "Battery usage". There are no ["Successive Results"] provided, which means we do not have information about what happens after clicking on the "Battery usage" element. However, the ["possible paths to UI target"] suggest that clicking on the "clickable 'android:id/title' Battery usage" is a path to follow.
+
+Step 3: Based on the task of checking the battery usage details, the clickable element "Battery usage" seems to be the most relevant and directly related to the user's task. There are no other elements or paths to consider on the current UI screen, and the hint provided by another model also suggests that clicking on this element should lead to task fulfillment.
+
+Step 4: Given the context and the hint, the clickable "Battery usage" element is the most likely candidate for the next operation. Therefore, I will assign a high confidence rating to this element:
+
+{
+    "id_1": 10.00
+}

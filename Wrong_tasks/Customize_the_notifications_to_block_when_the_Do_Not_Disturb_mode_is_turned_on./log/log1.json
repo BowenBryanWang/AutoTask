@@ -1,0 +1,65 @@
+{
+    "@User_intent": "Customize the notifications to block when the Do Not Disturb mode is turned on.",
+    "@Page_components": [
+        "<scroll id=1 class=android.widget.ScrollView >\n    <div id=2   clickable> \n    <p class='android:id/title'  > Network & internet </p>\n\n    <p class='android:id/summary'  > Wi\u2011Fi, mobile, data usage, and hotspot </p>\n </div>\n\n    <div id=3   clickable> \n    <p class='android:id/title'  > Connected devices </p>\n\n    <p class='android:id/summary'  > Bluetooth, Android Auto </p>\n </div>\n\n    <div id=4   clickable> \n    <p class='android:id/title'  > Apps & notifications </p>\n\n    <p class='android:id/summary'  > Recent apps, default apps </p>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Battery </p>\n\n    <p class='android:id/summary'  > 100% </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Display </p>\n\n    <p class='android:id/summary'  > Wallpaper, sleep, font size </p>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > Sound </p>\n\n    <p class='android:id/summary'  > Volume, vibration, Do Not Disturb </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 28% used - 5.75 GB free </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n </scroll>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "One-step UI knowledge": {},
+            "Multi-step UI knowledge": ""
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Score": {
+                "<scroll id=1 class=android.widget.ScrollView > </scroll>\n": 1.7577284692127377,
+                "<div id=2   clickable> \n    <p class='android:id/title'  > Network & internet </p>\n\n    <p class='android:id/summary'  > Wi\u2011Fi, mobile, data usage, and hotspot </p>\n </div>\n": 2.7954589738154736,
+                "<div id=3   clickable> \n    <p class='android:id/title'  > Connected devices </p>\n\n    <p class='android:id/summary'  > Bluetooth, Android Auto </p>\n </div>\n": 2.7988837974328815,
+                "<div id=4   clickable> \n    <p class='android:id/title'  > Apps & notifications </p>\n\n    <p class='android:id/summary'  > Recent apps, default apps </p>\n </div>\n": 4.80707173155584,
+                "<div id=5   clickable> \n    <p class='android:id/title'  > Battery </p>\n\n    <p class='android:id/summary'  > 100% </p>\n </div>\n": 2.7918501633431596,
+                "<div id=6   clickable> \n    <p class='android:id/title'  > Display </p>\n\n    <p class='android:id/summary'  > Wallpaper, sleep, font size </p>\n </div>\n": 2.7993481455468934,
+                "<div id=7   clickable> \n    <p class='android:id/title'  > Sound </p>\n\n    <p class='android:id/summary'  > Volume, vibration, Do Not Disturb </p>\n </div>\n": 10.810831038149669,
+                "<div id=8   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 28% used - 5.75 GB free </p>\n </div>\n": 2.767843496808018,
+                "<div id=9   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n": 2.8021310945996496
+            },
+            "Punishment coefficient": [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "GPT answer": {
+                "id_2": 2.0,
+                "id_3": 2.0,
+                "id_4": 4.0,
+                "id_5": 2.0,
+                "id_6": 2.0,
+                "id_7": 10.0,
+                "id_8": 2.0,
+                "id_9": 2.0
+            }
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "next ui element": "clickable 'android:id/title' Do Not Disturb 'android:id/summary' Off / 3 schedules can turn on automatically",
+                "status": "go on",
+                "reason": "The 'Do Not Disturb' option in the Sound settings is directly related to the user's task and can be operated on to customize the notifications to block when the Do Not Disturb mode is turned on."
+            }
+        }
+    ],
+    "@History_operation": " -> Click on clickable 'android:id/title' Sound 'android:id/summary' Volume, vibration, Do Not Disturb",
+    "@Current_Action": "Click on clickable 'android:id/title' Sound 'android:id/summary' Volume, vibration, Do Not Disturb",
+    "@Successive_Page": [
+        "<p class=''  > Sound </p>\n",
+        "<scroll id=1 class=androidx.recyclerview.widget.RecyclerView >\n    <p class='android:id/title'  > Media volume </p>\n\n    <p class='android:id/title'  > Call volume </p>\n\n    <p class='android:id/title'  > Ring & notification volume </p>\n\n    <p class='android:id/title'  > Alarm volume </p>\n\n    <div id=2   clickable> \n    <p class='android:id/title'  > Vibrate for calls </p>\n\n    <p class='android:id/summary'  > Never vibrate </p>\n </div>\n\n    <div id=3   clickable> \n    <p class='android:id/title'  > Do Not Disturb </p>\n\n    <p class='android:id/summary'  > Off / 3 schedules can turn on automatically </p>\n </div>\n\n    <div id=4   clickable> \n    <p class='android:id/title'  > Media </p>\n\n    <p class='android:id/summary'  > Show player </p>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Shortcut to prevent ringing </p>\n\n    <p class='android:id/summary'  > On (vibrate) </p>\n </div>\n </scroll>\n"
+    ]
+}

@@ -1,0 +1,61 @@
+{
+    "@User_intent": "Clear the cache and data in Google.",
+    "@Page_components": [
+        "<p class=''  > Google Play services storage </p>\n",
+        "<p class='com.google.android.gms:id/search_index_description'  > We accelerate search on your device by providing a search engine for your Apps to use. </p>\n",
+        "<p class='com.google.android.gms:id/icing_size_prefix'  > Search Data </p>\n",
+        "<p class='com.google.android.gms:id/icing_storage_size_text'  > 397 kB </p>\n",
+        "<button id=1 class='com.google.android.gms:id/manage_icing_storage'  > MANAGE SEARCH DATA </button>\n",
+        "<p class='com.google.android.gms:id/wear_description'  > Apps use your device storage to replicate data to a wearable. </p>\n",
+        "<p class='com.google.android.gms:id/wear_size_prefix'  > Wearable storage </p>\n",
+        "<button id=2 class='com.google.android.gms:id/manage_wear_storage'  > MANAGE WEARABLE STORAGE </button>\n",
+        "<p class='com.google.android.gms:id/all_storage_description'  > Total data used by Google Play services, including the search engine and other data. </p>\n",
+        "<p class='com.google.android.gms:id/total_size_prefix'  > Total storage </p>\n",
+        "<p class='com.google.android.gms:id/total_storage_size_text'  > 9.40 MB </p>\n",
+        "<button id=3 class='com.google.android.gms:id/clear_all_data'  > CLEAR ALL DATA </button>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "One-step UI knowledge": {},
+            "Multi-step UI knowledge": ""
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Score": {
+                "<button id=1 class='com.google.android.gms:id/manage_icing_storage'  > MANAGE SEARCH DATA </button>\n": 3.839695097105216,
+                "<button id=2 class='com.google.android.gms:id/manage_wear_storage'  > MANAGE WEARABLE STORAGE </button>\n": 2.823884011583351,
+                "<button id=3 class='com.google.android.gms:id/clear_all_data'  > CLEAR ALL DATA </button>\n": 10.847861005752854
+            },
+            "Punishment coefficient": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "GPT answer": {
+                "id_1": 3.0,
+                "id_2": 2.0,
+                "id_3": 10.0
+            }
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "next ui element": "'android:id/button1' OK",
+                "status": "go on",
+                "reason": "User is at the confirmation step to clear all data for the Google app, which is consistent with the task. Clicking 'OK' will complete the task."
+            }
+        }
+    ],
+    "@History_operation": " -> Click on clickable 'android:id/title' Apps & notifications 'android:id/summary' Recent apps, default apps -> Click on 'com.android.settings:id/header_details' SEE ALL 18 APPS -> Click on 'com.android.settings:id/search_app_list_menu' 'Search' enabled clickable -> Edit 'android:id/search_src_text' enabled editable Search with Google -> Click on 'Google Play services' clickable 'android:id/title' Google Play services 'android:id/summary' 21.15 MB -> Click on clickable 'android:id/title' Storage & cache 'android:id/summary' 21.53 MB used in internal storage -> Click on 'com.android.settings:id/button2' CLEAR CACHE -> Click on 'com.android.settings:id/button1' CLEAR STORAGE -> Click on 'com.google.android.gms:id/clear_all_data' CLEAR ALL DATA",
+    "@Current_Action": "Click on 'com.google.android.gms:id/clear_all_data' CLEAR ALL DATA",
+    "@Successive_Page": [
+        "<p class='android:id/alertTitle'  > Delete app data? </p>\n",
+        "<p class='android:id/message'  > All this app's data will be deleted permanently. This includes all files, settings, accounts, databases, etc. </p>\n",
+        "<button id=1 class='android:id/button2'  > CANCEL </button>\n",
+        "<button id=2 class='android:id/button1'  > OK </button>\n"
+    ]
+}

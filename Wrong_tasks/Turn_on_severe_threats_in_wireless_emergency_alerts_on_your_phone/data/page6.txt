@@ -1,0 +1,62 @@
+<p class=''  > Accessibility </p>
+<scroll id=1 class=androidx.recyclerview.widget.RecyclerView >
+    <div id=2   clickable> 
+    <p class='android:id/summary'  > Default </p>
+ </div>
+
+    <div id=3   clickable> 
+    <p class='android:id/title'  > Dark theme </p>
+
+    <switch id=4 class='android:id/switch_widget' clickable > Off </switch>
+ </div>
+
+    <div id=5   clickable> 
+    <p class='android:id/title'  > Magnification </p>
+
+    <p class='android:id/summary'  > Off </p>
+ </div>
+
+    <div id=6   clickable> 
+    <p class='android:id/title'  > Large mouse pointer </p>
+
+    <switch id=7 class='android:id/switch_widget' clickable > Off </switch>
+ </div>
+
+    <div id=8   clickable> 
+    <p class='android:id/title'  > Remove animations </p>
+
+    <switch id=9 class='android:id/switch_widget' clickable > Off </switch>
+ </div>
+
+    <p class='android:id/title'  > INTERACTION CONTROLS </p>
+
+    <div id=10   clickable> 
+    <p class='android:id/title'  > Autoclick (dwell timing) </p>
+
+    <p class='android:id/summary'  > Off </p>
+ </div>
+
+    <div id=11   clickable> 
+    <p class='android:id/title'  > Power button ends call </p>
+
+    <switch id=12 class='android:id/switch_widget' clickable > Off </switch>
+ </div>
+
+    <div id=13   clickable> 
+    <p class='android:id/title'  > Auto-rotate screen </p>
+
+    <switch id=14 class='android:id/switch_widget' clickable > Off </switch>
+ </div>
+
+    <div id=15   clickable> 
+    <p class='android:id/title'  > Touch & hold delay </p>
+
+    <p class='android:id/summary'  > Short </p>
+ </div>
+
+    <div id=16   clickable> 
+    <p class='android:id/title'  > Time to take action (Accessibility timeout) </p>
+
+    <p class='android:id/summary'  > Default </p>
+ </div>
+ </scroll>

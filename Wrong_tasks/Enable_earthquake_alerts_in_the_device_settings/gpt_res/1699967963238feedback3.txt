@@ -1,0 +1,74 @@
+system:
+You are an expert in UI automation and robust error handling. Your task is to critic a operation sequence produced by a [primitive LLM],following user task but inaccurate. 
+Utilizing the log files from each module of current step of the [primitive LLM], you should locate error in the final element chosen to operate on.
+[primitive LLM] works in which they cannot see further information on UI, but you are in the backtracking process so you should utilize further information observed from subsequent UI to help correct possible errors.
+Specifically, you should analyze the [Latest Action] and the [Successive Page] information to determine the extent of error on fulfilling the task, and then output the punishment coefficient to it.
+Follow the steps below and think step by step:
+a. Understand the information given and synthize, especially [Latest Action] and its subsequent result [Successive Page];
+b, Think step by step about the scoring result by [Evaluation Module], try to identify error causes on the LATEST ACTION and give [Punishment Coefficient] from 1-10, where 1 means no error and 10 means totally wrong;
+Finally, output a JSON format like this example:
+{
+    "punishment":
+    {
+        "id_x": 1,
+        ......(replace x to the element with id that you think causes the error, output your punishment coefficient from 0-10)
+    }
+}
+
+
+user:
+
+                Wrong reason: The current UI does not contain elements related to enabling earthquake alerts, and we are in a backtrack correction phase indicating the need to navigate back further.
+                
+
+user:
+
+                User intent: Enable earthquake alerts in the device settings
+                
+
+user:
+
+                Page components: ["<p class=''  > Location </p>\n", "<div id=1 class='com.android.settings:id/switch_bar'  clickable> \n    <p class='com.android.settings:id/switch_text'  > Use location </p>\n\n    <switch id=2 class='com.android.settings:id/switch_widget' clickable > On </switch>\n </div>\n", "<scroll id=3 class=androidx.recyclerview.widget.RecyclerView >\n    <p class='android:id/title'  > RECENT LOCATION REQUESTS </p>\n\n    <p class='android:id/title'  > No apps have requested location recently </p>\n\n    <div id=4   clickable> \n    <p class='android:id/title'  > See all </p>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > App access to location </p>\n\n    <p class='android:id/summary'  > 1 of 6 apps has access to location </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Wi‑Fi and Bluetooth scanning </p>\n\n    <p class='android:id/summary'  > Wi‑Fi scanning is on, Bluetooth scanning is off </p>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > Emergency Location Service </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Google Location Accuracy </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Google Location History </p>\n </div>\n\n    <div id=10   clickable> \n    <p class='android:id/title'  > Google Location Sharing </p>\n </div>\n\n    <div id=11   clickable> \n    <p class='android:id/title'  > Location may use sources like GPS, Wi‑Fi, mobile networks, and sensors to help estimate your device’s location. Google may collect location data periodically and use this data in an anonymous way to improve location accuracy and location-based services. </p>\n </div>\n </scroll>\n"]
+                
+
+user:
+
+                Previous Steps:  -> Scroll forward on android.widget.ScrollView -> Click on clickable 'android:id/title' Location 'android:id/summary' On - 1 app has access to location -> Click on clickable 'android:id/title' Advanced 'android:id/summary' Emergency Location Service, Google Location Accuracy, Google Location History, Google Location Sharing -> Scroll forward on androidx.recyclerview.widget.RecyclerView
+                
+
+user:
+
+                Action on this step: Scroll forward on androidx.recyclerview.widget.RecyclerView
+                
+
+user:
+
+                    Latest Page: ["<p class=''  > Location </p>\n", "<div id=1 class='com.android.settings:id/switch_bar'  clickable> \n    <p class='com.android.settings:id/switch_text'  > Use location </p>\n\n    <switch id=2 class='com.android.settings:id/switch_widget' clickable > On </switch>\n </div>\n", "<scroll id=3 class=androidx.recyclerview.widget.RecyclerView >\n    <div id=4   clickable> \n    <p class='android:id/title'  > See all </p>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > App access to location </p>\n\n    <p class='android:id/summary'  > 1 of 6 apps has access to location </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Wi‑Fi and Bluetooth scanning </p>\n\n    <p class='android:id/summary'  > Wi‑Fi scanning is on, Bluetooth scanning is off </p>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > Emergency Location Service </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Google Location Accuracy </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Google Location History </p>\n </div>\n\n    <div id=10   clickable> \n    <p class='android:id/title'  > Google Location Sharing </p>\n </div>\n\n    <div id=11   clickable> \n    <p class='android:id/title'  > Location may use sources like GPS, Wi‑Fi, mobile networks, and sensors to help estimate your device’s location. Google may collect location data periodically and use this data in an anonymous way to improve location accuracy and location-based services. </p>\n </div>\n </scroll>\n"]
+                    
+
+user:
+
+                Modules: {'Name': 'Evaluate', 'Description': "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent", 'Score': {"<div id=1 class='com.android.settings:id/switch_bar'  clickable> \n    <p class='com.android.settings:id/switch_text'  > Use location </p>\n\n    <switch id=2 class='com.android.settings:id/switch_widget' clickable > On </switch>\n </div>\n": 3.327344300809587, "<switch id=2 class='com.android.settings:id/switch_widget' clickable > On </switch>\n": 3.298091941855783, '<scroll id=3 class=androidx.recyclerview.widget.RecyclerView > </scroll>\n': 9.757854114446484, "<div id=4   clickable> \n    <p class='android:id/title'  > See all </p>\n </div>\n": 1.7994837905094863, "<div id=5   clickable> \n    <p class='android:id/title'  > App access to location </p>\n\n    <p class='android:id/summary'  > 1 of 6 apps has access to location </p>\n </div>\n": 1.8173512235319613, "<div id=6   clickable> \n    <p class='android:id/title'  > Wi‑Fi and Bluetooth scanning </p>\n\n    <p class='android:id/summary'  > Wi‑Fi scanning is on, Bluetooth scanning is off </p>\n </div>\n": 1.7962008603796726, "<div id=7   clickable> \n    <p class='android:id/title'  > Emergency Location Service </p>\n </div>\n": 1.822669699388718, "<div id=8   clickable> \n    <p class='android:id/title'  > Google Location Accuracy </p>\n </div>\n": 1.815109707378447, "<div id=9   clickable> \n    <p class='android:id/title'  > Google Location History </p>\n </div>\n": 1.8232319005455715, "<div id=10   clickable> \n    <p class='android:id/title'  > Google Location Sharing </p>\n </div>\n": 1.810203090160391, "<div id=11   clickable> \n    <p class='android:id/title'  > Location may use sources like GPS, Wi‑Fi, mobile networks, and sensors to help estimate your device’s location. Google may collect location data periodically and use this data in an anonymous way to improve location accuracy and location-based services. </p>\n </div>\n": 1.8020937433651627}, 'Punishment coefficient': [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], 'GPT answer': {'id_1': 2.5, 'id_2': 2.5, 'id_3': 9.0, 'id_4': 1.0, 'id_5': 1.0, 'id_6': 1.0, 'id_7': 1.0, 'id_8': 1.0, 'id_9': 1.0, 'id_10': 1.0, 'id_11': 1.0}}
+                
+
+===response===
+Based on the information provided, the user's intent is to enable earthquake alerts in the device settings. However, the [primitive LLM] performed a "Scroll forward on androidx.recyclerview.widget.RecyclerView" action, which does not directly address the user's intent. The log files indicate that the current UI does not contain elements related to enabling earthquake alerts, and the LLM is in a backtrack correction phase, suggesting that it should navigate back to find the correct setting.
+
+The [Latest Action] was to scroll forward on the RecyclerView, which is a generic action that could be correct in a different context. However, the [Successive Page] information does not show any element that would allow the user to enable earthquake alerts. This suggests that the action taken did not bring the user closer to fulfilling their intent.
+
+The [Evaluation Module] scored the RecyclerView scroll action with a high score of 9.757854114446484, which seems to be incorrect given the user's intent. The scroll action did not reveal any new elements that would enable earthquake alerts, which is the goal.
+
+Given that the action did not contribute to meeting the user's intent and that the system is in a backtrack phase, it is clear that the action was not appropriate. Therefore, the punishment coefficient should be high.
+
+Here is the JSON output with the punishment coefficient:
+
+```json
+{
+    "punishment":
+    {
+        "id_3": 10
+    }
+}
+```
+
+The punishment coefficient is set to 10 for the element with id_3 (the RecyclerView), indicating that the action was totally wrong in the context of the user's intent to enable earthquake alerts.

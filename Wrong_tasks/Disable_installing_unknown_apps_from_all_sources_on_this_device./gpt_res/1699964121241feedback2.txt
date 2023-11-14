@@ -1,0 +1,74 @@
+system:
+You are an expert in UI automation and robust error handling. Your task is to critic a operation sequence produced by a [primitive LLM],following user task but inaccurate. 
+Utilizing the log files from each module of current step of the [primitive LLM], you should locate error in the final element chosen to operate on.
+[primitive LLM] works in which they cannot see further information on UI, but you are in the backtracking process so you should utilize further information observed from subsequent UI to help correct possible errors.
+Specifically, you should analyze the [Latest Action] and the [Successive Page] information to determine the extent of error on fulfilling the task, and then output the punishment coefficient to it.
+Follow the steps below and think step by step:
+a. Understand the information given and synthize, especially [Latest Action] and its subsequent result [Successive Page];
+b, Think step by step about the scoring result by [Evaluation Module], try to identify error causes on the LATEST ACTION and give [Punishment Coefficient] from 1-10, where 1 means no error and 10 means totally wrong;
+Finally, output a JSON format like this example:
+{
+    "punishment":
+    {
+        "id_x": 1,
+        ......(replace x to the element with id that you think causes the error, output your punishment coefficient from 0-10)
+    }
+}
+
+
+user:
+
+                Wrong reason: The elements on the current UI page do not relate to the task of disabling the installation of unknown apps from all sources. The task likely requires access to security or privacy settings not present on this page, and further backtracking is necessary to find the correct path to fulfill the task.
+                
+
+user:
+
+                User intent: Disable installing unknown apps from all sources on this device.
+                
+
+user:
+
+                Page components: ["<p class=''  > Apps & notifications </p>\n", "<scroll id=1 class=androidx.recyclerview.widget.RecyclerView >\n    <p class='com.android.settings:id/header_title'  > Recently opened apps </p>\n\n    <div id=2 class='com.android.settings:id/app1_view'  clickable> \n    <p class='com.android.settings:id/app_title'  > ActionRecord </p>\n\n    <p class='com.android.settings:id/app_summary'  > 8 hr. ago </p>\n </div>\n\n    <div id=3 class='com.android.settings:id/app2_view'  clickable> \n    <p class='com.android.settings:id/app_title'  > Chrome </p>\n\n    <p class='com.android.settings:id/app_summary'  > 20 hr. ago </p>\n </div>\n\n    <button id=4 class='com.android.settings:id/header_details'  > See all 24 apps </button>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Conversations </p>\n\n    <p class='android:id/summary'  > No priority conversations </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Notifications </p>\n\n    <p class='android:id/summary'  > Notification history, bubbles, recently sent </p>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > Screen time </p>\n\n    <p class='android:id/summary'  > 8 hr, 35 min today </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Default apps </p>\n\n    <p class='android:id/summary'  > Chrome, Phone, and Messages </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Permission manager </p>\n\n    <p class='android:id/summary'  > Control app access to your data </p>\n </div>\n\n    <div id=10   clickable>  </div>\n </scroll>\n"]
+                
+
+user:
+
+                Previous Steps:  -> Click on clickable 'android:id/title' Apps & notifications 'android:id/summary' Recent apps, default apps -> Click on clickable 'android:id/title' Advanced 'android:id/summary' Default apps, Permission manager, Wireless emergency alerts, Special app access -> Scroll forward on androidx.recyclerview.widget.RecyclerView
+                
+
+user:
+
+                Action on this step: Scroll forward on androidx.recyclerview.widget.RecyclerView
+                
+
+user:
+
+                    Latest Page: ["<p class=''  > Apps & notifications </p>\n", "<scroll id=1 class=androidx.recyclerview.widget.RecyclerView >\n    <div id=2 class='com.android.settings:id/app1_view'  clickable> \n    <p class='com.android.settings:id/app_title'  > ActionRecord </p>\n\n    <p class='com.android.settings:id/app_summary'  > 8 hr. ago </p>\n </div>\n\n    <div id=3 class='com.android.settings:id/app2_view'  clickable> \n    <p class='com.android.settings:id/app_title'  > Chrome </p>\n\n    <p class='com.android.settings:id/app_summary'  > 20 hr. ago </p>\n </div>\n\n    <button id=4 class='com.android.settings:id/header_details'  > See all 24 apps </button>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Conversations </p>\n\n    <p class='android:id/summary'  > No priority conversations </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Notifications </p>\n\n    <p class='android:id/summary'  > Notification history, bubbles, recently sent </p>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > Screen time </p>\n\n    <p class='android:id/summary'  > 8 hr, 35 min today </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Default apps </p>\n\n    <p class='android:id/summary'  > Chrome, Phone, and Messages </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Permission manager </p>\n\n    <p class='android:id/summary'  > Control app access to your data </p>\n </div>\n\n    <div id=10   clickable> \n    <p class='android:id/title'  > Wireless emergency alerts </p>\n </div>\n\n    <div id=11   clickable> \n    <p class='android:id/title'  > Special app access </p>\n\n    <p class='android:id/summary'  > 2 apps can use unrestricted data </p>\n </div>\n </scroll>\n"]
+                    
+
+user:
+
+                Modules: {'Name': 'Evaluate', 'Description': "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent", 'Score': {'<scroll id=1 class=androidx.recyclerview.widget.RecyclerView > </scroll>\n': 10.26076187170324, "<div id=2 class='com.android.settings:id/app1_view'  clickable> \n    <p class='com.android.settings:id/app_title'  > ActionRecord </p>\n\n    <p class='com.android.settings:id/app_summary'  > 8 hr. ago </p>\n </div>\n": 1.8264692092427173, "<div id=3 class='com.android.settings:id/app2_view'  clickable> \n    <p class='com.android.settings:id/app_title'  > Chrome </p>\n\n    <p class='com.android.settings:id/app_summary'  > 20 hr. ago </p>\n </div>\n": 1.8214928729238653, "<button id=4 class='com.android.settings:id/header_details'  > See all 24 apps </button>\n": 1.820537193814943, "<div id=5   clickable> \n    <p class='android:id/title'  > Conversations </p>\n\n    <p class='android:id/summary'  > No priority conversations </p>\n </div>\n": 1.7919620646752077, "<div id=6   clickable> \n    <p class='android:id/title'  > Notifications </p>\n\n    <p class='android:id/summary'  > Notification history, bubbles, recently sent </p>\n </div>\n": 1.7972599396354256, "<div id=7   clickable> \n    <p class='android:id/title'  > Screen time </p>\n\n    <p class='android:id/summary'  > 8 hr, 35 min today </p>\n </div>\n": 1.79740557265132, "<div id=8   clickable> \n    <p class='android:id/title'  > Default apps </p>\n\n    <p class='android:id/summary'  > Chrome, Phone, and Messages </p>\n </div>\n": 1.8216514990006945, "<div id=9   clickable> \n    <p class='android:id/title'  > Permission manager </p>\n\n    <p class='android:id/summary'  > Control app access to your data </p>\n </div>\n": 1.8075849568079283, '<div id=10   clickable>  </div>\n': 1.7648727325560998}, 'Punishment coefficient': [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], 'GPT answer': {'id_1': 9.5, 'id_2': 1.0, 'id_3': 1.0, 'id_4': 1.0, 'id_5': 1.0, 'id_6': 1.0, 'id_7': 1.0, 'id_8': 1.0, 'id_9': 1.0}}
+                
+
+===response===
+Given the user's intent to "Disable installing unknown apps from all sources on this device," the actions taken by the [primitive LLM] do not align with the task. The user needs to navigate to security settings to adjust permissions for installing apps from unknown sources, which would typically be found in a section related to security, privacy, or a specialized sub-menu for app installation permissions.
+
+The [Latest Action] performed was "Scroll forward on androidx.recyclerview.widget.RecyclerView," and the [Successive Page] information shows a list of settings related to apps and notifications, but none of these options directly address the user's intent. The [Latest Page] does not contain elements that would lead to the settings for disabling the installation of unknown apps.
+
+Based on the [Evaluation Module], the highest score is attributed to the scroll view itself, which is incorrect, as scrolling did not bring the user closer to completing the task. The [Punishment Coefficient] should be high for the scroll action because it did not contribute to achieving the user's goal.
+
+In conclusion, the [primitive LLM] should be penalized for not correctly identifying the path to disable unknown app installations, and for performing an action (scrolling) that did not lead to the correct settings menu.
+
+Here is the JSON output with the punishment coefficient for the scroll view, which is the final element chosen to operate on, and is the cause of the error:
+
+```json
+{
+    "punishment":
+    {
+        "id_1": 10
+    }
+}
+```
+
+The punishment coefficient is set to 10, indicating that the action was entirely incorrect in the context of the user's intent.

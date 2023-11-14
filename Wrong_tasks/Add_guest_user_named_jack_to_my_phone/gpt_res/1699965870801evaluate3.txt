@@ -1,0 +1,97 @@
+system:
+You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
+Your job is to rate the available UI elements on the current page.
+Note that:
+    (1) The element with the highest score will be choosen as the next element to be operated. If you have more than one top scoring option in your scoring, it's a good idea to highlight the score of one of the most likely candidates to avoid confusion.
+    (2) Your score should be accurate to two decimal places.
+    (3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
+    (4) <scroll /> element means there is a list and you can interact with it by scrolling forward. If you want to explore more, you can also try giving <scroll/> a relatively high scorat. The score of the <scroll /> should always be higher than that of those appearantly unrelated with the task.
+For each option, provide a confidence rating from 1.00-10.00, based on the relation of each option to the task, where 1.00 is the lowest tier indicating complete irrelevance and may lead to errors, 2.00-4.00 is the second tier indicating minor relevance, 4.00-6.00 is the medium tier indicating neutrality, 6.00-8.00 indicates higher relevance, possibly a candidate, and 10.00 indicates the most likely to be chosen and executed.
+The structure of the output should be: {
+    "id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value and iterate over all possible values), and "<rating>" denotes its rating.
+Example:
+{
+    "id_1": 5.53, "id_2": 9.71, "id_3": 3.20
+}
+Think step by step and output your reasoning process:
+Step 1: think about ["History operation sequence"],what has been done,especially pay attention to those steps which is wrong and caused navigate back if any;
+Step 2: think step by step on the ["Succesive Results"] of each UI options GIVEN by user, which represents the subsequent items after operating on them, and the ["possible paths to UI target"] GIVEN by user, which was suggested by expert knowledge;
+Step 3: decide what should be done next. Possible operations: click, edit (text input), scroll. Pay attention to those steps which is wrong and caused navigate back if any;
+Step 4: Synthesize the above output to output a JSON object with scores.
+
+Strictly output a format like "id_1": 3.00, do not tamper with it to make it look like "scroll_1": 3.00, etc., it must start with id_.
+
+
+user:
+{
+    "Task": "Add guest user named jack to my phone.",
+    "History operation sequence": [
+        "Scroll forward on android.widget.ScrollView",
+        "Click on clickable 'android:id/title' Accounts 'android:id/summary' Google",
+        "Click on clickable 'android:id/title' Add account",
+        "Navigate back due to error",
+        "Click on clickable 'android:id/title' laixiruyun@gmail.com 'android:id/summary' Google",
+        "Navigate back due to error",
+        "Click on clickable 'android:id/title' laixiruyun@gmail.com 'android:id/summary' Google",
+        "Navigate back due to error"
+    ],
+    "Current UI screen": "<p class=''  > Accounts </p>\n<p class='android:id/title'  > ACCOUNTS FOR ADMIN </p>\n<div id=1   clickable> \n    <p class='android:id/title'  > kinnplh@gmail.com </p>\n\n    <p class='android:id/summary'  > Google </p>\n </div>\n<div id=2   clickable> \n    <p class='android:id/title'  > laixiruyun@gmail.com </p>\n\n    <p class='android:id/summary'  > Google </p>\n </div>\n<div id=3   clickable> \n    <p class='android:id/title'  > Add account </p>\n </div>\n<div id=4   clickable> \n    <p class='android:id/title'  > Automatically sync app data </p>\n\n    <p class='android:id/summary'  > Let apps refresh data automatically </p>\n\n    <switch id=5 class='android:id/switch_widget' clickable > Off </switch>\n </div>\n",
+    "Successive results": {
+        "id=1": [
+            "Google",
+            "'com.android.settings:id/entity_header_title' laixiruyun@gmail.com",
+            "clickable 'android:id/title' Google Account 'android:id/summary' Info, security & personalization",
+            "clickable 'android:id/title' Account sync 'android:id/summary' Sync on for all items",
+            "'com.android.settings:id/button' Remove account"
+        ],
+        "id=2": [
+            "Google",
+            "'com.android.settings:id/entity_header_title' laixiruyun@gmail.com",
+            "clickable 'android:id/title' Google Account 'android:id/summary' Info, security & personalization",
+            "clickable 'android:id/title' Account sync 'android:id/summary' Sync on for all items",
+            "'com.android.settings:id/button' Remove account"
+        ],
+        "id=3": [
+            "Add an account",
+            "clickable 'android:id/title' Exchange",
+            "clickable 'android:id/title' Google",
+            "clickable 'android:id/title' Personal (IMAP)",
+            "clickable 'android:id/title' Personal (POP3)"
+        ],
+        "id=4": [
+            "Google",
+            "'com.android.settings:id/entity_header_title' laixiruyun@gmail.com",
+            "clickable 'android:id/title' Google Account 'android:id/summary' Info, security & personalization",
+            "clickable 'android:id/title' Account sync 'android:id/summary' Sync on for all items",
+            "'com.android.settings:id/button' Remove account"
+        ]
+    },
+    "Hint": "Below is a hint and suggestion from another model{\"next ui element\": \"Add account\", \"status\": \"go on\", \"reason\": \"The 'Add account' option is present on the current UI page, which is necessary for completing the task of adding a new guest user. Despite being in a backtracking phase, this option should be explored further.\"}"
+}
+
+===response===
+Step 1: The history of operations suggests that the user has attempted to add an account by clicking on an existing account and then on "Add account," but navigated back due to an error. The user has also repeatedly clicked on an existing email account, which was not the correct path to adding a guest user.
+
+Step 2: Analyzing the "Successive results" for each UI element, we can see the following:
+- "id=1" and "id=2" lead to Google account settings, which is not the correct path for adding a guest user.
+- "id=3" leads to the "Add an account" screen with various account types, which is a step towards adding a new account but not specifically a guest user.
+- "id=4" relates to syncing app data, which is not relevant to adding a guest user.
+
+Step 3: The task is to add a guest user named Jack to the phone. None of the successive results explicitly mention adding a guest user, but "id=3" leads to an "Add an account" screen which is the closest step towards the goal. This option should be explored further to see if it leads to an option to add a guest user.
+
+Step 4: Given the above analysis, the scores for the UI elements are as follows:
+
+- "id=1" and "id=2" have been previously explored and led to an error, so they are not likely candidates: 2.00.
+- "id=3" leads to the "Add an account" screen, which could potentially lead to adding a guest user, so it has the highest relevance: 7.50.
+- "id=4" is about syncing app data, which is not relevant to adding a guest user: 1.00.
+- The <scroll/> element might reveal more options if there are any beyond the current view, so it should be given a score that is higher than the unrelated elements but lower than "id=3": 3.00.
+
+The final scores are:
+
+{
+    "id_1": 2.00, 
+    "id_2": 2.00, 
+    "id_3": 7.50, 
+    "id_4": 1.00, 
+    "scroll": 3.00
+}

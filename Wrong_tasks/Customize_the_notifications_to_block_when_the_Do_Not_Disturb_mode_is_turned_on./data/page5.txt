@@ -1,0 +1,46 @@
+<p class=''  > Apps </p>
+<scroll id=1 class=androidx.recyclerview.widget.RecyclerView >
+    <p class='android:id/title'  > APPS THAT CAN INTERRUPT </p>
+
+    <div id=2   clickable> 
+    <p class='android:id/title'  > Digital Wellbeing </p>
+
+    <p class='android:id/summary'  > Some notifications </p>
+ </div>
+
+    <p class='android:id/title'  > SELECT MORE APPS </p>
+
+    <div id=3   clickable> 
+    <p class='android:id/title'  > Android Auto </p>
+ </div>
+
+    <div id=4   clickable> 
+    <p class='android:id/title'  > Android System </p>
+ </div>
+
+    <div id=5   clickable> 
+    <p class='android:id/title'  > Bluetooth </p>
+ </div>
+
+    <div id=6   clickable> 
+    <p class='android:id/title'  > Call Management </p>
+ </div>
+
+    <div id=7   clickable> 
+    <p class='android:id/title'  > CarrierDefaultApp </p>
+ </div>
+
+    <div id=8   clickable> 
+    <p class='android:id/title'  > Chrome </p>
+ </div>
+
+    <div id=9   clickable> 
+    <p class='android:id/title'  > Clock </p>
+ </div>
+
+    <div id=10   clickable> 
+    <p class='android:id/title'  > Contacts </p>
+ </div>
+
+    <div id=11   clickable>  </div>
+ </scroll>

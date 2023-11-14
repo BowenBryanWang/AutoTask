@@ -1,0 +1,65 @@
+system:
+You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
+Your job is to rate the available UI elements on the current page.
+Note that:
+    (1) The element with the highest score will be choosen as the next element to be operated. If you have more than one top scoring option in your scoring, it's a good idea to highlight the score of one of the most likely candidates to avoid confusion.
+    (2) Your score should be accurate to two decimal places.
+    (3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
+    (4) <scroll /> element means there is a list and you can interact with it by scrolling forward. If you want to explore more, you can also try giving <scroll/> a relatively high scorat. The score of the <scroll /> should always be higher than that of those appearantly unrelated with the task.
+For each option, provide a confidence rating from 1.00-10.00, based on the relation of each option to the task, where 1.00 is the lowest tier indicating complete irrelevance and may lead to errors, 2.00-4.00 is the second tier indicating minor relevance, 4.00-6.00 is the medium tier indicating neutrality, 6.00-8.00 indicates higher relevance, possibly a candidate, and 10.00 indicates the most likely to be chosen and executed.
+The structure of the output should be: {
+    "id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value and iterate over all possible values), and "<rating>" denotes its rating.
+Example:
+{
+    "id_1": 5.53, "id_2": 9.71, "id_3": 3.20
+}
+Think step by step and output your reasoning process:
+Step 1: think about ["History operation sequence"],what has been done,especially pay attention to those steps which is wrong and caused navigate back if any;
+Step 2: think step by step on the ["Succesive Results"] of each UI options GIVEN by user, which represents the subsequent items after operating on them, and the ["possible paths to UI target"] GIVEN by user, which was suggested by expert knowledge;
+Step 3: decide what should be done next. Possible operations: click, edit (text input), scroll. Pay attention to those steps which is wrong and caused navigate back if any;
+Step 4: Synthesize the above output to output a JSON object with scores.
+
+Strictly output a format like "id_1": 3.00, do not tamper with it to make it look like "scroll_1": 3.00, etc., it must start with id_.
+
+
+user:
+{
+    "Task": "Enable earthquake alerts in the device settings",
+    "History operation sequence": [
+        "Scroll forward on android.widget.ScrollView"
+    ],
+    "Current UI screen": "<scroll id=1 class=android.widget.ScrollView >\n    <div id=2   clickable>  </div>\n\n    <div id=3   clickable> \n    <p class='android:id/title'  > Sound </p>\n\n    <p class='android:id/summary'  > Volume, vibration, Do Not Disturb </p>\n </div>\n\n    <div id=4   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 26% used - 5.89 GB free </p>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Location </p>\n\n    <p class='android:id/summary'  > On - 1 app has access to location </p>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > Security </p>\n\n    <p class='android:id/summary'  > Screen lock, fingerprint </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Accounts </p>\n\n    <p class='android:id/summary'  > No accounts added </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Accessibility </p>\n\n    <p class='android:id/summary'  > Screen readers, display, interaction controls </p>\n </div>\n\n    <div id=10   clickable> \n    <p class='android:id/title'  > Google </p>\n\n    <p class='android:id/summary'  > Services & preferences </p>\n </div>\n\n    <div id=11   clickable> \n    <p class='android:id/title'  > System </p>\n\n    <p class='android:id/summary'  > Languages, gestures, time, backup </p>\n </div>\n </scroll>\n",
+    "Successive results": {},
+    "Hint": "Below is a hint and suggestion from another model{\"next ui element\": \"Location or System (or scroll for more options)\", \"status\": \"go on\", \"reason\": \"The last action of scrolling brought the user to a page with settings that could contain the earthquake alert option. The user should explore the Location and System settings further or scroll to reveal more options that might include the desired setting.\"}"
+}
+
+===response===
+Step 1: The user has scrolled forward on an Android settings screen but hasn't made a wrong selection yet, so there's no need to navigate back.
+
+Step 2: Considering the task of enabling earthquake alerts, the most likely settings to contain this option would be related to emergency alerts or notifications, which could logically be found under "Location" or "System" settings. Earthquake alerts are typically tied to location services, but may also be part of broader system settings. The hint suggests that "Location" or "System" might contain the desired setting, or that the user might need to scroll for more options.
+
+Step 3: The next step should be to either select "Location" or "System" to look for the earthquake alert settings, or to scroll further if those categories do not seem promising.
+
+Based on the task and the provided hint, here are the ratings:
+
+- "Location" (id_6) has a high relevance as location services are commonly associated with emergency alerts like earthquake notifications.
+- "System" (id_11) is also relevant but slightly less so than location, as system settings could potentially include a broader range of device settings, including alerts.
+- Scrolling (id_1) should be rated high as well, as there may be more relevant options further down the list.
+
+Here are the scores reflecting these considerations:
+
+{
+    "id_1": 7.50,
+    "id_2": 1.00,
+    "id_3": 1.00,
+    "id_4": 1.00,
+    "id_5": 1.00,
+    "id_6": 9.00,
+    "id_7": 1.00,
+    "id_8": 1.00,
+    "id_9": 1.00,
+    "id_10": 1.00,
+    "id_11": 8.50
+}
+
+The highest scores are given to "Location" and "System," with a slightly higher score to "Location" as it is more directly related to the task at hand. Scrolling is also given a high score in case neither of those options contains the setting for earthquake alerts.

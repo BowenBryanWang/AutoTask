@@ -273,7 +273,7 @@ if __name__ == "__main__":
                         default="normal", help="Specify the mode: 'normal' or 'preserve'")
     parser.add_argument("--load", type=bool, choices=[True, False],
                         default=False, help="determine whether to load UI graph")
-    parser.add_argument("--percentage", type=float, default=0, choices=[0.25, 0.5, 0.75, 1],
+    parser.add_argument("--percentage", type=float, default=0, choices=[0.2, 0.4, 0.6, 0.8, 1],
                         help="determine the percentage to load knowledge")
     args = parser.parse_args()
 

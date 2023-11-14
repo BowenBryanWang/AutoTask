@@ -1,0 +1,73 @@
+{
+    "@User_intent": "Disable installing unknown apps from all sources on this device.",
+    "@Page_components": [
+        "<scroll id=1 class=android.widget.ScrollView >\n    <div id=2   clickable> \n    <p class='android:id/title'  > Network & internet </p>\n\n    <p class='android:id/summary'  > Wi\u2011Fi, mobile, data usage, and hotspot </p>\n </div>\n\n    <div id=3   clickable> \n    <p class='android:id/title'  > Connected devices </p>\n\n    <p class='android:id/summary'  > Bluetooth, Android Auto </p>\n </div>\n\n    <div id=4   clickable> \n    <p class='android:id/title'  > Apps & notifications </p>\n\n    <p class='android:id/summary'  > Recent apps, default apps </p>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Battery </p>\n\n    <p class='android:id/summary'  > 100% </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Display </p>\n\n    <p class='android:id/summary'  > Wallpaper, sleep, font size </p>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > Sound </p>\n\n    <p class='android:id/summary'  > Volume, vibration, Do Not Disturb </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 28% used - 5.78 GB free </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n </scroll>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "One-step UI knowledge": {},
+            "Multi-step UI knowledge": ""
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Score": {
+                "<scroll id=1 class=android.widget.ScrollView > </scroll>\n": 7.757397212301106,
+                "<div id=2   clickable> \n    <p class='android:id/title'  > Network & internet </p>\n\n    <p class='android:id/summary'  > Wi\u2011Fi, mobile, data usage, and hotspot </p>\n </div>\n": 1.7903319531223443,
+                "<div id=3   clickable> \n    <p class='android:id/title'  > Connected devices </p>\n\n    <p class='android:id/summary'  > Bluetooth, Android Auto </p>\n </div>\n": 1.7942218202763134,
+                "<div id=4   clickable> \n    <p class='android:id/title'  > Apps & notifications </p>\n\n    <p class='android:id/summary'  > Recent apps, default apps </p>\n </div>\n": 10.301595746543583,
+                "<div id=5   clickable> \n    <p class='android:id/title'  > Battery </p>\n\n    <p class='android:id/summary'  > 100% </p>\n </div>\n": 1.7862903275190283,
+                "<div id=6   clickable> \n    <p class='android:id/title'  > Display </p>\n\n    <p class='android:id/summary'  > Wallpaper, sleep, font size </p>\n </div>\n": 1.7892700643568022,
+                "<div id=7   clickable> \n    <p class='android:id/title'  > Sound </p>\n\n    <p class='android:id/summary'  > Volume, vibration, Do Not Disturb </p>\n </div>\n": 1.7841880397635321,
+                "<div id=8   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 28% used - 5.78 GB free </p>\n </div>\n": 1.7716349395497573,
+                "<div id=9   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n": 9.289552104624724
+            },
+            "Punishment coefficient": [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "GPT answer": {
+                "id_1": 7.0,
+                "id_2": 1.0,
+                "id_3": 1.0,
+                "id_4": 9.5,
+                "id_5": 1.0,
+                "id_6": 1.0,
+                "id_7": 1.0,
+                "id_8": 1.0,
+                "id_9": 8.5
+            }
+        },
+        {
+            "Name": "Decide",
+            "Description": "This module is a decision module, deciding the final action based on the evaluation result, whether complete or wrong or go on",
+            "Output": {
+                "next ui element": "Advanced",
+                "status": "go on",
+                "reason": "The 'Advanced' section within the 'Apps & notifications' settings may lead to more specialized settings where the option to disable installing unknown apps could potentially be found. The task is not yet completed, and the last action taken was on the correct track but requires further exploration."
+            }
+        }
+    ],
+    "@History_operation": " -> Click on clickable 'android:id/title' Apps & notifications 'android:id/summary' Recent apps, default apps",
+    "@Current_Action": "Click on clickable 'android:id/title' Apps & notifications 'android:id/summary' Recent apps, default apps",
+    "@Successive_Page": [
+        "<p class=''  > Apps & notifications </p>\n",
+        "<p class='com.android.settings:id/header_title'  > Recently opened apps </p>\n",
+        "<div id=1 class='com.android.settings:id/app1_view'  clickable> \n    <p class='com.android.settings:id/app_title'  > ActionRecord </p>\n\n    <p class='com.android.settings:id/app_summary'  > 8 hr. ago </p>\n </div>\n",
+        "<div id=2 class='com.android.settings:id/app2_view'  clickable> \n    <p class='com.android.settings:id/app_title'  > Chrome </p>\n\n    <p class='com.android.settings:id/app_summary'  > 20 hr. ago </p>\n </div>\n",
+        "<button id=3 class='com.android.settings:id/header_details'  > See all 24 apps </button>\n",
+        "<div id=4   clickable> \n    <p class='android:id/title'  > Conversations </p>\n\n    <p class='android:id/summary'  > No priority conversations </p>\n </div>\n",
+        "<div id=5   clickable> \n    <p class='android:id/title'  > Notifications </p>\n\n    <p class='android:id/summary'  > Notification history, bubbles, recently sent </p>\n </div>\n",
+        "<div id=6   clickable> \n    <p class='android:id/title'  > Screen time </p>\n\n    <p class='android:id/summary'  > 8 hr, 35 min today </p>\n </div>\n",
+        "<div id=7   clickable> \n    <p class='android:id/title'  > Advanced </p>\n\n    <p class='android:id/summary'  > Default apps, Permission manager, Wireless emergency alerts, Special app access </p>\n </div>\n"
+    ]
+}

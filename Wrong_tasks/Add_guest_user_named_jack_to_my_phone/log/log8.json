@@ -1,0 +1,31 @@
+{
+    "@User_intent": "Reset all network settings on the phone.",
+    "@Page_components": [
+        "<p class=''  > Reset? </p>\n",
+        "<p class='com.android.settings:id/reset_network_confirm'  > Reset all network settings? You can\u2019t undo this action. </p>\n",
+        "<button id=1 class='com.android.settings:id/execute_reset_network'  > Reset settings </button>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "One-step UI knowledge": {},
+            "Multi-step UI knowledge": ""
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Score": {
+                "<button id=1 class='com.android.settings:id/execute_reset_network'  > Reset settings </button>\n": 10.856775062339375
+            },
+            "Punishment coefficient": [
+                1.0
+            ],
+            "GPT answer": {
+                "id_1": 10.0
+            }
+        }
+    ],
+    "@History_operation": " -> Click on clickable 'android:id/title' Network & internet 'android:id/summary' Wi\u2011Fi, mobile, data usage, and hotspot -> Scroll forward on android.widget.ScrollView -> Scroll forward on android.widget.ScrollView -> Click on clickable 'android:id/title' System 'android:id/summary' Languages, gestures, time, backup -> Click on clickable 'android:id/title' Advanced 'android:id/summary' Reset options, Multiple users, Developer options, System update -> Click on clickable 'android:id/title' Reset options 'android:id/summary' Network, apps, or device can be reset -> Click on clickable 'android:id/title' Reset Wi-Fi, mobile & Bluetooth -> Click on 'com.android.settings:id/initiate_reset_network' Reset settings -> Click on 'com.android.settings:id/execute_reset_network' Reset settings",
+    "@Current_Action": "Click on 'com.android.settings:id/execute_reset_network' Reset settings"
+}

@@ -1,0 +1,59 @@
+system:
+You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
+Your job is to rate the available UI elements on the current page.
+Note that:
+    (1) The element with the highest score will be choosen as the next element to be operated. If you have more than one top scoring option in your scoring, it's a good idea to highlight the score of one of the most likely candidates to avoid confusion.
+    (2) Your score should be accurate to two decimal places.
+    (3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
+    (4) <scroll /> element means there is a list and you can interact with it by scrolling forward. If you want to explore more, you can also try giving <scroll/> a relatively high scorat. The score of the <scroll /> should always be higher than that of those appearantly unrelated with the task.
+For each option, provide a confidence rating from 1.00-10.00, based on the relation of each option to the task, where 1.00 is the lowest tier indicating complete irrelevance and may lead to errors, 2.00-4.00 is the second tier indicating minor relevance, 4.00-6.00 is the medium tier indicating neutrality, 6.00-8.00 indicates higher relevance, possibly a candidate, and 10.00 indicates the most likely to be chosen and executed.
+The structure of the output should be: {
+    "id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value and iterate over all possible values), and "<rating>" denotes its rating.
+Example:
+{
+    "id_1": 5.53, "id_2": 9.71, "id_3": 3.20
+}
+Think step by step and output your reasoning process:
+Step 1: think about ["History operation sequence"],what has been done,especially pay attention to those steps which is wrong and caused navigate back if any;
+Step 2: think step by step on the ["Succesive Results"] of each UI options GIVEN by user, which represents the subsequent items after operating on them, and the ["possible paths to UI target"] GIVEN by user, which was suggested by expert knowledge;
+Step 3: decide what should be done next. Possible operations: click, edit (text input), scroll. Pay attention to those steps which is wrong and caused navigate back if any;
+Step 4: Synthesize the above output to output a JSON object with scores.
+
+Strictly output a format like "id_1": 3.00, do not tamper with it to make it look like "scroll_1": 3.00, etc., it must start with id_.
+
+
+user:
+{
+    "Task": "Delete a guest user named Alice from the device.",
+    "History operation sequence": [
+        "Scroll forward on android.widget.ScrollView"
+    ],
+    "Current UI screen": "<scroll id=1 class=android.widget.ScrollView >\n    <div id=2   clickable>  </div>\n\n    <div id=3   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 28% used - 5.75 GB free </p>\n </div>\n\n    <div id=4   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Location </p>\n\n    <p class='android:id/summary'  > On - 2 apps have access to location </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Security </p>\n\n    <p class='android:id/summary'  > Screen lock, fingerprint </p>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > Accounts </p>\n\n    <p class='android:id/summary'  > No accounts added </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Accessibility </p>\n\n    <p class='android:id/summary'  > Screen readers, display, interaction controls </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Digital Wellbeing & parental controls </p>\n\n    <p class='android:id/summary'  > Screen time, app timers, bedtime schedules </p>\n </div>\n\n    <div id=10   clickable> \n    <p class='android:id/title'  > Google </p>\n\n    <p class='android:id/summary'  > Services & preferences </p>\n </div>\n\n    <div id=11   clickable> \n    <p class='android:id/title'  > System </p>\n\n    <p class='android:id/summary'  > Languages, gestures, time, backup </p>\n </div>\n </scroll>\n",
+    "Successive results": {},
+    "Hint": "Below is a hint and suggestion from another model{\"next ui element\": \"Accounts\", \"status\": \"go on\", \"reason\": \"The 'Accounts' element on the current UI page appears to be the most relevant to the task of deleting a guest user. Further interaction with this element is necessary to determine if it will lead to the completion of the task.\"}"
+}
+
+===response===
+Step 1: The history shows that the user has scrolled forward on an android.widget.ScrollView. There is no indication of a wrong step that caused navigation back.
+
+Step 2: The current UI screen presents several clickable div elements, each representing a different setting such as Storage, Privacy, Location, Security, Accounts, Accessibility, Digital Wellbeing & parental controls, Google, and System. To delete a guest user, one would typically look for a 'Users' or 'Accounts' setting where user profiles can be managed.
+
+Step 3: Based on the hint provided by another model and the task at hand, the 'Accounts' element seems to be the most relevant as it is the place where user accounts are generally managed on a device. Although the title 'Accounts' does not explicitly mention 'Users', it is semantically similar and likely to lead to options for managing user profiles, including the deletion of a guest user named Alice.
+
+Step 4: Since 'Accounts' is the most relevant option and there are no other elements on the page that are more closely related to the task, it should be given the highest score. The other elements are less relevant to the task and should be given lower scores. The <scroll /> element should be given a score higher than the unrelated elements but lower than 'Accounts' in case there are more options available off-screen that could be relevant to the task.
+
+Here is the JSON object with the scores:
+
+{
+    "id_1": 7.00, 
+    "id_2": 1.00, 
+    "id_3": 1.00, 
+    "id_4": 1.00, 
+    "id_5": 1.00, 
+    "id_6": 1.00, 
+    "id_7": 10.00, 
+    "id_8": 1.00, 
+    "id_9": 1.00, 
+    "id_10": 1.00, 
+    "id_11": 1.00
+}

@@ -1,0 +1,82 @@
+{
+    "@User_intent": "Add guest user named jack to my phone.",
+    "@Page_components": [
+        "<p class=''  > Accounts </p>\n",
+        "<p class='android:id/title'  > ACCOUNTS FOR ADMIN </p>\n",
+        "<div id=1   clickable> \n    <p class='android:id/title'  > kinnplh@gmail.com </p>\n\n    <p class='android:id/summary'  > Google </p>\n </div>\n",
+        "<div id=2   clickable> \n    <p class='android:id/title'  > laixiruyun@gmail.com </p>\n\n    <p class='android:id/summary'  > Google </p>\n </div>\n",
+        "<div id=3   clickable> \n    <p class='android:id/title'  > Add account </p>\n </div>\n",
+        "<div id=4   clickable> \n    <p class='android:id/title'  > Automatically sync app data </p>\n\n    <p class='android:id/summary'  > Let apps refresh data automatically </p>\n\n    <switch id=5 class='android:id/switch_widget' clickable > Off </switch>\n </div>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "One-step UI knowledge": {
+                "id=1": [
+                    "Google",
+                    "'com.android.settings:id/entity_header_title' laixiruyun@gmail.com",
+                    "clickable 'android:id/title' Google Account 'android:id/summary' Info, security & personalization",
+                    "clickable 'android:id/title' Account sync 'android:id/summary' Sync on for all items",
+                    "'com.android.settings:id/button' Remove account"
+                ],
+                "id=2": [
+                    "Google",
+                    "'com.android.settings:id/entity_header_title' laixiruyun@gmail.com",
+                    "clickable 'android:id/title' Google Account 'android:id/summary' Info, security & personalization",
+                    "clickable 'android:id/title' Account sync 'android:id/summary' Sync on for all items",
+                    "'com.android.settings:id/button' Remove account"
+                ],
+                "id=3": [
+                    "Add an account",
+                    "clickable 'android:id/title' Exchange",
+                    "clickable 'android:id/title' Google",
+                    "clickable 'android:id/title' Personal (IMAP)",
+                    "clickable 'android:id/title' Personal (POP3)"
+                ],
+                "id=4": [
+                    "Google",
+                    "'com.android.settings:id/entity_header_title' laixiruyun@gmail.com",
+                    "clickable 'android:id/title' Google Account 'android:id/summary' Info, security & personalization",
+                    "clickable 'android:id/title' Account sync 'android:id/summary' Sync on for all items",
+                    "'com.android.settings:id/button' Remove account"
+                ]
+            },
+            "Multi-step UI knowledge": ""
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Score": {
+                "<div id=1   clickable> \n    <p class='android:id/title'  > kinnplh@gmail.com </p>\n\n    <p class='android:id/summary'  > Google </p>\n </div>\n": 2.795910103431682,
+                "<div id=2   clickable> \n    <p class='android:id/title'  > laixiruyun@gmail.com </p>\n\n    <p class='android:id/summary'  > Google </p>\n </div>\n": 0.0,
+                "<div id=3   clickable> \n    <p class='android:id/title'  > Add account </p>\n </div>\n": 0.0,
+                "<div id=4   clickable> \n    <p class='android:id/title'  > Automatically sync app data </p>\n\n    <p class='android:id/summary'  > Let apps refresh data automatically </p>\n\n    <switch id=5 class='android:id/switch_widget' clickable > Off </switch>\n </div>\n": 1.7967788106086093,
+                "<switch id=5 class='android:id/switch_widget' clickable > Off </switch>\n": 1.7796543806900962
+            },
+            "Punishment coefficient": [
+                1.0,
+                0.0,
+                0.0,
+                1.0,
+                1.0
+            ],
+            "GPT answer": {
+                "id_1": 2.0,
+                "id_2": 2.0,
+                "id_3": 7.5,
+                "id_4": 1.0,
+                "scroll": 3.0
+            }
+        }
+    ],
+    "@History_operation": " -> Scroll forward on android.widget.ScrollView -> Click on clickable 'android:id/title' Accounts 'android:id/summary' Google -> Click on clickable 'android:id/title' Add account -> Click on clickable 'android:id/title' laixiruyun@gmail.com 'android:id/summary' Google -> Click on clickable 'android:id/title' laixiruyun@gmail.com 'android:id/summary' Google -> Click on clickable 'android:id/title' kinnplh@gmail.com 'android:id/summary' Google",
+    "@Current_Action": "Click on clickable 'android:id/title' kinnplh@gmail.com 'android:id/summary' Google",
+    "@Successive_Page": [
+        "<p class=''  > Google </p>\n",
+        "<p class='com.android.settings:id/entity_header_title'  > laixiruyun@gmail.com </p>\n",
+        "<div id=1   clickable> \n    <p class='android:id/title'  > Google Account </p>\n\n    <p class='android:id/summary'  > Info, security & personalization </p>\n </div>\n",
+        "<div id=2   clickable> \n    <p class='android:id/title'  > Account sync </p>\n\n    <p class='android:id/summary'  > Sync on for all items </p>\n </div>\n",
+        "<button id=3 class='com.android.settings:id/button'  > Remove account </button>\n"
+    ]
+}

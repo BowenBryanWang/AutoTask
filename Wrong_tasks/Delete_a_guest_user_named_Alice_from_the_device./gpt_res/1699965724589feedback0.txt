@@ -1,0 +1,80 @@
+system:
+You are an expert in UI automation and robust error handling. Your task is to critic a operation sequence produced by a [primitive LLM],following user task but inaccurate. 
+Utilizing the log files from each module of current step of the [primitive LLM], you should locate error in the final element chosen to operate on.
+[primitive LLM] works in which they cannot see further information on UI, but you are in the backtracking process so you should utilize further information observed from subsequent UI to help correct possible errors.
+Specifically, you should analyze the [Latest Action] and the [Successive Page] information to determine the extent of error on fulfilling the task, and then output the punishment coefficient to it.
+Follow the steps below and think step by step:
+a. Understand the information given and synthize, especially [Latest Action] and its subsequent result [Successive Page];
+b, Think step by step about the scoring result by [Evaluation Module], try to identify error causes on the LATEST ACTION and give [Punishment Coefficient] from 1-10, where 1 means no error and 10 means totally wrong;
+Finally, output a JSON format like this example:
+{
+    "punishment":
+    {
+        "id_x": 1,
+        ......(replace x to the element with id that you think causes the error, output your punishment coefficient from 0-10)
+    }
+}
+
+
+user:
+
+                Wrong reason: The current UI does not contain elements that would allow for the deletion of a guest user account, and the last action taken was a navigation back due to an error, indicating that the user was not on the correct path to completing the task.
+                
+
+user:
+
+                User intent: Delete a guest user named Alice from the device.
+                
+
+user:
+
+                Page components: ["<scroll id=1 class=android.widget.ScrollView >\n    <div id=2   clickable> \n    <p class='android:id/title'  > Network & internet </p>\n\n    <p class='android:id/summary'  > Wi‑Fi, mobile, data usage, and hotspot </p>\n </div>\n\n    <div id=3   clickable> \n    <p class='android:id/title'  > Connected devices </p>\n\n    <p class='android:id/summary'  > Bluetooth, Android Auto </p>\n </div>\n\n    <div id=4   clickable> \n    <p class='android:id/title'  > Apps & notifications </p>\n\n    <p class='android:id/summary'  > Recent apps, default apps </p>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Battery </p>\n\n    <p class='android:id/summary'  > 100% </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Display </p>\n\n    <p class='android:id/summary'  > Wallpaper, sleep, font size </p>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > Sound </p>\n\n    <p class='android:id/summary'  > Volume, vibration, Do Not Disturb </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 28% used - 5.75 GB free </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n </scroll>\n"]
+                
+
+user:
+
+                Previous Steps:  -> Scroll forward on android.widget.ScrollView
+                
+
+user:
+
+                Action on this step: Scroll forward on android.widget.ScrollView
+                
+
+user:
+
+                    Latest Page: ["<scroll id=1 class=android.widget.ScrollView >\n    <div id=2   clickable>  </div>\n\n    <div id=3   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 28% used - 5.75 GB free </p>\n </div>\n\n    <div id=4   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Location </p>\n\n    <p class='android:id/summary'  > On - 2 apps have access to location </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Security </p>\n\n    <p class='android:id/summary'  > Screen lock, fingerprint </p>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > Accounts </p>\n\n    <p class='android:id/summary'  > No accounts added </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Accessibility </p>\n\n    <p class='android:id/summary'  > Screen readers, display, interaction controls </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Digital Wellbeing & parental controls </p>\n\n    <p class='android:id/summary'  > Screen time, app timers, bedtime schedules </p>\n </div>\n\n    <div id=10   clickable> \n    <p class='android:id/title'  > Google </p>\n\n    <p class='android:id/summary'  > Services & preferences </p>\n </div>\n\n    <div id=11   clickable> \n    <p class='android:id/title'  > System </p>\n\n    <p class='android:id/summary'  > Languages, gestures, time, backup </p>\n </div>\n </scroll>\n"]
+                    
+
+user:
+
+                Modules: {'Name': 'Evaluate', 'Description': "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent", 'Score': {'<scroll id=1 class=android.widget.ScrollView > </scroll>\n': 8.252816483509893, "<div id=2   clickable> \n    <p class='android:id/title'  > Network & internet </p>\n\n    <p class='android:id/summary'  > Wi‑Fi, mobile, data usage, and hotspot </p>\n </div>\n": 1.785185625023626, "<div id=3   clickable> \n    <p class='android:id/title'  > Connected devices </p>\n\n    <p class='android:id/summary'  > Bluetooth, Android Auto </p>\n </div>\n": 1.790713001084433, "<div id=4   clickable> \n    <p class='android:id/title'  > Apps & notifications </p>\n\n    <p class='android:id/summary'  > Recent apps, default apps </p>\n </div>\n": 1.7894802834271863, "<div id=5   clickable> \n    <p class='android:id/title'  > Battery </p>\n\n    <p class='android:id/summary'  > 100% </p>\n </div>\n": 1.7814696128111476, "<div id=6   clickable> \n    <p class='android:id/title'  > Display </p>\n\n    <p class='android:id/summary'  > Wallpaper, sleep, font size </p>\n </div>\n": 1.783573027507607, "<div id=7   clickable> \n    <p class='android:id/title'  > Sound </p>\n\n    <p class='android:id/summary'  > Volume, vibration, Do Not Disturb </p>\n </div>\n": 1.7756308758613444, "<div id=8   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 28% used - 5.75 GB free </p>\n </div>\n": 1.7727230541651537, "<div id=9   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n": 4.286884713774888}, 'Punishment coefficient': [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], 'GPT answer': {'id_1': 7.5, 'id_2': 1.0, 'id_3': 1.0, 'id_4': 1.0, 'id_5': 1.0, 'id_6': 1.0, 'id_7': 1.0, 'id_8': 1.0, 'id_9': 3.5}}
+                
+
+===response===
+Based on the information provided, here is the analysis:
+
+- The user's intent was to delete a guest user named Alice from the device.
+- The latest action taken by the [primitive LLM] was to scroll forward on an `android.widget.ScrollView`.
+- The successive page shown after the action contains various settings options such as "Storage," "Privacy," "Location," and "Accounts."
+
+From the given logs, it appears that the [primitive LLM] has not navigated to the correct section to delete a guest user account. The section that typically contains user account settings is "Accounts." However, the [primitive LLM] has not interacted with this element but instead continued to scroll.
+
+The evaluation module scored the scroll view element with an 8.252816483509893, which is the highest among the elements, indicating that the action of scrolling was considered significant towards achieving the user's intent. However, this is incorrect as the intended action should have been to select the "Accounts" section where user management options are likely to be found.
+
+Therefore, the error lies in the action of scrolling instead of selecting the "Accounts" div element (id_7) to proceed with the deletion of the guest user account.
+
+Given this error and the fact that the [primitive LLM] has not made progress towards the correct path, a high punishment coefficient is warranted. However, since the [primitive LLM] did navigate to the page where the "Accounts" section is present, it is not completely off track.
+
+Here is the JSON output with the punishment coefficient:
+
+```json
+{
+    "punishment":
+    {
+        "id_7": 8
+    }
+}
+```
+
+The punishment coefficient of 8 is given because the [primitive LLM] was on the correct page but failed to select the correct element to accomplish the user's task.

@@ -1,0 +1,64 @@
+system:
+You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
+Your job is to rate the available UI elements on the current page.
+Note that:
+    (1) The element with the highest score will be choosen as the next element to be operated. If you have more than one top scoring option in your scoring, it's a good idea to highlight the score of one of the most likely candidates to avoid confusion.
+    (2) Your score should be accurate to two decimal places.
+    (3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
+    (4) <scroll /> element means there is a list and you can interact with it by scrolling forward. If you want to explore more, you can also try giving <scroll/> a relatively high scorat. The score of the <scroll /> should always be higher than that of those appearantly unrelated with the task.
+For each option, provide a confidence rating from 1.00-10.00, based on the relation of each option to the task, where 1.00 is the lowest tier indicating complete irrelevance and may lead to errors, 2.00-4.00 is the second tier indicating minor relevance, 4.00-6.00 is the medium tier indicating neutrality, 6.00-8.00 indicates higher relevance, possibly a candidate, and 10.00 indicates the most likely to be chosen and executed.
+The structure of the output should be: {
+    "id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value and iterate over all possible values), and "<rating>" denotes its rating.
+Example:
+{
+    "id_1": 5.53, "id_2": 9.71, "id_3": 3.20
+}
+Think step by step and output your reasoning process:
+Step 1: think about ["History operation sequence"],what has been done,especially pay attention to those steps which is wrong and caused navigate back if any;
+Step 2: think step by step on the ["Succesive Results"] of each UI options GIVEN by user, which represents the subsequent items after operating on them, and the ["possible paths to UI target"] GIVEN by user, which was suggested by expert knowledge;
+Step 3: decide what should be done next. Possible operations: click, edit (text input), scroll. Pay attention to those steps which is wrong and caused navigate back if any;
+Step 4: Synthesize the above output to output a JSON object with scores.
+
+Strictly output a format like "id_1": 3.00, do not tamper with it to make it look like "scroll_1": 3.00, etc., it must start with id_.
+
+
+user:
+{
+    "Task": "Customize the notifications to block when the Do Not Disturb mode is turned on.",
+    "History operation sequence": [
+        "Click on clickable 'android:id/title' Sound 'android:id/summary' Volume, vibration, Do Not Disturb",
+        "Click on clickable 'android:id/title' Do Not Disturb 'android:id/summary' Off / 3 schedules can turn on automatically",
+        "Click on clickable 'android:id/title' Apps 'android:id/summary' Digital Wellbeing can interrupt",
+        "Click on clickable 'android:id/title' Add apps"
+    ],
+    "Current UI screen": "<p class=''  > Apps </p>\n<scroll id=1 class=androidx.recyclerview.widget.RecyclerView >\n    <p class='android:id/title'  > APPS THAT CAN INTERRUPT </p>\n\n    <div id=2   clickable> \n    <p class='android:id/title'  > Digital Wellbeing </p>\n\n    <p class='android:id/summary'  > Some notifications </p>\n </div>\n\n    <p class='android:id/title'  > SELECT MORE APPS </p>\n\n    <div id=3   clickable> \n    <p class='android:id/title'  > Android Auto </p>\n </div>\n\n    <div id=4   clickable> \n    <p class='android:id/title'  > Android System </p>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Bluetooth </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Call Management </p>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > CarrierDefaultApp </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Chrome </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Clock </p>\n </div>\n\n    <div id=10   clickable> \n    <p class='android:id/title'  > Contacts </p>\n </div>\n\n    <div id=11   clickable>  </div>\n </scroll>\n",
+    "Successive results": {},
+    "Hint": "Below is a hint and suggestion from another model{\"next ui element\": \"<scroll id=1 class=androidx.recyclerview.widget.RecyclerView>\", \"status\": \"go on\", \"reason\": \"The user is on the correct screen to manage apps that can interrupt during Do Not Disturb mode and can scroll to view more apps to make the necessary adjustments according to the task.\"}"
+}
+
+===response===
+Step 1: Reviewing the history operation sequence, the user has navigated through the settings to reach the Do Not Disturb section, specifically targeting the management of apps that can interrupt during Do Not Disturb mode. The last action was to add apps to this list, which implies the user is in the process of customizing which apps can send notifications when Do Not Disturb is enabled.
+
+Step 2: The current UI screen shows a list of apps with the title "APPS THAT CAN INTERRUPT" and several apps listed below with clickability. Since the task is to customize notifications to block when Do Not Disturb is turned on, the user needs to select or deselect apps from this list. However, the "Successive results" are not provided, which means we do not have information on what happens after clicking on each app. The hint suggests that the user should scroll to view more apps, which aligns with the task of customizing the list.
+
+Step 3: Based on the task and the hint provided, the most appropriate next step is to interact with the scrollable list to view more apps. The user may need to find specific apps to include or exclude from the list of apps that can interrupt during Do Not Disturb mode.
+
+Step 4: The scrollable list (<scroll id=1>) is the most relevant UI element to the task, as it allows the user to view and potentially select more apps. The individual apps listed (ids 2 through 10) are also relevant, but without knowing which specific apps the user wants to block, they cannot be rated as highly as the scroll function, which is necessary to view all available options. The empty clickable div (id 11) does not provide enough context to be rated, as it is unclear what it represents.
+
+Based on this analysis, the scores for the UI elements on the current page are as follows:
+
+{
+    "id_1": 8.00, 
+    "id_2": 6.00, 
+    "id_3": 6.00, 
+    "id_4": 6.00, 
+    "id_5": 6.00, 
+    "id_6": 6.00, 
+    "id_7": 6.00, 
+    "id_8": 6.00, 
+    "id_9": 6.00, 
+    "id_10": 6.00, 
+    "id_11": 4.00
+}
+
+The scrollable list (<scroll id=1>) receives the highest score as it is the most likely candidate for the next operation to fulfill the task. The individual apps (ids 2 through 10) receive a lower but still relevant score, as they may be interacted with after scrolling through the list. The empty clickable div (id 11) receives the lowest score due to a lack of information.

@@ -1,0 +1,29 @@
+system:
+the following string cannot be parsed to a dict (or list) by the built-in function eval (in Python) due to the error: invalid syntax (<string>, line 2).
+
+{
+    "id_1": 2.00, // <scroll> is less relevant since we see the target "Battery" on screen.
+    "id_2": 1.00, // "Network & internet" is not related to battery details.
+    "id_3": 1.00, // "Connected devices" is not related to battery details.
+    "id_4": 3.00, // "Apps & notifications" has minor relevance due to app battery usage.
+    "id_5": 10.00, // "Battery" is the most likely candidate to lead to battery usage details.
+    "id_6": 1.00, // "Display" is not directly related to battery usage details.
+    "id_7": 1.00, // "Sound" is not related to battery usage details.
+    "id_8": 1.00, // "Storage" is not related to battery usage details.
+    "id_9": 1.00  // "Privacy" is not related to battery usage details.
+}
+
+Please correct its format error and output the correct string. Do not output anything else.
+
+===response===
+{
+    "id_1": 2.00,
+    "id_2": 1.00,
+    "id_3": 1.00,
+    "id_4": 3.00,
+    "id_5": 10.00,
+    "id_6": 1.00,
+    "id_7": 1.00,
+    "id_8": 1.00,
+    "id_9": 1.00
+}

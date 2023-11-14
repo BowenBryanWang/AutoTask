@@ -1,0 +1,67 @@
+system:
+You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
+Your job is to rate the available UI elements on the current page.
+Note that:
+    (1) The element with the highest score will be choosen as the next element to be operated. If you have more than one top scoring option in your scoring, it's a good idea to highlight the score of one of the most likely candidates to avoid confusion.
+    (2) Your score should be accurate to two decimal places.
+    (3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
+    (4) <scroll /> element means there is a list and you can interact with it by scrolling forward. If you want to explore more, you can also try giving <scroll/> a relatively high scorat. The score of the <scroll /> should always be higher than that of those appearantly unrelated with the task.
+For each option, provide a confidence rating from 1.00-10.00, based on the relation of each option to the task, where 1.00 is the lowest tier indicating complete irrelevance and may lead to errors, 2.00-4.00 is the second tier indicating minor relevance, 4.00-6.00 is the medium tier indicating neutrality, 6.00-8.00 indicates higher relevance, possibly a candidate, and 10.00 indicates the most likely to be chosen and executed.
+The structure of the output should be: {
+    "id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value and iterate over all possible values), and "<rating>" denotes its rating.
+Example:
+{
+    "id_1": 5.53, "id_2": 9.71, "id_3": 3.20
+}
+Think step by step and output your reasoning process:
+Step 1: think about ["History operation sequence"],what has been done,especially pay attention to those steps which is wrong and caused navigate back if any;
+Step 2: think step by step on the ["Succesive Results"] of each UI options GIVEN by user, which represents the subsequent items after operating on them, and the ["possible paths to UI target"] GIVEN by user, which was suggested by expert knowledge;
+Step 3: decide what should be done next. Possible operations: click, edit (text input), scroll. Pay attention to those steps which is wrong and caused navigate back if any;
+Step 4: Synthesize the above output to output a JSON object with scores.
+
+Strictly output a format like "id_1": 3.00, do not tamper with it to make it look like "scroll_1": 3.00, etc., it must start with id_.
+
+
+user:
+{
+    "Task": "Reset all network settings on the phone.",
+    "History operation sequence": [
+        "Click on clickable 'android:id/title' Network & internet 'android:id/summary' Wi\u2011Fi, mobile, data usage, and hotspot"
+    ],
+    "Current UI screen": "<p class=''  > Network & internet </p>\n<div id=1  description='Wi\u2011Fi' clickable> \n    <p class='android:id/title'  > Wi\u2011Fi </p>\n\n    <p class='android:id/summary'  > AndroidWifi / No internet </p>\n\n    <switch id=2 class='com.android.settings:id/switchWidget' clickable > On </switch>\n </div>\n<div id=3   clickable> \n    <p class='android:id/title'  > Mobile network </p>\n\n    <p class='android:id/summary'  > T-Mobile </p>\n </div>\n<div id=4   clickable> \n    <p class='android:id/title'  > Airplane mode </p>\n\n    <switch id=5 class='android:id/switch_widget' clickable > Off </switch>\n </div>\n<div id=6   clickable> \n    <p class='android:id/title'  > Mobile plan </p>\n </div>\n<div id=7   clickable> \n    <p class='android:id/title'  > Hotspot & tethering </p>\n\n    <p class='android:id/summary'  > Off </p>\n </div>\n<div id=8   clickable> \n    <p class='android:id/title'  > Advanced </p>\n\n    <p class='android:id/summary'  > Data Saver, VPN, Private DNS </p>\n </div>\n",
+    "Successive results": {},
+    "Hint": "Below is a hint and suggestion from another model{\"next ui element\": \"clickable 'android:id/title' Advanced 'android:id/summary' Data Saver, VPN, Private DNS\", \"status\": \"go on\", \"reason\": \"The user is in the correct section for network settings, but the reset option is not visible on the current screen. The 'Advanced' section is a logical place to look for more options, including potentially the reset network settings option.\"}"
+}
+
+===response===
+Step 1: Reviewing the "History operation sequence", the user has clicked on the "Network & internet" settings. There are no indications of any incorrect steps that led to a navigate back situation.
+
+Step 2: On the "Current UI screen", there are several options related to network settings, but none of them explicitly mention resetting network settings. Based on the hint provided, the "Advanced" section is likely to contain more detailed settings, including the option to reset network settings.
+
+Step 3: The task is to reset all network settings on the phone. The UI elements presented are:
+
+- Wi-Fi settings (id_1)
+- Mobile network settings (id_3)
+- Airplane mode toggle (id_4)
+- Mobile plan settings (id_6)
+- Hotspot & tethering settings (id_7)
+- Advanced network settings (id_8)
+
+Considering the hint and the typical location of the reset network settings option in a settings menu, the "Advanced" section (id_8) is the most likely candidate to contain the reset option.
+
+Step 4: I will assign scores based on the relevance of each UI element to the task of resetting network settings:
+
+- id_1 (Wi-Fi settings): 2.00 - Minor relevance, as it is a part of network settings but not related to resetting them.
+- id_2 (Wi-Fi toggle): 1.00 - Irrelevant to the task of resetting network settings.
+- id_3 (Mobile network settings): 2.00 - Minor relevance, as it is a part of network settings but not related to resetting them.
+- id_4 (Airplane mode settings): 1.00 - Irrelevant to the task of resetting network settings.
+- id_5 (Airplane mode toggle): 1.00 - Irrelevant to the task of resetting network settings.
+- id_6 (Mobile plan settings): 1.00 - Irrelevant to the task of resetting network settings.
+- id_7 (Hotspot & tethering settings): 1.00 - Irrelevant to the task of resetting network settings.
+- id_8 (Advanced network settings): 9.00 - High relevance, as it is likely to contain the reset network settings option based on expert knowledge and the hint provided.
+
+Outputting the scores as a JSON object:
+
+{
+    "id_1": 2.00, "id_2": 1.00, "id_3": 2.00, "id_4": 1.00, "id_5": 1.00, "id_6": 1.00, "id_7": 1.00, "id_8": 9.00
+}

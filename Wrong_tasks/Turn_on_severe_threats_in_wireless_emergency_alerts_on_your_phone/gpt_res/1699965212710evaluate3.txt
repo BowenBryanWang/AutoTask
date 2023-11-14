@@ -1,0 +1,177 @@
+system:
+You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
+Your job is to rate the available UI elements on the current page.
+Note that:
+    (1) The element with the highest score will be choosen as the next element to be operated. If you have more than one top scoring option in your scoring, it's a good idea to highlight the score of one of the most likely candidates to avoid confusion.
+    (2) Your score should be accurate to two decimal places.
+    (3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
+    (4) <scroll /> element means there is a list and you can interact with it by scrolling forward. If you want to explore more, you can also try giving <scroll/> a relatively high scorat. The score of the <scroll /> should always be higher than that of those appearantly unrelated with the task.
+For each option, provide a confidence rating from 1.00-10.00, based on the relation of each option to the task, where 1.00 is the lowest tier indicating complete irrelevance and may lead to errors, 2.00-4.00 is the second tier indicating minor relevance, 4.00-6.00 is the medium tier indicating neutrality, 6.00-8.00 indicates higher relevance, possibly a candidate, and 10.00 indicates the most likely to be chosen and executed.
+The structure of the output should be: {
+    "id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value and iterate over all possible values), and "<rating>" denotes its rating.
+Example:
+{
+    "id_1": 5.53, "id_2": 9.71, "id_3": 3.20
+}
+Think step by step and output your reasoning process:
+Step 1: think about ["History operation sequence"],what has been done,especially pay attention to those steps which is wrong and caused navigate back if any;
+Step 2: think step by step on the ["Succesive Results"] of each UI options GIVEN by user, which represents the subsequent items after operating on them, and the ["possible paths to UI target"] GIVEN by user, which was suggested by expert knowledge;
+Step 3: decide what should be done next. Possible operations: click, edit (text input), scroll. Pay attention to those steps which is wrong and caused navigate back if any;
+Step 4: Synthesize the above output to output a JSON object with scores.
+
+Strictly output a format like "id_1": 3.00, do not tamper with it to make it look like "scroll_1": 3.00, etc., it must start with id_.
+
+
+user:
+{
+    "Task": "Allow emergency broadcast alerts on the phone.",
+    "History operation sequence": [
+        "Click on clickable 'android:id/title' Apps & notifications 'android:id/summary' Recent apps, default apps",
+        "Click on clickable 'android:id/title' Advanced 'android:id/summary' Permission manager, Wireless emergency alerts, Special app access"
+    ],
+    "Current UI screen": "<p class=''  > Apps & notifications </p>\n<scroll id=1 class=androidx.recyclerview.widget.RecyclerView >\n    <p class='com.android.settings:id/header_title'  > Recently opened apps </p>\n\n    <div id=2 class='com.android.settings:id/app1_view'  clickable> \n    <p class='com.android.settings:id/app_title'  > WebView Shell </p>\n\n    <p class='com.android.settings:id/app_summary'  > 16 min. ago </p>\n </div>\n\n    <div id=3 class='com.android.settings:id/app2_view'  clickable> \n    <p class='com.android.settings:id/app_title'  > ActionRecord </p>\n\n    <p class='com.android.settings:id/app_summary'  > 3 hr. ago </p>\n </div>\n\n    <button id=4 class='com.android.settings:id/header_details'  > SEE ALL 18 APPS </button>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Conversations </p>\n\n    <p class='android:id/summary'  > No priority conversations </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Notifications </p>\n\n    <p class='android:id/summary'  > Notification history, bubbles, recently sent </p>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > Default apps </p>\n\n    <p class='android:id/summary'  > WebView Shell, Phone, and Messaging </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Permission manager </p>\n\n    <p class='android:id/summary'  > Control app access to your data </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Wireless emergency alerts </p>\n </div>\n\n    <div id=10   clickable> \n    <p class='android:id/title'  > Special app access </p>\n </div>\n </scroll>\n",
+    "Successive results": {
+        "id=2": [
+            "Apps & notifications",
+            "androidx.recyclerview.widget.RecyclerView",
+            "'com.android.settings:id/header_title' Recently opened apps",
+            "'com.android.settings:id/app1_view' clickable 'com.android.settings:id/app_title' WebView Shell 'com.android.settings:id/app_summary' 16 min. ago",
+            "'com.android.settings:id/app2_view' clickable 'com.android.settings:id/app_title' ActionRecord 'com.android.settings:id/app_summary' 3 hr. ago",
+            "'com.android.settings:id/header_details' SEE ALL 18 APPS",
+            "clickable 'android:id/title' Conversations 'android:id/summary' No priority conversations",
+            "clickable 'android:id/title' Notifications 'android:id/summary' Notification history, bubbles, recently sent",
+            "clickable 'android:id/title' Default apps 'android:id/summary' WebView Shell, Phone, and Messaging",
+            "clickable 'android:id/title' Permission manager 'android:id/summary' Control app access to your data",
+            "clickable 'android:id/title' Wireless emergency alerts",
+            "clickable 'android:id/title' Special app access"
+        ],
+        "id=3": [
+            "Apps & notifications",
+            "androidx.recyclerview.widget.RecyclerView",
+            "'com.android.settings:id/header_title' Recently opened apps",
+            "'com.android.settings:id/app1_view' clickable 'com.android.settings:id/app_title' WebView Shell 'com.android.settings:id/app_summary' 16 min. ago",
+            "'com.android.settings:id/app2_view' clickable 'com.android.settings:id/app_title' ActionRecord 'com.android.settings:id/app_summary' 3 hr. ago",
+            "'com.android.settings:id/header_details' SEE ALL 18 APPS",
+            "clickable 'android:id/title' Conversations 'android:id/summary' No priority conversations",
+            "clickable 'android:id/title' Notifications 'android:id/summary' Notification history, bubbles, recently sent",
+            "clickable 'android:id/title' Default apps 'android:id/summary' WebView Shell, Phone, and Messaging",
+            "clickable 'android:id/title' Permission manager 'android:id/summary' Control app access to your data",
+            "clickable 'android:id/title' Wireless emergency alerts",
+            "clickable 'android:id/title' Special app access"
+        ],
+        "id=5": [
+            "Apps & notifications",
+            "androidx.recyclerview.widget.RecyclerView",
+            "'com.android.settings:id/header_title' Recently opened apps",
+            "'com.android.settings:id/app1_view' clickable 'com.android.settings:id/app_title' WebView Shell 'com.android.settings:id/app_summary' 16 min. ago",
+            "'com.android.settings:id/app2_view' clickable 'com.android.settings:id/app_title' ActionRecord 'com.android.settings:id/app_summary' 3 hr. ago",
+            "'com.android.settings:id/header_details' SEE ALL 18 APPS",
+            "clickable 'android:id/title' Conversations 'android:id/summary' No priority conversations",
+            "clickable 'android:id/title' Notifications 'android:id/summary' Notification history, bubbles, recently sent",
+            "clickable 'android:id/title' Default apps 'android:id/summary' WebView Shell, Phone, and Messaging",
+            "clickable 'android:id/title' Permission manager 'android:id/summary' Control app access to your data",
+            "clickable 'android:id/title' Wireless emergency alerts",
+            "clickable 'android:id/title' Special app access"
+        ],
+        "id=6": [
+            "Apps & notifications",
+            "androidx.recyclerview.widget.RecyclerView",
+            "'com.android.settings:id/header_title' Recently opened apps",
+            "'com.android.settings:id/app1_view' clickable 'com.android.settings:id/app_title' WebView Shell 'com.android.settings:id/app_summary' 16 min. ago",
+            "'com.android.settings:id/app2_view' clickable 'com.android.settings:id/app_title' ActionRecord 'com.android.settings:id/app_summary' 3 hr. ago",
+            "'com.android.settings:id/header_details' SEE ALL 18 APPS",
+            "clickable 'android:id/title' Conversations 'android:id/summary' No priority conversations",
+            "clickable 'android:id/title' Notifications 'android:id/summary' Notification history, bubbles, recently sent",
+            "clickable 'android:id/title' Default apps 'android:id/summary' WebView Shell, Phone, and Messaging",
+            "clickable 'android:id/title' Permission manager 'android:id/summary' Control app access to your data",
+            "clickable 'android:id/title' Wireless emergency alerts",
+            "clickable 'android:id/title' Special app access"
+        ],
+        "id=7": [
+            "Apps & notifications",
+            "androidx.recyclerview.widget.RecyclerView",
+            "'com.android.settings:id/header_title' Recently opened apps",
+            "'com.android.settings:id/app1_view' clickable 'com.android.settings:id/app_title' WebView Shell 'com.android.settings:id/app_summary' 16 min. ago",
+            "'com.android.settings:id/app2_view' clickable 'com.android.settings:id/app_title' ActionRecord 'com.android.settings:id/app_summary' 3 hr. ago",
+            "'com.android.settings:id/header_details' SEE ALL 18 APPS",
+            "clickable 'android:id/title' Conversations 'android:id/summary' No priority conversations",
+            "clickable 'android:id/title' Notifications 'android:id/summary' Notification history, bubbles, recently sent",
+            "clickable 'android:id/title' Default apps 'android:id/summary' WebView Shell, Phone, and Messaging",
+            "clickable 'android:id/title' Permission manager 'android:id/summary' Control app access to your data",
+            "clickable 'android:id/title' Wireless emergency alerts",
+            "clickable 'android:id/title' Special app access"
+        ],
+        "id=8": [
+            "Apps & notifications",
+            "androidx.recyclerview.widget.RecyclerView",
+            "'com.android.settings:id/header_title' Recently opened apps",
+            "'com.android.settings:id/app1_view' clickable 'com.android.settings:id/app_title' WebView Shell 'com.android.settings:id/app_summary' 16 min. ago",
+            "'com.android.settings:id/app2_view' clickable 'com.android.settings:id/app_title' ActionRecord 'com.android.settings:id/app_summary' 3 hr. ago",
+            "'com.android.settings:id/header_details' SEE ALL 18 APPS",
+            "clickable 'android:id/title' Conversations 'android:id/summary' No priority conversations",
+            "clickable 'android:id/title' Notifications 'android:id/summary' Notification history, bubbles, recently sent",
+            "clickable 'android:id/title' Default apps 'android:id/summary' WebView Shell, Phone, and Messaging",
+            "clickable 'android:id/title' Permission manager 'android:id/summary' Control app access to your data",
+            "clickable 'android:id/title' Wireless emergency alerts",
+            "clickable 'android:id/title' Special app access"
+        ],
+        "id=9": [
+            "Apps & notifications",
+            "androidx.recyclerview.widget.RecyclerView",
+            "'com.android.settings:id/header_title' Recently opened apps",
+            "'com.android.settings:id/app1_view' clickable 'com.android.settings:id/app_title' WebView Shell 'com.android.settings:id/app_summary' 16 min. ago",
+            "'com.android.settings:id/app2_view' clickable 'com.android.settings:id/app_title' ActionRecord 'com.android.settings:id/app_summary' 3 hr. ago",
+            "'com.android.settings:id/header_details' SEE ALL 18 APPS",
+            "clickable 'android:id/title' Conversations 'android:id/summary' No priority conversations",
+            "clickable 'android:id/title' Notifications 'android:id/summary' Notification history, bubbles, recently sent",
+            "clickable 'android:id/title' Default apps 'android:id/summary' WebView Shell, Phone, and Messaging",
+            "clickable 'android:id/title' Permission manager 'android:id/summary' Control app access to your data",
+            "clickable 'android:id/title' Wireless emergency alerts",
+            "clickable 'android:id/title' Special app access"
+        ],
+        "id=10": [
+            "Apps & notifications",
+            "androidx.recyclerview.widget.RecyclerView",
+            "'com.android.settings:id/header_title' Recently opened apps",
+            "'com.android.settings:id/app1_view' clickable 'com.android.settings:id/app_title' WebView Shell 'com.android.settings:id/app_summary' 16 min. ago",
+            "'com.android.settings:id/app2_view' clickable 'com.android.settings:id/app_title' ActionRecord 'com.android.settings:id/app_summary' 3 hr. ago",
+            "'com.android.settings:id/header_details' SEE ALL 18 APPS",
+            "clickable 'android:id/title' Conversations 'android:id/summary' No priority conversations",
+            "clickable 'android:id/title' Notifications 'android:id/summary' Notification history, bubbles, recently sent",
+            "clickable 'android:id/title' Default apps 'android:id/summary' WebView Shell, Phone, and Messaging",
+            "clickable 'android:id/title' Permission manager 'android:id/summary' Control app access to your data",
+            "clickable 'android:id/title' Wireless emergency alerts",
+            "clickable 'android:id/title' Special app access"
+        ]
+    },
+    "Hint": "Below is a hint and suggestion from another model{\"next ui element\": \"Wireless emergency alerts\", \"status\": \"go on\", \"reason\": \"The 'Wireless emergency alerts' option is present on the current UI page, which is directly relevant to the user's task of allowing emergency broadcast alerts. The user can continue the task by interacting with this option.\"}"
+}
+
+===response===
+Step 1: Reviewing the history of operations, the user has navigated through "Apps & notifications" and clicked on "Advanced" to find options related to emergency alerts. There seems to be no mistake in the previous steps.
+
+Step 2: Analyzing the current UI elements, we see multiple clickable items, but based on the task and the hint provided, "Wireless emergency alerts" is the most relevant option to proceed with.
+
+Step 3: Deciding the next step, we should choose the UI element that directly relates to enabling emergency broadcast alerts, which is "Wireless emergency alerts".
+
+Based on the information provided:
+
+- "Recently opened apps", "WebView Shell", "ActionRecord", "SEE ALL 18 APPS", "Conversations", "Notifications", "Default apps", and "Permission manager" are not directly related to the task of enabling emergency broadcast alerts. Therefore, these will receive lower scores.
+- "Wireless emergency alerts" is the most relevant option and should receive the highest score.
+- "Special app access" might be somewhat relevant but less so than "Wireless emergency alerts", so it will receive a lower score.
+- Scrolling might reveal more options, but since the needed option is already visible, it should receive a lower score than the target but a higher score than unrelated items.
+
+Here is the rating for the UI elements:
+
+{
+    "id_1": 3.00, // Scroll, less likely needed but could reveal more options
+    "id_2": 1.00, // Recently opened apps - WebView Shell, not relevant
+    "id_3": 1.00, // Recently opened apps - ActionRecord, not relevant
+    "id_4": 1.00, // SEE ALL 18 APPS, not relevant
+    "id_5": 1.00, // Conversations, not relevant
+    "id_6": 1.00, // Notifications, not relevant
+    "id_7": 1.00, // Default apps, not relevant
+    "id_8": 1.00, // Permission manager, not relevant
+    "id_9": 10.00, // Wireless emergency alerts, directly related to the task
+    "id_10": 2.00 // Special app access, might be somewhat relevant but not the direct target
+}

@@ -1,0 +1,167 @@
+system:
+You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
+Your job is to rate the available UI elements on the current page.
+Note that:
+    (1) The element with the highest score will be choosen as the next element to be operated. If you have more than one top scoring option in your scoring, it's a good idea to highlight the score of one of the most likely candidates to avoid confusion.
+    (2) Your score should be accurate to two decimal places.
+    (3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
+    (4) <scroll /> element means there is a list and you can interact with it by scrolling forward. If you want to explore more, you can also try giving <scroll/> a relatively high scorat. The score of the <scroll /> should always be higher than that of those appearantly unrelated with the task.
+For each option, provide a confidence rating from 1.00-10.00, based on the relation of each option to the task, where 1.00 is the lowest tier indicating complete irrelevance and may lead to errors, 2.00-4.00 is the second tier indicating minor relevance, 4.00-6.00 is the medium tier indicating neutrality, 6.00-8.00 indicates higher relevance, possibly a candidate, and 10.00 indicates the most likely to be chosen and executed.
+The structure of the output should be: {
+    "id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value and iterate over all possible values), and "<rating>" denotes its rating.
+Example:
+{
+    "id_1": 5.53, "id_2": 9.71, "id_3": 3.20
+}
+Think step by step and output your reasoning process:
+Step 1: think about ["History operation sequence"],what has been done,especially pay attention to those steps which is wrong and caused navigate back if any;
+Step 2: think step by step on the ["Succesive Results"] of each UI options GIVEN by user, which represents the subsequent items after operating on them, and the ["possible paths to UI target"] GIVEN by user, which was suggested by expert knowledge;
+Step 3: decide what should be done next. Possible operations: click, edit (text input), scroll. Pay attention to those steps which is wrong and caused navigate back if any;
+Step 4: Synthesize the above output to output a JSON object with scores.
+
+Strictly output a format like "id_1": 3.00, do not tamper with it to make it look like "scroll_1": 3.00, etc., it must start with id_.
+
+
+user:
+{
+    "Task": "Enter VPN information Page on the device.",
+    "History operation sequence": [],
+    "Current UI screen": "<scroll id=1 class=android.widget.ScrollView >\n    <div id=2   clickable> \n    <p class='android:id/title'  > Network & internet </p>\n\n    <p class='android:id/summary'  > Wi\u2011Fi, mobile, data usage, and hotspot </p>\n </div>\n\n    <div id=3   clickable> \n    <p class='android:id/title'  > Connected devices </p>\n\n    <p class='android:id/summary'  > Bluetooth, Android Auto </p>\n </div>\n\n    <div id=4   clickable> \n    <p class='android:id/title'  > Apps & notifications </p>\n\n    <p class='android:id/summary'  > Recent apps, default apps </p>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Battery </p>\n\n    <p class='android:id/summary'  > 100% </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Display </p>\n\n    <p class='android:id/summary'  > Wallpaper, sleep, font size </p>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > Sound </p>\n\n    <p class='android:id/summary'  > Volume, vibration, Do Not Disturb </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 28% used - 5.77 GB free </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n </scroll>\n",
+    "Successive results": {
+        "id=1": [
+            "android.widget.ScrollView",
+            "'android:id/title' Sound 'android:id/summary' Volume, vibration, Do Not Disturb",
+            "'android:id/title' Storage 'android:id/summary' 27% used - 5.80 GB free",
+            "'android:id/title' Privacy 'android:id/summary' Permissions, account activity, personal data",
+            "'android:id/title' Location 'android:id/summary' On - 2 apps have access to location",
+            "'android:id/title' Security 'android:id/summary' Screen lock, fingerprint",
+            "'android:id/title' Accounts 'android:id/summary' No accounts added",
+            "'android:id/title' Accessibility 'android:id/summary' Screen readers, display, interaction controls",
+            "'android:id/title' Digital Wellbeing & parental controls 'android:id/summary' Screen time, app timers, bedtime schedules",
+            "'android:id/title' Google 'android:id/summary' Services & preferences",
+            "'android:id/title' System 'android:id/summary' Languages, gestures, time, backup",
+            " "
+        ],
+        "id=2": [
+            "Network & internet",
+            "'Wi\u2011Fi' clickable 'android:id/title' Wi\u2011Fi 'android:id/summary' Not connected 'com.android.settings:id/switchWidget' clickable On",
+            "clickable 'android:id/title' Mobile network 'android:id/summary' T-Mobile",
+            "clickable 'android:id/title' Airplane mode 'android:id/switch_widget' clickable Off",
+            "clickable 'android:id/title' Mobile plan",
+            "clickable 'android:id/title' Hotspot & tethering 'android:id/summary' Off",
+            "clickable 'android:id/title' Advanced 'android:id/summary' Data Saver, VPN, Private DNS"
+        ],
+        "id=3": [
+            "Connected devices",
+            "androidx.recyclerview.widget.RecyclerView",
+            "'android:id/title' Pair new device 'android:id/summary' Bluetooth will turn on to pair",
+            "'android:id/title' Connection preferences 'android:id/summary' Bluetooth",
+            "'android:id/title' Turn on Bluetooth to connect to other devices."
+        ],
+        "id=4": [
+            "Apps & notifications",
+            "'com.android.settings:id/header_title' Recently opened apps",
+            "'com.android.settings:id/app1_view' clickable 'com.android.settings:id/app_title' ActionRecord 'com.android.settings:id/app_summary' 15 min. ago",
+            "'com.android.settings:id/app2_view' clickable 'com.android.settings:id/app_title' Chrome 'com.android.settings:id/app_summary' 12 hr. ago",
+            "'com.android.settings:id/header_details' See all 24 apps",
+            "clickable 'android:id/title' Conversations 'android:id/summary' No priority conversations",
+            "clickable 'android:id/title' Notifications 'android:id/summary' Notification history, bubbles, recently sent",
+            "clickable 'android:id/title' Screen time 'android:id/summary' 40 minutes today",
+            "clickable 'android:id/title' Advanced 'android:id/summary' Default apps, Permission manager, Wireless emergency alerts, Special app access"
+        ],
+        "id=5": [
+            "Battery",
+            "'More options' enabled",
+            "androidx.recyclerview.widget.RecyclerView",
+            "'com.android.settings:id/battery_percent' 100 %",
+            "'com.android.settings:id/summary1' Full",
+            "'android:id/title' Apps are running normally 'android:id/summary' Phone has typical background battery usage",
+            "'android:id/title' Battery Saver 'android:id/summary' Off",
+            "'android:id/title' Battery Manager 'android:id/summary' On / Detecting when apps drain battery",
+            "'android:id/title' Battery percentage 'android:id/summary' Show battery percentage in status bar 'android:id/switch_widget' clickable Off",
+            "'android:id/title' Last full charge",
+            "'com.android.settings:id/widget_summary' 7 hours ago",
+            "'android:id/title' Screen usage since full charge",
+            "'com.android.settings:id/widget_summary' 1 hr, 12 min",
+            "'android:id/title' Battery usage data is approximate and can change based on usage"
+        ],
+        "id=6": [
+            "Display",
+            "clickable 'android:id/title' Brightness level 'android:id/summary' 0%",
+            "'Dark theme' clickable 'android:id/title' Dark theme 'android:id/summary' Off / Will never turn on automatically 'com.android.settings:id/switchWidget' clickable Off",
+            "clickable 'android:id/title' Wallpaper",
+            "clickable 'android:id/title' Screen timeout",
+            "clickable 'android:id/title' Auto-rotate screen 'android:id/switch_widget' clickable Off",
+            "clickable 'android:id/title' Advanced 'android:id/summary' Font size, Display size, Screen saver, Lock screen"
+        ],
+        "id=7": [
+            "Sound",
+            "androidx.recyclerview.widget.RecyclerView",
+            "'android:id/title' Media volume",
+            "'android:id/title' Call volume",
+            "'android:id/title' Ring & notification volume",
+            "'android:id/title' Alarm volume",
+            "clickable 'android:id/title' Vibrate for calls 'android:id/summary' Never vibrate",
+            "clickable 'android:id/title' Do Not Disturb 'android:id/summary' Off / 2 schedules can turn on automatically",
+            "clickable 'android:id/title' Media 'android:id/summary' Show player",
+            "clickable 'android:id/title' Shortcut to prevent ringing 'android:id/summary' On (vibrate)"
+        ],
+        "id=8": [
+            "Battery",
+            "'More options' enabled",
+            "androidx.recyclerview.widget.RecyclerView",
+            "'com.android.settings:id/battery_percent' 100 %",
+            "'com.android.settings:id/summary1' Full",
+            "'android:id/title' Apps are running normally 'android:id/summary' Phone has typical background battery usage",
+            "'android:id/title' Battery Saver 'android:id/summary' Off",
+            "'android:id/title' Battery Manager 'android:id/summary' On / Detecting when apps drain battery",
+            "'android:id/title' Battery percentage 'android:id/summary' Show battery percentage in status bar 'android:id/switch_widget' clickable Off",
+            "'android:id/title' Last full charge",
+            "'com.android.settings:id/widget_summary' 7 hours ago",
+            "'android:id/title' Screen usage since full charge",
+            "'com.android.settings:id/widget_summary' 1 hr, 12 min",
+            "'android:id/title' Battery usage data is approximate and can change based on usage"
+        ],
+        "id=9": [
+            "Privacy",
+            "clickable 'android:id/title' Accessibility usage 'android:id/summary' 1 app has full access to your device",
+            "clickable 'android:id/title' Permission manager 'android:id/summary' Control app access to your data",
+            "clickable 'android:id/title' Show passwords 'android:id/summary' Display characters briefly as you type 'android:id/switch_widget' clickable On",
+            "clickable 'android:id/title' Notifications on lock screen 'android:id/summary' Show all notification content",
+            "clickable 'android:id/title' Advanced 'android:id/summary' App content, Autofill service from Google, Google location history, Activity controls, Ads, Usage & diagnostics"
+        ]
+    }
+}
+
+===response===
+Step 1: There is no history of operations as the "History operation sequence" is empty. This means we are starting fresh on the current UI screen.
+
+Step 2: Reviewing the "Successive results" for each UI element:
+
+- "id=1" represents a scrollable view that includes various settings like "Location", "Security", "Accounts", etc., none of which directly mention VPN.
+- "id=2" leads to "Network & internet" settings, which include options like Wi-Fi, Mobile network, and importantly, "Advanced" with a mention of "VPN".
+- "id=3" to "id=9" lead to settings for "Connected devices", "Apps & notifications", "Battery", "Display", "Sound", "Storage", and "Privacy", respectively. None of these directly relate to VPN settings.
+
+Step 3: Based on the task to "Enter VPN information Page on the device," we can infer that the VPN settings would be located under the "Network & internet" section since VPNs are network-related configurations. The "Advanced" option within the "Network & internet" settings, as revealed in the successive results for "id=2", specifically mentions "VPN".
+
+Therefore, the next logical step would be to select "id=2" to navigate to "Network & internet" settings and eventually reach the VPN settings.
+
+Step 4: Synthesizing the above output to output a JSON object with scores:
+
+- "id=1" is a scroll element, but since we've identified a more likely candidate, its score will be lower than "id=2" but higher than the rest, which are unrelated.
+- "id=2" is the most relevant as it directly leads to the VPN settings.
+- "id=3" to "id=9" are unrelated to the task at hand.
+
+Given these considerations, the JSON object with scores would look like this:
+
+{
+    "id_1": 6.00,
+    "id_2": 10.00,
+    "id_3": 1.00,
+    "id_4": 1.00,
+    "id_5": 1.00,
+    "id_6": 1.00,
+    "id_7": 1.00,
+    "id_8": 1.00,
+    "id_9": 1.00
+}

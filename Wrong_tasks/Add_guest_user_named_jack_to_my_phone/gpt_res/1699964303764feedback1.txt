@@ -1,0 +1,72 @@
+system:
+You are an expert in UI automation and robust error handling. Your task is to critic a operation sequence produced by a [primitive LLM],following user task but inaccurate. 
+Utilizing the log files from each module of current step of the [primitive LLM], you should locate error in the final element chosen to operate on.
+[primitive LLM] works in which they cannot see further information on UI, but you are in the backtracking process so you should utilize further information observed from subsequent UI to help correct possible errors.
+Specifically, you should analyze the [Latest Action] and the [Successive Page] information to determine the extent of error on fulfilling the task, and then output the punishment coefficient to it.
+Follow the steps below and think step by step:
+a. Understand the information given and synthize, especially [Latest Action] and its subsequent result [Successive Page];
+b, Think step by step about the scoring result by [Evaluation Module], try to identify error causes on the LATEST ACTION and give [Punishment Coefficient] from 1-10, where 1 means no error and 10 means totally wrong;
+Finally, output a JSON format like this example:
+{
+    "punishment":
+    {
+        "id_x": 1,
+        ......(replace x to the element with id that you think causes the error, output your punishment coefficient from 0-10)
+    }
+}
+
+
+user:
+
+                Wrong reason: The current UI does not present an option to reset all network settings, and the last action taken does not lead towards accomplishing the user's task. The user would likely need to navigate to a different section or find a reset option that is not currently visible on the screen.
+                
+
+user:
+
+                User intent: Reset all network settings on the phone.
+                
+
+user:
+
+                Page components: ["<p class=''  > Network & internet </p>\n", "<div id=1  description='Wi‑Fi' clickable> \n    <p class='android:id/title'  > Wi‑Fi </p>\n\n    <p class='android:id/summary'  > Not connected </p>\n\n    <switch id=2 class='com.android.settings:id/switchWidget' clickable > On </switch>\n </div>\n", "<div id=3   clickable> \n    <p class='android:id/title'  > Mobile network </p>\n\n    <p class='android:id/summary'  > T-Mobile </p>\n </div>\n", "<div id=4   clickable> \n    <p class='android:id/title'  > Airplane mode </p>\n\n    <switch id=5 class='android:id/switch_widget' clickable > Off </switch>\n </div>\n", "<div id=6   clickable> \n    <p class='android:id/title'  > Mobile plan </p>\n </div>\n", "<div id=7   clickable> \n    <p class='android:id/title'  > Hotspot & tethering </p>\n\n    <p class='android:id/summary'  > Off </p>\n </div>\n", "<div id=8   clickable> \n    <p class='android:id/title'  > Advanced </p>\n\n    <p class='android:id/summary'  > Data Saver, VPN, Private DNS </p>\n </div>\n"]
+                
+
+user:
+
+                Previous Steps:  -> Click on clickable 'android:id/title' Network & internet 'android:id/summary' Wi‑Fi, mobile, data usage, and hotspot -> Click on clickable 'android:id/title' Advanced 'android:id/summary' Data Saver, VPN, Private DNS
+                
+
+user:
+
+                Action on this step: Click on clickable 'android:id/title' Advanced 'android:id/summary' Data Saver, VPN, Private DNS
+                
+
+user:
+
+                    Latest Page: ["<p class=''  > Network & internet </p>\n", "<div id=1  description='Wi‑Fi' clickable> \n    <p class='android:id/title'  > Wi‑Fi </p>\n\n    <p class='android:id/summary'  > Not connected </p>\n\n    <switch id=2 class='com.android.settings:id/switchWidget' clickable > On </switch>\n </div>\n", "<div id=3   clickable> \n    <p class='android:id/title'  > Mobile network </p>\n\n    <p class='android:id/summary'  > T-Mobile </p>\n </div>\n", "<div id=4   clickable> \n    <p class='android:id/title'  > Airplane mode </p>\n\n    <switch id=5 class='android:id/switch_widget' clickable > Off </switch>\n </div>\n", "<div id=6   clickable> \n    <p class='android:id/title'  > Mobile plan </p>\n </div>\n", "<div id=7   clickable> \n    <p class='android:id/title'  > Hotspot & tethering </p>\n\n    <p class='android:id/summary'  > Off </p>\n </div>\n", "<div id=8   clickable> \n    <p class='android:id/title'  > Data Saver </p>\n\n    <p class='android:id/summary'  > Off </p>\n </div>\n", "<div id=9   clickable> \n    <p class='android:id/title'  > VPN </p>\n\n    <p class='android:id/summary'  > None </p>\n </div>\n", "<div id=10   clickable> \n    <p class='android:id/title'  > Private DNS </p>\n\n    <p class='android:id/summary'  > Automatic </p>\n </div>\n"]
+                    
+
+user:
+
+                Modules: {'Name': 'Evaluate', 'Description': "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent", 'Score': {"<div id=1  description='Wi‑Fi' clickable> \n    <p class='android:id/title'  > Wi‑Fi </p>\n\n    <p class='android:id/summary'  > Not connected </p>\n\n    <switch id=2 class='com.android.settings:id/switchWidget' clickable > On </switch>\n </div>\n": 2.8320439520935805, "<switch id=2 class='com.android.settings:id/switchWidget' clickable > On </switch>\n": 1.8072014742251379, "<div id=3   clickable> \n    <p class='android:id/title'  > Mobile network </p>\n\n    <p class='android:id/summary'  > T-Mobile </p>\n </div>\n": 2.816291517134, "<div id=4   clickable> \n    <p class='android:id/title'  > Airplane mode </p>\n\n    <switch id=5 class='android:id/switch_widget' clickable > Off </switch>\n </div>\n": 1.8149995783529378, "<switch id=5 class='android:id/switch_widget' clickable > Off </switch>\n": 1.784076561466456, "<div id=6   clickable> \n    <p class='android:id/title'  > Mobile plan </p>\n </div>\n": 1.7991958678959075, "<div id=7   clickable> \n    <p class='android:id/title'  > Hotspot & tethering </p>\n\n    <p class='android:id/summary'  > Off </p>\n </div>\n": 2.8131908009472166, "<div id=8   clickable> \n    <p class='android:id/title'  > Advanced </p>\n\n    <p class='android:id/summary'  > Data Saver, VPN, Private DNS </p>\n </div>\n": 10.303431300272647}, 'Punishment coefficient': [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], 'GPT answer': {'id_1': 2.0, 'id_2': 1.0, 'id_3': 2.0, 'id_4': 1.0, 'id_5': 1.0, 'id_6': 1.0, 'id_7': 2.0, 'id_8': 9.5}}
+                
+
+===response===
+Based on the information given, it appears that the [primitive LLM] has failed to properly address the user's intent to reset all network settings on the phone. The last action taken was to click on the "Advanced" option, which leads to a page with options for "Data Saver," "VPN," and "Private DNS," none of which directly relate to resetting network settings.
+
+Given that the user's intent is to reset all network settings, the correct action would likely involve finding and selecting an option specifically for resetting these settings, which might be labeled something like "Reset" or "Network reset." Since the [primitive LLM] did not navigate towards such an option, its action did not contribute to fulfilling the user's task.
+
+The [Evaluation Module] scored the "Advanced" option with a high score (10.303431300272647), which is incorrect as this action does not move towards the goal of resetting network settings.
+
+Therefore, the error lies in the selection of the "Advanced" option, which is `<div id=8 ...> Advanced ...</div>`. The punishment coefficient should reflect the severity of the error, which in this case is significant because it does not lead to the desired outcome at all.
+
+Here is the JSON output with the punishment coefficient:
+
+```json
+{
+    "punishment":
+    {
+        "id_8": 10
+    }
+}
+```

@@ -1,0 +1,9 @@
+system:
+the following string cannot be parsed to a dict (or list) by the built-in function eval (in Python) due to the error: invalid syntax. Perhaps you forgot a comma? (<string>, line 1).
+
+[primitive LLM]
+
+Please correct its format error and output the correct string. Do not output anything else.
+
+===response===
+[{"primitive": "LLM"}]

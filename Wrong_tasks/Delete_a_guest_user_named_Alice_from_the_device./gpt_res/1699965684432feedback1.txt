@@ -1,0 +1,74 @@
+system:
+You are an expert in UI automation and robust error handling. Your task is to critic a operation sequence produced by a [primitive LLM],following user task but inaccurate. 
+Utilizing the log files from each module of current step of the [primitive LLM], you should locate error in the final element chosen to operate on.
+[primitive LLM] works in which they cannot see further information on UI, but you are in the backtracking process so you should utilize further information observed from subsequent UI to help correct possible errors.
+Specifically, you should analyze the [Latest Action] and the [Successive Page] information to determine the extent of error on fulfilling the task, and then output the punishment coefficient to it.
+Follow the steps below and think step by step:
+a. Understand the information given and synthize, especially [Latest Action] and its subsequent result [Successive Page];
+b, Think step by step about the scoring result by [Evaluation Module], try to identify error causes on the LATEST ACTION and give [Punishment Coefficient] from 1-10, where 1 means no error and 10 means totally wrong;
+Finally, output a JSON format like this example:
+{
+    "punishment":
+    {
+        "id_x": 1,
+        ......(replace x to the element with id that you think causes the error, output your punishment coefficient from 0-10)
+    }
+}
+
+
+user:
+
+                Wrong reason: The current UI does not contain options to delete a guest user account, which is necessary for task fulfillment. Navigation to a different settings area is required.
+                
+
+user:
+
+                User intent: Delete a guest user named Alice from the device.
+                
+
+user:
+
+                Page components: ["<scroll id=1 class=android.widget.ScrollView >\n    <div id=2   clickable>  </div>\n\n    <div id=3   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 28% used - 5.75 GB free </p>\n </div>\n\n    <div id=4   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Location </p>\n\n    <p class='android:id/summary'  > On - 2 apps have access to location </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Security </p>\n\n    <p class='android:id/summary'  > Screen lock, fingerprint </p>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > Accounts </p>\n\n    <p class='android:id/summary'  > No accounts added </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Accessibility </p>\n\n    <p class='android:id/summary'  > Screen readers, display, interaction controls </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Digital Wellbeing & parental controls </p>\n\n    <p class='android:id/summary'  > Screen time, app timers, bedtime schedules </p>\n </div>\n\n    <div id=10   clickable> \n    <p class='android:id/title'  > Google </p>\n\n    <p class='android:id/summary'  > Services & preferences </p>\n </div>\n\n    <div id=11   clickable> \n    <p class='android:id/title'  > System </p>\n\n    <p class='android:id/summary'  > Languages, gestures, time, backup </p>\n </div>\n </scroll>\n"]
+                
+
+user:
+
+                Previous Steps:  -> Scroll forward on android.widget.ScrollView -> Click on clickable 'android:id/title' Accounts 'android:id/summary' No accounts added
+                
+
+user:
+
+                Action on this step: Click on clickable 'android:id/title' Accounts 'android:id/summary' No accounts added
+                
+
+user:
+
+                    Latest Page: ["<p class=''  > Accounts </p>\n", "<p class='android:id/title'  > ACCOUNTS FOR OWNER </p>\n", "<div id=1   clickable> \n    <p class='android:id/title'  > Add account </p>\n </div>\n", "<div id=2   clickable> \n    <p class='android:id/title'  > Automatically sync app data </p>\n\n    <p class='android:id/summary'  > Let apps refresh data automatically </p>\n\n    <switch id=3 class='android:id/switch_widget' clickable > On </switch>\n </div>\n"]
+                    
+
+user:
+
+                Modules: {'Name': 'Evaluate', 'Description': "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent", 'Score': {'<scroll id=1 class=android.widget.ScrollView > </scroll>\n': 7.763140758535112, '<div id=2   clickable>  </div>\n': 1.7507441069693086, "<div id=3   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 28% used - 5.75 GB free </p>\n </div>\n": 1.7790102592582357, "<div id=4   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n": 1.7930565790371413, "<div id=5   clickable> \n    <p class='android:id/title'  > Location </p>\n\n    <p class='android:id/summary'  > On - 2 apps have access to location </p>\n </div>\n": 1.7850259118764582, "<div id=6   clickable> \n    <p class='android:id/title'  > Security </p>\n\n    <p class='android:id/summary'  > Screen lock, fingerprint </p>\n </div>\n": 1.7860870626900822, "<div id=7   clickable> \n    <p class='android:id/title'  > Accounts </p>\n\n    <p class='android:id/summary'  > No accounts added </p>\n </div>\n": 10.783053473393625, "<div id=8   clickable> \n    <p class='android:id/title'  > Accessibility </p>\n\n    <p class='android:id/summary'  > Screen readers, display, interaction controls </p>\n </div>\n": 1.7990575534421251, "<div id=9   clickable> \n    <p class='android:id/title'  > Digital Wellbeing & parental controls </p>\n\n    <p class='android:id/summary'  > Screen time, app timers, bedtime schedules </p>\n </div>\n": 1.786787409128796, "<div id=10   clickable> \n    <p class='android:id/title'  > Google </p>\n\n    <p class='android:id/summary'  > Services & preferences </p>\n </div>\n": 1.798410379565797, "<div id=11   clickable> \n    <p class='android:id/title'  > System </p>\n\n    <p class='android:id/summary'  > Languages, gestures, time, backup </p>\n </div>\n": 1.7934706041874087}, 'Punishment coefficient': [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], 'GPT answer': {'id_1': 7.0, 'id_2': 1.0, 'id_3': 1.0, 'id_4': 1.0, 'id_5': 1.0, 'id_6': 1.0, 'id_7': 10.0, 'id_8': 1.0, 'id_9': 1.0, 'id_10': 1.0, 'id_11': 1.0}}
+                
+
+===response===
+Based on the information provided, the [primitive LLM] has performed an action to click on the 'Accounts' option, with the user intent being to delete a guest user named Alice from the device. The latest page presented does not show any guest accounts or options to delete an account, which indicates that the latest action did not fulfill the user's intent.
+
+Given the user's intent to delete a guest user account, the correct action would have been to navigate to a section where guest user accounts are listed, which might be within the 'Accounts' section but requires further navigation. Since the latest action has resulted in a page that does not show any user accounts or deletion options, it is clear that the action was not correct.
+
+The evaluation module has scored the 'Accounts' div with a high score (id_7), which seems to be based on the assumption that navigating to 'Accounts' was the right step towards completing the task. However, the lack of options to delete a guest user on the resulting page indicates that the task has not been advanced correctly.
+
+The punishment coefficient should reflect the severity of the error in relation to the user's intent. Since the action taken did not lead to the possibility of deleting a guest user account, it is a significant error. However, it is not entirely wrong as the 'Accounts' section is a plausible place to look for user management options. Therefore, the punishment coefficient should be substantial but not the maximum.
+
+Considering these factors, a punishment coefficient of 8 seems appropriate, signifying a major error but leaving room for more egregious errors (such as navigating away from settings entirely).
+
+The JSON output would be as follows:
+
+```json
+{
+    "punishment":
+    {
+        "id_7": 8
+    }
+}
+```

@@ -1,0 +1,60 @@
+{
+    "@User_intent": "Customize the notifications to block when the Do Not Disturb mode is turned on.",
+    "@Page_components": [
+        "<p class=''  > Apps </p>\n",
+        "<scroll id=1 class=androidx.recyclerview.widget.RecyclerView >\n    <p class='android:id/title'  > APPS THAT CAN INTERRUPT </p>\n\n    <div id=2   clickable> \n    <p class='android:id/title'  > Digital Wellbeing </p>\n\n    <p class='android:id/summary'  > Some notifications </p>\n </div>\n\n    <p class='android:id/title'  > SELECT MORE APPS </p>\n\n    <div id=3   clickable> \n    <p class='android:id/title'  > Android Auto </p>\n </div>\n\n    <div id=4   clickable> \n    <p class='android:id/title'  > Android System </p>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Bluetooth </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Call Management </p>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > CarrierDefaultApp </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Chrome </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Clock </p>\n </div>\n\n    <div id=10   clickable> \n    <p class='android:id/title'  > Contacts </p>\n </div>\n\n    <div id=11   clickable>  </div>\n </scroll>\n"
+    ],
+    "@Module": [
+        {
+            "Name": "Predict",
+            "Description": "This module is a prediction model, predicting what will appear after clicking each components on current screen",
+            "One-step UI knowledge": {},
+            "Multi-step UI knowledge": ""
+        },
+        {
+            "Name": "Evaluate",
+            "Description": "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent",
+            "Score": {
+                "<scroll id=1 class=androidx.recyclerview.widget.RecyclerView > </scroll>\n": 8.74758828084682,
+                "<div id=2   clickable> \n    <p class='android:id/title'  > Digital Wellbeing </p>\n\n    <p class='android:id/summary'  > Some notifications </p>\n </div>\n": 6.819044880535689,
+                "<div id=3   clickable> \n    <p class='android:id/title'  > Android Auto </p>\n </div>\n": 6.795249207064751,
+                "<div id=4   clickable> \n    <p class='android:id/title'  > Android System </p>\n </div>\n": 6.805574294388592,
+                "<div id=5   clickable> \n    <p class='android:id/title'  > Bluetooth </p>\n </div>\n": 6.802942738556862,
+                "<div id=6   clickable> \n    <p class='android:id/title'  > Call Management </p>\n </div>\n": 6.808674372674593,
+                "<div id=7   clickable> \n    <p class='android:id/title'  > CarrierDefaultApp </p>\n </div>\n": 6.797447088570192,
+                "<div id=8   clickable> \n    <p class='android:id/title'  > Chrome </p>\n </div>\n": 6.800403008438977,
+                "<div id=9   clickable> \n    <p class='android:id/title'  > Clock </p>\n </div>\n": 6.803994199967416,
+                "<div id=10   clickable> \n    <p class='android:id/title'  > Contacts </p>\n </div>\n": 6.80546567812023,
+                "<div id=11   clickable>  </div>\n": 4.768882833949316
+            },
+            "Punishment coefficient": [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "GPT answer": {
+                "id_1": 8.0,
+                "id_2": 6.0,
+                "id_3": 6.0,
+                "id_4": 6.0,
+                "id_5": 6.0,
+                "id_6": 6.0,
+                "id_7": 6.0,
+                "id_8": 6.0,
+                "id_9": 6.0,
+                "id_10": 6.0,
+                "id_11": 4.0
+            }
+        }
+    ],
+    "@History_operation": " -> Click on clickable 'android:id/title' Sound 'android:id/summary' Volume, vibration, Do Not Disturb -> Click on clickable 'android:id/title' Do Not Disturb 'android:id/summary' Off / 3 schedules can turn on automatically -> Click on clickable 'android:id/title' Apps 'android:id/summary' Digital Wellbeing can interrupt -> Click on clickable 'android:id/title' Add apps -> Scroll forward on androidx.recyclerview.widget.RecyclerView",
+    "@Current_Action": "Scroll forward on androidx.recyclerview.widget.RecyclerView"
+}

@@ -1,0 +1,59 @@
+system:
+You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
+Your job is to rate the available UI elements on the current page.
+Note that:
+    (1) The element with the highest score will be choosen as the next element to be operated. If you have more than one top scoring option in your scoring, it's a good idea to highlight the score of one of the most likely candidates to avoid confusion.
+    (2) Your score should be accurate to two decimal places.
+    (3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
+    (4) <scroll /> element means there is a list and you can interact with it by scrolling forward. If you want to explore more, you can also try giving <scroll/> a relatively high scorat. The score of the <scroll /> should always be higher than that of those appearantly unrelated with the task.
+For each option, provide a confidence rating from 1.00-10.00, based on the relation of each option to the task, where 1.00 is the lowest tier indicating complete irrelevance and may lead to errors, 2.00-4.00 is the second tier indicating minor relevance, 4.00-6.00 is the medium tier indicating neutrality, 6.00-8.00 indicates higher relevance, possibly a candidate, and 10.00 indicates the most likely to be chosen and executed.
+The structure of the output should be: {
+    "id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value and iterate over all possible values), and "<rating>" denotes its rating.
+Example:
+{
+    "id_1": 5.53, "id_2": 9.71, "id_3": 3.20
+}
+Think step by step and output your reasoning process:
+Step 1: think about ["History operation sequence"],what has been done,especially pay attention to those steps which is wrong and caused navigate back if any;
+Step 2: think step by step on the ["Succesive Results"] of each UI options GIVEN by user, which represents the subsequent items after operating on them, and the ["possible paths to UI target"] GIVEN by user, which was suggested by expert knowledge;
+Step 3: decide what should be done next. Possible operations: click, edit (text input), scroll. Pay attention to those steps which is wrong and caused navigate back if any;
+Step 4: Synthesize the above output to output a JSON object with scores.
+
+Strictly output a format like "id_1": 3.00, do not tamper with it to make it look like "scroll_1": 3.00, etc., it must start with id_.
+
+
+user:
+{
+    "Task": "Customize the notifications to block when the Do Not Disturb mode is turned on.",
+    "History operation sequence": [
+        "Click on clickable 'android:id/title' Sound 'android:id/summary' Volume, vibration, Do Not Disturb"
+    ],
+    "Current UI screen": "<p class=''  > Sound </p>\n<scroll id=1 class=androidx.recyclerview.widget.RecyclerView >\n    <p class='android:id/title'  > Media volume </p>\n\n    <p class='android:id/title'  > Call volume </p>\n\n    <p class='android:id/title'  > Ring & notification volume </p>\n\n    <p class='android:id/title'  > Alarm volume </p>\n\n    <div id=2   clickable> \n    <p class='android:id/title'  > Vibrate for calls </p>\n\n    <p class='android:id/summary'  > Never vibrate </p>\n </div>\n\n    <div id=3   clickable> \n    <p class='android:id/title'  > Do Not Disturb </p>\n\n    <p class='android:id/summary'  > Off / 3 schedules can turn on automatically </p>\n </div>\n\n    <div id=4   clickable> \n    <p class='android:id/title'  > Media </p>\n\n    <p class='android:id/summary'  > Show player </p>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Shortcut to prevent ringing </p>\n\n    <p class='android:id/summary'  > On (vibrate) </p>\n </div>\n </scroll>\n",
+    "Successive results": {},
+    "Hint": "Below is a hint and suggestion from another model{\"next ui element\": \"clickable 'android:id/title' Do Not Disturb 'android:id/summary' Off / 3 schedules can turn on automatically\", \"status\": \"go on\", \"reason\": \"The 'Do Not Disturb' option in the Sound settings is directly related to the user's task and can be operated on to customize the notifications to block when the Do Not Disturb mode is turned on.\"}"
+}
+
+===response===
+Step 1: Reviewing the "History operation sequence", the user has clicked on the Sound settings where options related to volume, vibration, and Do Not Disturb can be found. There is no indication of a wrong step that caused a navigate back action.
+
+Step 2: On the "Current UI screen", we have several options related to sound settings, but the task is to customize notifications for the Do Not Disturb mode. The hint provided by another model suggests that the 'Do Not Disturb' option is the correct path to follow. There are no "Successive results" provided, so we will rely on the hint and the task description for guidance.
+
+Step 3: Based on the task and the hint, the next operation should be to click on the 'Do Not Disturb' option to access its settings. This is the direct path to customizing the notifications for the Do Not Disturb mode.
+
+Step 4: Synthesizing the information, the ratings for the UI elements are as follows:
+
+- The 'Do Not Disturb' option (id_3) is the most relevant to the task, so it should be given the highest score.
+- The scroll function (id_1) can be rated slightly lower than the 'Do Not Disturb' option because it may reveal more options, but the 'Do Not Disturb' option is already visible and directly related to the task.
+- Other options such as 'Media volume', 'Call volume', 'Ring & notification volume', 'Alarm volume', 'Vibrate for calls', 'Media', and 'Shortcut to prevent ringing' are not directly related to the task, so they should be given lower scores.
+
+Here is the JSON object with the scores:
+
+{
+    "id_1": 7.00, 
+    "id_2": 1.00, 
+    "id_3": 10.00, 
+    "id_4": 1.00, 
+    "id_5": 1.00
+}
+
+The 'Do Not Disturb' option (id_3) has the highest score, indicating it should be the next element to operate on.

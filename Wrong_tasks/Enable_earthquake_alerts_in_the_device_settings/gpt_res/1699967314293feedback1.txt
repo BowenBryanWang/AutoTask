@@ -1,0 +1,72 @@
+system:
+You are an expert in UI automation and robust error handling. Your task is to critic a operation sequence produced by a [primitive LLM],following user task but inaccurate. 
+Utilizing the log files from each module of current step of the [primitive LLM], you should locate error in the final element chosen to operate on.
+[primitive LLM] works in which they cannot see further information on UI, but you are in the backtracking process so you should utilize further information observed from subsequent UI to help correct possible errors.
+Specifically, you should analyze the [Latest Action] and the [Successive Page] information to determine the extent of error on fulfilling the task, and then output the punishment coefficient to it.
+Follow the steps below and think step by step:
+a. Understand the information given and synthize, especially [Latest Action] and its subsequent result [Successive Page];
+b, Think step by step about the scoring result by [Evaluation Module], try to identify error causes on the LATEST ACTION and give [Punishment Coefficient] from 1-10, where 1 means no error and 10 means totally wrong;
+Finally, output a JSON format like this example:
+{
+    "punishment":
+    {
+        "id_x": 1,
+        ......(replace x to the element with id that you think causes the error, output your punishment coefficient from 0-10)
+    }
+}
+
+
+user:
+
+                Wrong reason: The current UI page is related to 'Storage', which is not relevant to the task of turning on severe threats in wireless emergency alerts. No further actions on this page can lead to the fulfillment of the task.
+                
+
+user:
+
+                User intent: Turn on severe threats in wireless emergency alerts on your phone
+                
+
+user:
+
+                Page components: ["<scroll id=1 class=android.widget.ScrollView >\n    <div id=2   clickable>  </div>\n\n    <div id=3   clickable> \n    <p class='android:id/title'  > Sound </p>\n\n    <p class='android:id/summary'  > Volume, vibration, Do Not Disturb </p>\n </div>\n\n    <div id=4   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 26% used - 5.89 GB free </p>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n\n    <div id=6   clickable> \n    <p class='android:id/title'  > Location </p>\n\n    <p class='android:id/summary'  > On - 1 app has access to location </p>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > Security </p>\n\n    <p class='android:id/summary'  > Screen lock, fingerprint </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Accounts </p>\n\n    <p class='android:id/summary'  > No accounts added </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Accessibility </p>\n\n    <p class='android:id/summary'  > Screen readers, display, interaction controls </p>\n </div>\n\n    <div id=10   clickable> \n    <p class='android:id/title'  > Google </p>\n\n    <p class='android:id/summary'  > Services & preferences </p>\n </div>\n\n    <div id=11   clickable> \n    <p class='android:id/title'  > System </p>\n\n    <p class='android:id/summary'  > Languages, gestures, time, backup </p>\n </div>\n </scroll>\n"]
+                
+
+user:
+
+                Previous Steps:  -> Scroll forward on android.widget.ScrollView -> Scroll forward on android.widget.ScrollView -> Click on clickable 'android:id/title' Accessibility 'android:id/summary' Screen readers, display, interaction controls
+                
+
+user:
+
+                Action on this step: Click on clickable 'android:id/title' Accessibility 'android:id/summary' Screen readers, display, interaction controls
+                
+
+user:
+
+                    Latest Page: ["<p class=''  > Storage </p>\n", "<p class='android:id/title'  > DEVICE STORAGE </p>\n", "<div id=1   clickable> \n    <p class='android:id/title'  > 2.11 GB </p>\n\n    <p class='android:id/summary'  > Total used of 8.00 GB </p>\n </div>\n", "<div id=2   clickable> \n    <p class='android:id/title'  > Internal shared storage </p>\n\n    <p class='android:id/summary'  > 2.11 GB used of 8.00 GB </p>\n </div>\n", "<p class='android:id/title'  > PORTABLE STORAGE </p>\n", "<div id=3  description='Eject' clickable> \n    <p class='android:id/title'  > SDCARD </p>\n\n    <p class='android:id/summary'  > 55.30 kB used of 535 MB </p>\n\n    <button id=4 class='com.android.settings:id/unmount' description='Eject' >  </button>\n </div>\n"]
+                    
+
+user:
+
+                Modules: {'Name': 'Evaluate', 'Description': "This module is an evaluation module, evaluating the selected components of their contribution to fulfilling the user's intent", 'Score': {'<scroll id=1 class=android.widget.ScrollView > </scroll>\n': 0.0, '<div id=2   clickable>  </div>\n': 1.740205967868003, "<div id=3   clickable> \n    <p class='android:id/title'  > Sound </p>\n\n    <p class='android:id/summary'  > Volume, vibration, Do Not Disturb </p>\n </div>\n": 1.775266509888175, "<div id=4   clickable> \n    <p class='android:id/title'  > Storage </p>\n\n    <p class='android:id/summary'  > 26% used - 5.89 GB free </p>\n </div>\n": 1.7624374818844606, "<div id=5   clickable> \n    <p class='android:id/title'  > Privacy </p>\n\n    <p class='android:id/summary'  > Permissions, account activity, personal data </p>\n </div>\n": 1.7841570601465135, "<div id=6   clickable> \n    <p class='android:id/title'  > Location </p>\n\n    <p class='android:id/summary'  > On - 1 app has access to location </p>\n </div>\n": 1.7774609617305928, "<div id=7   clickable> \n    <p class='android:id/title'  > Security </p>\n\n    <p class='android:id/summary'  > Screen lock, fingerprint </p>\n </div>\n": 1.786360798192613, "<div id=8   clickable> \n    <p class='android:id/title'  > Accounts </p>\n\n    <p class='android:id/summary'  > No accounts added </p>\n </div>\n": 1.7642257834177537, "<div id=9   clickable> \n    <p class='android:id/title'  > Accessibility </p>\n\n    <p class='android:id/summary'  > Screen readers, display, interaction controls </p>\n </div>\n": 1.8046095009607646, "<div id=10   clickable> \n    <p class='android:id/title'  > Google </p>\n\n    <p class='android:id/summary'  > Services & preferences </p>\n </div>\n": 1.7853517268528563, "<div id=11   clickable> \n    <p class='android:id/title'  > System </p>\n\n    <p class='android:id/summary'  > Languages, gestures, time, backup </p>\n </div>\n": 1.7865897457887496}, 'Punishment coefficient': [0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], 'GPT answer': {'id_1': 10.0, 'id_2': 1.0, 'id_3': 1.0, 'id_4': 1.0, 'id_5': 1.0, 'id_6': 1.0, 'id_7': 1.0, 'id_8': 1.0, 'id_9': 1.0, 'id_10': 1.0, 'id_11': 1.0}}
+                
+
+===response===
+Based on the information provided, the [primitive LLM] has made an error in the automation sequence. The user's intent is to turn on severe threats in wireless emergency alerts on their phone. However, the action taken by the [primitive LLM] was to click on the 'Accessibility' option, which led to a page related to 'Storage'—a completely unrelated area to the user's intent.
+
+The [Latest Action] was to click on 'Accessibility', and the [Successive Page] shows details about 'Storage', indicating that the [primitive LLM] navigated to the wrong part of the settings. The [Evaluation Module] scored various elements, but none of them are related to the wireless emergency alerts. Therefore, the error lies in the decision to click on 'Accessibility' instead of navigating to the appropriate section for emergency alerts.
+
+Given that the [primitive LLM] has navigated to an unrelated section and no further actions on this page can lead to the fulfillment of the task, the error is significant. A high [Punishment Coefficient] is warranted.
+
+Here's the JSON output with the punishment coefficient for the 'Accessibility' element (id_9), which is the element that caused the error:
+
+```json
+{
+    "punishment":
+    {
+        "id_9": 10
+    }
+}
+```
+
+The coefficient of 10 is assigned because the action was completely irrelevant to the task at hand, and the error prevented the task from being completed successfully.

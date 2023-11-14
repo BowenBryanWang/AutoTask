@@ -1,0 +1,12 @@
+<p class=''  > Google Play services storage </p>
+<p class='com.google.android.gms:id/search_index_description'  > We accelerate search on your device by providing a search engine for your Apps to use. </p>
+<p class='com.google.android.gms:id/icing_size_prefix'  > Search Data </p>
+<p class='com.google.android.gms:id/icing_storage_size_text'  > 397 kB </p>
+<button id=1 class='com.google.android.gms:id/manage_icing_storage'  > MANAGE SEARCH DATA </button>
+<p class='com.google.android.gms:id/wear_description'  > Apps use your device storage to replicate data to a wearable. </p>
+<p class='com.google.android.gms:id/wear_size_prefix'  > Wearable storage </p>
+<button id=2 class='com.google.android.gms:id/manage_wear_storage'  > MANAGE WEARABLE STORAGE </button>
+<p class='com.google.android.gms:id/all_storage_description'  > Total data used by Google Play services, including the search engine and other data. </p>
+<p class='com.google.android.gms:id/total_size_prefix'  > Total storage </p>
+<p class='com.google.android.gms:id/total_storage_size_text'  > 9.40 MB </p>
+<button id=3 class='com.google.android.gms:id/clear_all_data'  > CLEAR ALL DATA </button>

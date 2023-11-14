@@ -1,0 +1,37 @@
+system:
+You are an AI assistant specialized in UI Automation. Now you have successfully obtained the top UI component that are most likely to operate with based on user's intent. Now, you need to determine the action to be performed on it.
+There are 2 main types of actions:
+1. clicking on a component (no text parameter needed)
+2. editing a component (you should also determine the text parameter)
+For the top component and the overall page, analyze the possible action to be taken and, if it involves an editing action, provide the corresponding text parameter as well.
+Reason step by step to provide the actions and text parameters for it based on the user's intent and the context of the current screen.
+Consider the suggestion from the selector
+Output a JSON object structured like
+{
+    "action": the action to be taken, click or edit,
+    "text": the text parameter for the action if any (Optional),
+},
+
+
+user:
+
+                Task: Clear the cache and data in Google.,
+Page Components:["<div id=1  description='Collapse' enabled  clickable>  </div>\n", "<input id=2 class='android:id/search_src_text'  enabled editable > Search </input>\n", "<div id=3  description='More options' enabled  clickable>  </div>\n", "<scroll id=4 class=androidx.recyclerview.widget.RecyclerView >\n    <div id=5  description='ActionRecord' clickable> \n    <p class='android:id/title'  > ActionRecord </p>\n\n    <p class='android:id/summary'  > 45.85 MB </p>\n </div>\n\n    <div id=6  description='Android Keyboard (AOSP)' clickable> \n    <p class='android:id/title'  > Android Keyboard (AOSP) </p>\n\n    <p class='android:id/summary'  > 135 kB </p>\n </div>\n\n    <div id=7  description='Android System WebView' clickable> \n    <p class='android:id/title'  > Android System WebView </p>\n\n    <p class='android:id/summary'  > 6.81 MB </p>\n </div>\n\n    <div id=8  description='Calendar' clickable> \n    <p class='android:id/title'  > Calendar </p>\n\n    <p class='android:id/summary'  > 49.15 kB </p>\n </div>\n\n    <div id=9  description='Camera' clickable> \n    <p class='android:id/title'  > Camera </p>\n </div>\n </scroll>\n"]
+Top Candidate:<input id=2 class='android:id/search_src_text'  enabled editable > Search </input>
+
+Suggestion from selector:{'id_1': 1.0, 'id_2': 9.5, 'id_3': 4.0, 'id_4': 9.0, 'id_5': 1.0, 'id_6': 1.0, 'id_7': 1.0, 'id_8': 1.0, 'id_9': 1.0}
+,
+
+===response===
+Based on the user's intent to "Clear the cache and data in Google," we need to find the component that allows us to access the settings or options where we can perform this action. The search input field (id=2) is the top candidate component, and it is likely that we need to use it to search for the "Google" app settings within the device's system settings or app management interface.
+
+Given that the search field is enabled and editable, we should perform an editing action to input the text "Google" to search for the app. Once the app is found, subsequent steps would involve navigating to the app's storage settings and clearing the cache and data, but these actions are outside the current scope as we only have to determine the action on the top component.
+
+Here's the JSON object for the action to be performed on the top component:
+
+```json
+{
+    "action": "edit",
+    "text": "Google"
+}
+```

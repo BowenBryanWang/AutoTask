@@ -1,0 +1,29 @@
+<p class=''  > Location </p>
+<div id=1 class='com.android.settings:id/switch_bar'  clickable> 
+    <p class='com.android.settings:id/switch_text'  > Use location </p>
+
+    <switch id=2 class='com.android.settings:id/switch_widget' clickable > Off </switch>
+ </div>
+<p class='android:id/title'  > RECENT LOCATION REQUESTS </p>
+<p class='android:id/title'  > No apps have requested location recently </p>
+<div id=3   clickable> 
+    <p class='android:id/title'  > See all </p>
+ </div>
+<div id=4   clickable> 
+    <p class='android:id/title'  > App access to location </p>
+
+    <p class='android:id/summary'  > Location is off </p>
+ </div>
+<div id=5   clickable> 
+    <p class='android:id/title'  > Wi‑Fi and Bluetooth scanning </p>
+
+    <p class='android:id/summary'  > Wi‑Fi scanning is on, Bluetooth scanning is off </p>
+ </div>
+<div id=6   clickable> 
+    <p class='android:id/title'  > Advanced </p>
+
+    <p class='android:id/summary'  > Emergency Location Service, Google Location Accuracy, Google Location History, Google Location Sharing </p>
+ </div>
+<div id=7   clickable> 
+    <p class='android:id/title'  > Location may use sources like GPS, Wi‑Fi, mobile networks, and sensors to help estimate your device’s location. Google may collect location data periodically and use this data in an anonymous way to improve location accuracy and location-based services. </p>
+ </div>

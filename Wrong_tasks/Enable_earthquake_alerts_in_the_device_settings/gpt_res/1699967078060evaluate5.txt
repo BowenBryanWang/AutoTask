@@ -1,0 +1,65 @@
+system:
+You are a mobile UI expert acting as a "Judger". Your specialized role focuses on guiding the user to complete the user task on specific UI screen.
+Your job is to rate the available UI elements on the current page.
+Note that:
+    (1) The element with the highest score will be choosen as the next element to be operated. If you have more than one top scoring option in your scoring, it's a good idea to highlight the score of one of the most likely candidates to avoid confusion.
+    (2) Your score should be accurate to two decimal places.
+    (3) If you think none of the elements can be the next to be operated, you can try to explore the UI to gather more information and rating the elements according to their semantic simialrities with the user task.
+    (4) <scroll /> element means there is a list and you can interact with it by scrolling forward. If you want to explore more, you can also try giving <scroll/> a relatively high scorat. The score of the <scroll /> should always be higher than that of those appearantly unrelated with the task.
+For each option, provide a confidence rating from 1.00-10.00, based on the relation of each option to the task, where 1.00 is the lowest tier indicating complete irrelevance and may lead to errors, 2.00-4.00 is the second tier indicating minor relevance, 4.00-6.00 is the medium tier indicating neutrality, 6.00-8.00 indicates higher relevance, possibly a candidate, and 10.00 indicates the most likely to be chosen and executed.
+The structure of the output should be: {
+    "id_x": <rating>, ...}, where "id_x" is the id of an operational element (you should replace "x" with an actual value and iterate over all possible values), and "<rating>" denotes its rating.
+Example:
+{
+    "id_1": 5.53, "id_2": 9.71, "id_3": 3.20
+}
+Think step by step and output your reasoning process:
+Step 1: think about ["History operation sequence"],what has been done,especially pay attention to those steps which is wrong and caused navigate back if any;
+Step 2: think step by step on the ["Succesive Results"] of each UI options GIVEN by user, which represents the subsequent items after operating on them, and the ["possible paths to UI target"] GIVEN by user, which was suggested by expert knowledge;
+Step 3: decide what should be done next. Possible operations: click, edit (text input), scroll. Pay attention to those steps which is wrong and caused navigate back if any;
+Step 4: Synthesize the above output to output a JSON object with scores.
+
+Strictly output a format like "id_1": 3.00, do not tamper with it to make it look like "scroll_1": 3.00, etc., it must start with id_.
+
+
+user:
+{
+    "Task": "Turn on severe threats in wireless emergency alerts on your phone",
+    "History operation sequence": [
+        "Scroll forward on android.widget.ScrollView",
+        "Scroll forward on android.widget.ScrollView",
+        "Scroll forward on android.widget.ScrollView",
+        "\u4e0a\u6b65\u64cd\u4f5c\u6ca1\u6709\u54cd\u5e94\uff0c\u56e0\u6b64\u662f\u9519\u8bef\u7684",
+        "Click on clickable 'android:id/title' Accessibility 'android:id/summary' Screen readers, display, interaction controls",
+        "Scroll forward on androidx.recyclerview.widget.RecyclerView"
+    ],
+    "Current UI screen": "<p class=''  > Accessibility </p>\n<scroll id=1 class=androidx.recyclerview.widget.RecyclerView >\n    <p class='android:id/title'  > INTERACTION CONTROLS </p>\n\n    <div id=2   clickable> \n    <p class='android:id/title'  > Autoclick (dwell timing) </p>\n\n    <p class='android:id/summary'  > Off </p>\n </div>\n\n    <div id=3   clickable> \n    <p class='android:id/title'  > Power button ends call </p>\n\n    <switch id=4 class='android:id/switch_widget' clickable > Off </switch>\n </div>\n\n    <div id=5   clickable> \n    <p class='android:id/title'  > Auto-rotate screen </p>\n\n    <switch id=6 class='android:id/switch_widget' clickable > Off </switch>\n </div>\n\n    <div id=7   clickable> \n    <p class='android:id/title'  > Touch & hold delay </p>\n\n    <p class='android:id/summary'  > Short </p>\n </div>\n\n    <div id=8   clickable> \n    <p class='android:id/title'  > Time to take action (Accessibility timeout) </p>\n\n    <p class='android:id/summary'  > Default </p>\n </div>\n\n    <div id=9   clickable> \n    <p class='android:id/title'  > Vibration & haptic strength </p>\n\n    <p class='android:id/summary'  > Ring Off, notification On, touch On </p>\n </div>\n\n    <div id=10   clickable> \n    <p class='android:id/title'  > System navigation </p>\n\n    <p class='android:id/summary'  > 3-button navigation </p>\n </div>\n\n    <p class='android:id/title'  > AUDIO & ON-SCREEN TEXT </p>\n\n    <div id=11   clickable> \n    <p class='android:id/title'  > Mono audio </p>\n\n    <p class='android:id/summary'  > Combine channels when playing audio </p>\n\n    <switch id=12 class='android:id/switch_widget' clickable > Off </switch>\n </div>\n </scroll>\n",
+    "Successive results": {},
+    "Hint": "Below is a hint and suggestion from another model{\"next ui element\": \"<scroll id=1 class=androidx.recyclerview.widget.RecyclerView>\", \"status\": \"go on\", \"reason\": \"The current UI does not contain the wireless emergency alert settings, but there is a scrollable element that suggests more options are available off-screen which might include the desired settings.\"}"
+}
+
+===response===
+Step 1: The history shows that the user has been scrolling through a ScrollView and a RecyclerView, and there was a click on a section titled 'Accessibility' which suggests the user is in the Accessibility settings. There was an indication that a previous operation did not receive a response, which suggests that the user may have scrolled past the relevant section or that the section was not the correct one.
+
+Step 2: The current UI screen shows various accessibility options, none of which are related to wireless emergency alerts. The options include controls for autoclick, power button behavior, auto-rotate screen, touch & hold delay, accessibility timeout, vibration & haptic strength, system navigation, and audio settings. None of these options seem to directly relate to the task of turning on severe threats in wireless emergency alerts.
+
+Step 3: The hint suggests that the user should continue scrolling through the RecyclerView to find the desired settings, as the current screen does not contain them. This aligns with the expectation that the wireless emergency alert settings are often grouped with other notification or alert settings, which are not visible on the current screen.
+
+Step 4: Based on the information provided and the hint, the next logical step would be to scroll further in the RecyclerView to find the relevant settings for wireless emergency alerts. Given that none of the currently visible options are relevant to the task, the scroll action is the most appropriate next step.
+
+Here is the JSON object with the scores:
+
+{
+    "id_1": 9.00, 
+    "id_2": 1.00, 
+    "id_3": 1.00, 
+    "id_4": 1.00, 
+    "id_5": 1.00, 
+    "id_6": 1.00, 
+    "id_7": 1.00, 
+    "id_8": 1.00, 
+    "id_9": 1.00, 
+    "id_10": 1.00, 
+    "id_11": 1.00, 
+    "id_12": 1.00
+}
