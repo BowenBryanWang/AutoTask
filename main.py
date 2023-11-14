@@ -285,7 +285,7 @@ if __name__ == "__main__":
     if LOAD:
         print("Loading")
         Graph = UINavigationGraph("cache/random/Graph_"+str(PER)+".pkl")
-        Graph.merge_from_random(k=PER)
+        Graph.merge_from_random(task_name=TASK, k=PER)
     else:
         print("Not Loading")
         Graph = UINavigationGraph(

@@ -265,9 +265,11 @@ class UINavigationGraph:
         nx.draw(self.graph, with_labels=True)
         plt.show()
 
-    def merge_from_random(self, k=1):
+    def merge_from_random(self, task_name="", k=1):
         self = UINavigationGraph("cache/random/Graph_"+str(k)+".pkl")
         cache_list = os.listdir("cache")
+        cache_list = [l for l in cache_list if l !=
+                      "Graph_"+task_name.replace(" ", "_")]
         random.shuffle(cache_list)
         for file in cache_list[:len(cache_list)*k*10//10]:
             if file.startswith("Graph_"):

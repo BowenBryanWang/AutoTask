@@ -1,3 +1,0 @@
-<p class=''  > Reset? </p>
-<p class='com.android.settings:id/reset_network_confirm'  > Reset all network settings? You can’t undo this action. </p>
-<button id=1 class='com.android.settings:id/execute_reset_network'  > Reset settings </button>

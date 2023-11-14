@@ -1,7 +1,0 @@
-<p class=''  > Reset Wi-Fi, mobile & Bluetooth </p>
-<p class=''  > This will reset all network settings, including:
-
-Wi‑Fi
-Mobile data
-Bluetooth </p>
-<button id=1 class='com.android.settings:id/initiate_reset_network'  > Reset settings </button>

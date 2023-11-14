@@ -78,6 +78,8 @@ class Selection_KB(KnowledgeBase):
 def extract_knowledge(task):
     global COUNT
     Log_path = "../Shots/"+task.replace(" ", "_")+"/logs"
+    if not os.path.exists(Log_path):
+        Log_path = "../Shots/"+task.replace(" ", "_")+"/log"
 
     def is_json_log(file_name):
         return file_name.startswith('log') and file_name.endswith('.json')
@@ -101,6 +103,7 @@ def extract_knowledge(task):
     l = process_sequences(
         ACTION_TRACE["PAGES"], ACTION_TRACE["ACTION"], ACTION_TRACE["ACTION_DESC"])
     resp = GPT(Knowledge_prompt(task, ACTION_TRACE, json_data, l))
+    print(resp)
     predict_knowledge, selection_knowledge, decision_knowledge = resp.get("prediction"), resp.get(
         "selection"), resp.get("decision")
     for i in range(len(predict_knowledge)):
@@ -152,7 +155,8 @@ def process_sequences(pages, action, action_desc):
     for sequence in back_sequences:
         start = sequence[0]
         end = sequence[-1]+1
-        prev_pages = pages[max(0, start - len(sequence)):min(len(pages), end-len(sequence)+1)]
+        prev_pages = pages[max(0, start - len(sequence))
+                               :min(len(pages), end-len(sequence)+1)]
         actions = action[start - len(sequence):end-len(sequence)]
         l.append((prev_pages, actions))
     return l
@@ -180,6 +184,7 @@ def retrivel_knowledge(task, type, page, PER):
     with open(file_path, 'r', newline='', encoding='utf-8') as f:
         reader = csv.reader(f)
         data = list(reader)
+    data = [k for k in data if k[0] != task]
 
     num_rows = len(data)
     num_sample = int(num_rows * PER)
@@ -239,5 +244,5 @@ def detect_log():
 
 if __name__ == "__main__":
     from utility import GPT, Knowledge_prompt, get_top_combined_similarities, get_top_similarities, sort_by_similarity
-    # extract_batch_knowledge()
-    detect_log()
+    extract_batch_knowledge()
+    # detect_log()
