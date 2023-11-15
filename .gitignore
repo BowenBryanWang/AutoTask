@@ -13,3 +13,5 @@ page/static/
 src/__pycache__
 Shots/
 venv/
+logs/
+pixel_logs/

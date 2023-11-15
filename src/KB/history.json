@@ -878,5 +878,403 @@
             "action_type": "report_answer",
             "text": "5.62 MB used"
         }
+    },
+    {
+        "Previous Actions": [
+            {
+                "action_type": "click",
+                "idx": 5
+            },
+            {
+                "action_type": "click",
+                "idx": 3
+            },
+            {
+                "action_type": "click",
+                "idx": 1
+            }
+        ],
+        "Screen": [
+            "<div id=1 class='' > SMS preference\n    <p> T-Mobile </p> </div>\n",
+            "<p class='android:id/summary' > T-Mobile </p>\n",
+            "<p class='android:id/title' > SMS preference </p>\n",
+            "<div id=2 class='' > Calls preference\n    <p> T-Mobile </p> </div>\n",
+            "<p class='android:id/summary' > T-Mobile </p>\n",
+            "<p class='android:id/title' > Calls preference </p>\n",
+            "<p class='com.android.settings:id/cycle_left_time' > 14 days left </p>\n",
+            "<p class='com.android.settings:id/data_limits' > 2.00 GB data warning </p>\n",
+            "<p class='android:id/text2' > 2.00 GB </p>\n",
+            "<p class='android:id/text1' > 0 B </p>\n",
+            "<p class='com.android.settings:id/data_usage_view' > 7.12 MB used </p>\n",
+            "<button id=3 class='' > Use SIM </button>\n",
+            "<div id=4 class='com.android.settings:id/main_switch_bar' > Use SIM </div>\n",
+            "<switch id=5 class='android:id/switch_widget' clickable> On </switch>\n",
+            "<p class='com.android.settings:id/switch_text' > Use SIM </p>\n",
+            "<div id=6 class='com.android.settings:id/edit_sim_name' description='SIM name & color'>  </div>\n",
+            "<div id=7 class='' description='Navigate up'>  </div>\n"
+        ],
+        "Instruction": "View data usage of 'T-mobile' on this phone",
+        "Answer": {
+            "action_type": "report_answer",
+            "text": "The data usage for T-Mobile is 7.12 MB used"
+        }
+    },
+    {
+        "Previous Actions": [],
+        "Screen": [
+            "<button id=1 class='com.android.settings:id/account_avatar' description='Profile picture, double tap to open Google Account'>  </button>\n",
+            "<p class='com.android.settings:id/homepage_title' > Settings </p>\n",
+            "<scroll id=2 class=android.widget.ScrollView > </scroll>\n",
+            "<div id=3 class='' > Network & internet\n    <p> Mobile, Wi\u2011Fi, hotspot </p> </div>\n",
+            "<p class='android:id/title' > Network & internet </p>\n",
+            "<p class='android:id/summary' > Mobile, Wi\u2011Fi, hotspot </p>\n",
+            "<div id=4 class='' > Connected devices\n    <p> Bluetooth, pairing </p> </div>\n",
+            "<p class='android:id/title' > Connected devices </p>\n",
+            "<p class='android:id/summary' > Bluetooth, pairing </p>\n",
+            "<div id=5 class='' > Apps\n    <p> Assistant, recent apps, default apps </p> </div>\n",
+            "<p class='android:id/title' > Apps </p>\n",
+            "<p class='android:id/summary' > Assistant, recent apps, default apps </p>\n",
+            "<div id=6 class='' > Notifications\n    <p> Notification history, conversations </p> </div>\n",
+            "<p class='android:id/title' > Notifications </p>\n",
+            "<p class='android:id/summary' > Notification history, conversations </p>\n",
+            "<div id=7 class='' >  </div>\n"
+        ],
+        "Instruction": "View data usage of 'T-mobile' on this phone",
+        "Answer": {
+            "action_type": "click",
+            "idx": 3
+        }
+    },
+    {
+        "Previous Actions": [],
+        "Screen": [
+            "<button id=1 class='com.android.settings:id/account_avatar' description='Profile picture, double tap to open Google Account'>  </button>\n",
+            "<p class='com.android.settings:id/homepage_title' > Settings </p>\n",
+            "<scroll id=2 class=android.widget.ScrollView > </scroll>\n",
+            "<div id=3 class='' > Network & internet\n    <p> Mobile, Wi\u2011Fi, hotspot </p> </div>\n",
+            "<p class='android:id/title' > Network & internet </p>\n",
+            "<p class='android:id/summary' > Mobile, Wi\u2011Fi, hotspot </p>\n",
+            "<div id=4 class='' > Connected devices\n    <p> Bluetooth, pairing </p> </div>\n",
+            "<p class='android:id/title' > Connected devices </p>\n",
+            "<p class='android:id/summary' > Bluetooth, pairing </p>\n",
+            "<div id=5 class='' > Apps\n    <p> Assistant, recent apps, default apps </p> </div>\n",
+            "<p class='android:id/title' > Apps </p>\n",
+            "<p class='android:id/summary' > Assistant, recent apps, default apps </p>\n",
+            "<div id=6 class='' > Notifications\n    <p> Notification history, conversations </p> </div>\n",
+            "<p class='android:id/title' > Notifications </p>\n",
+            "<p class='android:id/summary' > Notification history, conversations </p>\n",
+            "<div id=7 class='' > Battery\n    <p> 100% </p> </div>\n",
+            "<p class='android:id/title' > Battery </p>\n",
+            "<p class='android:id/summary' > 100% </p>\n",
+            "<div id=8 class='' > Storage\n    <p> 33% used - 5.33 GB free </p> </div>\n",
+            "<p class='android:id/title' > Storage </p>\n",
+            "<p class='android:id/summary' > 33% used - 5.33 GB free </p>\n",
+            "<div id=9 class='' >  </div>\n"
+        ],
+        "Instruction": "Enable find my device",
+        "Answer": {
+            "action_type": "scroll_forward"
+        }
+    },
+    {
+        "Previous Actions": [
+            {
+                "action_type": "scroll_forward",
+                "idx": 2
+            },
+            {
+                "action_type": "scroll_forward",
+                "idx": 1
+            },
+            {
+                "action_type": "scroll_forward",
+                "idx": 1
+            },
+            {
+                "action_type": "scroll_forward",
+                "idx": 1
+            }
+        ],
+        "Screen": [
+            "<scroll id=1 class=android.widget.ScrollView > </scroll>\n",
+            "<div id=2 class='' > Location\n    <p> On - 3 apps have access to location </p> </div>\n",
+            "<p class='android:id/title' > Location </p>\n",
+            "<p class='android:id/summary' > On - 3 apps have access to location </p>\n",
+            "<div id=3 class='' > Safety & emergency\n    <p> Emergency SOS, medical info, alerts </p> </div>\n",
+            "<p class='android:id/title' > Safety & emergency </p>\n",
+            "<p class='android:id/summary' > Emergency SOS, medical info, alerts </p>\n",
+            "<div id=4 class='' > Passwords & accounts\n    <p> Saved passwords, autofill, synced accounts </p> </div>\n",
+            "<p class='android:id/title' > Passwords & accounts </p>\n",
+            "<p class='android:id/summary' > Saved passwords, autofill, synced accounts </p>\n",
+            "<div id=5 class='' > Digital Wellbeing & parental controls\n    <p> Screen time, app timers, bedtime schedules </p> </div>\n",
+            "<p class='android:id/title' > Digital Wellbeing & parental controls </p>\n",
+            "<p class='android:id/summary' > Screen time, app timers, bedtime schedules </p>\n",
+            "<div id=6 class='' > Google\n    <p> Services & preferences </p> </div>\n",
+            "<p class='android:id/title' > Google </p>\n",
+            "<p class='android:id/summary' > Services & preferences </p>\n",
+            "<div id=7 class='' > System\n    <p> Languages, gestures, time, backup </p> </div>\n",
+            "<p class='android:id/title' > System </p>\n",
+            "<p class='android:id/summary' > Languages, gestures, time, backup </p>\n",
+            "<div id=8 class='' > About emulated device\n    <p> sdk_gphone64_x86_64 </p> </div>\n",
+            "<p class='android:id/title' > About emulated device </p>\n",
+            "<p class='android:id/summary' > sdk_gphone64_x86_64 </p>\n",
+            "<div id=9 class='' > Tips & support\n    <p> Help articles, phone & chat </p> </div>\n",
+            "<p class='android:id/title' > Tips & support </p>\n",
+            "<p class='android:id/summary' > Help articles, phone & chat </p>\n"
+        ],
+        "Instruction": "Enable find my device",
+        "Answer": {
+            "action_type": "scroll_forward",
+            "idx": 1
+        }
+    },
+    {
+        "Previous Actions": [],
+        "Screen": [
+            "<scroll id=1 class=android.widget.ScrollView > </scroll>\n",
+            "<div id=2 class='' > Location\n    <p> On - 3 apps have access to location </p> </div>\n",
+            "<p class='android:id/title' > Location </p>\n",
+            "<p class='android:id/summary' > On - 3 apps have access to location </p>\n",
+            "<div id=3 class='' > Safety & emergency\n    <p> Emergency SOS, medical info, alerts </p> </div>\n",
+            "<p class='android:id/title' > Safety & emergency </p>\n",
+            "<p class='android:id/summary' > Emergency SOS, medical info, alerts </p>\n",
+            "<div id=4 class='' > Passwords & accounts\n    <p> Saved passwords, autofill, synced accounts </p> </div>\n",
+            "<p class='android:id/title' > Passwords & accounts </p>\n",
+            "<p class='android:id/summary' > Saved passwords, autofill, synced accounts </p>\n",
+            "<div id=5 class='' > Digital Wellbeing & parental controls\n    <p> Screen time, app timers, bedtime schedules </p> </div>\n",
+            "<p class='android:id/title' > Digital Wellbeing & parental controls </p>\n",
+            "<p class='android:id/summary' > Screen time, app timers, bedtime schedules </p>\n",
+            "<div id=6 class='' > Google\n    <p> Services & preferences </p> </div>\n",
+            "<p class='android:id/title' > Google </p>\n",
+            "<p class='android:id/summary' > Services & preferences </p>\n",
+            "<div id=7 class='' > System\n    <p> Languages, gestures, time, backup </p> </div>\n",
+            "<p class='android:id/title' > System </p>\n",
+            "<p class='android:id/summary' > Languages, gestures, time, backup </p>\n",
+            "<div id=8 class='' > About emulated device\n    <p> sdk_gphone64_x86_64 </p> </div>\n",
+            "<p class='android:id/title' > About emulated device </p>\n",
+            "<p class='android:id/summary' > sdk_gphone64_x86_64 </p>\n",
+            "<div id=9 class='' > Tips & support\n    <p> Help articles, phone & chat </p> </div>\n",
+            "<p class='android:id/title' > Tips & support </p>\n",
+            "<p class='android:id/summary' > Help articles, phone & chat </p>\n"
+        ],
+        "Instruction": "Enable find my device",
+        "Answer": {
+            "action_type": "scroll_forward",
+            "idx": 1
+        }
+    },
+    {
+        "Previous Actions": [
+            {
+                "action_type": "scroll_forward",
+                "idx": 1
+            }
+        ],
+        "Screen": [
+            "<scroll id=1 class=android.widget.ScrollView > </scroll>\n",
+            "<div id=2 class='' > Location\n    <p> On - 3 apps have access to location </p> </div>\n",
+            "<p class='android:id/title' > Location </p>\n",
+            "<p class='android:id/summary' > On - 3 apps have access to location </p>\n",
+            "<div id=3 class='' > Safety & emergency\n    <p> Emergency SOS, medical info, alerts </p> </div>\n",
+            "<p class='android:id/title' > Safety & emergency </p>\n",
+            "<p class='android:id/summary' > Emergency SOS, medical info, alerts </p>\n",
+            "<div id=4 class='' > Passwords & accounts\n    <p> Saved passwords, autofill, synced accounts </p> </div>\n",
+            "<p class='android:id/title' > Passwords & accounts </p>\n",
+            "<p class='android:id/summary' > Saved passwords, autofill, synced accounts </p>\n",
+            "<div id=5 class='' > Digital Wellbeing & parental controls\n    <p> Screen time, app timers, bedtime schedules </p> </div>\n",
+            "<p class='android:id/title' > Digital Wellbeing & parental controls </p>\n",
+            "<p class='android:id/summary' > Screen time, app timers, bedtime schedules </p>\n",
+            "<div id=6 class='' > Google\n    <p> Services & preferences </p> </div>\n",
+            "<p class='android:id/title' > Google </p>\n",
+            "<p class='android:id/summary' > Services & preferences </p>\n",
+            "<div id=7 class='' > System\n    <p> Languages, gestures, time, backup </p> </div>\n",
+            "<p class='android:id/title' > System </p>\n",
+            "<p class='android:id/summary' > Languages, gestures, time, backup </p>\n",
+            "<div id=8 class='' > About emulated device\n    <p> sdk_gphone64_x86_64 </p> </div>\n",
+            "<p class='android:id/title' > About emulated device </p>\n",
+            "<p class='android:id/summary' > sdk_gphone64_x86_64 </p>\n",
+            "<div id=9 class='' > Tips & support\n    <p> Help articles, phone & chat </p> </div>\n",
+            "<p class='android:id/title' > Tips & support </p>\n",
+            "<p class='android:id/summary' > Help articles, phone & chat </p>\n"
+        ],
+        "Instruction": "Enable find my device",
+        "Answer": {
+            "action_type": "scroll_forward",
+            "idx": 1
+        }
+    },
+    {
+        "Previous Actions": [
+            {
+                "action_type": "scroll_forward",
+                "idx": 1
+            }
+        ],
+        "Screen": [
+            "<scroll id=1 class=android.widget.ScrollView > </scroll>\n",
+            "<div id=2 class='' > Location\n    <p> On - 3 apps have access to location </p> </div>\n",
+            "<p class='android:id/title' > Location </p>\n",
+            "<p class='android:id/summary' > On - 3 apps have access to location </p>\n",
+            "<div id=3 class='' > Safety & emergency\n    <p> Emergency SOS, medical info, alerts </p> </div>\n",
+            "<p class='android:id/title' > Safety & emergency </p>\n",
+            "<p class='android:id/summary' > Emergency SOS, medical info, alerts </p>\n",
+            "<div id=4 class='' > Passwords & accounts\n    <p> Saved passwords, autofill, synced accounts </p> </div>\n",
+            "<p class='android:id/title' > Passwords & accounts </p>\n",
+            "<p class='android:id/summary' > Saved passwords, autofill, synced accounts </p>\n",
+            "<div id=5 class='' > Digital Wellbeing & parental controls\n    <p> Screen time, app timers, bedtime schedules </p> </div>\n",
+            "<p class='android:id/title' > Digital Wellbeing & parental controls </p>\n",
+            "<p class='android:id/summary' > Screen time, app timers, bedtime schedules </p>\n",
+            "<div id=6 class='' > Google\n    <p> Services & preferences </p> </div>\n",
+            "<p class='android:id/title' > Google </p>\n",
+            "<p class='android:id/summary' > Services & preferences </p>\n",
+            "<div id=7 class='' > System\n    <p> Languages, gestures, time, backup </p> </div>\n",
+            "<p class='android:id/title' > System </p>\n",
+            "<p class='android:id/summary' > Languages, gestures, time, backup </p>\n",
+            "<div id=8 class='' > About emulated device\n    <p> sdk_gphone64_x86_64 </p> </div>\n",
+            "<p class='android:id/title' > About emulated device </p>\n",
+            "<p class='android:id/summary' > sdk_gphone64_x86_64 </p>\n",
+            "<div id=9 class='' > Tips & support\n    <p> Help articles, phone & chat </p> </div>\n",
+            "<p class='android:id/title' > Tips & support </p>\n",
+            "<p class='android:id/summary' > Help articles, phone & chat </p>\n"
+        ],
+        "Instruction": "Check Usage of T-mobile",
+        "Answer": {
+            "action_type": "navigate_back"
+        }
+    },
+    {
+        "Previous Actions": [
+            {
+                "action_type": "scroll_forward",
+                "idx": 1
+            }
+        ],
+        "Screen": [
+            "<scroll id=1 class=android.widget.ScrollView > </scroll>\n",
+            "<div id=2 class='' > Location\n    <p> On - 3 apps have access to location </p> </div>\n",
+            "<p class='android:id/title' > Location </p>\n",
+            "<p class='android:id/summary' > On - 3 apps have access to location </p>\n",
+            "<div id=3 class='' > Safety & emergency\n    <p> Emergency SOS, medical info, alerts </p> </div>\n",
+            "<p class='android:id/title' > Safety & emergency </p>\n",
+            "<p class='android:id/summary' > Emergency SOS, medical info, alerts </p>\n",
+            "<div id=4 class='' > Passwords & accounts\n    <p> Saved passwords, autofill, synced accounts </p> </div>\n",
+            "<p class='android:id/title' > Passwords & accounts </p>\n",
+            "<p class='android:id/summary' > Saved passwords, autofill, synced accounts </p>\n",
+            "<div id=5 class='' > Digital Wellbeing & parental controls\n    <p> Screen time, app timers, bedtime schedules </p> </div>\n",
+            "<p class='android:id/title' > Digital Wellbeing & parental controls </p>\n",
+            "<p class='android:id/summary' > Screen time, app timers, bedtime schedules </p>\n",
+            "<div id=6 class='' > Google\n    <p> Services & preferences </p> </div>\n",
+            "<p class='android:id/title' > Google </p>\n",
+            "<p class='android:id/summary' > Services & preferences </p>\n",
+            "<div id=7 class='' > System\n    <p> Languages, gestures, time, backup </p> </div>\n",
+            "<p class='android:id/title' > System </p>\n",
+            "<p class='android:id/summary' > Languages, gestures, time, backup </p>\n",
+            "<div id=8 class='' > About emulated device\n    <p> sdk_gphone64_x86_64 </p> </div>\n",
+            "<p class='android:id/title' > About emulated device </p>\n",
+            "<p class='android:id/summary' > sdk_gphone64_x86_64 </p>\n",
+            "<div id=9 class='' > Tips & support\n    <p> Help articles, phone & chat </p> </div>\n",
+            "<p class='android:id/title' > Tips & support </p>\n",
+            "<p class='android:id/summary' > Help articles, phone & chat </p>\n"
+        ],
+        "Instruction": "Check Usage of T-mobile",
+        "Answer": {
+            "action_type": "navigate_back"
+        }
+    },
+    {
+        "Previous Actions": [
+            {
+                "action_type": "click",
+                "idx": 3
+            },
+            {
+                "action_type": "click",
+                "idx": 5
+            },
+            {
+                "action_type": "click",
+                "idx": 3
+            },
+            {
+                "action_type": "click",
+                "idx": 2
+            },
+            {
+                "action_type": "navigate_back"
+            }
+        ],
+        "Screen": [
+            "<div id=1 class='' description='Navigate up'>  </div>\n",
+            "<div id=2 class='com.android.settings:id/edit_sim_name' description='SIM name & color'>  </div>\n",
+            "<scroll id=3 class=androidx.recyclerview.widget.RecyclerView > </scroll>\n",
+            "<button id=4 class='' > Use SIM </button>\n",
+            "<div id=5 class='com.android.settings:id/main_switch_bar' > Use SIM </div>\n",
+            "<p class='com.android.settings:id/switch_text' > Use SIM </p>\n",
+            "<switch id=6 class='android:id/switch_widget' clickable> On </switch>\n",
+            "<p class='com.android.settings:id/data_usage_view' > 7.54 MB used </p>\n",
+            "<p class='android:id/text1' > 0 B </p>\n",
+            "<p class='android:id/text2' > 2.00 GB </p>\n",
+            "<p class='com.android.settings:id/data_limits' > 2.00 GB data warning </p>\n",
+            "<p class='com.android.settings:id/cycle_left_time' > 14 days left </p>\n",
+            "<div id=7 class='' > Calls preference\n    <p> T-Mobile </p> </div>\n",
+            "<p class='android:id/title' > Calls preference </p>\n",
+            "<p class='android:id/summary' > T-Mobile </p>\n",
+            "<div id=8 class='' > SMS preference\n    <p> T-Mobile </p> </div>\n",
+            "<p class='android:id/title' > SMS preference </p>\n",
+            "<p class='android:id/summary' > T-Mobile </p>\n",
+            "<div id=9 class='' > Mobile data\n    <p> Access data using mobile network </p> </div>\n",
+            "<p class='android:id/title' > Mobile data </p>\n",
+            "<p class='android:id/summary' > Access data using mobile network </p>\n",
+            "<switch id=10 class='android:id/switch_widget' clickable> On </switch>\n"
+        ],
+        "Instruction": "Check Usage of T-mobile",
+        "Answer": {
+            "action_type": "report_answer",
+            "text": "7.54 MB used"
+        }
+    },
+    {
+        "Previous Actions": [
+            {
+                "action_type": "scroll_forward",
+                "idx": 1
+            },
+            {
+                "action_type": "scroll_forward",
+                "idx": 1
+            }
+        ],
+        "Screen": [
+            "<scroll id=1 class=android.widget.ScrollView > </scroll>\n",
+            "<div id=2 class='' > Location\n    <p> On - 3 apps have access to location </p> </div>\n",
+            "<p class='android:id/title' > Location </p>\n",
+            "<p class='android:id/summary' > On - 3 apps have access to location </p>\n",
+            "<div id=3 class='' > Safety & emergency\n    <p> Emergency SOS, medical info, alerts </p> </div>\n",
+            "<p class='android:id/title' > Safety & emergency </p>\n",
+            "<p class='android:id/summary' > Emergency SOS, medical info, alerts </p>\n",
+            "<div id=4 class='' > Passwords & accounts\n    <p> Saved passwords, autofill, synced accounts </p> </div>\n",
+            "<p class='android:id/title' > Passwords & accounts </p>\n",
+            "<p class='android:id/summary' > Saved passwords, autofill, synced accounts </p>\n",
+            "<div id=5 class='' > Digital Wellbeing & parental controls\n    <p> Screen time, app timers, bedtime schedules </p> </div>\n",
+            "<p class='android:id/title' > Digital Wellbeing & parental controls </p>\n",
+            "<p class='android:id/summary' > Screen time, app timers, bedtime schedules </p>\n",
+            "<div id=6 class='' > Google\n    <p> Services & preferences </p> </div>\n",
+            "<p class='android:id/title' > Google </p>\n",
+            "<p class='android:id/summary' > Services & preferences </p>\n",
+            "<div id=7 class='' > System\n    <p> Languages, gestures, time, backup </p> </div>\n",
+            "<p class='android:id/title' > System </p>\n",
+            "<p class='android:id/summary' > Languages, gestures, time, backup </p>\n",
+            "<div id=8 class='' > About emulated device\n    <p> sdk_gphone64_x86_64 </p> </div>\n",
+            "<p class='android:id/title' > About emulated device </p>\n",
+            "<p class='android:id/summary' > sdk_gphone64_x86_64 </p>\n",
+            "<div id=9 class='' > Tips & support\n    <p> Help articles, phone & chat </p> </div>\n",
+            "<p class='android:id/title' > Tips & support </p>\n",
+            "<p class='android:id/summary' > Help articles, phone & chat </p>\n"
+        ],
+        "Instruction": "Enable 'Find My Device'",
+        "Answer": {
+            "action_type": "scroll_forward",
+            "idx": 1
+        }
     }
 ]

@@ -1,0 +1,42 @@
+! 无法完成
+a Privacy卡死
+b 页面底端卡死
+c 其他页面无法抓取
+
+71 可能无法完成
+74 差一点做对，很奇怪
+76 b
+77 ! 环境有误
+78 c internet
+79 中断1698932337001
+82 ! 指令有误
+84 b notifications
+89 b settings
+91 b App
+92 ! 环境有误
+95 ! 环境有误
+96 c internet
+97 b Network & internet
+99 ! 指令有误
+101 sensitive 假阳性
+103 ! 指令有误
+105 qianduan
+106 ! 指令有误
+109 b Network & internet
+111 中断
+116 a
+
+68 对但不对
+78 dui
+113 duanle
+126 c
+136 !
+169 !
+186
+201 zhongduan
+211 zhongduan
+257 wufawanc
+258 chrome
+259 bumingque 
+276 zhongduan
+303 zhongduan

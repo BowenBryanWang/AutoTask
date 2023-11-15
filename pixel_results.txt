@@ -1,0 +1,578 @@
+[
+    {
+        "task": "see all system apps",
+        "id": 1,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "open the vpn edit profile",
+        "id": 2,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "see sites visited before in the chrome app",
+        "id": 106,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "clear all cookies in the chrome app",
+        "id": 107,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change timer sound to Argon",
+        "id": 108,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "open the 9:00 alarm",
+        "id": 109,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "turn notification dots on",
+        "id": 110,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "set default search engine in the chrome app to 'bing'",
+        "id": 112,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "check for android updates in system settings",
+        "id": 113,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "delete browsing data in the chrome app",
+        "id": 114,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "turn on wifi",
+        "id": 115,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "turn on priority inbox in the gmail app",
+        "id": 16,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 17,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 18,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 19,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 20,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 21,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 22,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 23,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 24,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 25,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 26,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 27,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 28,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 29,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 30,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 31,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 32,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 33,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 34,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 35,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 36,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 37,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 38,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 39,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 40,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 41,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 42,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 43,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 44,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 45,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 46,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 47,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 48,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 49,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change sync settings in the gmail app to 29 days",
+        "id": 50,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "open display settings",
+        "id": 117,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "change the clock display to show seconds in the clock setting",
+        "id": 118,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "turn on find my device",
+        "id": 7,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "find default apps in the app setting",
+        "id": 119,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "check backup status in the system settings",
+        "id": 120,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "change text size to a larger size in settings app",
+        "id": 121,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "check bookmarks in the chrome app",
+        "id": 122,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "set screen lock to none",
+        "id": 124,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change screen display into darkmode",
+        "id": 125,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "turn on app pinning",
+        "id": 126,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "turn on the 24-hour format for clock",
+        "id": 127,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "check google app version",
+        "id": 128,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "turn pop-ups on in chrome",
+        "id": 129,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "turn on private dns to automatic",
+        "id": 130,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "change the clock style to digital",
+        "id": 131,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "turn on wifi scan",
+        "id": 132,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "reset app preferences",
+        "id": 133,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "use speak search in google app",
+        "id": 134,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "clear history in the chrome app",
+        "id": 136,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "open the latest photo in the google photos",
+        "id": 137,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "turn on bluetooth scan",
+        "id": 138,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "add a contact (name:Jack phone:123456789) in the contacts app",
+        "id": 139,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "change your default location settings in chrome",
+        "id": 140,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "change your default location settings in chrome",
+        "id": 141,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "check out phone information",
+        "id": 143,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "change site's camera permissions to blocked in the chrome app",
+        "id": 144,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "allow cookies in the chrome app",
+        "id": 145,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "allow cookies in the chrome app",
+        "id": 146,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "add user",
+        "id": 147,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Turn on wireless emergency alerts in settings app",
+        "id": 149,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "reset all network settings in system settings",
+        "id": 150,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "View emergency info of this device",
+        "id": 151,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Turn on notifications from all 'SITES' in the chrome app",
+        "id": 157,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "View data usage of \"T-mobile\" on this phone",
+        "id": 159,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "update user",
+        "id": 160,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "open notifications settings",
+        "id": 161,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "open notifications settings",
+        "id": 162,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "turn off the permission of location",
+        "id": 163,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "turn data saver mode on",
+        "id": 164,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "open settings for sites in the chrome app",
+        "id": 165,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "open chrome privacy setting",
+        "id": 167,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "start the stopwatch",
+        "id": 168,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "check android version",
+        "id": 169,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "stop showing notifications on the lock screen",
+        "id": 171,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "have battery saver turn on",
+        "id": 173,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "open bookmarks in the chrome app",
+        "id": 174,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "turn on javascript in the chrome app",
+        "id": 175,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "turn off set automatic date & time",
+        "id": 179,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "find which apps use the phone's location",
+        "id": 180,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "open a new tab in the chrome app",
+        "id": 181,
+        "completed": false,
+        "error": null
+    }
+]

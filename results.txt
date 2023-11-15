@@ -1,0 +1,1742 @@
+[
+    {
+        "task": "Disable the schedule for the battery saver mode on the phone.",
+        "id": 61,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Enable quick open camera.",
+        "id": 62,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Check the storage usage of photos on the phone.",
+        "id": 63,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Automatically free up storage space.",
+        "id": 64,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Change phone unlock method to PIN, 0000",
+        "id": 65,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Remove screen lock protection on the phone",
+        "id": 66,
+        "completed": false,
+        "error": "<class 'KeyError'>"
+    },
+    {
+        "task": "Open the Talkback settings.",
+        "id": 67,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Check for Android updates on your device.",
+        "id": 68,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Check if location is turned on",
+        "id": 69,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Check available storage on the phone.",
+        "id": 70,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Clear the data of Calendar.",
+        "id": 71,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Uninstall the google play app.",
+        "id": 72,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Enable Wifi hotspot",
+        "id": 73,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Set up an event named 'busy' in the Do Not Disturb",
+        "id": 74,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Set notifications to priority only when \"do not disturb\" is on.",
+        "id": 75,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Change my sleeping time to 9:00 PM in Do Not Disturb.",
+        "id": 76,
+        "completed": false,
+        "error": "<class 'KeyError'>"
+    },
+    {
+        "task": "Connect to the newest VPN on your phone",
+        "id": 77,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Delete the latest connected Wi-Fi network from your phone",
+        "id": 78,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Reset all network settings on the phone.",
+        "id": 79,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Check if the Wi-Fi hotspot is enabled on the phone.",
+        "id": 80,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Turn off location on your phone.",
+        "id": 81,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Set chrome as the default browser.",
+        "id": 82,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Change the phone ringtong to 'Lyra'.",
+        "id": 83,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Change the notification sound to 'Duet'.",
+        "id": 84,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Open the sounds and vibrations settings on the phone.",
+        "id": 85,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Favorite the latest song in the Now Playing history",
+        "id": 86,
+        "completed": false,
+        "error": "<class 'KeyError'>"
+    },
+    {
+        "task": "Enable the 24-hour format in the Clock app.",
+        "id": 87,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Turn 'Automatically sync my app data' on.",
+        "id": 88,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Send a feedback report about the device to Google.",
+        "id": 89,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Contact the system company ",
+        "id": 90,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Change location permissions to disabled",
+        "id": 91,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Configure the phone to automatically remove permissions for unused apps.",
+        "id": 92,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Open the date and time settings on your phone.",
+        "id": 93,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Clear the cache for the \"Contacts\" app on the phone.",
+        "id": 94,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Clear previously connected devices and forget paired car device.",
+        "id": 95,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Turn mobile data on.",
+        "id": 96,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Turn data roaming on on the phone.",
+        "id": 97,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Remove the latest Google account from the phone",
+        "id": 98,
+        "completed": false,
+        "error": "<class 'KeyError'>"
+    },
+    {
+        "task": "Set up accessibility shortcuts for ActionRecord on the device.",
+        "id": 99,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Enable app pinning in the phone's settings.",
+        "id": 100,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Disable notifications on the lock screen.",
+        "id": 101,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Enable emergency SOS feature on the phone.",
+        "id": 102,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Setting up digital wellbeing on your phone.",
+        "id": 103,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Access the app usage information.",
+        "id": 104,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Restrict apps with high background battery use.",
+        "id": 105,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Restrict apps with high overall battery use",
+        "id": 106,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Remove a region from COVID-19 exposure settings",
+        "id": 107,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Disable COVID-19 exposure notifications on an Android device.",
+        "id": 108,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Turn on and connect to the first Wi-Fi on your device.",
+        "id": 109,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Clear the cache of the camera app on your phone.",
+        "id": 110,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Enable the motion sense feature on a Pixel 4.",
+        "id": 111,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Start the silence interruptions settings on a Pixel 4 device.",
+        "id": 112,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Stop skipping songs on a Pixel 4 device.",
+        "id": 113,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Enable the accessibility menu shortcut in the device's settings.",
+        "id": 114,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Turn the printing service on on your phone.",
+        "id": 115,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Set up face unlock to require eyes to be open.",
+        "id": 116,
+        "completed": false,
+        "error": "<class 'KeyError'>"
+    },
+    {
+        "task": "Clear devices from phone's memory.",
+        "id": 117,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Provide information about the setting.",
+        "id": 118,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Search by topicin the \"Tips & support\" section of the phone's \"Settings\" app.",
+        "id": 119,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Enable app pinning in phone settings.",
+        "id": 120,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Turn on Bluetooth on your phone.",
+        "id": 121,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Connect a Bluetooth device to a Pixel phone",
+        "id": 122,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Open the settings for a Bluetooth accessory.",
+        "id": 123,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Enable Dark theme in the phone's display settings.",
+        "id": 124,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Turn on NFC on the phone.",
+        "id": 125,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "",
+        "id": 126,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Remove the saved network 'AndroidWifi' from the device.",
+        "id": 127,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Open the mobile network setting.",
+        "id": 128,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Set the default SIM card for data, calls, and text messages",
+        "id": 129,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Delete a user named jack from the device.",
+        "id": 130,
+        "completed": false,
+        "error": "<class 'KeyError'>"
+    },
+    {
+        "task": "Adjust the display size to large on the device",
+        "id": 131,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Enable colour inversion in the device's Accessibility settings.",
+        "id": 132,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Enable the large mouse pointer in the Accessibility settings.",
+        "id": 133,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Add an eSIM as a second SIM to your phone",
+        "id": 134,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Open the assistant settings for the Pixel Stand",
+        "id": 135,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Open interruptions and brightness settings.",
+        "id": 136,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Enable emergency location service on the phone.",
+        "id": 137,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Set the extreme battery saver turned on when power is lower than 10%.",
+        "id": 138,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Share Wi-Fi information of AndroidWifi using a QR code.",
+        "id": 139,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Turn on the hotspot on your phone.",
+        "id": 140,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Enable location permission for the Google app on an Android device.",
+        "id": 141,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Clear the cache and data in Google Play Store.",
+        "id": 142,
+        "completed": false,
+        "error": "<class 'KeyError'>"
+    },
+    {
+        "task": "Turn on adaptive connectivity on your phone.",
+        "id": 143,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Turn on the dark theme on your phone",
+        "id": 144,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Turn notifications on",
+        "id": 145,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Open fingerprint settings on the phone.",
+        "id": 146,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Check if Find My Device is turned on",
+        "id": 147,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Check storage usage on the device.",
+        "id": 148,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Check data usage on the device",
+        "id": 149,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Remove the user named jack from the device.",
+        "id": 150,
+        "completed": false,
+        "error": "<class 'KeyError'>"
+    },
+    {
+        "task": "Enable \"Usage & diagnostics\" in device settings.",
+        "id": 151,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Check the Android version on your phone",
+        "id": 152,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Encrypt a Nexus device running on Android 5.0",
+        "id": 153,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Enable Wi-Fi hotspot on your phone",
+        "id": 154,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Enable instant tethering on other devices using phone's connection",
+        "id": 155,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Customize the notifications to block when the Do Not Disturb mode is turned on.",
+        "id": 156,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Disconnect from VPN on an Android phone.",
+        "id": 157,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Remove the latest VPN connection on the device.",
+        "id": 158,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Access and modify location settings on an Android 9.0 device.",
+        "id": 159,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Disable recognized music notifications on the lock screen.",
+        "id": 160,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Open lock screen notification settings",
+        "id": 161,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Choose screen saver content to 'Colors'.",
+        "id": 162,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Turn on NFC in the phone's settings.",
+        "id": 163,
+        "completed": false,
+        "error": "<class 'KeyError'>"
+    },
+    {
+        "task": "Change the system navigation option to gesture navigation in the phone's settings.",
+        "id": 164,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Disable auto-sync for your Google account on your phone.",
+        "id": 165,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Disable Camera's permission access to Microphone in settings.",
+        "id": 166,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Add guest user named jack to my phone.",
+        "id": 167,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Turn off smart lock on the phone.",
+        "id": 168,
+        "completed": false,
+        "error": "<class 'KeyError'>"
+    },
+    {
+        "task": "Turn on battery share on the phone",
+        "id": 169,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Set up a driving rule for \"Do Not Disturb\"",
+        "id": 170,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Add a language Brezhoneg on your device.",
+        "id": 171,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Allow clock app to use mobile data while Data Saver is on.",
+        "id": 172,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Add a Google account to your phone.",
+        "id": 173,
+        "completed": false,
+        "error": "<class 'KeyError'>"
+    },
+    {
+        "task": "Set up step scanning in the Accessibility settings.",
+        "id": 174,
+        "completed": false,
+        "error": "<class 'KeyError'>"
+    },
+    {
+        "task": "Turn on the 'Extra dim' feature of Text.",
+        "id": 175,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Turn on airplane mode on your device.",
+        "id": 176,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Check mobile data usage on your phone.",
+        "id": 177,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Set up a proxy connection.",
+        "id": 178,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Change the device navigation to buttons in the Settings app.",
+        "id": 179,
+        "completed": false,
+        "error": "<class 'KeyError'>"
+    },
+    {
+        "task": "Disable lock screen notifications in the phone's settings app.",
+        "id": 180,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Add emergency information to your phone's lock screen.",
+        "id": 181,
+        "completed": false,
+        "error": "<class 'KeyError'>"
+    },
+    {
+        "task": "Put a message on the lock screen of your phone.",
+        "id": 182,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Turn on severe threats in wireless emergency alerts on your phone.",
+        "id": 183,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Set a time limit of 1 hour for Chrome in Digital Wellbeing & parental controls.",
+        "id": 184,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Enable the \"Heads Up\" feature in the \"Digital Wellbeing & parental controls\" settings.",
+        "id": 185,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "",
+        "id": 186,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Disable voice access while using do not disturb",
+        "id": 187,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Find fast pair accessories in device settings.",
+        "id": 188,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Remove custom certificates from the device.",
+        "id": 189,
+        "completed": false,
+        "error": "<class 'KeyError'>"
+    },
+    {
+        "task": "Enable the \"Reach to check phone\" feature in the Motion Sense settings on a Pixel 4",
+        "id": 190,
+        "completed": false,
+        "error": "<class 'KeyError'>"
+    },
+    {
+        "task": "Add and use printers on your device",
+        "id": 191,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Find the Google account username associated with the phone",
+        "id": 192,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Disable the smooth display feature.",
+        "id": 193,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Pair a Bluetooth device",
+        "id": 194,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Change the Bluetooth name on your phone to jack.",
+        "id": 195,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Disable contactless payments via NFC on the device.",
+        "id": 196,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Set screen lock to number code '1111' on the phone.",
+        "id": 197,
+        "completed": false,
+        "error": "<class 'KeyError'>"
+    },
+    {
+        "task": "Turn on the \"Extra dim\" feature in the \"Text and display\" settings .",
+        "id": 198,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Temporarily disable a SIM card in the phone's settings.",
+        "id": 199,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Set the duration for \"Do Not Disturb\" on your phone to 1 hour.",
+        "id": 200,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "",
+        "id": 201,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Turn on Wi-Fi.",
+        "id": 202,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Enable the \"Turn on Wi-Fi automatically\" feature in the phone's network preferences.",
+        "id": 203,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Enable the dark color scheme on your Android phone.",
+        "id": 204,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Turn on Airplane mode in the phone's settings.",
+        "id": 205,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Enable the Wi-Fi hotspot on your phone for sharing the mobile connection.",
+        "id": 206,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Set Chrome as the default web browser on your Android device.",
+        "id": 207,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Clear cache and data from Google Play Services on your device.",
+        "id": 208,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Clear the cache and data in the Download Manager.",
+        "id": 209,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Cast the screen to a selected device",
+        "id": 210,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Change a network or internet setting on the phone.",
+        "id": 211,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Turn on airplane mode on the phone.",
+        "id": 212,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Find manufacturer and carrier information in device settings",
+        "id": 213,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Change the settings for gestures on in the phone's system settings.",
+        "id": 214,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Enable and use the quick tap feature on the phone to open apps or complete tasks.",
+        "id": 215,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Set up a fingerprint on your phone.",
+        "id": 216,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Close all apps",
+        "id": 217,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Check if location is on",
+        "id": 218,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Open security settings on your phone",
+        "id": 219,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Open the privacy settings on the phone.",
+        "id": 220,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Open the privacy settings on the phone.",
+        "id": 221,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Open the privacy settings on the phone.",
+        "id": 222,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Open the privacy settings on the phone.",
+        "id": 223,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Check if \"Find My Device\" is turned on in the device settings.",
+        "id": 224,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Find the MAC address of your phone",
+        "id": 225,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Open additional Wi-Fi settings on the phone",
+        "id": 226,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Check for system updates and install the latest Android version",
+        "id": 227,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Check for security updateson the device.",
+        "id": 228,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Check for Android updates on your phone.",
+        "id": 229,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Change the switch access settings in the device's accessibility menu.",
+        "id": 230,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Open app permissions for location setting.",
+        "id": 231,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Set up exposure notifications through device settings.",
+        "id": 232,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Delete exposure history in COVID-19 Exposure Notifications settings on Android device.",
+        "id": 233,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Clear the cache of Chrome on your phone",
+        "id": 234,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Set the hotspot to turn off automatically in the device's settings.",
+        "id": 235,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Open the interrupt settings for the \"Do Not Disturb\" mode on an Android phone.",
+        "id": 236,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Set the duration for \"Do Not Disturb\" mode on an Android device.",
+        "id": 237,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Set up automatic \"Do Not Disturb\" rule on Android",
+        "id": 238,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Set up a rule in the \"Do Not Disturb preferences\" to silence sounds during events and meetings.",
+        "id": 239,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Override \"Do Not Disturb\" for chrome on your phone.",
+        "id": 240,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Enter VPN information on the device.",
+        "id": 241,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Edit VPN settings on your phone.",
+        "id": 242,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Turn off the \"Always-on VPN\" setting in the phone's \"Settings\" app.",
+        "id": 243,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Enable location access",
+        "id": 244,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Find the EID number of the phone.",
+        "id": 247,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Open the keyboard sounds and vibrations settings on your phone.",
+        "id": 248,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Open the settings for emergency broadcast alerts on the phone.",
+        "id": 249,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Create a custom rule for a Wi-Fi network or location in the phone's settings.",
+        "id": 250,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Enable automatic song identification on the phone",
+        "id": 251,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Find recently played songs.",
+        "id": 252,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Enable snoozing for notifications in phone settings.",
+        "id": 253,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Access the notification history in the phone's settings.",
+        "id": 254,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Open the notifications settings for the lock screen on your phone.",
+        "id": 255,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Turn on notification dots in the phone's settings.",
+        "id": 256,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Enable notification bubbles in the phone's settings.",
+        "id": 257,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Manage bubble notifications for chrome",
+        "id": 258,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Configure the phone's notification settings to display sensitive content on the lock screen.",
+        "id": 259,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Disable the screen saver in your phone's settings.",
+        "id": 260,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Open the screen timeout settings on your phone.",
+        "id": 261,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Disable auto-rotate screen in device settings",
+        "id": 262,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Enable the \"Power button ends call\" feature in the Accessibility settings.",
+        "id": 263,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Enable the \"Power button ends call\" option in the Accessibility settings.",
+        "id": 264,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Switch backup accounts on the device.",
+        "id": 265,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Manually back up data and settings on a phone",
+        "id": 266,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Open the vibration settings on the device.",
+        "id": 267,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Open the connection settings on your phone.",
+        "id": 268,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Confirm if adaptive battery is enabled.",
+        "id": 269,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Enable gesture navigation on Android 9.",
+        "id": 270,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Set the screen lock on your phone.",
+        "id": 271,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "View a list of Google apps that can auto-sync",
+        "id": 272,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Turn off auto-sync for chrome apps on your phone.",
+        "id": 273,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Enable adaptive sound.",
+        "id": 274,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Check for security updates.",
+        "id": 275,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Switch backup accounts on your phone.",
+        "id": 277,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Change the time to take action for accessibility on the device.",
+        "id": 278,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Set up driving mode.",
+        "id": 279,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Open display settings on the phone.",
+        "id": 280,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Access and manage mobile data plan and notification settings in the \"Settings\" app.",
+        "id": 281,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Manually sync your Google account on your phone.",
+        "id": 282,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Open the date & time settings on your phone",
+        "id": 283,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Turn on Data Saver on the phone.",
+        "id": 284,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Disable chrome app that came with your phone.",
+        "id": 285,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Remove a Google named jack from your phone.",
+        "id": 286,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Set up auto-scanning on switch access settings.",
+        "id": 287,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Check if mobile data is turned on",
+        "id": 288,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Check Wi-Fi connection status",
+        "id": 289,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Set a data warning to receive alerts about data usage.",
+        "id": 290,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Set a data limit and enable automatic data turn-off on mobile data settings.",
+        "id": 291,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Add a Google account to your phone",
+        "id": 292,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Change the floating accessibility button settings in the \"Accessibility\" menu of the \"Settings\" app.",
+        "id": 293,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Display all notifications on the lock screen.",
+        "id": 294,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Turn on the emergency location service on your phone.",
+        "id": 295,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Turn the location setting on for your phone.",
+        "id": 296,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Enable auto-rotate screen in the device's accessibility settings.",
+        "id": 297,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Turn on usage & diagnostics.",
+        "id": 298,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Turn off the \"Active during calls\" setting in Voice Access under the \"General\" section in the device's settings.",
+        "id": 299,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Disable the option to install apps from unknown sources on the device.",
+        "id": 300,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Enable text-to-speech output on the device.",
+        "id": 301,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Install a certificate on your device.",
+        "id": 302,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "",
+        "id": 303,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Disable adaptive charging to enable overnight charging.",
+        "id": 304,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Delete face data.",
+        "id": 305,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Turn off face unlock",
+        "id": 306,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Manage app permissions for location and disable location access for chrome.",
+        "id": 307,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Reset a Pixel phone using the settings app and restore backed-up data.",
+        "id": 308,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Sync device with Google servers for accurate date and time settings.",
+        "id": 309,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Disable the option to save payment information in the autofill settings.",
+        "id": 310,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Change the autofill service in the \"Passwords & accounts\" settings to Google.",
+        "id": 311,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Disable fingerprint authentication for autofill in Google.",
+        "id": 312,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Set up camera switches and assign facial gestures to actions.",
+        "id": 313,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Change the gesture size to big for switch access",
+        "id": 314,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Change the duration for a gesture in the accessibility settings.",
+        "id": 315,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Change the direction of point scan in the accessibility settings.",
+        "id": 316,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Disable the \"Idle lock screen\" option in the phone's settings to turn off the screen when not in use.",
+        "id": 317,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Adjust the screen timeout on the phone to a shorter duration.",
+        "id": 318,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Enable adaptive brightness on the phone.",
+        "id": 319,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Disable keyboard sound and vibration in the phone's settings.",
+        "id": 320,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Limit the battery usage of apps with high overall battery use on the phone.",
+        "id": 321,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Enable the dark theme on the phone and schedule it to turn on from sunset to sunrise.",
+        "id": 322,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Enable the option to open cards and passes with the power button in the settings menu.",
+        "id": 323,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Compare the signal strength of different networks",
+        "id": 324,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Turn off switch access on Android device",
+        "id": 326,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Change the touch & hold delay to short in the device's accessibility settings.",
+        "id": 327,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Enable data usage during calls to use a different SIM card.",
+        "id": 328,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Disable the auto-fill service for payment information.",
+        "id": 329,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Change the Autofill service in the phone's settings to save info in chrome.",
+        "id": 330,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Disable fingerprint authentication for auto-filling payment cards in the phone's settings.",
+        "id": 331,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Change the font size to small on your device",
+        "id": 333,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Enable bold text in the device's settings",
+        "id": 334,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Enable and select a color correction mode in the device's accessibility settings.",
+        "id": 335,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Disable animations in the device's settings.",
+        "id": 336,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Enable high contrast text in the device's settings.",
+        "id": 337,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Open app permissions on the phone",
+        "id": 338,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Enable automatic removal of permissions for unused apps.",
+        "id": 340,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Enable earthquake alerts in the device settings.",
+        "id": 342,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Open Do Not Disturb settings to specify what should be blocked or allowed.",
+        "id": 343,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Set the interruption settings for Do Not Disturb mode.",
+        "id": 344,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Open the settings for hidden notifications in the \"Do Not Disturb\" section of the phone's settings.",
+        "id": 345,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Set up Do Not Disturb to limit interruptions during events and meetings on Google Calendar.",
+        "id": 346,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Display the battery percentage in the status bar on my phone.",
+        "id": 347,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Check the battery life and usage on the phone.",
+        "id": 348,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Configure battery saver to turn off when the phone is fully charged.",
+        "id": 349,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Choose chrome to stay active with extreme battery saver",
+        "id": 350,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Customize the action triggered by pressing the power and volume up buttons on your phone.",
+        "id": 351,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Change the action triggered by pressing power and volume up buttons",
+        "id": 352,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Change the BrailleBack settings in the Accessibility menu.",
+        "id": 353,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Compare the Wi-Fi signal strength of different networks",
+        "id": 354,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Compare the strength of different networks on the phone.",
+        "id": 355,
+        "completed": false,
+        "error": null
+    },
+    {
+        "task": "Remove all saved networks from the phone's wi-fi settings.",
+        "id": 357,
+        "completed": true,
+        "error": null
+    },
+    {
+        "task": "Set up OpenRoaming on your device",
+        "id": 358,
+        "completed": false,
+        "error": null
+    }
+]

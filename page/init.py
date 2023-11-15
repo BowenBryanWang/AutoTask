@@ -1,161 +1,127 @@
+"""
+Description: This module contains the Screen class for UI analysis.
+Author: Your Name
+Date: Creation Date
+License: Appropriate License (e.g., MIT License)
+"""
+
 import base64
 import json
 import os
 import time
-
-import numpy as np
-import cv2
-from page.NodeDescriberManager import NodeDescriberManager
 
 from page.WindowStructure import PageInstance
 from page.process import transfer_2_html
 
 
 class Screen:
+    """
+    Represents a screen for UI analysis.
+    """
 
-    cnt = 0
-    describermanagers_init = False
-    describermanagers = {}
-    all_text = ""  # 当前页面的所有文本
-    current_path = []
-    current_path_str = "Begin"
-    page_id_now = 0
-    screenshot = None
-    layout = None
-    imgdata = None
-    page_instance = None
-    page_root = None
-    semantic_nodes = []
-    semantic_info = []
-    upload_time = 0
-    page_description = ""
+    @staticmethod
+    def process_layout(root):
+        # 删除所有不可见的子元素
+        # 删除visible属性为false的子元素
+        if 'node' in root:
+            if isinstance(root['node'], dict):
+                root['node'] = [root['node']]
+            root['node'] = [Screen.process_layout(x) for x in root['node'] if (
+                '@visible' not in x or x['@visible'])]
+
+        return root
+
+    @staticmethod
+    def process_frag_overlap(node, rect_exist=None):
+        overlapped = False
+        bound = eval(node['@bounds'].replace('][', '],['))
+        x0, y0, x1, y1 = bound[0][0], bound[0][1], bound[1][0], bound[1][1]
+        if rect_exist is not None:
+            for x_min, y_min, x_max, y_max in rect_exist:
+                if x_min <= x0 <= x_max and y_min <= y0 <= y_max and x_min <= x1 <= x_max and y_min <= y1 <= y_max:
+                    overlapped = True
+        if overlapped:
+            node['@visible'] = False
+
+        if 'node' not in node:
+            node['node'] = []
+        if isinstance(node['node'], dict):
+            node['node'] = [node['node']]
+
+        if 'FrameLayout' in node['@class']:
+            crt_rect_exist = set()
+            if rect_exist is not None:
+                crt_rect_exist.update(rect_exist)
+
+            for sub_node in node['node'][::-1]:
+                crt_rect_exist.add(Screen.process_frag_overlap(
+                    sub_node, crt_rect_exist))
+        else:
+            for sub_node in node['node']:
+                Screen.process_frag_overlap(sub_node, rect_exist)
+        return (x0, y0, x1, y1)
 
     def __init__(self, cnt=0) -> None:
+        """
+        Initializes a Screen object.
+
+        Args:
+            cnt (int, optional): The number of the screen. Defaults to 0.
+        Returns:
+            None
+        """
         self.cnt = cnt
+        self.all_text = ""
+        self.page_id_now = 0
+        self.screenshot = None
+        self.layout = None
+        self.imgdata = None
+        self.page_instance = None
+        self.page_root = None
+        self.semantic_nodes = []
+        self.semantic_info = []
+        self.upload_time = 0
+        self.page_description = ""
 
     def update(self, request):
-        if not os.path.exists("./page/static/data"):
-            os.makedirs("./page/static/data")
-        # if not self.describermanagers_init:
-        #     self.init_describer()  # 全局第一次初始化discribermanagers
+        if not os.path.exists("./page/data"):
+            os.makedirs("./page/data")
         self.cnt += 1  # 将数据存储时候页面的编号
         start_time = time.time()  # 记录开始时间
         self.page_id_now = self.cnt
-        self.screenshot = request["screenshot"]
+        self.screenshot = request["screenshot"] if 'screenshot' in request else None
         if request['layout'] == self.layout:
             print("Layout depredicted")
             return "error:"
         self.layout = request['layout']
-        self.imgdata = base64.b64decode(self.screenshot)
+        self.imgdata = base64.b64decode(
+            self.screenshot) if self.screenshot is not None else None
         self.page_instance = PageInstance()
-        self.page_instance.load_from_dict("", json.loads(self.layout))
+        layout_json = json.loads(self.layout)
+        # Screen.process_frag_overlap(layout_json)
+        layout_json = Screen.process_layout(layout_json)
+        self.page_instance.load_from_dict("", layout_json)
         self.page_root = self.page_instance.ui_root
-        # if len(self.page_root.children[0].children[0].children) == 2:
-        #     print("FUCK")
-        #     self.page_root.children[0].children[0].children = [
-        #         self.page_root.children[0].children[0].children[0]]
         print("all_text", self.page_root.generate_all_text())
         self.semantic_nodes, relation = self.page_root.get_all_semantic_nodes()
 
-        # 创建与semantic_nodes["nodes"]等长的type列表，用于存放每个节点的类型
-        # self.semantic_nodes["type"] = [
-        #     "" for ii in range(len(self.semantic_nodes["nodes"]))]
-        # for i in range(len(self.semantic_nodes["nodes"])):
-        #     self.semantic_nodes["nodes"][i].update_page_id(self.page_id_now)
-        #     dis = 99.0
-        #     for key, value in self.describermanagers.items():
-        #         if key == "Root Object;":
-        #             continue
-        #         tmp_dis = value.calculate(self.semantic_nodes["nodes"][i])
-        #         if tmp_dis < dis:
-        #             dis = tmp_dis
-        #             self.semantic_nodes["type"][i] = key.split(";")[-2]
-        # print("semantic_nodes", self.semantic_nodes["type"])
-
-        self.semantic_info, self.semantic_info_list, self.trans_relation = transfer_2_html(
+        self.semantic_info_all_warp, self.semantic_info_half_warp, self.semantic_info_no_warp, self.trans_relation = transfer_2_html(
             self.semantic_nodes["nodes"], relation)
+        self.semantic_info_no_warp_with_id = list(
+            filter(lambda x: "id=" in x, self.semantic_info_no_warp))
 
         self.semantic_info_str = "".join(self.semantic_info)
 
-        with open('./page/static/data/page{}.txt'.format(self.cnt), 'w', encoding="utf-8") as fp:
-            fp.write("".join(self.semantic_info))
-        print("semantic_info", self.semantic_info_str)
-        print("semantic_nodes", len(self.semantic_nodes))
+        with open('./page/data/page{}.txt'.format(self.cnt), 'w', encoding="utf-8") as fp:
+            fp.write("".join(self.semantic_info_all_warp))
+        print("semantic_info", self.semantic_info_all_warp)
         end_time = time.time()
         self.upload_time = end_time  # 记录本次上传的时间
         print("upload_time", self.upload_time)
         print("time:", end_time-start_time, flush=True)
-        with open('./page/static/data/imagedata{}.jpg'.format(self.cnt), 'wb') as fp:
-            fp.write(self.imgdata)
-        with open('./page/static/data/page{}.json'.format(self.cnt), 'w', encoding="utf-8") as fp:
+        if self.imgdata is not None:
+            with open('./page/data/imagedata{}.jpg'.format(self.cnt), 'wb') as fp:
+                fp.write(self.imgdata)
+        with open('./page/data/page{}.json'.format(self.cnt), 'w', encoding="utf-8") as fp:
             fp.write(self.layout)
         return "OK"
-
-    def init_describer(self):
-        print("loadmodel")
-        global relation_dict
-        with open('./page/static/data'+'/manager_structure.json', 'r', encoding='utf-8') as file:
-            describermanagers_str = json.load(file)
-            global describermanagers
-            for key, value in describermanagers_str.items():
-                value = json.loads(value)
-                print("loading", key)
-                if key == "Root Object;":
-                    self.describermanagers[key] = NodeDescriberManager(
-                        "Root", None, "Root Object;")
-                if key.count(";") > 1:
-                    p_last = key.split(";")[-2]
-                    model_fa_id = key.replace(p_last+";", "")
-                    self.describermanagers[key] = NodeDescriberManager(
-                        value["type"], self.describermanagers[model_fa_id], key)
-                    self.describermanagers[model_fa_id].update_children(
-                        self.describermanagers[key])
-                    tmp_positive_ref_nodes = []
-                    tmp_negative_ref_nodes = []
-                    tmp_positive_nodes = []
-                    for node_info in value["positive_ref"]:
-                        with open('./page/static/data/'+'page' + str(node_info["page_id"]) + '.json', 'r', encoding="utf-8")as fp:
-                            tmp_layout = json.loads(fp.read())
-                        tmp_page_instance = PageInstance()
-                        if isinstance(tmp_layout, list):
-                            tmp_layout = tmp_layout[0]
-                        tmp_page_instance.load_from_dict("", tmp_layout)
-                        tmp_page_root = tmp_page_instance.ui_root
-                        tmp_node = tmp_page_root.get_node_by_relative_id(
-                            node_info["index"])
-                        tmp_node.update_page_id(node_info["page_id"])
-                        tmp_positive_ref_nodes.append(
-                            (tmp_node.findBlockNode(), tmp_node))
-                    for node_info in value["negative_ref"]:
-                        print("node_info", node_info)
-                        with open('./page/static/data/'+'page' + str(node_info["page_id"]) + '.json', 'r', encoding="utf-8")as fp:
-                            tmp_layout = json.loads(fp.read())
-                        tmp_page_instance = PageInstance()
-                        if isinstance(tmp_layout, list):
-                            tmp_layout = tmp_layout[0]
-                        tmp_page_instance.load_from_dict("", tmp_layout)
-                        tmp_page_root = tmp_page_instance.ui_root
-                        print(node_info["page_id"],
-                              tmp_page_root.generate_all_text())
-                        tmp_node = tmp_page_root.get_node_by_relative_id(
-                            node_info["index"])
-                        tmp_node.update_page_id(node_info["page_id"])
-                        tmp_negative_ref_nodes.append(
-                            (tmp_node.findBlockNode(), tmp_node))
-                    for node_info in value["positive"]:
-                        with open('./page/static/data/'+'page' + str(node_info["page_id"]) + '.json', 'r', encoding="utf-8")as fp:
-                            tmp_layout = json.loads(fp.read())
-                        tmp_page_instance = PageInstance()
-                        if isinstance(tmp_layout, list):
-                            tmp_layout = tmp_layout[0]
-                        tmp_page_instance.load_from_dict("", tmp_layout)
-                        tmp_page_root = tmp_page_instance.ui_root
-                        tmp_node = tmp_page_root.get_node_by_relative_id(
-                            node_info["index"])
-                        tmp_node.update_page_id(node_info["page_id"])
-                        tmp_positive_nodes.append(
-                            (tmp_node.findBlockNode(), tmp_node))
-                    self.describermanagers[key].update(
-                        tmp_positive_ref_nodes, tmp_negative_ref_nodes, tmp_positive_nodes)
-        global describermanagers_init
-        describermanagers_init = True
