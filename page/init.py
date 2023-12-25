@@ -86,8 +86,8 @@ class Screen:
     def update(self, request):
         if not os.path.exists("./page/data"):
             os.makedirs("./page/data")
-        self.cnt += 1  # 将数据存储时候页面的编号
-        start_time = time.time()  # 记录开始时间
+        self.cnt += 1
+        start_time = time.time()
         self.page_id_now = self.cnt
         self.screenshot = request["screenshot"] if 'screenshot' in request else None
         if request['layout'] == self.layout:
@@ -116,7 +116,7 @@ class Screen:
             fp.write("".join(self.semantic_info_all_warp))
         print("semantic_info", self.semantic_info_all_warp)
         end_time = time.time()
-        self.upload_time = end_time  # 记录本次上传的时间
+        self.upload_time = end_time
         print("upload_time", self.upload_time)
         print("time:", end_time-start_time, flush=True)
         if self.imgdata is not None:

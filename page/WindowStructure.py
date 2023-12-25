@@ -18,26 +18,26 @@ class UINode:
     def __init__(self, crt_layout, parent, instance):
         if crt_layout is None:
             return
-        self.page_instance = instance  # type: PageInstance
+        self.page_instance = instance
         self.depth = 0 if parent is None else parent.depth + 1
-        self.parent = parent  # type: UINode
+        self.parent = parent
         self.index = int(crt_layout['@index'])
         self.page_id = instance.page_cnt
         if '@text' in crt_layout:
-            self.text = crt_layout['@text']  # type: str
+            self.text = crt_layout['@text']
         else:
             self.text = ""
         if '@resource-id' in crt_layout:
-            self.resource_id = crt_layout['@resource-id']  # type: str
+            self.resource_id = crt_layout['@resource-id']
         else:
             self.resource_id = ""
-        self.node_class = crt_layout['@class']  # type: str
+        self.node_class = crt_layout['@class']
         if '@package' in crt_layout:
-            self.package = crt_layout['@package']  # type: str
+            self.package = crt_layout['@package']
         else:
             self.package = ""
         if '@content-desc' in crt_layout:
-            self.content_desc = crt_layout['@content-desc']  # type: str
+            self.content_desc = crt_layout['@content-desc']
         else:
             self.content_desc = ""
         self.checkable = (crt_layout['@checkable'] ==
@@ -68,7 +68,6 @@ class UINode:
             self.scrollable = False
         self.long_clickable = (
             crt_layout['@long-clickable'] == 'true') or (crt_layout['@long-clickable'] == True)
-        # self.password = (crt_layout['@password'] == 'true')
         if '@selected' in crt_layout:
             self.selected = (
                 crt_layout['@selected'] == 'true') or (crt_layout['@selected'] == True)
@@ -80,18 +79,16 @@ class UINode:
             self.ori_node_id = None
         self.editable = (crt_layout['@editable'] ==
                          'true') or (crt_layout['@editable'] == True)
-        # self.accessibilityFocused = (crt_layout['@accessibilityFocused'] == 'true')
-        # self.dismissable = (crt_layout['@dismissable'] == 'true')  # todo 这个属性如何利用
         self.executable = self.clickable | self.long_clickable | self.editable | self.scrollable
         self.clone_source = None
 
         self.bound = [int(x) for x in crt_layout['@bounds'].replace('][', ',').replace(']', '').replace('[', '').split(
-            ',')]  # type: List[int]  # 左上右下两个点四个坐标
+            ',')]  # type: List[int]
         self.width = self.bound[2] - self.bound[0]
         self.height = self.bound[3] - self.bound[1]
         self.center = [(self.bound[0] + self.bound[2]) / 2,
                        (self.bound[1] + self.bound[3]) / 2]
-        # 面积
+
         self.area = self.width * self.height
         self.isVisible = (self.bound[0] < self.bound[2]
                           and self.bound[1] < self.bound[3])
@@ -113,8 +110,6 @@ class UINode:
         return
 
     def has_semantic_info(self):
-        # 判断该节点以及它的所有子节点是否有语义信息
-        # 语义信息指的是一个节点有没有text或者description或者content-desc
         def hasSemanticInfo(self):
             if self.text != '' or self.content_desc != '':
                 return True
@@ -123,7 +118,7 @@ class UINode:
         if hasSemanticInfo(self):
             return True
         else:
-            # 遍历所有后代
+
             all_children = [self]
             while all_children:
                 current_node = all_children.pop()
@@ -134,7 +129,7 @@ class UINode:
             return False
 
     def generate_all_semantic_info(self):
-        # 获得该节点和它的所有后代，所有的语义信息，以dict形式返回
+
         # {"text":[],"content-desc":[],"description":[]}
         res = {"text": [], "content-desc": [], "class": [], "Major_text": []}
 
@@ -162,24 +157,22 @@ class UINode:
             if "class" in tmp_info:
                 if res["class"] == []:
                     res["class"] = tmp_info["class"]
-        # 从text中去除Major_text
 
         return res
 
     def has_similar_children(self):
-        # 如果一个节点的子节点中有半数以上的子节点的宽度和高度都在一个范围内，那么就认为这个节点有相似的子节点
-        # 这个函数用于判断一个节点是否有相似的子节点
+
         all = {"width": [], "height": []}
         if self.children != [] and len(self.children) > 1:
             for child in self.children:
                 all["width"].append(child.width)
                 all["height"].append(child.height)
-            # 找到all中width和height的众数比例
+
             widthModeRatio = all["width"].count(
                 max(set(all["width"]), key=all["width"].count))/len(all["width"])
             heightModeRatio = all["height"].count(
                 max(set(all["height"]), key=all["height"].count))/len(all["height"])
-            # print("area:",widthModeRatio,heightModeRatio)
+
             if widthModeRatio*heightModeRatio > 0.8:
                 return True
         return False
@@ -192,7 +185,7 @@ class UINode:
         if self.parent is not None and 'action_bar' in self.parent.resource_id and self.content_desc == 'Back':
             # disable back
             return 0
-        # 如果节点的面积大于页面面积的0.4，给予惩罚
+
         if self.area > 1080*2310*0.4:
             prob *= 0.5
         if self.clickable:
@@ -295,7 +288,7 @@ class UINode:
         else:
             return self.common_ancestor(other1, other2.parent)
 
-    def is_ancestor(self, other_node):  # other_node是self的祖先
+    def is_ancestor(self, other_node):
         crt_node = self
         while crt_node is not None:
             if crt_node is other_node:
@@ -405,7 +398,7 @@ class PageInstance:
         crt_node.absolute_id = crt_node.node_class if crt_node.parent is None else crt_node.parent.absolute_id + '|%d;%s' % (
             crt_node.index, crt_node.node_class)
 
-        self.absolute_id_2_node[crt_node.absolute_id] = crt_node  # 准备数据
+        self.absolute_id_2_node[crt_node.absolute_id] = crt_node
         if crt_node.absolute_dynamic_id not in self.absolute_dynamic_id_2_node:
             self.absolute_dynamic_id_2_node[crt_node.absolute_dynamic_id] = []
         self.absolute_dynamic_id_2_node[crt_node.absolute_dynamic_id].append(

@@ -23,25 +23,37 @@ def coverage(text1, text2):
 
 
 class Node:
+    """UI node in the Graph, representing specific UI page
+
+    Attributes:
+        graph: Graph class, representing the navigation graph
+        screen: Screen class, representing the UI page
+        elements: list of UI elements in the page
+    """
+
     def __init__(self,  screen, g=None) -> None:
+        """Initialize the node with the screen and graph"""
         self.graph = g
         self.screen = screen
         self.elements = list(
             map(simplify_ui_element, screen.semantic_info_half_warp))
 
     def __eq__(self, o: object) -> bool:
-        # if coverage(" ".join(self.elements), " ".join(o.elements)) >= 0.85:
-        #     print("__eq__", coverage(" ".join(self.elements), " ".join(o.elements)))
-        #     print(self.elements, o.elements)
-        #     print("\n")
+        """Override the equal function to compare the elements of the node
+
+        if the coverage of the elements of two nodes is larger than 0.7, then they are equal
+        """
         return coverage(" ".join(self.elements), " ".join(o.elements)) >= 0.7
 
     def __hash__(self):
+        """Override the hash function to hash the elements of the node"""
         if self is None:
             return hash(tuple([]))
         return hash(tuple(self.elements))
 
     def query(self, query):
+        """Query the UI elements in this UI page with the query string
+        """
         result = sort_by_similarity(query, self.elements)
         result = sorted(result, key=lambda x: x[1], reverse=True)
         result = list(filter(lambda x: x[1] > 0.80, result))
@@ -50,13 +62,28 @@ class Node:
 
 
 class Edge:
+    """
+    Class for UI operations, representing the edge in the navigation graph.
+
+    Attributes:
+        graph: Graph class, representing the navigation graph
+        action: str, representing the UI operation
+        text: str, representing the text of the UI element
+        node: str, representing the UI element
+    """
+
     def __init__(self,  action: str, text: str, node: str, g=None) -> None:
+        """Initialize the edge with the action, text and node"""
         self.graph = g
         self.action = action
         self.text = text
         self.node = node
 
     def __eq__(self, __value: object) -> bool:
+        """Override the equal function to compare node of the edge
+
+        If the node descriptions of two edges are the same, then they are equal
+        """
         return self.node == __value.node
 
     def __hash__(self) -> int:
@@ -64,18 +91,33 @@ class Edge:
 
 
 class UINavigationGraph:
+    """ Class for navigation graph
+
+    This class represents the navigation graph, which is a directed graph of UI pages.
+
+    Attributes:
+        graph: networkx.DiGraph, representing the navigation graph
+        file_path: str, representing the path of the pickle file
+    """
+
     def __init__(self, file_path=None):
+        """Initialize the navigation graph with the pickle file path"""
         self.graph = nx.DiGraph()
         if file_path:
             self.file_path = os.path.join(
                 os.path.dirname(__file__), file_path)
 
     def is_null(self):
+        """Return whether the graph is null"""
         return self.graph.number_of_nodes() == 0
 
     def add_node(self, page: Node):
-        """
-        :param page: UI界面
+        """Add a UI page to the navigation graph
+
+        First check whether the page is already in the graph, if not, add it to the graph.
+
+        Args:
+            page: Node class, representing the UI page
         """
         node = self.find_node(page)
         if node is None:
@@ -87,11 +129,14 @@ class UINavigationGraph:
             return node
 
     def add_edge(self, source_page: Node, target_page: Node, Edge: Edge):
-        """
-        添加有向边表示页面跳转关系。
-        :param source_page: 起始界面
-        :param target_page: 目标界面
-        :param Edge: 边
+        """Add an edge to the navigation graph
+
+        First check whether the edge is already in the graph, if not, add it to the graph.
+
+        Args:
+            source_page: Node class, representing the source UI page
+            target_page: Node class, representing the target UI page
+            Edge: Edge class, representing the UI operation
         """
         e = self.find_edge_from_node(source_page, Edge)
         if e is None:
@@ -104,29 +149,25 @@ class UINavigationGraph:
             return e
 
     def find_node(self, page: Node):
-        """
-        通过页面找到节点。
-        :param page: 页面
-        :return: 节点
+        """Find the UI page in the graph
+
+        Return the UI page if it is in the graph, otherwise return None.
+
+        Args:
+            page: Node class, representing the UI page
         """
         for node in self.graph.nodes:
             if node == page:
                 return node
 
-    def find_node_to(self, page: Node, action: Edge):
-        """
-        通过起点和边找到终点。
-        :param page: 页面
-        :param action: 边
-        :return: 终点
-        """
-
     def find_shortest_road_to(self, source: Node, End: Node) -> list:
-        """
-        找到从source到End的最短路径。
-        :param source: 起始节点
-        :param End: 终止节点
-        :return: 最短路径的操作序列
+        """Find the shortest road from source to End
+
+        Return the shortest road from source to End if it exists, otherwise return None.
+
+        Args:
+            source: Node class, representing the source UI page
+            End: Node class, representing the target UI page
         """
         try:
             path = nx.shortest_path(self.graph, source, End)
@@ -141,19 +182,11 @@ class UINavigationGraph:
         return list(map(lambda x: process_action_info(x.action, x.text, x.node), edges))
 
     def find_neighbour_nodes(self, node: Node) -> list:
-        """
-        找到所有从node出发的的所有邻居节点
-        :param node: 节点
-        :return: 邻居节点
-        """
+        """Return all the successors of the node"""
         return self.graph.successors(node)
 
     def find_neighbour_edges(self, node: Node) -> list:
-        """
-        找到所有从node出发的的所有邻居边
-        :param node: 节点
-        :return: 邻居边
-        """
+        """Return all the edges between the node and its successors"""
         edges = []
         for u, v, data in self.graph.edges(data=True):
             if u == node:
@@ -161,10 +194,8 @@ class UINavigationGraph:
 
         return [data['edge'] for _, _, data in edges]
 
-    def find_edge_from_node(self, node: Node, edge: Edge):
-        """
-        找到node节点的所有出发边当中与edge相同的边。
-        """
+    def find_edge_from_node(self, node: Node, edge: Edge) -> Edge | None:
+        """Find the edge from the node which is equal to the edge passed in"""
         edges = self.find_neighbour_edges(node)
         for e in edges:
             if e == edge:
@@ -172,22 +203,23 @@ class UINavigationGraph:
         return None
 
     def get_all_nodes(self):
-        """
-        获取所有节点
-        :return: 所有节点
-        """
+        """Get all the nodes in the graph"""
         return self.graph.nodes
 
     def get_all_children_successcor_nodes(self, node: Node):
-        """
-        获取所有从node出发能够到达的后继节点
-        :param node: 节点
-        :return: 后继节点
-        """
+        """Return all the successors of the node"""
         return nx.descendants(self.graph, node)
 
     def find_target_UI(self, query, refer_node=None, similarity_threshold=0.80):
-        # 创建一个列表，包含每个节点的元素及其对应的节点
+        """Find the target UI page with the query string
+
+        First find the UI page with the query string, then find the shortest road from the current UI page to the target UI page.
+
+        Args:
+            query: str, representing the query string
+            refer_node: Node class, representing the current UI page
+            similarity_threshold: float, representing the similarity threshold
+        """
         if self.graph.number_of_nodes() <= 1:
             return [], []
 
@@ -206,40 +238,26 @@ class UINavigationGraph:
         sorted_elements = sorted(
             element_node_pairs, key=lambda x: x[2], reverse=True)
 
-        # 筛选出相似度超过阈值的元素及其对应的节点
         filtered_pairs = list(
             filter(lambda x: x[2], sorted_elements))[:10]
 
-        # 使用字典来聚合结果
         aggregated_results = {}
         for element, node, score in filtered_pairs:
             if node not in aggregated_results:
                 aggregated_results[node] = [element]
             else:
                 aggregated_results[node].append(element)
-        # prompt = [
-        #     {"role": "system",
-        #         "content": "you are a mobile UI Task execution expert, your specialized role focuses on guiding the user to complete the user task by providing specific hints(knowledge). You are given a set of knowledge generated by human labelers. But the knowledge is not precise and may contain noises, you task is to optimize and select the most relevant knowledge to the current UI task. Return as JSON format like \{\"knowledge\": (knowledge content)\}"},
-        #     {"role": "user", "content": "Task: {}, Knowledge:{}".format(query, aggregated_results)}]
-        # resp = GPT(prompt, tag="knowledge")
-        # aggregated_results = resp.get("knowledge")
-        # 返回聚合后的结果
         return aggregated_results.keys(), aggregated_results.values()
 
     def save_to_pickle(self):
-        """
-        保存图到 Pickle 文件。
-        """
+        """Save Graph to pickle"""
         if not os.path.exists(os.path.dirname(self.file_path)):
             os.makedirs(os.path.dirname(self.file_path))
         with open(self.file_path, 'wb') as f:
             pickle.dump(self.graph, f)
 
     def load_from_pickle(self, file_path):
-        """
-        从 Pickle 文件加载图。
-        : param file_path: 文件路径
-        """
+        """Load Graph from pickle"""
         if os.path.exists(file_path):
             with open(file_path, 'rb') as f:
                 self.graph = pickle.load(f)
@@ -247,19 +265,17 @@ class UINavigationGraph:
             print("No such file.")
 
     def merge_from_another_pickle(self, file_path_another: str):
+        """Merge Graph from another pickle"""
         if os.path.exists(file_path_another):
             graph_another = UINavigationGraph()
             graph_another.load_from_pickle(file_path_another)
 
-        # 创建一个映射表，以跟踪合并后的节点
         node_mapping = {}
 
-        # 检查并合并相似节点
         for node in graph_another.get_all_nodes():
             ans = self.add_node(node)
             node_mapping[node] = ans
 
-        # 添加或合并边
         for u, v, data in graph_another.graph.edges(data=True):
             u_mapped = node_mapping[u]
             v_mapped = node_mapping[v]
