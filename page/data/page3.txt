@@ -1,0 +1,24 @@
+<p class=''  > System </p>
+<div id=1   clickable> 
+    <p class='android:id/title'  > Languages & input </p>
+
+    <p class='android:id/summary'  > Gboard </p>
+ </div>
+<div id=2   clickable> 
+    <p class='android:id/title'  > Gestures </p>
+ </div>
+<div id=3   clickable> 
+    <p class='android:id/title'  > Date & time </p>
+
+    <p class='android:id/summary'  > GMT+08:00 China Standard Time </p>
+ </div>
+<div id=4   clickable> 
+    <p class='android:id/title'  > Backup </p>
+
+    <p class='android:id/summary'  > Off </p>
+ </div>
+<div id=5   clickable> 
+    <p class='android:id/title'  > Advanced </p>
+
+    <p class='android:id/summary'  > Reset options, Multiple users, System update </p>
+ </div>
