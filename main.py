@@ -207,12 +207,12 @@ def copy_to_file(task_name):
     if os.path.exists("./Shots/{}".format(task_name)):
         shutil.rmtree("./Shots/{}".format(task_name))
         shutil.copytree("./logs", "./Shots/{}/log".format(task_name))
-        shutil.copytree("./Page/data", "./Shots/{}/data".format(task_name))
+        shutil.copytree("./UI/data", "./Shots/{}/data".format(task_name))
         shutil.copytree("./Modules/gpt_res",
                         "./Shots/{}/gpt_res".format(task_name))
     else:
         shutil.copytree("./logs", "./Shots/{}/log".format(task_name))
-        shutil.copytree("./Page/data", "./Shots/{}/data".format(task_name))
+        shutil.copytree("./UI/data", "./Shots/{}/data".format(task_name))
         shutil.copytree("./Modules/gpt_res",
                         "./Shots/{}/gpt_res".format(task_name))
 
@@ -228,7 +228,7 @@ def save_to_file(task_name):
     if not os.path.exists("./Shots/{}".format(task_name)):
         os.makedirs("./Shots/{}".format(task_name))
         shutil.move("./logs", "./Shots/{}".format(task_name))
-        shutil.move("./Page/data", "./Shots/{}".format(task_name))
+        shutil.move("./UI/data", "./Shots/{}".format(task_name))
         shutil.move("./Modules/gpt_res", "./Shots/{}".format(task_name))
 
 

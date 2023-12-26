@@ -75,8 +75,8 @@ class Screen:
         self.page_description = ""
 
     def update(self, request):
-        if not os.path.exists("./page/data"):
-            os.makedirs("./page/data")
+        if not os.path.exists("./UI/data"):
+            os.makedirs("./UI/data")
         self.cnt += 1
         start_time = time.time()
         self.page_id_now = self.cnt
@@ -103,7 +103,7 @@ class Screen:
 
         self.semantic_info_str = "".join(self.semantic_info)
 
-        with open('./page/data/page{}.txt'.format(self.cnt), 'w', encoding="utf-8") as fp:
+        with open('./UI/data/page{}.txt'.format(self.cnt), 'w', encoding="utf-8") as fp:
             fp.write("".join(self.semantic_info_all_warp))
         print("semantic_info", self.semantic_info_all_warp)
         end_time = time.time()
@@ -111,8 +111,8 @@ class Screen:
         print("upload_time", self.upload_time)
         print("time:", end_time-start_time, flush=True)
         if self.imgdata is not None:
-            with open('./page/data/imagedata{}.jpg'.format(self.cnt), 'wb') as fp:
+            with open('./UI/data/imagedata{}.jpg'.format(self.cnt), 'wb') as fp:
                 fp.write(self.imgdata)
-        with open('./page/data/page{}.json'.format(self.cnt), 'w', encoding="utf-8") as fp:
+        with open('./UI/data/page{}.json'.format(self.cnt), 'w', encoding="utf-8") as fp:
             fp.write(self.layout)
         return "OK"
