@@ -1,7 +1,7 @@
-from src.utility import process_ACTION_TRACE, coverage, simplify_ui_element
-from page.WindowStructure import *
-from page.init import Screen
-from src.model import Model
+from Modules.utility import process_ACTION_TRACE, coverage, simplify_ui_element
+from UI.component import *
+from UI.init import Screen
+from Modules.model import Model
 from Graph import UINavigationGraph
 from pynput import keyboard
 from typing import Any, Union
@@ -21,6 +21,7 @@ app = Flask(__name__)
 TASK: str = ""  # User command
 MODE: str = ""  # Run-time mode: "normal" or "preserve"
 PER: float = 0  # Percentage of knowledge loaded
+LOAD: bool = False
 STATUS: str = "stop"  # Run-time status of the workflow
 STATUS_SAME: bool = False
 INDEX: int = 0  # Step index of the execution workflow
@@ -207,12 +208,12 @@ def copy_to_file(task_name):
         shutil.rmtree("./Shots/{}".format(task_name))
         shutil.copytree("./logs", "./Shots/{}/log".format(task_name))
         shutil.copytree("./Page/data", "./Shots/{}/data".format(task_name))
-        shutil.copytree("./src/gpt_res",
+        shutil.copytree("./Modules/gpt_res",
                         "./Shots/{}/gpt_res".format(task_name))
     else:
         shutil.copytree("./logs", "./Shots/{}/log".format(task_name))
         shutil.copytree("./Page/data", "./Shots/{}/data".format(task_name))
-        shutil.copytree("./src/gpt_res",
+        shutil.copytree("./Modules/gpt_res",
                         "./Shots/{}/gpt_res".format(task_name))
 
 
@@ -228,7 +229,7 @@ def save_to_file(task_name):
         os.makedirs("./Shots/{}".format(task_name))
         shutil.move("./logs", "./Shots/{}".format(task_name))
         shutil.move("./Page/data", "./Shots/{}".format(task_name))
-        shutil.move("./src/gpt_res", "./Shots/{}".format(task_name))
+        shutil.move("./Modules/gpt_res", "./Shots/{}".format(task_name))
 
 
 def on_key_release(key):
@@ -257,6 +258,7 @@ def main():
     """
     Main function for the front-end
     """
+    global TASK, MODE, LOAD, PER, Graph
     default_cmd = "Add new system user Bob"
 
     parser = argparse.ArgumentParser(
@@ -266,7 +268,7 @@ def main():
     parser.add_argument("--mode", type=str, choices=["normal", "preserve"],
                         default="normal", help="Specify the mode: 'normal' or 'preserve'")
     parser.add_argument("--load", type=bool, choices=[True, False],
-                        default=True, help="determine whether to load UI graph")
+                        default=False, help="determine whether to load UI graph")
     parser.add_argument("--percentage", type=float, default=1, choices=[0.2, 0.4, 0.6, 0.8, 1],
                         help="determine the percentage to load knowledge")
     args = parser.parse_args()

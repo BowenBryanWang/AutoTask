@@ -5,8 +5,8 @@ from matplotlib import pyplot as plt
 import networkx as nx
 import pickle
 
-from src.utility import GPT, cal_similarity_one, sort_by_similarity, cal_embedding
-from src.utility import process_action_info, simplify_ui_element
+from Modules.utility import GPT, cal_similarity_one, sort_by_similarity, cal_embedding
+from Modules.utility import process_action_info, simplify_ui_element
 
 
 def coverage(text1, text2):
@@ -292,9 +292,7 @@ class UINavigationGraph:
             self.merge_from_another_pickle(file_path)
 
     def visualize(self):
-        """
-        可视化图。每个label显示节点的元素。
-        """
+        """Visualization"""
         nx.draw(self.graph, with_labels=True)
         plt.show()
 

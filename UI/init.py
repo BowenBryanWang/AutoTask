@@ -1,17 +1,10 @@
-"""
-Description: This module contains the Screen class for UI analysis.
-Author: Your Name
-Date: Creation Date
-License: Appropriate License (e.g., MIT License)
-"""
-
 import base64
 import json
 import os
 import time
 
-from page.WindowStructure import PageInstance
-from page.process import transfer_2_html
+from UI.component import PageInstance
+from UI.process import transfer_2_html
 
 
 class Screen:
@@ -21,8 +14,6 @@ class Screen:
 
     @staticmethod
     def process_layout(root):
-        # 删除所有不可见的子元素
-        # 删除visible属性为false的子元素
         if 'node' in root:
             if isinstance(root['node'], dict):
                 root['node'] = [root['node']]

@@ -1,11 +1,10 @@
 import csv
 import json
 import os
-import pickle
 import random
 
 
-from src.utility import GPT, Knowledge_prompt, get_top_combined_similarities, get_top_similarities, sort_by_similarity
+from Modules.utility import GPT, Knowledge_prompt, get_top_combined_similarities, get_top_similarities, sort_by_similarity
 
 OPENAI_KEY = os.getenv('OPENAI_API_KEY')
 COUNT = 0
@@ -245,4 +244,3 @@ def detect_log():
 if __name__ == "__main__":
     from utility import GPT, Knowledge_prompt, get_top_combined_similarities, get_top_similarities, sort_by_similarity
     extract_batch_knowledge()
-    # detect_log()

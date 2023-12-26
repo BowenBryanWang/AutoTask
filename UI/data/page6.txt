@@ -1,0 +1,39 @@
+<p class=''  > Date & time </p>
+<div id=1   clickable> 
+    <p class='android:id/title'  > Use network-provided time </p>
+
+    <switch id=2 class='android:id/switch_widget' clickable > On </switch>
+ </div>
+<div id=3   clickable> 
+    <p class='android:id/title'  > Date </p>
+
+    <p class='android:id/summary'  > November 15, 2023 </p>
+ </div>
+<div id=4   clickable> 
+    <p class='android:id/title'  > Time </p>
+
+    <p class='android:id/summary'  > 20:25 </p>
+ </div>
+<div id=5   clickable> 
+    <p class='android:id/title'  > Use network-provided time zone </p>
+
+    <switch id=6 class='android:id/switch_widget' clickable > On </switch>
+ </div>
+<div id=7   clickable> 
+    <p class='android:id/title'  > Time zone </p>
+
+    <p class='android:id/summary'  > GMT+08:00 China Standard Time </p>
+ </div>
+<p class='android:id/title'  > TIME FORMAT </p>
+<div id=8   clickable> 
+    <p class='android:id/title'  > Use locale default </p>
+
+    <switch id=9 class='android:id/switch_widget' clickable > Off </switch>
+ </div>
+<div id=10   clickable> 
+    <p class='android:id/title'  > Use 24-hour format </p>
+
+    <p class='android:id/summary'  > 1:00 PM </p>
+
+    <switch id=11 class='android:id/switch_widget' clickable > On </switch>
+ </div>

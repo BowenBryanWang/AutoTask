@@ -1,11 +1,7 @@
 
 import copy
 
-from page.WindowStructure import UINode
-
-
-def mask(s):
-    return s
+from UI.component import UINode
 
 
 def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
@@ -23,7 +19,7 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
         elif (node.node_class == "android.widget.TextView" or ".TextView" in node.node_class) and not node.clickable:
             temp = node.generate_all_semantic_info()
             html_element = "<p class='{}' {} > {} </p>\n".format(
-                mask(node.resource_id),
+                node.resource_id,
                 "description='"+",".join(temp["content-desc"])+"'" if ",".join(
                     temp["content-desc"]) != "" else "",
                 "".join(temp["text"]) if temp["text"] == temp["Major_text"] else temp["Major_text"][0] + "\n    " + "".join(["<p> " + i + " </p>\n    " for i in temp["text"][1:]])[:-5])
@@ -32,7 +28,7 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
             temp = node.generate_all_semantic_info()
             html_element = "<div id={} {} {} {}>  </div>\n".format(
                 len(real_comp)+1,
-                "class='"+mask(node.resource_id) +
+                "class='"+node.resource_id +
                 "'" if node.resource_id != "" else "",
                 "description='"+",".join(temp["content-desc"])+"'" if ",".join(
                     temp["content-desc"]) != "" else "",
@@ -45,7 +41,7 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
             print(temp)
             html_element = "<button id={} class='{}' {} > {} </button>\n".format(
                 len(real_comp)+1,
-                mask(node.resource_id),
+                node.resource_id,
                 "description='"+",".join(temp["content-desc"])+"'" if ",".join(
                     temp["content-desc"]) != "" else "",
                 "".join(temp["text"]) if temp["text"] == temp["Major_text"] else temp["Major_text"][0] +
@@ -58,7 +54,7 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
         elif "Switch" in node.node_class:
             html_element = "<switch id={} class='{}' clickable > {} </switch>\n".format(
                 len(real_comp)+1,
-                mask(node.resource_id),
+                node.resource_id,
                 "On" if node.checked else "Off",
             )
             semantic_info_all_warp.append(html_element)
@@ -66,7 +62,7 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
         elif "CheckedTextView" in node.node_class or "CheckBox" in node.node_class or "checkbox" in node.resource_id:
             html_element = "<checkbox id={} class='{}' {} > {} </checkbox>\n".format(
                 len(real_comp)+1,
-                mask(node.resource_id),
+                node.resource_id,
                 node.text,
                 "On" if node.checked else "Off",
 
@@ -78,7 +74,7 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
             if node.editable:
                 html_element = "<input id={} class='{}' {} {} editable > {} </input>\n".format(
                     len(real_comp)+1,
-                    mask(node.resource_id),
+                    node.resource_id,
                     "description='"+",".join(temp["content-desc"])+"'" if ",".join(
                         temp["content-desc"]) != "" else "",
                     "enabled" if node.enabled else "Not enabled",
@@ -87,7 +83,7 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
             else:
                 html_element = "<button id={} class='{}' {} {} clickable ineditable >  </button>\n".format(
                     len(real_comp)+1,
-                    mask(node.resource_id),
+                    node.resource_id,
                     "description='"+",".join(temp["content-desc"])+"'" if ",".join(
                         temp["content-desc"]) != "" else "",
                     "enabled" if node.enabled else "Not enabled",
@@ -99,7 +95,7 @@ def transfer_2_html(semantic_nodes: list[UINode], relation: list[tuple]):
             print(temp)
             html_element = "<div id={} {} {} {} {} {}> {} </div>\n".format(
                 len(real_comp)+1,
-                "class='"+mask(node.resource_id) +
+                "class='"+node.resource_id +
                 "'" if node.resource_id != "" else "",
                 "description='" +
                 ",".join(temp["content-desc"]) +

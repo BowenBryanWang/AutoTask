@@ -1,0 +1,16 @@
+<div id=1  description='Alarm' enabled  clickable> Alarm
+    <p class=''  > Alarm </p>
+ </div>
+<div id=2  description='Clock' enabled  clickable> Clock
+    <p class=''  > Clock </p>
+ </div>
+<div id=3  description='Timer' enabled  clickable> Timer
+    <p class=''  > Timer </p>
+ </div>
+<div id=4  description='Stopwatch' enabled  clickable> Stopwatch
+    <p class=''  > Stopwatch </p>
+ </div>
+<button id=5 class='' description='More options' >  </button>
+<p class='com.google.android.deskclock:id/digital_clock' description='8:21 PM' > 8:21 PM </p>
+<p class='com.google.android.deskclock:id/date' description='Wednesday, November 15' > Wed, Nov 15 </p>
+<div id=6 class='com.google.android.deskclock:id/fab' description='Cities' enabled  clickable>  </div>

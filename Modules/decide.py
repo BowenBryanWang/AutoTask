@@ -1,20 +1,28 @@
-import csv
 import json
 import openai
 import os
 
-from src.utility import GPT, Knowledge_prompt, decide_prompt
-from page.init import Screen
+from Modules.utility import GPT, decide_prompt
+from UI.init import Screen
 
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
 
 class Decide:
+    """Decide mofule of AutoTask, representing the deciding process of the workflow
+
+    Attributes:
+        model (Model): the model object
+    """
+
     def __init__(self, model) -> None:
+        """
+        Initialize a Decide object
+        """
         self.model = model
 
     def log_decorator(func):
-        print("___________________________decide___________________________")
+        """Log decorator for Decide module, logging the output of the module to the log file"""
 
         def wrapper(self, *args, **kwargs):
             result = func(self, *args, **kwargs)
@@ -31,14 +39,17 @@ class Decide:
 
     @log_decorator
     def decide(self, new_screen: Screen, ACTION_TRACE: dict, flag: str):
+        """
+        Deciding process: calling GPT API to start deciding procedures
+        """
         prompt = decide_prompt(
             self.model.task, self.model.prev_model.current_action if self.model.prev_model else "", ACTION_TRACE, new_screen.semantic_info_all_warp, self.model.decision_knowledge)
         if flag == "debug":
             prompt.append({"role": "user",
-                           "content": """请注意以下特殊的额外信息：
-现在你处于回溯纠错阶段，这意味着在ACTION_TRACE当中最后若干步骤执行后因不符合任务要求导致被回溯才到达此页面，作为决策模块，你需要判断是否继续在当前UI上进行探索，如果是，请输出status为“go on”；如果不是（即无法继续，需要继续往前回溯），请输出“wrong”。
-为此，请仔细分析ACTION_TRACE中的每步操作，和每步操作进入的新页面的信息，特别是回溯导致的信息，判断是否还需在该页面上是否继续探索。
-如果已经有多次探索+回溯，那么大概率需要输出wrong再回溯一步去寻找更早的错误。
+                           "content": """Please note the following special additional information:
+You are currently in the backtracking and error correction phase, which means that you have reached this page due to backtracking after the last several steps in ACTION_TRACE were executed but did not meet the task requirements. As the decision module, you need to determine whether to continue exploring on the current UI. If so, please output the status as 'go on'; if not (i.e., it is not possible to continue and further backtracking is needed), please output 'wrong'.
+For this purpose, please carefully analyze each step in ACTION_TRACE, and the information of the new page entered by each step, especially the information caused by backtracking, to judge whether further exploration is needed on that page.
+If there have been multiple explorations and backtrackings, then it is highly probable that 'wrong' needs to be output to backtrack one more step to look for earlier errors.
 """})
         self.answer = GPT(prompt, tag="decide"+str(self.model.index+1))
         if flag == "debug":

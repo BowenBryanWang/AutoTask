@@ -1,8 +1,7 @@
 
 from Graph import Edge
-from src.utility import simplify_ui_element_id, sort_by_similarity
-from src.utility import GPT, Task_UI_grounding_prompt, coverage, get_top_combined_similarities, plan_prompt, process_action_info, simplify_ui_element
-import copy
+from Modules.utility import simplify_ui_element_id, sort_by_similarity
+from Modules.utility import GPT, Task_UI_grounding_prompt, coverage, plan_prompt, process_action_info, simplify_ui_element
 import json
 import os
 import numpy as np
@@ -10,11 +9,19 @@ import openai
 import sys
 sys.path.append('..')
 
-
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
 
 class Evaluate():
+    """
+    Class for Evaluation Module in AutoTask.
+
+    Attributes:
+        model (AutoTaskModel): The model instance associated with the evaluation.
+        score (list): A list of scores for each UI element.
+        reason (list): A list of reasons for each score.
+        weights (list): A list of weights for adjusting scores.
+    """
 
     def __init__(self, model):
         self.model = model
@@ -24,9 +31,19 @@ class Evaluate():
 
     @staticmethod
     def log_decorator(func):
+        """
+        Decorator for logging the evaluation process.
+
+        Args:
+            func (function): The function to be decorated.
+
+        Returns:
+            function: The wrapped function with logging capability.
+        """
+
         def wrapper(self, *args, **kwargs):
             result = func(self, *args, **kwargs)
-
+            # Log the current state and module information
             self.model.log_json["@History_operation"] = self.model.current_path_str
             self.model.log_json["@Current_Action"] = self.model.current_action if self.model.current_action else ""
             self.model.log_json["@Module"].append({
@@ -36,6 +53,7 @@ class Evaluate():
                 "Punishment coefficient": self.weights,
                 "GPT answer": self.resp
             })
+            # Save the log to a file
             with open("logs/log{}.json".format(self.model.index+1), "w", encoding="utf-8") as f:
                 json.dump(self.model.log_json, f, indent=4)
             return result
@@ -43,6 +61,15 @@ class Evaluate():
 
     @log_decorator
     def evaluate(self, ACTION_TRACE):
+        """
+        Evaluate the current action trace and update the model's state.
+
+        Args:
+            action_trace (dict): The current action trace.
+
+        Returns:
+            str or list: 'wrong' if evaluation fails, or a list of scores.
+        """
         if self.score_comp(ACTION_TRACE) == "wrong":
             self.model.current_action = "Back due to overall low scoring"
             return "wrong"
@@ -50,6 +77,13 @@ class Evaluate():
         return self.score
 
     def handle_cycle(self, curpage, ACTION_TRACE):
+        """
+        Handle cycles in the action trace to prevent infinite loops.
+
+        Args:
+            current_page (str): The current page in the GUI.
+            action_trace (dict): The current action trace.
+        """
         if ACTION_TRACE["ACTION_DESC"] and len(ACTION_TRACE["ACTION_DESC"]) > 0 and ACTION_TRACE["ACTION_DESC"][-1] == "BACK":
             return
         for page in ACTION_TRACE["PAGES"][:-1]:
@@ -66,7 +100,15 @@ class Evaluate():
                     self.prompt.append({"role": "user", "content": """NOTE: Current UI was once visited in the history operation sequence, and at that time it chose to operate on {}. To avoid infinite cycling operation, give punishment to this element when you score it in this step""".format(node)})
 
     def score_comp(self, ACTION_TRACE):
+        """
+        Compute scores for each component based on the current action trace.
 
+        Args:
+            action_trace (dict): The current action trace.
+
+        Returns:
+            str: 'wrong' if the overall scoring is low, else None.
+        """
         self.prompt = Task_UI_grounding_prompt(self.model.task, [ACTION_TRACE[key]
                                                                  for key in ACTION_TRACE.keys() if "Action" in key], self.model.screen.semantic_info_all_warp, self.model.predict_module.comp_json_simplified, self.model.evaluation_knowledge, self.model.long_term_UI_knowledge, hint=None)
         self.handle_cycle(curpage=self.model.screen.page_root.generate_all_text().split(
@@ -94,6 +136,9 @@ Please output the next element to be operated.""".format(self.model.task, [ACTIO
                       ).tolist() if self.weights != [] else self.score
 
     def select_top_one(self):
+        """
+        Select the top scoring UI element and update the model's current action.
+        """
         top_index = np.argmax(self.score)
         self.model.node_selected = self.model.screen.semantic_info_no_warp_with_id[top_index]
         self.model.node_selected_warp = list(filter(
@@ -119,6 +164,12 @@ Please output the next element to be operated.""".format(self.model.task, [ACTIO
             self.model.node_selected_action, self.model.node_selected_text, simplify_ui_element_id(self.model.node_selected))
 
     def update_weights(self, weights):
+        """
+        Update the punishing weights for scoring components.
+
+        Args:
+            weights (dict): The punishment weights to be applied.
+        """
         w = [0]*len(self.model.screen.semantic_info_no_warp_with_id)
         for key, item in weights.items():
             if key.startswith("id_"):

@@ -1,9 +1,7 @@
-from typing import List
 import traceback
 import re
 import copy
 import openai
-
 import json
 import pickle
 import os

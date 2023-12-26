@@ -1,12 +1,6 @@
 import os.path
 from queue import Queue
-from collections import deque
-
-
-try:
-    from typing import List
-except ImportError:
-    pass
+from typing import List
 
 
 class UINode:

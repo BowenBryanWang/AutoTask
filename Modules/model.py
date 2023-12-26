@@ -1,51 +1,59 @@
 
 import copy
+
 from Graph import Edge, Node
-
-
-from src.utility import generate_perform, simplify_ui_element
-
+from Modules.utility import generate_perform, simplify_ui_element
 from .knowledge import Decision_KB, Error_KB, Selection_KB, Task_KB, retrivel_knowledge
-from src.decide import Decide
-from src.evaluate import Evaluate
-from src.feedback import Feedback
-from page.init import Screen
-from src.predict import Predict
+from Modules.decide import Decide
+from Modules.evaluate import Evaluate
+from Modules.feedback import Feedback
+from UI.init import Screen
+from Modules.predict import Predict
 
 
 class Model:
+    """
+    Model class for the AutoTask application.
 
-    def update_infos(self, s):
-        for k in self.screen.semantic_info_all_warp:
-            if s in k:
-                k = k.replace(s, s+" --New")
-
-    def cal_diff(self):
-        if self.prev_model is None:
-            return
-        else:
-            new_elements = list(
-                filter(lambda x: x not in self.prev_model.screen.semantic_info_half_warp, self.screen.semantic_info_half_warp))
-            old_elements = list(
-                filter(lambda x: x in self.prev_model.screen.semantic_info_half_warp, self.screen.semantic_info_half_warp))
-            if len(new_elements) / len(self.screen.semantic_info_half_warp) > 0.8:
-                return
-            new_elements_index = [self.screen.semantic_info_half_warp.index(
-                x) for x in new_elements]
-            for i in new_elements_index:
-                self.update_infos(self.screen.semantic_info_half_warp[i])
-            self.screen.semantic_diff = new_elements_index
+    Attributes:
+        load (bool): Indicates if the model is loaded with knowledge.
+        index (int): The index of the current model in the workflow.
+        screen (Screen): The current UI screen being processed.
+        task (str): Description of the user's task.
+        node_selected (str): HTML format of the top UI element selected.
+        node_selected_id (int): ID of the top UI element selected.
+        current_action (str): The latest action performed by this model.
+        log_json (dict): Log data for the current model.
+        prev_model (Model): Reference to the previous model.
+        next_model (Model): Reference to the next model.
+        Task_KB (Task_KB): Knowledge base for tasks.
+        Error_KB (Error_KB): Knowledge base for errors.
+        Decision_KB (Decision_KB): Knowledge base for decisions.
+        Selection_KB (Selection_KB): Knowledge base for selections.
+        similar_tasks (list): List of similar tasks.
+        similar_traces (list): List of similar action traces.
+        predict_module (Predict): Prediction module instance.
+        evaluate_module (Evaluate): Evaluation module instance.
+        decide_module (Decide): Decision module instance.
+        feedback_module (Feedback): Feedback module instance.
+        long_term_UI_knowledge: Long-term knowledge about the UI.
+        simplified_semantic_info_no_warp (list): Simplified semantic information.
+        node_in_graph (Node): Current node in the UI graph.
+        edge_in_graph (Edge): Current edge in the UI graph.
+        wrong_reason (str): Description of any error or wrong action.
+        PER (float): Percentage of knowledge loaded.
+    """
 
     def __init__(self, screen: Screen = None, description: str = "", prev_model=None, index: int = 0, LOAD=False, Graph=None, PER=0):
         self.load: bool = LOAD
-        self.index: int = index  # Index of current Model
+        self.index: int = index
         if screen is not None:
-            self.screen: Screen = screen  # Current Screen
+            self.screen: Screen = screen
 
-        self.task: str = description  # User's Task
-        self.node_selected: str = None  # HTML format of the top UI element selected
-        self.node_selected_id: int = 0  # id of the top UI element selected
-        self.current_action: str = ""  # the lastest action of this model
+        self.task: str = description
+        self.node_selected: str = None
+        self.node_selected_id: int = 0
+        self.current_action: str = ""
         self.log_json: dict = {}
 
         self.prev_model = prev_model
@@ -78,14 +86,37 @@ class Model:
         self.PER = PER
         print("________________INITIAL_DONE________________")
 
+    def update_infos(self, s):
+        """Updates the semantic information with a new suffix."""
+        for k in self.screen.semantic_info_all_warp:
+            if s in k:
+                k = k.replace(s, s + " --New")
+
+    def cal_diff(self):
+        """Calculates the difference in semantic elements between the current and previous model."""
+        if self.prev_model is None:
+            return
+        else:
+            new_elements = list(
+                filter(lambda x: x not in self.prev_model.screen.semantic_info_half_warp, self.screen.semantic_info_half_warp))
+            old_elements = list(
+                filter(lambda x: x in self.prev_model.screen.semantic_info_half_warp, self.screen.semantic_info_half_warp))
+            if len(new_elements) / len(self.screen.semantic_info_half_warp) > 0.8:
+                return
+            new_elements_index = [self.screen.semantic_info_half_warp.index(
+                x) for x in new_elements]
+            for i in new_elements_index:
+                self.update_infos(self.screen.semantic_info_half_warp[i])
+            self.screen.semantic_diff = new_elements_index
+
     @property
     def current_path_str(self):
+        """Returns the current path as a string."""
         return " -> ".join(self.current_path)
 
     def decide_before_and_log(func):
+        # Decorator for logging and decision making before work execution
         def wrapper(self, *args, **kwargs):
-            print("ACTION_TRACE", kwargs.get("ACTION_TRACE"))
-            print("flag", kwargs.get("flag"))
             if self.load:
                 self.prediction_knowledge = retrivel_knowledge(self.task, "prediction", list(
                     map(simplify_ui_element, self.screen.semantic_info_half_warp)), PER=self.PER)
@@ -123,7 +154,7 @@ class Model:
 
     @decide_before_and_log
     def work(self, ACTION_TRACE=None, flag="normal"):
-
+        """Main work function of the model."""
         self.predict_module.predict(ACTION_TRACE)
         eval_res = self.evaluate_module.evaluate(ACTION_TRACE)
         if isinstance(eval_res, str) and eval_res == "wrong":
@@ -132,6 +163,7 @@ class Model:
         return self.execute()
 
     def execute(self):
+        """Executes the selected action."""
         node = self.final_node
         if self.node_selected_action == "click":
             center_x = (node.bound[0] + node.bound[2]) // 2
