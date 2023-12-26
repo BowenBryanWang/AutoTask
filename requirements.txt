@@ -1,0 +1,15 @@
+flask
+tdqm
+langchain
+openai
+loguru
+spacy
+scikit-learn
+opencv-python
+pydotplus
+tiktoken
+faiss-cpu
+pynput
+pandas
+matplotlib
+networkx
