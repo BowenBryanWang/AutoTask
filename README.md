@@ -37,5 +37,13 @@ export OPENAI_API_KEY=<your key>
 If you use AutoTask in your research, please cite our paper:
 
 ```bibtex
+@misc{pan2023autotask,
+      title={AutoTask: Executing Arbitrary Voice Commands by Exploring and Learning from Mobile GUI}, 
+      author={Lihang Pan and Bowen Wang and Chun Yu and Yuxuan Chen and Xiangyu Zhang and Yuanchun Shi},
+      year={2023},
+      eprint={2312.16062},
+      archivePrefix={arXiv},
+      primaryClass={cs.HC}
+}
 
 ```
